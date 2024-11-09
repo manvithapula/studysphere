@@ -89,5 +89,10 @@ override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexP
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // Set the height for each row to add spacing
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70 // Adjust this value as needed
+    }
 
 }
