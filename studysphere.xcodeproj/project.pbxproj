@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		358641C52CDF7CC7008478B1 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358641C42CDF7CC7008478B1 /* LoginViewController.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3502262B2CCF5C51006F019D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		350226142CCF5C50006F019D /* studysphere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = studysphere.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3502262A2CCF5C51006F019D /* studysphereTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studysphereTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		350226342CCF5C51006F019D /* studysphereUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studysphereUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		358641C42CDF7CC7008478B1 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -88,6 +93,7 @@
 		3502260B2CCF5C50006F019D = {
 			isa = PBXGroup;
 			children = (
+				358641C42CDF7CC7008478B1 /* LoginViewController.swift */,
 				350226162CCF5C50006F019D /* studysphere */,
 				3502262D2CCF5C51006F019D /* studysphereTests */,
 				350226372CCF5C51006F019D /* studysphereUITests */,
@@ -249,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				358641C52CDF7CC7008478B1 /* LoginViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
