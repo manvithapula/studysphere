@@ -34,7 +34,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         Subject.setCollectionViewLayout(generateLayout(), animated: true)
     }
 
-    // MARK: - UICollectionView DataSource Methods
+   
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cards.count

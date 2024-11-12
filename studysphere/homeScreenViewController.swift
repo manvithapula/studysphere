@@ -45,6 +45,8 @@ class homeScreenViewController:UIViewController {
     
     var homeScreenData: DashboardData?
     
+   
+    
     /* override func viewDidLoad() {
      super.viewDidLoad()
      
@@ -60,29 +62,52 @@ class homeScreenViewController:UIViewController {
      }*/
     
     override func viewDidLoad() {
-            super.viewDidLoad()
-            
-            // streak
-            for (i, streak) in streaks.enumerated() {
-                if streakValues[i] {
-                    streak.image = UIImage(systemName: "flame")
-                } else {
-                    streak.image = UIImage(systemName: "circle.dotted")
-                }
-            }
-            
-            // Sample data
-            let sampleData = createSampleDashboardData()
-            setupDashboard(with: sampleData)
+        super.viewDidLoad()
         
-
+        
+        
+        // streak
+        for (i, streak) in streaks.enumerated() {
+            if streakValues[i] {
+                streak.image = UIImage(systemName: "flame")
+            } else {
+                streak.image = UIImage(systemName: "circle.dotted")
+            }
         }
         
-        
+        // Sample data
+        let sampleData = createSampleDashboardData()
+        setupDashboard(with: sampleData)
+    }
+    
+    //profile icon
+    
+    override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            // Adding an accessory view with a profile button
+            let accessoryView = UIButton()
+            let image = UIImage(named: "profile.crop.circle")
+            if let image = UIImage(named: "profile") {
+            accessoryView.setImage(image, for: .normal)
+            } else {
+            print("Image not found.")
+            }
+
+            
+            accessoryView.setImage(image, for: .normal)
+            accessoryView.frame.size = CGSize(width: 34, height: 34)
+            
+            if let largeTitleView = navigationController?.navigationBar.subviews.first(where: { subview in
+                String(describing: type(of: subview)) == "_UINavigationBarLargeTitleView"
+            }) {
+                largeTitleView.perform(Selector(("setAccessoryView:")), with: accessoryView)
+                largeTitleView.perform(Selector(("setAlignAccessoryViewToTitleBaseline:")), with: nil)
+                largeTitleView.perform(Selector(("updateContent")))
+            }
+        }
+    
     private func setupDashboard(with data: DashboardData) {
             homeScreenData = data
-        
-       
             
             // subjects
             if data.subjects.count >= 3 {
