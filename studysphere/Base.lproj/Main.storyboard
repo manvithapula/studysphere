@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="yTd-km-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcp-kn-L0O">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -1165,9 +1165,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Screenshot_2024-11-13_at_12.03.16_PM-removebg-preview" translatesAutoresizingMaskIntoConstraints="NO" id="8Qb-S0-Nd5">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="409"/>
-                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="WWC-T5-16V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1175,7 +1172,6 @@
                             <constraint firstItem="DE2-KY-KqH" firstAttribute="centerX" secondItem="ySc-sw-aL0" secondAttribute="centerX" id="2EU-wu-cnH"/>
                             <constraint firstItem="WWC-T5-16V" firstAttribute="trailing" secondItem="Cn5-Vf-iEW" secondAttribute="trailing" constant="54" id="3oK-GE-hfo"/>
                             <constraint firstItem="ak2-fa-AJE" firstAttribute="leading" secondItem="WWC-T5-16V" secondAttribute="leading" constant="49" id="5AK-4l-4Yb"/>
-                            <constraint firstItem="8Qb-S0-Nd5" firstAttribute="trailing" secondItem="WWC-T5-16V" secondAttribute="trailing" id="70X-7U-N94"/>
                             <constraint firstItem="B1A-2p-ZMM" firstAttribute="centerX" secondItem="BRb-M3-1to" secondAttribute="centerX" constant="3.5" id="7PS-Gy-gzB"/>
                             <constraint firstItem="WWC-T5-16V" firstAttribute="trailing" secondItem="ySc-sw-aL0" secondAttribute="trailing" constant="49" id="9Ik-ZR-zc0"/>
                             <constraint firstItem="WWC-T5-16V" firstAttribute="trailing" secondItem="H3i-4E-eKf" secondAttribute="trailing" constant="126" id="ARW-Qk-7rU"/>
@@ -1195,8 +1191,6 @@
                             <constraint firstItem="WWC-T5-16V" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="B1A-2p-ZMM" secondAttribute="trailing" symbolic="YES" id="Yve-JH-r6z"/>
                             <constraint firstItem="B1A-2p-ZMM" firstAttribute="centerX" secondItem="ySc-sw-aL0" secondAttribute="centerX" constant="3.5" id="bYJ-At-bPn"/>
                             <constraint firstItem="B1A-2p-ZMM" firstAttribute="top" secondItem="WWC-T5-16V" secondAttribute="top" constant="155" id="fwi-fd-r1B"/>
-                            <constraint firstItem="8Qb-S0-Nd5" firstAttribute="top" secondItem="BRb-M3-1to" secondAttribute="top" id="g2F-Da-hOo"/>
-                            <constraint firstItem="obu-aB-jmJ" firstAttribute="top" secondItem="8Qb-S0-Nd5" secondAttribute="bottom" constant="8.3300000000000001" id="hFD-HY-3d8"/>
                             <constraint firstItem="B1A-2p-ZMM" firstAttribute="centerX" secondItem="lSM-Kf-Ivb" secondAttribute="centerX" constant="3.5" id="hMk-sE-pRI"/>
                             <constraint firstItem="ak2-fa-AJE" firstAttribute="top" secondItem="gR1-De-9k3" secondAttribute="bottom" constant="16" id="hY8-zR-KQp"/>
                             <constraint firstItem="zif-3Y-3tK" firstAttribute="centerY" secondItem="Cn5-Vf-iEW" secondAttribute="centerY" constant="-1" id="ipI-ta-IW6"/>
@@ -1205,7 +1199,6 @@
                             <constraint firstItem="zif-3Y-3tK" firstAttribute="top" secondItem="gR1-De-9k3" secondAttribute="bottom" constant="77" id="mej-Xm-kck"/>
                             <constraint firstItem="obu-aB-jmJ" firstAttribute="top" secondItem="lSM-Kf-Ivb" secondAttribute="bottom" constant="16" id="psp-10-ezE"/>
                             <constraint firstItem="ak2-fa-AJE" firstAttribute="centerX" secondItem="gR1-De-9k3" secondAttribute="centerX" id="slK-0r-9Ua"/>
-                            <constraint firstItem="8Qb-S0-Nd5" firstAttribute="leading" secondItem="WWC-T5-16V" secondAttribute="leading" id="tjT-1r-pIj"/>
                             <constraint firstItem="H3i-4E-eKf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="WWC-T5-16V" secondAttribute="leading" symbolic="YES" id="xlG-XO-nmU"/>
                             <constraint firstItem="obu-aB-jmJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lSM-Kf-Ivb" secondAttribute="leading" id="xwO-a8-bMq"/>
                         </constraints>
