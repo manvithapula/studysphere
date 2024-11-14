@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="phr-6X-47I">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcp-kn-L0O">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -378,6 +378,7 @@
                                                             </textView>
                                                         </subviews>
                                                         <color key="backgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <gestureRecognizers/>
                                                         <constraints>
                                                             <constraint firstItem="ZXK-V4-LNm" firstAttribute="top" secondItem="FsP-sy-ucw" secondAttribute="bottom" constant="2" id="6bh-W3-Tif"/>
                                                             <constraint firstAttribute="height" constant="115" id="7cc-bC-HHp"/>
@@ -388,6 +389,9 @@
                                                             <constraint firstItem="ZXK-V4-LNm" firstAttribute="leading" secondItem="FsP-sy-ucw" secondAttribute="leading" id="zaW-QV-WBi"/>
                                                             <constraint firstAttribute="width" constant="115" id="zb2-RZ-OKN"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="b9b-sG-88v" appends="YES" id="nqu-iW-1HM"/>
+                                                        </connections>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oQc-GC-Rsu" customClass="CardView" customModule="studysphere" customModuleProvider="target">
                                                         <rect key="frame" x="123" y="0.0" width="115" height="115"/>
@@ -569,6 +573,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="odG-sP-VKE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="b9b-sG-88v">
+                    <connections>
+                        <segue destination="46N-Fw-bnm" kind="show" id="fO1-g2-twz"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="7609.9236641221369" y="-158.45070422535213"/>
         </scene>
@@ -1747,6 +1756,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PjG-sU-B5H" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="jS7-mQ-bY4"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="FyZ-Za-aAI">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1765,6 +1775,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="phr-6X-47I" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="Md8-o5-goe"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="SxD-ra-j0f">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1832,7 +1843,7 @@
             </objects>
             <point key="canvasLocation" x="2710.6870229007632" y="1442.9577464788733"/>
         </scene>
-        <!--List View Controller-->
+        <!--Spaced Repetition-->
         <scene sceneID="1EY-QU-Q40">
             <objects>
                 <viewController id="46N-Fw-bnm" customClass="SRListViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
@@ -1888,6 +1899,9 @@
                                                             <buttonConfiguration key="configuration" style="filled" title="Continue" cornerStyle="capsule">
                                                                 <color key="baseBackgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="displayP3"/>
                                                             </buttonConfiguration>
+                                                            <connections>
+                                                                <segue destination="KzB-74-32G" kind="show" id="aLN-zf-1nf"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                 </stackView>
@@ -1956,7 +1970,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <navigationItem key="navigationItem" id="ff6-qb-mhF"/>
+                    <navigationItem key="navigationItem" title="Spaced Repetition" id="ff6-qb-mhF"/>
                     <connections>
                         <outlet property="collection" destination="SL0-0I-snG" id="67j-BQ-cgP"/>
                         <outlet property="queryF" destination="SqR-ZX-00e" id="BAk-Pi-DCd"/>
@@ -2727,7 +2741,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Xg5-rj-Oj2">
-                                <rect key="frame" x="16" y="391" width="361" height="427"/>
+                                <rect key="frame" x="16" y="391" width="361" height="390"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
@@ -2739,7 +2753,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2815,8 +2829,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="aLN-zf-1nf"/>
         <segue reference="VsD-Mw-nb3"/>
         <segue reference="Ugo-eF-S0D"/>
+        <segue reference="fO1-g2-twz"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Screenshot_2024-11-13_at_12.03.16_PM-removebg-preview" width="440" height="566"/>
