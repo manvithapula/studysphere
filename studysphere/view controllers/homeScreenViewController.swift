@@ -86,8 +86,8 @@ class homeScreenViewController:UIViewController {
             super.viewDidLayoutSubviews()
             // Adding an accessory view with a profile button
             let accessoryView = UIButton()
-            let image = UIImage(named: "profile")
-            if let image = UIImage(named: "profile") {
+            let image = UIImage(named: "profile-avatar")
+            if let image = UIImage(named: "profile-avatar") {
             accessoryView.setImage(image, for: .normal)
             } else {
             print("Image not found.")

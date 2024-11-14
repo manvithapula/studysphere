@@ -45,6 +45,21 @@
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="plain" title=""/>
                                                     </button>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8hr-Bs-8lz">
+                                                        <rect key="frame" x="321" y="33" width="58" height="55"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <subviews>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="profile-avatar" translatesAutoresizingMaskIntoConstraints="NO" id="8Fx-ol-vCs">
+                                                                <rect key="frame" x="8" y="8" width="42" height="39"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            </imageView>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <gestureRecognizers/>
+                                                        <connections>
+                                                            <outletCollection property="gestureRecognizers" destination="7gK-D3-G4J" appends="YES" id="mye-sJ-Luk"/>
+                                                        </connections>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -576,6 +591,11 @@
                 <tapGestureRecognizer id="b9b-sG-88v">
                     <connections>
                         <segue destination="46N-Fw-bnm" kind="show" id="fO1-g2-twz"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="7gK-D3-G4J">
+                    <connections>
+                        <segue destination="2ak-I4-miM" kind="show" id="uTf-6x-cz4"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -1293,7 +1313,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VRC-Pv-3Jp" customClass="question" customModule="Studysphere2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VRC-Pv-3Jp" customClass="question" customModule="studysphere" customModuleProvider="target">
                                 <rect key="frame" x="16" y="299" width="361" height="376"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -1362,12 +1382,12 @@
         <!--Schedule-->
         <scene sceneID="lME-GN-Idg">
             <objects>
-                <viewController id="5QP-iT-Wah" customClass="ARModuleViewController" customModule="Studysphere2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="5QP-iT-Wah" customClass="ARModuleViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ul7-N0-2Da">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oAl-2K-Ahe" customClass="ProgressViewCIrcle" customModule="Studysphere2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oAl-2K-Ahe" customClass="ProgressViewCIrcle" customModule="studysphere" customModuleProvider="target">
                                 <rect key="frame" x="34" y="118" width="111" height="113"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -1393,10 +1413,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="scheduleCell" rowHeight="83" id="sCT-Jw-jPe" customClass="ARModuleTableViewCell" customModule="Studysphere2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="scheduleCell" rowHeight="83" id="sCT-Jw-jPe" customClass="ARModuleTableViewCell" customModule="studysphere" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="361" height="83"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sCT-Jw-jPe" id="m5T-OF-kcW" customClass="question" customModule="Studysphere2" customModuleProvider="target">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sCT-Jw-jPe" id="m5T-OF-kcW" customClass="question" customModule="studysphere" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="361" height="83"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -1476,7 +1496,7 @@
         <!--create-->
         <scene sceneID="EBS-1N-gOa">
             <objects>
-                <viewController id="065-Ov-wae" customClass="CreateViewController" customModule="Studysphere2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="065-Ov-wae" customClass="CreateViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cZo-Fm-QYW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1496,7 +1516,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zya-lf-o39" customClass="DashedRectangleUpload" customModule="Studysphere2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zya-lf-o39" customClass="DashedRectangleUpload" customModule="studysphere" customModuleProvider="target">
                                 <rect key="frame" x="54" y="307" width="284" height="256"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -1558,7 +1578,7 @@
         <!--Progress View View Controller-->
         <scene sceneID="4l2-HP-3KW">
             <objects>
-                <viewController id="Mfc-fU-V4v" customClass="ProgressViewViewController" customModule="Studysphere2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Mfc-fU-V4v" customClass="ProgressViewViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="So3-Td-RFp">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1579,7 +1599,7 @@
                                     <color key="baseBackgroundColor" systemColor="systemIndigoColor"/>
                                 </buttonConfiguration>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xub-zW-D9X" customClass="ProgressViewDetails" customModule="Studysphere2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xub-zW-D9X" customClass="ProgressViewDetails" customModule="studysphere" customModuleProvider="target">
                                 <rect key="frame" x="39" y="228" width="315" height="396"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Memorised" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EqK-g2-FTz">
@@ -1603,7 +1623,7 @@
                                         <color key="textColor" systemColor="systemGreenColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wb6-zL-GeX" customClass="ProgressViewCIrcle" customModule="Studysphere2" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wb6-zL-GeX" customClass="ProgressViewCIrcle" customModule="studysphere" customModuleProvider="target">
                                         <rect key="frame" x="78" y="50" width="159" height="128"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="50%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HQG-kc-h3R">
@@ -1678,7 +1698,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h6T-fn-R08" customClass="Round_shadow" customModule="Studysphere2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h6T-fn-R08" customClass="Round_shadow" customModule="studysphere" customModuleProvider="target">
                                 <rect key="frame" x="25" y="145" width="343" height="121"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -1699,7 +1719,7 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a9D-JC-GsN" customClass="Round_shadow" customModule="Studysphere2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a9D-JC-GsN" customClass="Round_shadow" customModule="studysphere" customModuleProvider="target">
                                 <rect key="frame" x="25" y="302" width="343" height="125"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -1720,7 +1740,7 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VUF-PW-Wqb" customClass="Round_shadow" customModule="Studysphere2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VUF-PW-Wqb" customClass="Round_shadow" customModule="studysphere" customModuleProvider="target">
                                 <rect key="frame" x="25" y="468" width="343" height="124"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -1862,7 +1882,7 @@
                                 </connections>
                             </segmentedControl>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SL0-0I-snG">
-                                <rect key="frame" x="16" y="219" width="361" height="599"/>
+                                <rect key="frame" x="16" y="219" width="361" height="550"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="vN7-Wf-GAN">
                                     <size key="itemSize" width="128" height="128"/>
@@ -2753,7 +2773,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2832,6 +2852,7 @@
         <segue reference="aLN-zf-1nf"/>
         <segue reference="VsD-Mw-nb3"/>
         <segue reference="Ugo-eF-S0D"/>
+        <segue reference="uTf-6x-cz4"/>
         <segue reference="fO1-g2-twz"/>
     </inferredMetricsTieBreakers>
     <resources>
