@@ -595,7 +595,7 @@
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="7gK-D3-G4J">
                     <connections>
-                        <segue destination="2ak-I4-miM" kind="show" id="uTf-6x-cz4"/>
+                        <segue destination="4m0-1A-V49" kind="show" id="3se-XA-JWE"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -2388,8 +2388,8 @@
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Anwin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sx2-5F-0bt">
-                                                        <rect key="frame" x="282" y="12" width="47" height="21"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Anwin" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sx2-5F-0bt">
+                                                        <rect key="frame" x="99" y="12" width="230" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
@@ -2421,8 +2421,8 @@
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sharon" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GUX-ec-jUt">
-                                                        <rect key="frame" x="275" y="11" width="54" height="21"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sharon" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GUX-ec-jUt">
+                                                        <rect key="frame" x="99" y="11" width="230" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
@@ -2508,7 +2508,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="huW-S2-Nra" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1844" y="3001"/>
+            <point key="canvasLocation" x="1843.5114503816794" y="3000.7042253521126"/>
         </scene>
         <!--Edit -->
         <scene sceneID="yrB-B7-MSw">
@@ -2576,6 +2576,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4m0-1A-V49" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="38O-JI-epJ"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Da8-dg-7kS">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2773,7 +2774,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2852,7 +2853,6 @@
         <segue reference="aLN-zf-1nf"/>
         <segue reference="VsD-Mw-nb3"/>
         <segue reference="Ugo-eF-S0D"/>
-        <segue reference="uTf-6x-cz4"/>
         <segue reference="fO1-g2-twz"/>
     </inferredMetricsTieBreakers>
     <resources>

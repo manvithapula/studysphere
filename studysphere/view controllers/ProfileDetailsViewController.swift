@@ -78,6 +78,9 @@ class ProfileDetailsViewController: UIViewController {
         firstNameLabel.text = "First Name"
         lastNameLabel.text = "Last Name"
         dateOfBirthLabel.text = "Date of Birth"
+        firstNameValueLabel.text = user.firstName
+        lastNameLabel.text = user.lastName
+        dateOfBirthValueLabel.text = formatDateToString(date: user.dob)
         
         firstNameTextField.text = user.firstName
         lastNameLabel.text = user.lastName
@@ -166,6 +169,15 @@ class ProfileDetailsViewController: UIViewController {
         firstNameValueLabel.text = firstNameTextField.text
         lastNameValueLabel.text = lastNameTextField.text
         dateOfBirthValueLabel.text = dateTextField.text
+        
+        if let firstname = firstNameTextField.text, !firstname.isEmpty {
+            user.firstName = firstname
+        }
+        if let lastname = lastNameTextField.text, !lastname.isEmpty {
+            user.lastName = lastname
+        }
+        user.dob = datePicker.date
+        UserDetailsType.saveData(user: user)
         
         // Here you would typically save to your data source
         // saveToDataSource()

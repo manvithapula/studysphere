@@ -20,6 +20,7 @@ class ProfileMainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        user = UserDetailsType.loadData()
         setupUI()
         setupTableView()
     }
@@ -84,6 +85,7 @@ class ProfileMainViewController: UIViewController {
         // Name label setup
         nameLabel.font = .systemFont(ofSize: 24, weight: .bold)
         nameLabel.textAlignment = .center
+        nameLabel.text = user.firstName
         
         // Details button setup
         detailsButton.backgroundColor = .systemGray6
@@ -108,6 +110,20 @@ class ProfileMainViewController: UIViewController {
     @objc private func doneTapped() {
         dismiss(animated: true)
     }
+    
+    @IBAction func comeHere(segue:UIStoryboardSegue) {
+        setupUI()
+        setupTableView()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            if isMovingToParent || isBeingPresented {
+                // Normal forward navigation
+            } else {
+                setupUI()
+                setupTableView()
+            }
+        }
 }
 
 // MARK: - TableView DataSource & Delegate
@@ -131,6 +147,10 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             let toggle = UISwitch()
             toggle.isOn = indexPath.row == 0 ? user.pushNotificationEnabled : user.faceIdEnabled
             toggle.onTintColor = .systemGreen
+            
+            toggle.tag = indexPath.row  // Use tag to identify which toggle
+            toggle.addTarget(self, action: #selector(toggleValueChanged(_:)), for: .valueChanged)
+                   
             cell.accessoryView = toggle
             
             return cell
@@ -149,4 +169,17 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             return UITableViewCell()
         }
     }
+    @objc private func toggleValueChanged(_ sender: UISwitch) {
+            switch sender.tag {
+            case 0:  // Push notifications
+                user.pushNotificationEnabled = sender.isOn
+                
+            case 1:  // Face ID
+                user.faceIdEnabled = sender.isOn
+                
+            default:
+                break
+            }
+        UserDetailsType.saveData(user: user)
+        }
 }

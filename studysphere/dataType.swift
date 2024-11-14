@@ -18,13 +18,34 @@ struct ProgressType{
         Double(completed)/Double(total)
     }
 }
-struct UserDetailsType{
+struct UserDetailsType:Codable{
     var firstName:String
     var lastName:String
     var dob:Date
     var pushNotificationEnabled:Bool
     var faceIdEnabled:Bool
+    
+    static var ArchiveURL: URL {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let archiveURL = documentDirectory.appendingPathComponent("user.plist")
+        return archiveURL
+    }
+    
+    static func saveData(user: UserDetailsType){
+        let plistEncoder = PropertyListEncoder()
+        let data = try? plistEncoder.encode(user)
+        try? data?.write(to: ArchiveURL)
+    }
+    
+    static func loadData()->UserDetailsType{
+        let plistDecoder = PropertyListDecoder()
+        guard let data = try? Data(contentsOf: ArchiveURL) else { return user }
+        return try! plistDecoder.decode(UserDetailsType.self, from: data)
+    }
 }
+var user = UserDetailsType(firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true)
+
+
 struct Flashcard {
     let question: String
     let answer: String
@@ -88,7 +109,7 @@ var schedules:[Schedule]=[
 ]
 
 
-var user = UserDetailsType(firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true)
+
 
 //var cards:[Card]=[
 //    Card(title:"English Literature",subtitle:"1 more to go",isCompleted: false),
