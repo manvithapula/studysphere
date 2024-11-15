@@ -40,3 +40,4 @@ class subjectListTableViewCell: UITableViewCell {
     }
     
 }
+

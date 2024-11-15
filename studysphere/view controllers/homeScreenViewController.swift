@@ -14,6 +14,7 @@ class homeScreenViewController:UIViewController {
     
     //streak
     @IBOutlet var streaks: [UIImageView]!
+    @IBOutlet weak var streakLabel: UILabel!
     
     
     // Today's Learning
@@ -45,40 +46,44 @@ class homeScreenViewController:UIViewController {
     
     var homeScreenData: DashboardData?
     
-   
-    
-    /* override func viewDidLoad() {
-     super.viewDidLoad()
-     
-     for(i,streak) in streaks.enumerated() {
-     if(streakValues[i]){
-     streak.image = UIImage(systemName: "flame")
-     }
-     else{
-     streak.image = UIImage(systemName: "circle.dotted")
-     }
-     }
-     }
-     }*/
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        
-        
-        // streak
-        for (i, streak) in streaks.enumerated() {
-            if streakValues[i] {
-                streak.image = UIImage(systemName: "flame")
-            } else {
-                streak.image = UIImage(systemName: "circle.dotted")
-            }
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            
+            // Update streak when the home screen loads
+            StreakManager.shared.updateStreak()
+            updateStreakDisplay()
+            
+            // Sample data
+            let sampleData = createSampleDashboardData()
+            setupDashboard(with: sampleData)
         }
+
+    private func updateStreakDisplay() {
+          let currentStreak = StreakManager.shared.currentStreak
+
+          // Loop through streaks array and set the image based on the current streak count
+          for (index, streakImageView) in streaks.enumerated() {
+              if index < currentStreak {
+                  streakImageView.image = UIImage(systemName: "flame")
+                  streakImageView.tintColor = .yellow 
+              } else {
+                  streakImageView.image = UIImage(systemName: "circle.dotted")
+                  streakImageView.tintColor = .black
+              }
+          }
+
         
-        // Sample data
-        let sampleData = createSampleDashboardData()
-        setupDashboard(with: sampleData)
-    }
+        
+        if currentStreak == 1 {
+                  streakLabel.text = "1 day streak"
+              } else {
+                  streakLabel.text = "\(currentStreak) days streak"
+              }
+        
+      }
+
+
     
     //profile icon
     

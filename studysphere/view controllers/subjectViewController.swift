@@ -9,7 +9,6 @@ import UIKit
 
 class subjectViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
-    // The collection of cards
     var cards: [Card] = [
         Card(title: "English Literature", subtitle: "1 more to go", isCompleted: false),
         Card(title: "Maths Literature", subtitle: "1 more to go", isCompleted: false),
@@ -17,18 +16,15 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         Card(title: "Biology Literature", subtitle: "1 more to go", isCompleted: false),
         Card(title: "Biology Literature", subtitle: "1 more to go", isCompleted: true)
     ]
-    
-    // Boolean to manage search filter (for demonstration purposes)
+   
     var isSearching = false
     
-    // Outlets for the collection view
     @IBOutlet weak var Subject: UICollectionView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        // Set up the collection view delegate and data source
+     
         
         Subject.dataSource = self
         Subject.setCollectionViewLayout(generateLayout(), animated: true)
@@ -56,10 +52,10 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
                 cell.continueButton.setTitle("Continue Studying", for: .normal)
             }
             
-            // Handle the button tap with a closure
+            
             cell.buttonTapped = {
                 print("Button tapped for: \(card.title)")
-                // Add logic to update the state or navigate to another screen here
+               
             }
         }
         

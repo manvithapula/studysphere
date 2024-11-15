@@ -6,6 +6,8 @@
 //
 
 
+
+
 import Foundation
 
 // User Profile Model
@@ -28,8 +30,8 @@ struct ScheduleItem {
 }
 
 // Subject Model
-struct Subject {
-    let name: String
+struct Subject: Codable {
+    var name: String
 }
 
 // Study Technique Model

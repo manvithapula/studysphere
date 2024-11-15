@@ -9,9 +9,6 @@ import UIKit
 
 class ProgressViewCIrcle: UIView {
 
-
-    
-
         private var ringLayer: CAShapeLayer!
         private var trackLayer: CAShapeLayer!
         
