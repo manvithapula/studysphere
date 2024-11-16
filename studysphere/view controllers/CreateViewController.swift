@@ -1,79 +1,163 @@
-//
-//  CreateViewController.swift
-//  Studysphere2
-//
-//  Created by Dev on 30/10/24.
-//
-
 import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
-class CreateViewController: UIViewController {
-    let picker = UIPickerView()
-        var thisSaturday: Date!
-        
 
+class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    let picker = UIPickerView()
+    var thisSaturday: Date!
+
+    // Outlets
     @IBOutlet weak var Topic: UITextField!
     @IBOutlet weak var Date: UITextField!
     @IBOutlet weak var NextButton: UIButton!
     @IBOutlet weak var fileUploadView: DashedRectangleUpload!
-    
     @IBOutlet weak var subject: UITextField!
+
     var datePicker = UIDatePicker()
     
+    // Dropdown TableView for subjects
+    var dropdownTableView: UITableView!
+    var subjects: [Subject] = [] // Referenced dynamically from SubjectListTableViewController
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Initial setup
         Topic.returnKeyType = .done
         Topic.autocorrectionType = .no
         Date.returnKeyType = .done
         Date.keyboardType = .numbersAndPunctuation
         fileUploadView.setup(in: self)
         setupDatePicker()
+        setupDropdownTableView() // Initialize the dropdown table view
         
+        subject.addTarget(self, action: #selector(showDropdown), for: .editingDidBegin) // Show dropdown when editing starts
         
-        // Do any additional setup after loading the view.
+        loadSubjects() // Load subjects from UserDefaults
     }
 
+    @IBAction func Topic(_ sender: Any) {}
+    @IBAction func Date(_ sender: Any) {}
+    @IBAction func TapButton(_ sender: Any) {}
 
-    @IBAction func Topic(_ sender: Any) {
-    }
-    
-    @IBAction func Date(_ sender: Any) {
-        
-    }
-    
-    @IBAction func TapButton(_ sender: Any) {
-    }
-    
     @objc private func datePickerDone() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM yyyy"
         Date.text = dateFormatter.string(from: datePicker.date)
         Date.resignFirstResponder()
     }
+    
     private func setupDatePicker() {
-        // Create a container view that will hold both toolbar and picker
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 260)) // Adjust height as needed
-        
-        // Setup toolbar
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 260))
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDone))
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         toolbar.items = [flexSpace, doneButton]
-        
-        // Setup date picker
+
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
-        datePicker.frame = CGRect(x: 0, y: toolbar.frame.height, width: view.frame.width, height: 216) // Standard picker height
-        
-        // Add toolbar and picker to container
+        datePicker.frame = CGRect(x: 0, y: toolbar.frame.height, width: view.frame.width, height: 216)
+
         containerView.addSubview(toolbar)
         containerView.addSubview(datePicker)
-        
-        // Set container as input view
         Date.inputView = containerView
     }
     
+    private func setupDropdownTableView() {
+        dropdownTableView = UITableView(frame: CGRect.zero)
+        dropdownTableView.delegate = self
+        dropdownTableView.dataSource = self
+        dropdownTableView.isHidden = true
+        dropdownTableView.layer.borderWidth = 1
+        dropdownTableView.layer.borderColor = UIColor.lightGray.cgColor
+        dropdownTableView.layer.cornerRadius = 5
+        dropdownTableView.backgroundColor = .white
+        dropdownTableView.separatorStyle = .singleLine
+        self.view.addSubview(dropdownTableView)
+    }
+    
+    @objc private func showDropdown() {
+        let dropdownHeight: CGFloat = min(200, CGFloat(subjects.count + 1) * 44) // Add height for "Add Subject" button
+        dropdownTableView.frame = CGRect(
+            x: subject.frame.minX,
+            y: subject.frame.maxY + 5,
+            width: subject.frame.width,
+            height: dropdownHeight
+        )
+        dropdownTableView.isHidden = false
+        dropdownTableView.reloadData()
+    }
+    
+    @objc private func hideDropdown() {
+        dropdownTableView.isHidden = true
+    }
+    
+    private func loadSubjects() {
+        if let savedData = UserDefaults.standard.data(forKey: "subjects"),
+           let decodedSubjects = try? JSONDecoder().decode([Subject].self, from: savedData) {
+            subjects = decodedSubjects
+        }
+    }
+    
+    private func saveSubjects() {
+        if let encoded = try? JSONEncoder().encode(subjects) {
+            UserDefaults.standard.set(encoded, forKey: "subjects")
+        }
+    }
+    
+    // MARK: - UITableViewDataSource and UITableViewDelegate
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return subjects.count + 1 // Include "Add Subject" button
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row < subjects.count {
+            // Subject Cell
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "subjectCell")
+            cell.textLabel?.text = subjects[indexPath.row].name
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+            cell.textLabel?.textColor = .black
+            return cell
+        } else {
+            // "Add Subject" Cell
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "addSubjectCell")
+            cell.textLabel?.text = "➕ Add Subject"
+            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            cell.textLabel?.textColor = UIColor.systemBlue
+            cell.backgroundColor = UIColor.systemGray6
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row < subjects.count {
+            // Select an existing subject
+            subject.text = subjects[indexPath.row].name
+            hideDropdown()
+        } else {
+            // Add New Subject
+            let addSubjectVC = AddSubjectViewController()
+            addSubjectVC.modalPresentationStyle = .pageSheet
+            if let sheet = addSubjectVC.sheetPresentationController {
+                sheet.detents = [.medium()]
+                sheet.prefersGrabberVisible = true
+            }
+            
+            addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
+                let newSubject = Subject(name: newSubjectName)
+                self?.subjects.append(newSubject)
+                self?.saveSubjects() // Save the new subject to UserDefaults
+                self?.dropdownTableView.reloadData()
+            }
+            
+            present(addSubjectVC, animated: true, completion: nil)
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        hideDropdown() // Hide dropdown when tapping outside
+    }
 }
-
 
