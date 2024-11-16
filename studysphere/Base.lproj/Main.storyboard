@@ -2433,6 +2433,67 @@
             </objects>
             <point key="canvasLocation" x="2164" y="3051"/>
         </scene>
+        <!--AREdit-->
+        <scene sceneID="bGI-HP-k1c">
+            <objects>
+                <viewController id="j1X-Pg-KeT" userLabel="AREdit" customClass="AReditViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nmW-E5-U1f">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="jTq-n4-9gR">
+                                <rect key="frame" x="16" y="236" width="361" height="440"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="440" id="3Yr-IC-MvB"/>
+                                </constraints>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ARedit" textLabel="mBL-t7-YVp" detailTextLabel="FA7-gv-CZt" style="IBUITableViewCellStyleValue1" id="raH-oQ-cHz">
+                                        <rect key="frame" x="0.0" y="50" width="361" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="raH-oQ-cHz" id="jWU-FC-rch">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mBL-t7-YVp">
+                                                    <rect key="frame" x="20" y="15" width="25" height="14.333333333333334"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FA7-gv-CZt">
+                                                    <rect key="frame" x="308.33333333333331" y="15" width="32.666666666666664" height="14.333333333333334"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="MGG-gl-8s7"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="jTq-n4-9gR" firstAttribute="leading" secondItem="nmW-E5-U1f" secondAttribute="leadingMargin" id="FB4-7j-0CZ"/>
+                            <constraint firstItem="jTq-n4-9gR" firstAttribute="top" secondItem="MGG-gl-8s7" secondAttribute="top" constant="177" id="aBd-2Z-DFu"/>
+                            <constraint firstItem="jTq-n4-9gR" firstAttribute="trailing" secondItem="nmW-E5-U1f" secondAttribute="trailingMargin" id="pSC-pj-gIz"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Edit " id="qYc-nf-fHD"/>
+                    <connections>
+                        <outlet property="ARedittable" destination="jTq-n4-9gR" id="UA8-cQ-Y29"/>
+                        <outlet property="tableHeightConstraint" destination="3Yr-IC-MvB" id="QGU-Do-0k2"/>
+                        <outlet property="tableView" destination="jTq-n4-9gR" id="jfU-Kj-CCD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cUH-ud-opZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2967" y="3051"/>
+        </scene>
         <!--Flashcard View Controller-->
         <scene sceneID="9KI-vw-K7Y">
             <objects>
@@ -2616,7 +2677,11 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
+<<<<<<< Updated upstream
                                                     <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
+=======
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+>>>>>>> Stashed changes
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2747,7 +2812,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2814,7 +2879,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+<<<<<<< Updated upstream
             <point key="canvasLocation" x="5755" y="2451"/>
+=======
+            <point key="canvasLocation" x="8479" y="3484"/>
+>>>>>>> Stashed changes
         </scene>
         <!--Spaced Repetition List-->
         <scene sceneID="nfS-Qe-X8T">
