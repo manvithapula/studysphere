@@ -2677,11 +2677,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-<<<<<<< Updated upstream
                                                     <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
-=======
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
->>>>>>> Stashed changes
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2879,11 +2875,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-<<<<<<< Updated upstream
             <point key="canvasLocation" x="5755" y="2451"/>
-=======
-            <point key="canvasLocation" x="8479" y="3484"/>
->>>>>>> Stashed changes
         </scene>
         <!--Spaced Repetition List-->
         <scene sceneID="nfS-Qe-X8T">
