@@ -13,6 +13,7 @@ class AReditViewController: UIViewController {
     var datePicker: UIDatePicker?
     var activeIndexPath: IndexPath?
     var datePickerToolbar: UIToolbar?
+    @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
     fileprivate func setupTableView() {
         ARedittable.delegate = self
         ARedittable.dataSource = self
@@ -40,7 +41,7 @@ class AReditViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: "Done",style:.done, target: self, action: #selector(doneButtonTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done",style:.done, target: self, action: #selector(doneButtonTapped))
         
         setupTableView()
 
