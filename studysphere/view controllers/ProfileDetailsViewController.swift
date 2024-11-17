@@ -79,11 +79,10 @@ class ProfileDetailsViewController: UIViewController {
         lastNameLabel.text = "Last Name"
         dateOfBirthLabel.text = "Date of Birth"
         firstNameValueLabel.text = user.firstName
-        lastNameLabel.text = user.lastName
+        lastNameValueLabel.text = user.lastName
         dateOfBirthValueLabel.text = formatDateToString(date: user.dob)
         
         firstNameTextField.text = user.firstName
-        lastNameLabel.text = user.lastName
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMMM yyyy"
         dateOfBirthValueLabel.text = dateFormatter.string(from: user.dob)

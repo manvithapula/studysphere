@@ -20,8 +20,11 @@ class ProfileMainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let item = userDB.findFirst(){
+        let email = AuthManager.shared.userEmail
+        print(email as Any)
+        if let item = userDB.findFirst(where: ["email":email!]){
             user = item
+            print(item)
         }else{
             userDB.create(&user)
         }
@@ -173,6 +176,38 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             return UITableViewCell()
         }
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            tableView.deselectRow(at: indexPath, animated: true)
+            
+            if indexPath.row == 2 {  // Logout cell
+                showLogoutAlert()
+            }
+        }
+    private func showLogoutAlert() {
+            let alert = UIAlertController(
+                title: "Logout",
+                message: "Are you sure you want to logout?",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            
+            alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { [weak self] _ in
+                self?.performLogout()
+            })
+            
+            present(alert, animated: true)
+        }
+        
+        private func performLogout() {
+            // Clear user data
+            AuthManager.shared.logOut()
+
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let navVC = storyboard.instantiateViewController(withIdentifier: "loginNav") as? UINavigationController {
+                        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = navVC
+        }
+        }
     @objc private func toggleValueChanged(_ sender: UISwitch) {
             switch sender.tag {
             case 0:  // Push notifications

@@ -18,7 +18,8 @@ class SignupViewController: UIViewController {
     @IBOutlet weak var googleSignInButton: UIButton!
     @IBOutlet weak var appleSignInButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
-    
+    let datePicker = UIDatePicker()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -30,7 +31,6 @@ class SignupViewController: UIViewController {
         signUpButton.clipsToBounds = true
         
     
-        let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
         dateOfBirthTextField.inputView = datePicker
@@ -48,12 +48,22 @@ class SignupViewController: UIViewController {
         guard let email = emailTextField.text, !email.isEmpty,
               let firstName = firstNameTextField.text, !firstName.isEmpty,
               let lastName = lastNameTextField.text, !lastName.isEmpty,
-              let dateOfBirth = dateOfBirthTextField.text, !dateOfBirth.isEmpty else {
+              let dateOfBirth = dateOfBirthTextField.text, !dateOfBirth.isEmpty,
+              let password = passwordTextField.text,!password.isEmpty  else {
             showAlert(message: "Please fill out all fields.")
             return
         }
         
-     
+        var newUser = UserDetailsType(id: "", firstName: firstName, lastName: lastName, dob: datePicker.date, pushNotificationEnabled: false, faceIdEnabled: false, email: email, password: password)
+        
+        let user = userDB.findFirst(where: ["email":email])
+        if  user != nil{
+            showAlert(message: "User with email \(email) already exists.")
+            return
+        }
+        
+        userDB.create(&newUser)
+        dismiss(animated: true)
         print("Signing up with email: \(email), name: \(firstName) \(lastName)")
     }
     

@@ -23,12 +23,25 @@ class LoginViewController: UIViewController {
             super.viewDidLoad()
             setupUI()
         }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        checkAndNavigate()
+
+    }
         
         private func setupUI() {
             // Customize the login button
             loginButton.layer.cornerRadius = 8
             loginButton.clipsToBounds = true
         }
+    private func checkAndNavigate() {
+        if AuthManager.shared.isLoggedIn {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+                    }
+        }
+    }
         
         // Actions
         @IBAction func loginButtonTapped(_ sender: UIButton) {
@@ -39,7 +52,16 @@ class LoginViewController: UIViewController {
             }
             
             // Perform login action
-            print("Logging in with email: \(email)")
+            let user = userDB.findFirst(where: ["email": email])
+            if user != nil {
+                AuthManager.shared.logIn(email: email)
+                if password != user?.password {
+                    showAlert(message: "Invalid password.")
+                    return
+                }
+                checkAndNavigate()
+            }
+            showAlert(message: "User not found.")
         }
         
         @IBAction func forgotPasswordButtonTapped(_ sender: UIButton) {
@@ -59,9 +81,11 @@ class LoginViewController: UIViewController {
         
         @IBAction func signUpButtonTapped(_ sender: UIButton) {
             // Navigate to the sign-up screen
-            if let signupVC = storyboard?.instantiateViewController(withIdentifier: "SignupViewController") {
-                navigationController?.pushViewController(signupVC, animated: true)
-            }
+//            if let signupVC = storyboard?.instantiateViewController(withIdentifier: "SignupViewController") {
+//                //present modally
+//                signupVC.modalPresentationStyle = .fullScreen
+//                navigationController?.pushViewController(signupVC, animated: true)
+//            }
         }
         
         private func showAlert(message: String) {

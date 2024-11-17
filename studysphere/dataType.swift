@@ -29,6 +29,8 @@ struct UserDetailsType:Codable,Identifiable{
     var dob:Date
     var pushNotificationEnabled:Bool
     var faceIdEnabled:Bool
+    var email:String
+    var password:String
     
     static var ArchiveURL: URL {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -48,7 +50,7 @@ struct UserDetailsType:Codable,Identifiable{
         return try! plistDecoder.decode(UserDetailsType.self, from: data)
     }
 }
-var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true)
+var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true,email: "test@test.com",password: "password")
 
 
 struct Flashcard {
@@ -242,4 +244,28 @@ extension Encodable {
     }
 }
 
-let userDB = FakeDb<UserDetailsType>(name: "user")
+class AuthManager {
+    static let shared = AuthManager()
+    
+    private init() {}
+    
+    var isLoggedIn: Bool {
+        return UserDefaults.standard.string(forKey: "userEmail") != nil
+    }
+    
+    var userEmail: String? {
+        return UserDefaults.standard.string(forKey: "userEmail")
+    }
+    
+    func logIn(email: String) {
+        UserDefaults.standard.set(email, forKey: "userEmail")
+    }
+    
+    func logOut() {
+        UserDefaults.standard.removeObject(forKey: "userEmail")
+    }
+}
+
+
+
+let userDB = FakeDb<UserDetailsType>(name: "usertemp")
