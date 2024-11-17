@@ -46,13 +46,13 @@ class FlashcardViewController: UIViewController {
         guard currentCardIndex < flashcards.count - 1 else {
             updateCompletion()
             // navigate to TestResultViewController after animation
-            practiceNumCount += 1
+            memorisedNumCount += 1
             updateCountLabels()
             animateOut(direction: .left)
             return
             
         }
-        practiceNumCount += 1
+        memorisedNumCount += 1
         animateCardTransition(direction: .left)
     }
     
@@ -68,13 +68,13 @@ class FlashcardViewController: UIViewController {
         guard currentCardIndex < flashcards.count - 1 else {
             updateCompletion()
             // navigate to TestResultViewController after animation
-            memorisedNumCount += 1
+            practiceNumCount += 1
             updateCountLabels()
             animateOut(direction: .right)
             return
             
         }
-        memorisedNumCount += 1
+        practiceNumCount += 1
         animateCardTransition(direction: .right)
     }
     
