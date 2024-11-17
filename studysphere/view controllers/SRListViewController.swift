@@ -72,14 +72,14 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "spacedrepetition", for: indexPath)
             let card = filteredCards[indexPath.item]
             
-            if let cell = cell as? SummaryCollectionViewCell {
+            if let cell = cell as? spacedCollectionViewCell {
                 cell.titleLabel.text = card.title
-                cell.subTitleLabel.text = card.subtitle
+                cell.subtitleLabel.text = card.subtitle
                 
                 if card.isCompleted {
-                    cell.continueButton.setTitle("Review", for: .normal)
+                    cell.continueButtonTapped.setTitle("Review", for: .normal)
                 } else {
-                    cell.continueButton.setTitle("Continue Studying", for: .normal)
+                    cell.continueButtonTapped.setTitle("Continue Studying", for: .normal)
                 }
                 
                 cell.buttonTapped = {
