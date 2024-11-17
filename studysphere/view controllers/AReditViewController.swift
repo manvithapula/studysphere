@@ -62,7 +62,7 @@ extension AReditViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let schedule = schedules[indexPath.row]
-        let cell = ARedittable.dequeueReusableCell(withIdentifier: "ARedittable", for: indexPath)
+        let cell = ARedittable.dequeueReusableCell(withIdentifier: "ARedit", for: indexPath)
         cell.textLabel?.text = "Session \(indexPath.row + 1)"
         cell.detailTextLabel?.text = ""
         

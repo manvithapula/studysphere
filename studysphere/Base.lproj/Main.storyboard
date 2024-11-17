@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcp-kn-L0O">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vhf-AP-aDg">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -1520,11 +1520,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SGw-IU-2PL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="6454" y="1660"/>
-=======
-            <point key="canvasLocation" x="6615" y="2382"/>
-
         </scene>
         <!--Schedule-->
         <scene sceneID="lME-GN-Idg">
@@ -1638,11 +1634,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MXW-VV-KoP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="6511" y="3063"/>
-=======
-            <point key="canvasLocation" x="6615" y="4567"/>
-
         </scene>
         <!--create-->
         <scene sceneID="EBS-1N-gOa">
@@ -1842,11 +1834,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5fC-ID-qGh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="6511" y="2361"/>
-=======
-            <point key="canvasLocation" x="6615" y="3818"/>
-
         </scene>
         <!--Test Result View Controller-->
         <scene sceneID="p8X-mc-ex4">
@@ -1916,7 +1904,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nhM-Kh-kas" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="7Ig-aY-LMO" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="6615" y="3089"/>
+            <point key="canvasLocation" x="5755" y="3743"/>
         </scene>
         <!--Progress-->
         <scene sceneID="MJg-jR-ZIQ">
@@ -2526,16 +2514,11 @@
                     <connections>
                         <outlet property="ARedittable" destination="jTq-n4-9gR" id="UA8-cQ-Y29"/>
                         <outlet property="tableHeightConstraint" destination="3Yr-IC-MvB" id="wxS-Mt-dyq"/>
-                        <outlet property="tableView" destination="jTq-n4-9gR" id="jfU-Kj-CCD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUH-ud-opZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="5755" y="3051"/>
-=======
-            <point key="canvasLocation" x="5755" y="3103"/>
-
         </scene>
         <!--Flashcard View Controller-->
         <scene sceneID="9KI-vw-K7Y">
@@ -2720,11 +2703,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
-=======
                                                     <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
-
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2858,11 +2837,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
-=======
                                                     <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
-
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2933,11 +2908,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="5755" y="2361"/>
-=======
-            <point key="canvasLocation" x="5755" y="2382"/>
-
         </scene>
         <!--Spaced Repetition List-->
         <scene sceneID="nfS-Qe-X8T">
