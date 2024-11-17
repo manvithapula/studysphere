@@ -120,7 +120,6 @@ class homeScreenViewController:UIViewController {
                 subject2.text = data.subjects[1].name
                 subject3.text = data.subjects[2].name
             }
-            
             // study techniques
             for technique in data.studyTechniques {
                 switch technique.name {
@@ -177,12 +176,7 @@ class homeScreenViewController:UIViewController {
                        ScheduleItem(title: "History Assignment", progress: 0.7)
             ]
             
-            let subjects = [
-                Subject(name: "iOS Development"),
-                Subject(name: "Swift Programming"),
-                Subject(name: "Data Structures")
-            ]
-            
+            let Allsubjects = subjectDb.findAll()
             let studyTechniques = [
                 StudyTechnique(name: "Spaced Repetition", completedSessions: 3, totalSessions: 5),
                 StudyTechnique(name: "Active Recall", completedSessions: 2, totalSessions: 4),
@@ -193,7 +187,7 @@ class homeScreenViewController:UIViewController {
                 userProfile: userProfile,
                 streak: streak,
                 todaySchedule: todaySchedule,
-                subjects: subjects,
+                subjects: Allsubjects,
                 studyTechniques: studyTechniques
             )
         }

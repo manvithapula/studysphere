@@ -29,10 +29,7 @@ struct ScheduleItem {
     let progress: Float
 }
 
-// Subject Model
-struct Subject: Codable {
-    var name: String
-}
+
 
 // Study Technique Model
 struct StudyTechnique {

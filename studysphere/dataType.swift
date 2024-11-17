@@ -53,7 +53,8 @@ struct UserDetailsType:Codable,Identifiable{
 var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true,email: "test@test.com",password: "password")
 
 
-struct Flashcard {
+struct Flashcard:Codable,Identifiable {
+    var id:String
     let question: String
     let answer: String
 }
@@ -63,24 +64,28 @@ struct Schedule{
     var time:String
     var completed:Bool
 }
+struct Subject:Codable,Identifiable{
+    var id:String
+    let name:String
+}
 
 var flashcards1: [Flashcard] = [
-    Flashcard(question: "What is the capital of France?", answer: "Paris"),
-    Flashcard(question: "What is the capital of Germany?", answer: "Berlin"),
-    Flashcard(question: "What is the capital of Italy?", answer: "Rome"),
-    Flashcard(question: "What is the capital of Spain?", answer: "Madrid"),
-    Flashcard(question: "What is the capital of Sweden?", answer: "Stockholm"),
-    Flashcard(question: "What is the capital of Norway?", answer: "Oslo"),
-    Flashcard(question: "What is the capital of Finland?", answer: "Helsinki"),
+    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris"),
+    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin"),
+    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome"),
+    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid"),
+    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm"),
+    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo"),
+    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki"),
 ]
 var flc : [Flashcard] = [
-    Flashcard(question: "What is the capital of test?", answer: "Paris"),
-    Flashcard(question: "What is the capital of Germany?", answer: "Berlin"),
-    Flashcard(question: "What is the capital of Italy?", answer: "Rome"),
-    Flashcard(question: "What is the capital of Spain?", answer: "Madrid"),
-    Flashcard(question: "What is the capital of Sweden?", answer: "Stockholm"),
-    Flashcard(question: "What is the capital of Norway?", answer: "Oslo"),
-    Flashcard(question: "What is the capital of Finland?", answer: "Helsinki"),
+    Flashcard(id: "", question: "What is the capital of test?", answer: "Paris"),
+    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin"),
+    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome"),
+    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid"),
+    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm"),
+    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo"),
+    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki"),
 ]
 let unformattedDate = "14 Jan 2001"
 
@@ -277,3 +282,5 @@ class AuthManager {
 
 
 let userDB = FakeDb<UserDetailsType>(name: "usertemp")
+let flashCardDb = FakeDb<Flashcard>(name: "flashcardtemp")
+let subjectDb = FakeDb<Subject>(name: "subjecttemp")

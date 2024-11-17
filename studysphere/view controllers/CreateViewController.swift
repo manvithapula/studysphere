@@ -32,8 +32,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         setupDropdownTableView() // Initialize the dropdown table view
         
         subject.addTarget(self, action: #selector(showDropdown), for: .editingDidBegin) // Show dropdown when editing starts
-        
-        loadSubjects() // Load subjects from UserDefaults
+        subjects = subjectDb.findAll()
     }
 
     @IBAction func Topic(_ sender: Any) {}
@@ -145,9 +144,9 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             
             addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-                let newSubject = Subject(name: newSubjectName)
+                var newSubject = Subject(id:"",name: newSubjectName)
+                subjectDb.create(&newSubject)
                 self?.subjects.append(newSubject)
-                self?.saveSubjects() // Save the new subject to UserDefaults
                 self?.dropdownTableView.reloadData()
             }
             

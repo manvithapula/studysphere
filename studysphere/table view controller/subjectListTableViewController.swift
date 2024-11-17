@@ -9,14 +9,11 @@ import UIKit
 
 class subjectListTableViewController: UITableViewController {
     
-    var subjects: [Subject] = [] {
-            didSet {
-                saveSubjects()
-            }
-        }
+    var subjects: [Subject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         loadSubjects()
+        subjects = subjectDb.findAll()
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showAddSubjectModal))
                 navigationItem.rightBarButtonItem = addButton
@@ -38,8 +35,9 @@ class subjectListTableViewController: UITableViewController {
           }
           
         addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-            let newSubject = Subject(name: newSubjectName)
-            self?.subjects.append(newSubject)  // Add the new subject to the data source
+            var newSubject = Subject(id:"",name: newSubjectName)
+            subjectDb.create(&newSubject)
+            self?.subjects.append(newSubject)
             self?.tableView.reloadData()  // Reload the table view to show the new subject
         }
 
