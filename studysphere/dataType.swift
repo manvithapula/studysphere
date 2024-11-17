@@ -105,15 +105,23 @@ var date:Date?{
     formatDateFromString(date: unformattedDate)
 }
 
-var schedules:[Schedule]=[
-    Schedule(title: "Swift fundamentals ", date: formatDateFromString(date: "23 Sep 2024")!, time: "10:00 AM", completed: true),
-    Schedule(title: "Swift fundamentals ", date: formatDateFromString(date: "23 Sep 2024")!, time: "10:00 AM", completed: true),
-    Schedule(title: "Swift fundamentals ", date: formatDateFromString(date: "23 Sep 2024")!, time: "10:00 AM", completed: true),
-    Schedule(title: "Swift fundamentals ", date: formatDateFromString(date: "23 Sep 2024")!, time: "10:00 AM", completed: true),
-    Schedule(title: "Swift fundamentals ", date: formatDateFromString(date: "23 Sep 2024")!, time: "10:00 AM", completed: true),
-    Schedule(title: "Swift fundamentals ", date: formatDateFromString(date: "23 Sep 2024")!, time: "10:00 AM", completed: false),
-    Schedule(title: "Swift fundamentals ", date: formatDateFromString(date: "23 Sep 2024")!, time: "10:00 AM", completed: false),
-]
+var schedules:[Schedule] = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title: "Swift fundamentals ")
+
+import Foundation
+
+func spacedRepetitionSchedule(startDate: Date,title:String) -> [Schedule] {
+    let intervals = [0, 1, 3, 7, 14, 30]
+    
+    let calendar = Calendar.current
+    
+    // Generate review dates based on intervals
+    let schedule = intervals.map { interval in
+        let date = calendar.date(byAdding: .day, value: interval, to: startDate)!
+        return Schedule(title: title, date: date, time: "10:00 AM", completed: false)
+    }
+    
+    return schedule
+}
 
 
 
