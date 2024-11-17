@@ -55,37 +55,53 @@ var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob:
 
 struct Flashcard:Codable,Identifiable {
     var id:String
-    let question: String
-    let answer: String
+    var question: String
+    var answer: String
+    var topic:String
 }
-struct Schedule{
+struct Schedule:Codable,Identifiable{
+    var id:String
     var title:String
     var date:Date
     var time:String
     var completed:Bool
+    var topic:String
 }
 struct Subject:Codable,Identifiable{
     var id:String
     let name:String
 }
+struct Topics:Codable,Identifiable {
+    var id:String
+    var title:String
+    var subject:String
+    var type:TopicsType
+    var completed:Bool
+    var subtitle:String
+}
+enum TopicsType: String, Codable {
+    case flashcards = "flashcards"
+    case quizzes = "quizzes"
+    case summery = "summery"
+}
 
 var flashcards1: [Flashcard] = [
-    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris"),
-    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin"),
-    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome"),
-    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid"),
-    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm"),
-    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo"),
-    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki"),
+    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: ""),
 ]
 var flc : [Flashcard] = [
-    Flashcard(id: "", question: "What is the capital of test?", answer: "Paris"),
-    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin"),
-    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome"),
-    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid"),
-    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm"),
-    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo"),
-    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki"),
+    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: ""),
+    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: ""),
 ]
 let unformattedDate = "14 Jan 2001"
 
@@ -110,11 +126,11 @@ var date:Date?{
     formatDateFromString(date: unformattedDate)
 }
 
-var schedules:[Schedule] = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title: "Swift fundamentals ")
+var schedules:[Schedule] = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title: "Swift fundamentals ",topic: "Swift")
 
 import Foundation
 
-func spacedRepetitionSchedule(startDate: Date,title:String) -> [Schedule] {
+func spacedRepetitionSchedule(startDate: Date,title:String,topic:String) -> [Schedule] {
     let intervals = [0, 1, 3, 7, 14, 30]
     
     let calendar = Calendar.current
@@ -122,7 +138,7 @@ func spacedRepetitionSchedule(startDate: Date,title:String) -> [Schedule] {
     // Generate review dates based on intervals
     let schedule = intervals.map { interval in
         let date = calendar.date(byAdding: .day, value: interval, to: startDate)!
-        return Schedule(title: title, date: date, time: "10:00 AM", completed: false)
+        return Schedule(id:"",title: title, date: date, time: "10:00 AM", completed: false,topic: topic)
     }
     
     return schedule
@@ -173,10 +189,11 @@ class FakeDb<T: Codable & Identifiable> {
         }
     }
     
-    public func create(_ item: inout T) {
+    public func create(_ item: inout T) -> T{
         item.id = UUID().uuidString
         items.append(item)
         saveData()
+        return item
     }
     
     public func findAll(where conditions: [String: Any]? = nil) -> [T] {
@@ -284,3 +301,5 @@ class AuthManager {
 let userDB = FakeDb<UserDetailsType>(name: "usertemp")
 let flashCardDb = FakeDb<Flashcard>(name: "flashcardtemp")
 let subjectDb = FakeDb<Subject>(name: "subjecttemp")
+let topicsDb = FakeDb<Topics>(name: "topictemp")
+let schedulesDb = FakeDb<Schedule>(name: "schedulestemp")

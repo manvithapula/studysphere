@@ -20,42 +20,34 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
     var filteredCards: [Card] = []
     var isSearching = false
     var selectedCategory: String = "Flashcards"
+    var subject:Subject?
+    var flashcards: [Topics] = []
     
   
        @IBOutlet weak var subjectSegmentControl: UISegmentedControl!
        @IBOutlet weak var searchBar: UISearchBar!
-       @IBOutlet weak var Subject: UICollectionView!
+       @IBOutlet weak var SubjectCollectionView: UICollectionView!
 
     
     override func viewDidLoad() {
            super.viewDidLoad()
-           
-           Subject.dataSource = self
-           Subject.delegate = self
+        self.flashcards = topicsDb.findAll(where: ["subject":subject!.id])
+           SubjectCollectionView.dataSource = self
+           SubjectCollectionView.delegate = self
            searchBar.delegate = self
-           Subject.setCollectionViewLayout(generateLayout(), animated: true)
+           SubjectCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
            filterCardsByCategory()
        }
 
     
        @IBAction func segmentControlValueChanged(_ sender: UISegmentedControl) {
-           switch sender.selectedSegmentIndex {
-           case 0:
-               selectedCategory = "Flashcards"
-           case 1:
-               selectedCategory = "Quizzes"
-           case 2:
-               selectedCategory = "Summaries"
-           default:
-               break
-           }
-           filterCardsByCategory()
+           SubjectCollectionView.reloadData()
        }
        
        func filterCardsByCategory() {
            filteredCards = cards.filter { $0.title.contains(selectedCategory) }
            isSearching = true
-           Subject.reloadData()
+           SubjectCollectionView.reloadData()
        }
        
     
@@ -69,7 +61,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
                }
                isSearching = true
            }
-           Subject.reloadData()
+           SubjectCollectionView.reloadData()
        }
        
        func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -79,7 +71,11 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
 
        
        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-           return isSearching ? filteredCards.count : cards.count
+           if(subjectSegmentControl.selectedSegmentIndex == 0){
+               return self.flashcards.count
+               
+           }
+           return 0
        }
        
        func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -88,23 +84,19 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
        
        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subject", for: indexPath)
-           let card = isSearching ? filteredCards[indexPath.item] : cards[indexPath.item]
-           if let cell = cell as? SummaryCollectionViewCell {
+           let card = flashcards[indexPath.row]
+           if let cell = cell as? subjectCellCollectionViewCell {
                cell.titleLabel.text = card.title
                cell.subTitleLabel.text = card.subtitle
-               
-               if card.isCompleted {
-                   cell.continueButton.setTitle("Review", for: .normal)
-               } else {
-                   cell.continueButton.setTitle("Continue Studying", for: .normal)
-               }
-               
-               cell.buttonTapped = {
-                   print("Button tapped for: \(card.title)")
-               }
+               cell.continueButtonTapped.tag = indexPath.item
+               cell.continueButtonTapped.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
+              
            }
            return cell
        }
+    @objc func detailButtonTapped(_ sender: UIButton) {
+        performSegue(withIdentifier: "toSRSchedule", sender: sender.tag) // Pass the tag as the sender
+    }
        
        
        func generateLayout() -> UICollectionViewLayout {
@@ -119,4 +111,17 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
 
            return UICollectionViewCompositionalLayout(section: section)
        }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toSRSchedule",
+           let destinationVC = segue.destination as? SRScheduleViewController,
+           let selectedIndex = sender as? Int { // Extract the tag passed as sender
+            let selectedCard = flashcards[selectedIndex] // Get the card using the tag
+            destinationVC.topic = selectedCard // Pass the data to the destination VC
+        }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        flashcards = topicsDb.findAll(where: ["subject":subject!.id])
+        SubjectCollectionView.reloadData()
+    }
    }

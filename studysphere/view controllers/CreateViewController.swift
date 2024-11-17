@@ -13,6 +13,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var fileUploadView: DashedRectangleUpload!
     @IBOutlet weak var subject: UITextField!
 
+    private var selectedSubject: Subject?
     var datePicker = UIDatePicker()
     
     // Dropdown TableView for subjects
@@ -133,6 +134,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if indexPath.row < subjects.count {
             // Select an existing subject
             subject.text = subjects[indexPath.row].name
+            selectedSubject = subjects[indexPath.row]
             hideDropdown()
         } else {
             // Add New Subject
@@ -147,6 +149,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 var newSubject = Subject(id:"",name: newSubjectName)
                 subjectDb.create(&newSubject)
                 self?.subjects.append(newSubject)
+                self?.selectedSubject = newSubject
                 self?.dropdownTableView.reloadData()
             }
             
@@ -157,6 +160,49 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         hideDropdown() // Hide dropdown when tapping outside
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "selectTechnique" {
+            if let destinationVC = segue.destination as? SelectTechniqueViewController {
+                destinationVC.date = datePicker.date
+                destinationVC.topic = Topic.text
+                destinationVC.subject = selectedSubject
+            }
+        }
+    }
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "selectTechnique" {
+            
+            // Check if topic is entered
+            guard let topic = Topic.text, !topic.isEmpty else {
+                showAlert(title: "Missing Topic", message: "Please enter a topic before continuing.")
+                return false
+            }
+            
+            // Check if date is valid (e.g., not in the past)
+            guard let date = Date.text, !date.isEmpty else {
+                showAlert(title: "Missing Date", message: "Please enter a date before continuing.")
+                return false
+            }
+            // Check if subject is selected
+            guard selectedSubject != nil else {
+                showAlert(title: "Missing Subject", message: "Please select a subject before continuing.")
+                return false
+            }
+            
+            return true
+        }
+        return true
+    }
+
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
 

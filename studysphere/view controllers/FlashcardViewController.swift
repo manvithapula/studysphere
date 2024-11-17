@@ -16,7 +16,7 @@ class FlashcardViewController: UIViewController {
     private var practiceNumCount: Int = 0
     private var memorisedNumCount: Int = 0
     var flashcards: [Flashcard] = flashcards1
-    var scheduleIndex:Int = -1
+    var schedule:Schedule?
     
     var currentCardIndex = 0
     var isShowingAnswer = false
@@ -58,10 +58,8 @@ class FlashcardViewController: UIViewController {
     
     // Handle swipe right (Memorised count)
     fileprivate func updateCompletion() {
-        if  scheduleIndex != -1 {
-            var schedule = schedules[scheduleIndex]
-            schedule.completed = true
-        }
+        schedule?.completed = true
+        schedulesDb.update(schedule!)
     }
     
     @IBAction func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
@@ -139,23 +137,9 @@ class FlashcardViewController: UIViewController {
         }) { _ in
             self.isShowingAnswer = false
             self.answerLabel.text = self.flashcards[self.currentCardIndex].question
-            let index = self.getIndex()
-            if(index != -1){
-                schedules[index].completed = true
-            }
+            self.updateCompletion()
             self.performSegue(withIdentifier: "TestResultViewController", sender: nil)
         }
-    }
-    private func getIndex() -> Int {
-        if self.scheduleIndex != -1 {
-            return self.scheduleIndex
-        }
-        for index in schedules.indices {
-            if !schedules[index].completed {
-                return index
-            }
-        }
-        return -1
     }
 
     

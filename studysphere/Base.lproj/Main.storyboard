@@ -420,7 +420,7 @@
                                                                 <state key="normal" title="Button"/>
                                                                 <buttonConfiguration key="configuration" style="plain"/>
                                                                 <connections>
-                                                                    <segue destination="8M2-RD-7UQ" kind="show" id="hiG-LI-sT9"/>
+                                                                    <segue destination="8M2-RD-7UQ" kind="show" identifier="toSRList" id="hiG-LI-sT9"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -667,9 +667,6 @@
                                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain"/>
-                                            <connections>
-                                                <segue destination="Xu4-hE-HiR" kind="show" id="3U6-Lz-pKE"/>
-                                            </connections>
                                         </button>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -686,6 +683,10 @@
                     <navigationItem key="navigationItem" id="OAH-yn-YG3">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="g3p-pZ-XMZ"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="subjectTableView" destination="3jP-Nl-abc" id="158-iA-h7D"/>
+                        <segue destination="Xu4-hE-HiR" kind="show" identifier="toSubjectDetails" id="BI1-l1-Jlu"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TXM-Cc-caX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -765,7 +766,7 @@
         <!--Select Technique-->
         <scene sceneID="9om-rs-JPu">
             <objects>
-                <viewController title="Select Technique" id="XdA-oI-b0j" sceneMemberID="viewController">
+                <viewController title="Select Technique" id="XdA-oI-b0j" customClass="SelectTechniqueViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qZn-OJ-Vrn">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -786,6 +787,9 @@
                                         <buttonConfiguration key="configuration" style="filled" title="Create" cornerStyle="capsule">
                                             <color key="baseBackgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="createSR:" destination="XdA-oI-b0j" eventType="touchUpInside" id="Ty3-ZE-KNG"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -815,6 +819,9 @@
                                         <buttonConfiguration key="configuration" style="filled" title="Create" cornerStyle="capsule">
                                             <color key="baseBackgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="createAR:" destination="XdA-oI-b0j" eventType="touchUpInside" id="tzn-6d-wLj"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -845,6 +852,9 @@
                                         <buttonConfiguration key="configuration" style="filled" title="Create" cornerStyle="capsule">
                                             <color key="baseBackgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="createSummarizer:" destination="XdA-oI-b0j" eventType="touchUpInside" id="Vpt-lJ-8oo"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1055,9 +1065,10 @@
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yME-30-9Tc">
                                                             <rect key="frame" x="16" y="90" width="345" height="35"/>
-                                                            <color key="tintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" title="Button"/>
-                                                            <buttonConfiguration key="configuration" style="filled" title="Continue Studying" cornerStyle="capsule"/>
+                                                            <buttonConfiguration key="configuration" style="filled" title="Continue Studying" cornerStyle="capsule">
+                                                                <color key="baseBackgroundColor" name="Button"/>
+                                                            </buttonConfiguration>
                                                             <connections>
                                                                 <action selector="continueButtonTapped:" destination="oJR-RP-ecF" eventType="touchUpInside" id="hus-Xf-xRX"/>
                                                             </connections>
@@ -1100,6 +1111,9 @@
                                     <segment title="Quizzes"/>
                                     <segment title="Summaries"/>
                                 </segments>
+                                <connections>
+                                    <action selector="segmentControlValueChanged:" destination="Xu4-hE-HiR" eventType="valueChanged" id="jdq-p1-y8B"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="WT8-bs-lcW"/>
@@ -1119,10 +1133,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="erw-FA-o8N"/>
                     <connections>
-                        <outlet property="Subject" destination="pX3-XT-QcR" id="Wvl-ao-rgJ"/>
+                        <outlet property="SubjectCollectionView" destination="pX3-XT-QcR" id="Wvl-ao-rgJ"/>
                         <outlet property="searchBar" destination="KP9-BL-Lr7" id="8h4-RP-FwX"/>
-                        <outlet property="subject" destination="pX3-XT-QcR" id="aBk-ad-r08"/>
                         <outlet property="subjectSegmentControl" destination="nP6-Em-uvj" id="9v4-gF-qsA"/>
+                        <segue destination="8M2-RD-7UQ" kind="show" identifier="toSRSchedule" id="VeW-GZ-82h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1520,11 +1534,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SGw-IU-2PL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="6454" y="1660"/>
-=======
-            <point key="canvasLocation" x="6615" y="2382"/>
-
         </scene>
         <!--Schedule-->
         <scene sceneID="lME-GN-Idg">
@@ -1638,11 +1648,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MXW-VV-KoP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
-            <point key="canvasLocation" x="6511" y="3063"/>
-=======
-            <point key="canvasLocation" x="6615" y="4567"/>
-
+            <point key="canvasLocation" x="7506" y="3089"/>
         </scene>
         <!--create-->
         <scene sceneID="EBS-1N-gOa">
@@ -1697,7 +1703,7 @@
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="TapButton:" destination="065-Ov-wae" eventType="touchUpInside" id="Sfx-nD-5US"/>
-                                    <segue destination="XdA-oI-b0j" kind="presentation" id="e5v-t2-57F"/>
+                                    <segue destination="XdA-oI-b0j" kind="presentation" identifier="selectTechnique" id="e5v-t2-57F"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Subject" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="z6d-yz-ZHM">
@@ -1842,11 +1848,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5fC-ID-qGh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="6511" y="2361"/>
-=======
-            <point key="canvasLocation" x="6615" y="3818"/>
-
         </scene>
         <!--Test Result View Controller-->
         <scene sceneID="p8X-mc-ex4">
@@ -2531,16 +2533,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUH-ud-opZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="5755" y="3051"/>
-=======
-            <point key="canvasLocation" x="5755" y="3103"/>
-
         </scene>
         <!--Flashcard View Controller-->
         <scene sceneID="9KI-vw-K7Y">
             <objects>
-                <viewController id="RJg-4G-O5d" customClass="FlashcardViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FlashcardViewController" id="RJg-4G-O5d" customClass="FlashcardViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1hd-qs-dLW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2690,7 +2688,7 @@
                                     <color key="baseBackgroundColor" name="Button"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="RJg-4G-O5d" kind="show" identifier="showScheduleDetail" id="coH-rd-R45"/>
+                                    <segue destination="RJg-4G-O5d" kind="show" identifier="showScheduleDetailBtn" id="coH-rd-R45"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Revision Schedule" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gSR-MK-dZ5">
@@ -2720,11 +2718,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-
                                                     <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
-=======
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
-
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2858,11 +2852,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
-=======
                                                     <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
-
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2933,29 +2923,24 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-
             <point key="canvasLocation" x="5755" y="2361"/>
-=======
-            <point key="canvasLocation" x="5755" y="2382"/>
-
         </scene>
         <!--Spaced Repetition List-->
         <scene sceneID="nfS-Qe-X8T">
             <objects>
-                <viewController title="Spaced Repetition List" id="8M2-RD-7UQ" customClass="SRListViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SRListView" title="Spaced Repetition List" id="8M2-RD-7UQ" customClass="SRListViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KzP-v9-aIw">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="JPu-rw-qKc">
-                                <rect key="frame" x="0.0" y="103" width="393" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="TEr-2a-w0m"/>
-                                </constraints>
+                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JPu-rw-qKc">
+                                <rect key="frame" x="0.0" y="103" width="393" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="JCX-hL-CmR">
-                                <rect key="frame" x="0.0" y="198" width="393" height="654"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="JCX-hL-CmR">
+                                <rect key="frame" x="0.0" y="204" width="393" height="571"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="qt8-vw-kNJ">
                                     <size key="itemSize" width="377" height="150"/>
@@ -2993,7 +2978,6 @@
                                                             <buttonConfiguration key="configuration" style="filled" title="Continue Studying" cornerStyle="capsule"/>
                                                             <connections>
                                                                 <action selector="continueButtonTapped:" destination="Gbx-v3-eEi" eventType="touchUpInside" id="nez-lB-jsc"/>
-                                                                <segue destination="KzB-74-32G" kind="show" id="sww-IS-a33"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -3027,8 +3011,9 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="dyS-1i-Sma">
-                                <rect key="frame" x="9" y="151" width="375" height="32"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="dyS-1i-Sma">
+                                <rect key="frame" x="9" y="167" width="375" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="Ongoing"/>
                                     <segment title="Completed"/>
@@ -3037,29 +3022,18 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="wwb-8i-etR"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="JCX-hL-CmR" firstAttribute="top" secondItem="JPu-rw-qKc" secondAttribute="bottom" constant="51" id="0zW-1w-l5e"/>
-                            <constraint firstItem="JCX-hL-CmR" firstAttribute="trailing" secondItem="wwb-8i-etR" secondAttribute="trailing" id="AA7-Th-yis"/>
-                            <constraint firstItem="JCX-hL-CmR" firstAttribute="leading" secondItem="wwb-8i-etR" secondAttribute="leading" id="HUv-ox-qUL"/>
-                            <constraint firstItem="JPu-rw-qKc" firstAttribute="leading" secondItem="wwb-8i-etR" secondAttribute="leading" id="IA1-Tu-cEl"/>
-                            <constraint firstItem="JCX-hL-CmR" firstAttribute="top" secondItem="dyS-1i-Sma" secondAttribute="bottom" constant="16" id="IHQ-iA-YHg"/>
-                            <constraint firstItem="dyS-1i-Sma" firstAttribute="leading" secondItem="wwb-8i-etR" secondAttribute="leading" constant="9" id="Lrh-lu-5oL"/>
-                            <constraint firstItem="JPu-rw-qKc" firstAttribute="trailing" secondItem="wwb-8i-etR" secondAttribute="trailing" id="Uxi-Py-WTm"/>
-                            <constraint firstItem="JPu-rw-qKc" firstAttribute="top" secondItem="wwb-8i-etR" secondAttribute="top" id="hZU-yF-7Kh"/>
-                            <constraint firstAttribute="bottom" secondItem="JCX-hL-CmR" secondAttribute="bottom" id="koY-uz-NRH"/>
-                            <constraint firstItem="dyS-1i-Sma" firstAttribute="centerX" secondItem="JPu-rw-qKc" secondAttribute="centerX" id="yWX-zk-iHC"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Spaced Repetition" leftItemsSupplementBackButton="YES" id="7wN-uW-DYm"/>
                     <connections>
                         <outlet property="SpacedRepetitionList" destination="JCX-hL-CmR" id="gtq-am-QDQ"/>
                         <outlet property="searchBar" destination="JPu-rw-qKc" id="xgw-bD-jED"/>
                         <outlet property="segmentControl" destination="dyS-1i-Sma" id="aAx-MQ-6Bm"/>
+                        <segue destination="KzB-74-32G" kind="show" identifier="toSRSchedule" id="PO4-kN-YgS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YQF-cK-aK2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2164" y="1660"/>
+            <point key="canvasLocation" x="2162.5954198473282" y="1659.8591549295775"/>
         </scene>
         <!--Active Recall List-->
         <scene sceneID="u9Z-Ze-Nd8">
@@ -3221,6 +3195,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="VeW-GZ-82h"/>
         <segue reference="coH-rd-R45"/>
         <segue reference="sfi-Wn-OdW"/>
     </inferredMetricsTieBreakers>

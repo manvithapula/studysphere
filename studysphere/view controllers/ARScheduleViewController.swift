@@ -43,7 +43,7 @@ class ARScheduleViewController: UIViewController {
                 if let destinationVC = segue.destination as? FlashcardViewController,
                    let index = ARtable.indexPathForSelectedRow {
                     destinationVC.flashcards = flashcards1
-                    destinationVC.scheduleIndex = index.row
+//                    destinationVC.scheduleIndex = index.row
                 }
             }
         }

@@ -9,6 +9,7 @@ import UIKit
 
 class subjectListTableViewController: UITableViewController {
     
+    @IBOutlet var subjectTableView: UITableView!
     var subjects: [Subject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,13 +37,21 @@ class subjectListTableViewController: UITableViewController {
           
         addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
             var newSubject = Subject(id:"",name: newSubjectName)
-            subjectDb.create(&newSubject)
+            newSubject = subjectDb.create(&newSubject)
             self?.subjects.append(newSubject)
             self?.tableView.reloadData()  // Reload the table view to show the new subject
         }
 
           present(addSubjectVC, animated: true, completion: nil)
       }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toSubjectDetails",
+           let destinationVC = segue.destination as? subjectViewController,
+           let indexPath = sender as? IndexPath {
+            let subject = subjects[indexPath.row]
+            destinationVC.subject = subject
+        }
+    }
     
     private func saveSubjects() {
             if let encoded = try? JSONEncoder().encode(subjects) {
@@ -71,6 +80,8 @@ class subjectListTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "subjectcell", for: indexPath) as! subjectListTableViewCell
         let subject = subjects[indexPath.row]
         cell.subjectListButton.setTitle(subject.name, for: .normal)
+        cell.subjectListButton.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
+
         return cell
 }
 
@@ -79,6 +90,13 @@ class subjectListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 70
 }
+    @objc func detailButtonTapped(_ sender: UIButton) {
+        if let cell = sender.superview?.superview as? subjectListTableViewCell,
+           let indexPath = self.tableView.indexPath(for: cell) {
+            performSegue(withIdentifier: "toSubjectDetails", sender: indexPath)
+        }
+    }
+    //can select row
     
 }
     

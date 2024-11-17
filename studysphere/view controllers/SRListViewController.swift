@@ -17,19 +17,13 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         
         
-        var cards: [Card] = [
-            Card(title: "English Literature", subtitle: "1 more to go", isCompleted: false),
-            Card(title: "Maths Literature", subtitle: "1 more to go", isCompleted: false),
-            Card(title: "Chemistry Literature", subtitle: "1 more to go", isCompleted: false),
-            Card(title: "Biology Literature", subtitle: "1 more to go", isCompleted: false),
-            Card(title: "Physics", subtitle: "Completed", isCompleted: true)
-        ]
+    var cards: [Topics] = []
         
        
-        var filteredCards: [Card] {
+    var filteredCards: [Topics] {
             return cards.filter { card in
                
-                let matchesSegment = filterState == .ongoing ? !card.isCompleted : card.isCompleted
+                let matchesSegment = filterState == .ongoing ? !card.completed : card.completed
                 let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
                 return matchesSegment && matchesSearch
             }
@@ -48,6 +42,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
           
             searchBar.delegate = self
+            cards = topicsDb.findAll(where: ["type": TopicsType.flashcards])
         }
        
         @objc func segmentChanged() {
@@ -76,16 +71,14 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
                 cell.titleLabel.text = card.title
                 cell.subtitleLabel.text = card.subtitle
                 
-                if card.isCompleted {
+                if card.completed {
                     cell.continueButtonTapped.setTitle("Review", for: .normal)
                 } else {
                     cell.continueButtonTapped.setTitle("Continue Studying", for: .normal)
                 }
                 
-                cell.buttonTapped = {
-                    print("Button tapped for: \(card.title)")
-                    
-                }
+                cell.continueButtonTapped.tag = indexPath.item // Use the tag to identify
+                cell.continueButtonTapped.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
             }
             
             return cell
@@ -96,13 +89,31 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.22))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.27))
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
             
             return UICollectionViewCompositionalLayout(section: section)
         }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toSRSchedule",
+           let destinationVC = segue.destination as? SRScheduleViewController,
+           let selectedIndex = sender as? Int { // Extract the tag passed as sender
+            let selectedCard = filteredCards[selectedIndex] // Get the card using the tag
+            destinationVC.topic = selectedCard // Pass the data to the destination VC
+        }
     }
+
+    @objc func detailButtonTapped(_ sender: UIButton) {
+        performSegue(withIdentifier: "toSRSchedule", sender: sender.tag) // Pass the tag as the sender
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        cards = topicsDb.findAll(where: ["type": TopicsType.flashcards])
+        SpacedRepetitionList.reloadData()
+    }
+
+}
 
    

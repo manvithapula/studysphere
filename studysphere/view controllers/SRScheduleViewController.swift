@@ -13,21 +13,35 @@ class SRScheduleViewController: UIViewController {
     @IBOutlet weak var circularProgressV: CircularProgressView!
     @IBOutlet weak var scheduleTable: UITableView!
     @IBOutlet weak var remainingNumberL: UILabel!
+    private var mySchedules: [Schedule] = []
     var completedSchedules: [Schedule]{
-        schedules.filter({
+        mySchedules.filter({
             $0.completed
         })
     }
+    var topic:Topics?
     fileprivate func setup() {
-        circularProgressV.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
-        progressL.text = "\(completedSchedules.count)/\(schedules.count)"
-        let countDiff = schedules.count - completedSchedules.count
+        mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
+        circularProgressV.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(mySchedules.count))
+        if(mySchedules.count == 0){
+            mySchedules = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title:topic!.title,topic: topic!.id)
+            for var schedule in mySchedules{
+                let _ = schedulesDb.create(&schedule)
+            }
+            mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
+        }
+        progressL.text = "\(completedSchedules.count)/\(mySchedules.count)"
+        let countDiff = mySchedules.count - completedSchedules.count
         if(countDiff == 0){
             remainingNumberL.text = "All schedules are completed"
+            topic?.subtitle = "All schedules are completed"
+            topic?.completed = true
         }
         else{
             remainingNumberL.text = "\(countDiff) more to go"
+            topic?.subtitle = "\(countDiff) more to go"
         }
+        topicsDb.update(topic!)
     }
     
     override func viewDidLoad() {
@@ -46,11 +60,25 @@ class SRScheduleViewController: UIViewController {
             if segue.identifier == "showScheduleDetail" {
                 if let destinationVC = segue.destination as? FlashcardViewController,
                    let index = scheduleTable.indexPathForSelectedRow {
-                    destinationVC.flashcards = flashcards1
-                    destinationVC.scheduleIndex = index.row
+                    destinationVC.flashcards = flashCardDb.findAll(where: ["topic":topic!.id])
+                    destinationVC.schedule = mySchedules[index.row]
                 }
             }
+        if segue.identifier == "showScheduleDetailBtn" {
+            if completedSchedules.count == mySchedules.count {
+                
+            }
+            if let destinationVC = segue.destination as? FlashcardViewController{
+                destinationVC.flashcards = flashCardDb.findAll(where: ["topic":topic!.id])
+                if completedSchedules.count == mySchedules.count {
+                    destinationVC.schedule = mySchedules.last
+                    return
+                }
+                destinationVC.schedule = mySchedules[completedSchedules.count]
+            }
         }
+        }
+    
     
     @IBAction func comeHere(segue:UIStoryboardSegue) {
         //refresh table
@@ -67,12 +95,12 @@ extension SRScheduleViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return schedules.count
+        return mySchedules.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "scheduleCell", for: indexPath)
-        let scedules = schedules[indexPath.row]
+        let scedules = mySchedules[indexPath.row]
         
         if let cell = cell as? SRScheduleTableViewCell {
             cell.completionImage.image = UIImage(systemName: scedules.completed ? "checkmark.circle.fill" : "circle.dashed")
