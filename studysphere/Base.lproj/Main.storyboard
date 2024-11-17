@@ -1502,21 +1502,29 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9CU-OI-LUa">
-                                <rect key="frame" x="136" y="683" width="119" height="41"/>
+                                <rect key="frame" x="137" y="707" width="119" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="NEXT" cornerStyle="capsule">
                                     <color key="baseBackgroundColor" systemColor="systemIndigoColor"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <segue destination="pVk-Kh-hbX" kind="show" id="Lj5-vt-b8j"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gQp-8e-6Se"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="RSk-3p-aCT"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SGw-IU-2PL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+
             <point key="canvasLocation" x="6454" y="1660"/>
+=======
+            <point key="canvasLocation" x="6615" y="2382"/>
+
         </scene>
         <!--Schedule-->
         <scene sceneID="lME-GN-Idg">
@@ -1630,7 +1638,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MXW-VV-KoP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+
             <point key="canvasLocation" x="6511" y="3063"/>
+=======
+            <point key="canvasLocation" x="6615" y="4567"/>
+
         </scene>
         <!--create-->
         <scene sceneID="EBS-1N-gOa">
@@ -1830,7 +1842,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5fC-ID-qGh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+
             <point key="canvasLocation" x="6511" y="2361"/>
+=======
+            <point key="canvasLocation" x="6615" y="3818"/>
+
         </scene>
         <!--Test Result View Controller-->
         <scene sceneID="p8X-mc-ex4">
@@ -1866,6 +1882,41 @@
                 <exit id="lat-tp-YXV" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3700" y="2361"/>
+        </scene>
+        <!--Test Result View Controller-->
+        <scene sceneID="awB-UT-Tfx">
+            <objects>
+                <viewController id="pVk-Kh-hbX" customClass="ARTestResultViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="C3k-Ny-bYq">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Succesfully completed this task" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39I-RE-Owj">
+                                <rect key="frame" x="75" y="416" width="242" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xxw-CT-vjW" userLabel="tick">
+                                <rect key="frame" x="117" y="243" width="158" height="165"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="DXS-ft-OSS"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="evp-tT-P4k"/>
+                    <connections>
+                        <outlet property="tickView" destination="xxw-CT-vjW" id="0W2-wo-2jp"/>
+                        <segue destination="7Ig-aY-LMO" kind="unwind" identifier="gotoFlash" unwindAction="comeHereWithSegue:" id="ym1-KW-KHo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nhM-Kh-kas" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="7Ig-aY-LMO" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="6615" y="3089"/>
         </scene>
         <!--Progress-->
         <scene sceneID="MJg-jR-ZIQ">
@@ -2426,11 +2477,11 @@
             <objects>
                 <viewController id="j1X-Pg-KeT" userLabel="AREdit" customClass="AReditViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nmW-E5-U1f">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="jTq-n4-9gR">
-                                <rect key="frame" x="16" y="236" width="361" height="440"/>
+                                <rect key="frame" x="16" y="177" width="361" height="440"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="440" id="3Yr-IC-MvB"/>
@@ -2480,7 +2531,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUH-ud-opZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+
             <point key="canvasLocation" x="5755" y="3051"/>
+=======
+            <point key="canvasLocation" x="5755" y="3103"/>
+
         </scene>
         <!--Flashcard View Controller-->
         <scene sceneID="9KI-vw-K7Y">
@@ -2665,7 +2720,11 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
+
                                                     <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+=======
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2768,6 +2827,9 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Take Quiz" cornerStyle="capsule">
                                     <color key="baseBackgroundColor" name="Button"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <segue destination="Kdx-Zo-MPf" kind="show" id="xRt-nh-R8f"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Revision Schedule" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNe-99-kUc">
                                 <rect key="frame" x="16" y="308" width="183" height="27"/>
@@ -2788,15 +2850,19 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ARscheduleCell" rowHeight="83" id="r9G-8F-p1S" customClass="SRScheduleTableViewCell" customModule="studysphere" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ARscheduleCell" rowHeight="83" id="r9G-8F-p1S" customClass="SRScheduleTableViewCell" customModule="studysphere" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="361" height="83"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="r9G-8F-p1S" id="WYI-EM-jVX">
-                                            <rect key="frame" x="0.0" y="0.0" width="361" height="83"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="330.66666666666669" height="83"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
+
                                                     <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+=======
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2839,6 +2905,7 @@
                                             <outlet property="dateL" destination="Rkt-JZ-QRx" id="Juc-5i-4dl"/>
                                             <outlet property="timeL" destination="KAN-Es-9QW" id="bBx-g5-Le1"/>
                                             <outlet property="titleL" destination="e2t-kx-RRq" id="9iN-89-PJ6"/>
+                                            <segue destination="Kdx-Zo-MPf" kind="show" id="sfi-Wn-OdW"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -2848,6 +2915,9 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit Schedule"/>
+                                <connections>
+                                    <segue destination="j1X-Pg-KeT" kind="presentation" id="nda-Ei-Rbf"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Mqn-TH-UvN"/>
@@ -2863,7 +2933,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+
             <point key="canvasLocation" x="5755" y="2361"/>
+=======
+            <point key="canvasLocation" x="5755" y="2382"/>
+
         </scene>
         <!--Spaced Repetition List-->
         <scene sceneID="nfS-Qe-X8T">
@@ -3041,6 +3115,7 @@
                                                             <buttonConfiguration key="configuration" style="filled" title="Continue Studying" cornerStyle="capsule"/>
                                                             <connections>
                                                                 <action selector="continueButtonTapped:" destination="mH4-GP-FlP" eventType="touchUpInside" id="YvU-De-EfL"/>
+                                                                <segue destination="vhf-AP-aDg" kind="show" id="F7d-l5-hyZ"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -3147,6 +3222,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="coH-rd-R45"/>
+        <segue reference="sfi-Wn-OdW"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Screenshot_2024-11-13_at_12.03.16_PM-removebg-preview" width="440" height="566"/>

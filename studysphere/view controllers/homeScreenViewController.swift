@@ -66,7 +66,7 @@ class homeScreenViewController:UIViewController {
           for (index, streakImageView) in streaks.enumerated() {
               if index < currentStreak {
                   streakImageView.image = UIImage(systemName: "flame")
-                  streakImageView.tintColor = .yellow 
+                  streakImageView.tintColor = .red
               } else {
                   streakImageView.image = UIImage(systemName: "circle.dotted")
                   streakImageView.tintColor = .black
