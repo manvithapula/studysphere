@@ -11,6 +11,10 @@ import Foundation
 //    var subtitle:String
 //    var isCompleted:Bool
 //}
+
+protocol Identifiable {
+    var id: String { get set }
+}
 struct ProgressType{
     var completed:Int
     var total:Int
@@ -18,7 +22,8 @@ struct ProgressType{
         Double(completed)/Double(total)
     }
 }
-struct UserDetailsType:Codable{
+struct UserDetailsType:Codable,Identifiable{
+    var id:String
     var firstName:String
     var lastName:String
     var dob:Date
@@ -43,7 +48,7 @@ struct UserDetailsType:Codable{
         return try! plistDecoder.decode(UserDetailsType.self, from: data)
     }
 }
-var user = UserDetailsType(firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true)
+var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true)
 
 
 struct Flashcard {
@@ -134,3 +139,107 @@ let weeklyStreak = 7
 
 let monthlyTime = 1000 * 60 * 60 * 10
 let monthlyStreak = 17
+
+
+class FakeDb<T: Codable & Identifiable> {
+    private var name: String
+    private var ArchiveURL: URL {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let archiveURL = documentDirectory.appendingPathComponent("\(self.name).plist")
+        return archiveURL
+    }
+    private var items: [T]
+    
+    init(name: String) {
+        self.name = name
+        self.items = []
+        if let loadedItems = self.loadData() {
+            self.items = loadedItems
+        }
+    }
+    
+    public func create(_ item: inout T) {
+        item.id = UUID().uuidString
+        items.append(item)
+        saveData()
+    }
+    
+    public func findAll(where conditions: [String: Any]? = nil) -> [T] {
+        // If no conditions provided, return all items
+        guard let conditions = conditions else {
+            return items
+        }
+        
+        // Filter items based on conditions
+        return items.filter { item in
+            guard let itemDict = try? item.asDictionary() else { return false }
+            
+            return conditions.allSatisfy { key, value in
+                if let itemValue = itemDict[key] {
+                    return String(describing: itemValue) == String(describing: value)
+                }
+                return false
+            }
+        }
+    }
+    
+    public func findFirst(where conditions: [String: Any]? = nil) -> T? {
+        guard let conditions = conditions else {
+            return items.first
+        }
+        return items.first { item in
+            guard let itemDict = try? item.asDictionary() else { return false }
+            
+            // Check if all conditions match
+            return conditions.allSatisfy { key, value in
+                if let itemValue = itemDict[key] {
+                    return String(describing: itemValue) == String(describing: value)
+                }
+                return false
+            }
+        }
+    }
+    
+    public func update(_ item: T) {
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            items[index] = item
+            saveData()
+        }
+    }
+    
+    public func delete(id: String) {
+        items.removeAll { $0.id == id }
+        saveData()
+    }
+    
+    private func loadData() -> [T]? {
+        let plistDecoder = PropertyListDecoder()
+        guard let data = try? Data(contentsOf: ArchiveURL) else {
+            return nil
+        }
+        do {
+            return try plistDecoder.decode([T].self, from: data)
+        } catch {
+            print("Error decoding data: \(error)")
+            return nil
+        }
+    }
+    
+    private func saveData() {
+        let plistEncoder = PropertyListEncoder()
+        let data = try? plistEncoder.encode(self.items)
+        try? data?.write(to: ArchiveURL)
+    }
+}
+// Extension to help convert Codable to Dictionary
+extension Encodable {
+    func asDictionary() throws -> [String: Any] {
+        let data = try JSONEncoder().encode(self)
+        guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
+            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Dictionary conversion failed"])
+        }
+        return dictionary
+    }
+}
+
+let userDB = FakeDb<UserDetailsType>(name: "user")

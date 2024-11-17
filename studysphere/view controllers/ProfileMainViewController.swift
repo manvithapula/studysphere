@@ -20,7 +20,11 @@ class ProfileMainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        user = UserDetailsType.loadData()
+        if let item = userDB.findFirst(){
+            user = item
+        }else{
+            userDB.create(&user)
+        }
         setupUI()
         setupTableView()
     }
@@ -180,6 +184,6 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             default:
                 break
             }
-        UserDetailsType.saveData(user: user)
+        userDB.update(user)
         }
 }

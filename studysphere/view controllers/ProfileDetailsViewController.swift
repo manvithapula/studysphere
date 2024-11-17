@@ -177,7 +177,7 @@ class ProfileDetailsViewController: UIViewController {
             user.lastName = lastname
         }
         user.dob = datePicker.date
-        UserDetailsType.saveData(user: user)
+        userDB.update(user)
         
         // Here you would typically save to your data source
         // saveToDataSource()
