@@ -62,6 +62,10 @@ class SelectTechniqueViewController: UIViewController {
             question.topic = newTopic.id
             let _ = questionsDb.create(&question)
         }
+        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id)
+        for var schedule in mySchedules{
+            let _ = schedulesDb.create(&schedule)
+        }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
@@ -84,6 +88,10 @@ class SelectTechniqueViewController: UIViewController {
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,completed: false,subtitle: "")
         newTopic = topicsDb.create(&newTopic)
         let summary = createSummary(topic: newTopic.id)
+        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id)
+        for var schedule in mySchedules{
+            let _ = schedulesDb.create(&schedule)
+        }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC

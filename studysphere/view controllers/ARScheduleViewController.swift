@@ -19,6 +19,7 @@ class ARScheduleViewController: UIViewController {
         })
     }
     var topic: Topics?
+    private var mySchedules: [Schedule] = []
     fileprivate func setup() {
         ARprogresswheel.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
         ProgressNum.text = "\(completedSchedules.count)/\(schedules.count)"
@@ -32,7 +33,7 @@ class ARScheduleViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
         // Do any additional setup after loading the view.
         ARtable.delegate = self
         ARtable.dataSource = self
@@ -61,12 +62,12 @@ extension ARScheduleViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return schedules.count
+        return mySchedules.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ARscheduleCell", for: indexPath)
-        let scedules = schedules[indexPath.row]
+        let scedules = mySchedules[indexPath.row]
         
         if let cell = cell as? ARScheduleTableViewCell {
             cell.ARcompletionImage.image = UIImage(systemName: scedules.completed ? "checkmark.circle.fill" : "circle.dashed")
