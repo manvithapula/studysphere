@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="31H-mw-hQE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcp-kn-L0O">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -891,7 +891,7 @@
         <!--Summary List-->
         <scene sceneID="dfB-A8-qHs">
             <objects>
-                <viewController title="Summary List" id="ivI-JP-b7I" customClass="SummaryViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Summary List" id="ivI-JP-b7I" customClass="SummaryListViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jv7-Zc-VZu">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -945,7 +945,6 @@
                                                             <buttonConfiguration key="configuration" style="filled" title="Continue Studying" cornerStyle="capsule"/>
                                                             <connections>
                                                                 <action selector="continueButtonTapped:" destination="C3C-Y5-03a" eventType="touchUpInside" id="CA3-Ma-A7i"/>
-                                                                <segue destination="jcz-Zh-nQ0" kind="show" id="bqK-aV-2wZ"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -1007,6 +1006,7 @@
                         <outlet property="searchBar" destination="jFi-vT-Shr" id="cUI-ya-llm"/>
                         <outlet property="segmentControl" destination="EZJ-UL-UCJ" id="QrG-VK-Cwb"/>
                         <outlet property="summaryList" destination="g8G-7j-hYW" id="3Mv-gL-I1w"/>
+                        <segue destination="jcz-Zh-nQ0" kind="show" identifier="toSummary" id="Dqf-Gg-TxS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QEZ-QD-Kq4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2851,7 +2851,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -3194,8 +3194,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="vbk-8J-x7B"/>
-        <segue reference="coH-rd-R45"/>
+        <segue reference="PO4-kN-YgS"/>
+        <segue reference="VsD-Mw-nb3"/>
         <segue reference="sfi-Wn-OdW"/>
     </inferredMetricsTieBreakers>
     <resources>

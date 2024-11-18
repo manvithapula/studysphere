@@ -40,13 +40,9 @@ class SelectTechniqueViewController: UIViewController {
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
             
-            // Ensure the TabBarController contains a UINavigationController with HomeViewController
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                // Find the UINavigationController containing HomeViewController
                 if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
                    let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                    
-                    // Perform the segue from HomeViewController
                     homeVC.performSegue(withIdentifier: "toSRList", sender: nil)
                 } else {
                     print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
@@ -60,9 +56,12 @@ class SelectTechniqueViewController: UIViewController {
         
     }
     @IBAction func createAR(_ sender: Any) {
+        
     }
     
-    @IBAction func createSummarizer(_ sender: Any) {
+    @IBAction func createSummariser(_ sender: Any) {
+        
+    
     }
     private func createFlashCards(topic:String) -> [Flashcard]{
         let flashcards1: [Flashcard] = [
