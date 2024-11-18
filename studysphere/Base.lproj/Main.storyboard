@@ -1138,7 +1138,8 @@
                         <outlet property="searchBar" destination="KP9-BL-Lr7" id="8h4-RP-FwX"/>
                         <outlet property="subjectSegmentControl" destination="nP6-Em-uvj" id="9v4-gF-qsA"/>
                         <segue destination="KzB-74-32G" kind="show" identifier="toSRSchedule" id="vbk-8J-x7B"/>
-                        <segue destination="ivI-JP-b7I" kind="show" identifier="toSummary" id="bKo-Mu-DbJ"/>
+                        <segue destination="vhf-AP-aDg" kind="show" identifier="toARSchedule" id="llO-ze-ygf"/>
+                        <segue destination="jcz-Zh-nQ0" kind="show" identifier="toSummary" id="qdn-Bb-u7i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3308,10 +3309,11 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="PO4-kN-YgS"/>
+        <segue reference="llO-ze-ygf"/>
+        <segue reference="vbk-8J-x7B"/>
         <segue reference="VsD-Mw-nb3"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="iXJ-2M-xOS"/>
+        <segue reference="paQ-p4-NU6"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Screenshot_2024-11-13_at_12.03.16_PM-removebg-preview" width="440" height="566"/>
