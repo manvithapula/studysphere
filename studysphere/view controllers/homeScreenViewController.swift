@@ -173,13 +173,20 @@ class homeScreenViewController:UIViewController {
                 StreakDay(dayOfWeek: "Sat", isCompleted: false),
                 StreakDay(dayOfWeek: "Sun", isCompleted: true)
             ]
-            
-            let todaySchedule = [
-                       ScheduleItem(title: "Math Homework", progress: 0.5),
-                       ScheduleItem(title: "Science Project", progress: 0.8),
-                       ScheduleItem(title: "English Essay", progress: 0.3),
-                       ScheduleItem(title: "History Assignment", progress: 0.7)
-            ]
+            let schedules = schedulesDb.findAll()
+            let today = formatDateToString(date: Date())
+            var filterSchedules:[Schedule]{
+                return schedules.filter { schedule in
+                   
+                    let date = formatDateToString(date: schedule.date)
+                    return date == today
+                }
+            }
+            var todaySchedule:[ScheduleItem] = []
+            for schedule in filterSchedules{
+                let scheduleItem = ScheduleItem(title: schedule.title, progress: 0)
+                todaySchedule.append(scheduleItem)
+            }
             
             let Allsubjects = subjectDb.findAll()
             let studyTechniques = [
