@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcp-kn-L0O">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="31H-mw-hQE">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -469,7 +469,7 @@
                                                                 <state key="normal" title="Button"/>
                                                                 <buttonConfiguration key="configuration" style="plain"/>
                                                                 <connections>
-                                                                    <segue destination="yXa-Zf-mng" kind="show" id="fYA-PV-lNV"/>
+                                                                    <segue destination="yXa-Zf-mng" kind="show" identifier="toArList" id="fYA-PV-lNV"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -1459,10 +1459,10 @@
             </objects>
             <point key="canvasLocation" x="11158.015267175571" y="-725.35211267605632"/>
         </scene>
-        <!--View Controller-->
+        <!--Question View Controller-->
         <scene sceneID="bwS-hV-yvX">
             <objects>
-                <viewController id="Kdx-Zo-MPf" sceneMemberID="viewController">
+                <viewController id="Kdx-Zo-MPf" customClass="QuestionViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JT0-Ul-Sex">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1483,24 +1483,36 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Gregorian Calendar"/>
+                                        <connections>
+                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="eu0-0d-SSh"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOy-pg-6Rg">
                                         <rect key="frame" x="16" y="100" width="337" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Julian Calendar"/>
+                                        <connections>
+                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="Dxd-je-Npc"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ddj-Ev-hd8">
                                         <rect key="frame" x="16" y="227" width="337" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Jewish Calendar"/>
+                                        <connections>
+                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="bRx-GC-TCJ"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rek-RD-Fiy">
                                         <rect key="frame" x="16" y="292" width="337" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Chinese Calendar"/>
+                                        <connections>
+                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="Qny-aC-EHo"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1524,7 +1536,7 @@
                                     <color key="baseBackgroundColor" systemColor="systemIndigoColor"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="pVk-Kh-hbX" kind="show" id="Lj5-vt-b8j"/>
+                                    <action selector="nextButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="ocv-DC-oFx"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1532,6 +1544,17 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="RSk-3p-aCT"/>
+                    <connections>
+                        <outlet property="ARProgressBar" destination="STb-fP-etu" id="nUp-xC-J9F"/>
+                        <outlet property="Askedquestion" destination="nUj-24-PiK" id="iRO-KJ-JRU"/>
+                        <outlet property="Next" destination="9CU-OI-LUa" id="UFn-Ra-Ivw"/>
+                        <outlet property="Option1" destination="xOy-pg-6Rg" id="eJr-Ce-3PV"/>
+                        <outlet property="Option2" destination="Zlu-J9-JyJ" id="GS1-9Q-xLn"/>
+                        <outlet property="Option3" destination="ddj-Ev-hd8" id="ouY-Vo-88O"/>
+                        <outlet property="Option4" destination="Rek-RD-Fiy" id="0n9-6W-LCc"/>
+                        <outlet property="questionLabel" destination="nlz-gL-jkD" id="u5m-Ng-rxU"/>
+                        <segue destination="pVk-Kh-hbX" kind="show" identifier="toARresult" id="NYi-Zg-VCg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SGw-IU-2PL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2820,7 +2843,7 @@
                                     <color key="baseBackgroundColor" name="Button"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="Kdx-Zo-MPf" kind="show" id="xRt-nh-R8f"/>
+                                    <segue destination="Kdx-Zo-MPf" kind="show" identifier="toQuestionVC" id="xRt-nh-R8f"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Revision Schedule" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNe-99-kUc">
@@ -2893,7 +2916,7 @@
                                             <outlet property="dateL" destination="Rkt-JZ-QRx" id="Juc-5i-4dl"/>
                                             <outlet property="timeL" destination="KAN-Es-9QW" id="bBx-g5-Le1"/>
                                             <outlet property="titleL" destination="e2t-kx-RRq" id="9iN-89-PJ6"/>
-                                            <segue destination="Kdx-Zo-MPf" kind="show" id="sfi-Wn-OdW"/>
+                                            <segue destination="Kdx-Zo-MPf" kind="show" identifier="toQuestionVC" id="sfi-Wn-OdW"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -3036,7 +3059,7 @@
         <!--Active Recall List-->
         <scene sceneID="u9Z-Ze-Nd8">
             <objects>
-                <viewController title="Active Recall List" id="yXa-Zf-mng" customClass="SRListViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Active Recall List" id="yXa-Zf-mng" customClass="ARListViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uuf-sR-xAq">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3087,7 +3110,6 @@
                                                             <buttonConfiguration key="configuration" style="filled" title="Continue Studying" cornerStyle="capsule"/>
                                                             <connections>
                                                                 <action selector="continueButtonTapped:" destination="mH4-GP-FlP" eventType="touchUpInside" id="YvU-De-EfL"/>
-                                                                <segue destination="vhf-AP-aDg" kind="show" id="F7d-l5-hyZ"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -3146,9 +3168,10 @@
                     </view>
                     <navigationItem key="navigationItem" title="Active Recall" leftItemsSupplementBackButton="YES" id="YZb-Xe-wU7"/>
                     <connections>
-                        <outlet property="SpacedRepetitionList" destination="PBk-yT-cO5" id="tL5-2h-wBr"/>
-                        <outlet property="searchBar" destination="4Y5-3P-8XJ" id="FLz-R1-tAB"/>
-                        <outlet property="segmentControl" destination="o0Y-3O-vfd" id="J5b-hy-I5G"/>
+                        <outlet property="ARList" destination="PBk-yT-cO5" id="a2b-jR-4UN"/>
+                        <outlet property="searchBar" destination="4Y5-3P-8XJ" id="BT7-BY-yXq"/>
+                        <outlet property="segmentControl" destination="o0Y-3O-vfd" id="3cx-EB-XTW"/>
+                        <segue destination="vhf-AP-aDg" kind="show" identifier="toARschedule" id="bfc-Hh-3ad"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sgj-88-yrj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3284,8 +3307,8 @@
     <inferredMetricsTieBreakers>
         <segue reference="PO4-kN-YgS"/>
         <segue reference="VsD-Mw-nb3"/>
-        <segue reference="sfi-Wn-OdW"/>
-        <segue reference="bKo-Mu-DbJ"/>
+
+        <segue reference="xRt-nh-R8f"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Screenshot_2024-11-13_at_12.03.16_PM-removebg-preview" width="440" height="566"/>

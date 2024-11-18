@@ -18,6 +18,7 @@ class ARScheduleViewController: UIViewController {
             $0.completed
         })
     }
+    var topic: Topics?
     fileprivate func setup() {
         ARprogresswheel.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
         ProgressNum.text = "\(completedSchedules.count)/\(schedules.count)"
@@ -39,15 +40,13 @@ class ARScheduleViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "showScheduleDetail" {
-                if let destinationVC = segue.destination as? FlashcardViewController,
-                   let index = ARtable.indexPathForSelectedRow {
-                    destinationVC.flashcards = flashcards1
-//                    destinationVC.scheduleIndex = index.row
+            if segue.identifier == "toQuestionVC" {
+                if let destinationVC = segue.destination as? QuestionViewController {
+                    destinationVC.topic = topic
                 }
             }
+
         }
-    
     @IBAction func comeHere(segue:UIStoryboardSegue) {
         //refresh table
         setup()
