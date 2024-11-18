@@ -9,14 +9,14 @@ import UIKit
 import Lottie
 
 class ARTestResultViewController: UIViewController {
-
+    
+    // MARK: - Properties
+//    private var animationView: LottieAnimationView?
     private var tickAnimation: LottieAnimationView?
     
+    @IBOutlet private weak var tickView: UIView!
     
-    @IBOutlet weak var tickView: UIView!
-//    @IBOutlet weak var tickView: UIView!
-    
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
@@ -25,12 +25,20 @@ class ARTestResultViewController: UIViewController {
 //        scheduleNavigation()
     }
     
+    // MARK: - Setup Methods
     private func setupNavigationBar() {
         navigationItem.hidesBackButton = true
     }
+    
     private func setupAnimations() {
         // Setup confetti animation
-
+//        let confettiAnimation = LottieAnimationView(name: "confetti")
+//        confettiAnimation.frame = view.bounds
+//        confettiAnimation.contentMode = .scaleAspectFit
+//        confettiAnimation.loopMode = .playOnce
+//        confettiAnimation.animationSpeed = 0.5
+//        view.addSubview(confettiAnimation)
+//        animationView = confettiAnimation
         
         // Setup tick animation
         let tickAnim = LottieAnimationView(name: "tick")
@@ -39,8 +47,9 @@ class ARTestResultViewController: UIViewController {
         tickAnim.loopMode = .playOnce
         tickAnim.animationSpeed = 1.0
         tickView.addSubview(tickAnim)
-        tickView = tickAnim
+        tickAnimation = tickAnim
     }
+    
     private func startAnimations() {
 //        animationView?.play()
         tickAnimation?.play()
@@ -51,10 +60,13 @@ class ARTestResultViewController: UIViewController {
         }
         
     }
+    
+    
+    // MARK: - Navigation
     private func scheduleNavigation() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 7) { [weak self] in
             self?.performSegue(withIdentifier: "gotoFlash", sender: nil)
         }
     }
-
+    
 }
