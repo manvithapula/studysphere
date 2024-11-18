@@ -923,7 +923,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="377" height="150"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UAa-wZ-SnU" customClass="CardView" customModule="studysphere" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UAa-wZ-SnU" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="377" height="153"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ol9-cJ-GIU">
@@ -974,6 +974,7 @@
                                             <outlet property="continueButton" destination="4Uu-yU-nmh" id="dxB-ra-Lbv"/>
                                             <outlet property="subTitleLabel" destination="uOP-Cq-S0Y" id="fzB-Pw-XP1"/>
                                             <outlet property="titleLabel" destination="Ol9-cJ-GIU" id="OvY-Pt-Sex"/>
+                                            <outlet property="view" destination="UAa-wZ-SnU" id="67g-ab-3YT"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -2715,7 +2716,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2849,8 +2850,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2954,7 +2954,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="377" height="150"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r8n-Af-7BI" customClass="CardView" customModule="studysphere" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r8n-Af-7BI" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="377" height="153"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B7N-pO-ZuE">
@@ -3005,6 +3005,7 @@
                                             <outlet property="continueButtonTapped" destination="FGX-w9-Xkd" id="noS-TH-iEZ"/>
                                             <outlet property="subtitleLabel" destination="G0L-2I-Yzl" id="9Tm-Xl-TpP"/>
                                             <outlet property="titleLabel" destination="B7N-pO-ZuE" id="pAp-N3-maL"/>
+                                            <outlet property="viewSr" destination="r8n-Af-7BI" id="jJu-DK-m5b"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -3065,7 +3066,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="377" height="150"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60R-Vg-EFH" customClass="CardView" customModule="studysphere" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60R-Vg-EFH" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="377" height="153"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnR-DK-SK6">
@@ -3117,6 +3118,7 @@
                                             <outlet property="continueButtonTapped" destination="dHv-Ih-v8t" id="e5X-PL-kex"/>
                                             <outlet property="subtitleLabel" destination="qUA-Yt-Udg" id="CZe-8N-Ey8"/>
                                             <outlet property="titleLabel" destination="pnR-DK-SK6" id="kdK-2o-Nhq"/>
+                                            <outlet property="viewSr" destination="60R-Vg-EFH" id="743-P1-PyU"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -3243,8 +3245,8 @@
                                         <rect key="frame" x="78" y="50" width="159" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="50%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Gw-3B-YLP">
-                                                <rect key="frame" x="64" y="54" width="36" height="20"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="50%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Gw-3B-YLP">
+                                                <rect key="frame" x="31" y="54" width="96" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -3278,7 +3280,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oaC-zs-Cyh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2937" y="3051"/>
+            <point key="canvasLocation" x="2935.1145038167938" y="3050.7042253521126"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

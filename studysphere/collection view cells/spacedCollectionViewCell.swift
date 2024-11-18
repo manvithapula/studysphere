@@ -16,15 +16,25 @@ class spacedCollectionViewCell: UICollectionViewCell {
     
     
     
-            var buttonTapped: (() -> Void)?
-            
+    var buttonTapped: (() -> Void)?
+    
     @IBAction func continueButtonTapped(_ sender: UIButton) {
         buttonTapped?()
     }
     
-    override class func awakeFromNib() {
-            super.awakeFromNib()
-        }
-        }
-
+    @IBOutlet weak var viewSr: RoundNShadow!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        viewSr.translatesAutoresizingMaskIntoConstraints = false
+                        NSLayoutConstraint.activate([
+                            viewSr.topAnchor.constraint(equalTo: self.topAnchor, constant: 1),
+                            viewSr.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -3),
+                            viewSr.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+                            viewSr.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10)
+                        ])
+                }
+        
+    }
+    
 

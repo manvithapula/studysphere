@@ -17,12 +17,21 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         // Closure for button tap action
         var buttonTapped: (() -> Void)?
         
-        // Action for the button tap
+    @IBOutlet weak var view: RoundNShadow!
+    // Action for the button tap
         @IBAction func continueButtonTapped(_ sender: UIButton) {
             buttonTapped?()  // Trigger the closure when the button is tapped
         }
-    override class func awakeFromNib() {
+    override func awakeFromNib() {
         super.awakeFromNib()
-    }
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+                        NSLayoutConstraint.activate([
+                            view.topAnchor.constraint(equalTo: self.topAnchor, constant: 1),
+                            view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -3),
+                            view.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+                            view.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10)
+                        ])
+                }
     }
 

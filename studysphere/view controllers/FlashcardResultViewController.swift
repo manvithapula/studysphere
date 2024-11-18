@@ -23,10 +23,10 @@ class FlashcardResultViewController: UIViewController {
         let leftButton = UIBarButtonItem(title:"Schedule",style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = leftButton
         
-        circularPV.setProgress(value: CGFloat(memorised/needPractice))
+        circularPV.setProgress(value: CGFloat(needPractice/(memorised + needPractice)))
         memorisedL.text = "\(memorised)"
         needPracticeL.text = "\(needPractice)"
-        percentageL.text = "\(Int(memorised/needPractice*100))%"
+        percentageL.text = "\(Int(needPractice/(memorised + needPractice)*100))%"
     }
     @objc func backButtonTapped() {
         performSegue(withIdentifier: "toScheduleUnwind", sender: nil)
