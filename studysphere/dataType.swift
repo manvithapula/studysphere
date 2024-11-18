@@ -59,6 +59,12 @@ struct Flashcard:Codable,Identifiable {
     var answer: String
     var topic:String
 }
+
+struct Summary:Codable,Identifiable{
+    var id:String
+    var topic:String
+}
+
 struct Schedule:Codable,Identifiable{
     var id:String
     var title:String
@@ -82,7 +88,7 @@ struct Topics:Codable,Identifiable {
 enum TopicsType: String, Codable {
     case flashcards = "flashcards"
     case quizzes = "quizzes"
-    case summery = "summery"
+    case summary = "summary"
 }
 
 var flashcards1: [Flashcard] = [
@@ -132,10 +138,7 @@ import Foundation
 
 func spacedRepetitionSchedule(startDate: Date,title:String,topic:String) -> [Schedule] {
     let intervals = [0, 1, 3, 7, 14, 30]
-    
     let calendar = Calendar.current
-    
-    // Generate review dates based on intervals
     let schedule = intervals.map { interval in
         let date = calendar.date(byAdding: .day, value: interval, to: startDate)!
         return Schedule(id:"",title: title, date: date, time: "10:00 AM", completed: false,topic: topic)
@@ -147,27 +150,14 @@ func spacedRepetitionSchedule(startDate: Date,title:String,topic:String) -> [Sch
 
 
 
-//var cards:[Card]=[
-//    Card(title:"English Literature",subtitle:"1 more to go",isCompleted: false),
-//    Card(title: "Maths Literature", subtitle: "1 more to go",isCompleted: false),
-//    Card(title: "Chemistry Literature", subtitle: "1 more to go",isCompleted: false),
-//    Card(title: "Biology Literature", subtitle: "1 more to go",isCompleted: false),
-//    Card(title: "Biology Literature", subtitle: "1 more to go",isCompleted: true),
-//
-//]
-
-
 let flashcardsProgress:ProgressType=ProgressType(completed: 250, total: 500)
 let questions:ProgressType=ProgressType(completed: 250, total: 300)
 let hours:ProgressType=ProgressType(completed: 20, total: 24*7)
-
 let flashcardsMonthly:ProgressType=ProgressType(completed: 550, total: 700)
 let questionsMonthly:ProgressType=ProgressType(completed: 333, total: 645)
 let hoursMonthly:ProgressType=ProgressType(completed: 24, total: 6*7)
-
 let weeklyTime = 1000 * 60 * 46
 let weeklyStreak = 7
-
 let monthlyTime = 1000 * 60 * 60 * 10
 let monthlyStreak = 17
 
@@ -180,7 +170,6 @@ class FakeDb<T: Codable & Identifiable> {
         return archiveURL
     }
     private var items: [T]
-    
     init(name: String) {
         self.name = name
         self.items = []

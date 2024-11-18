@@ -19,6 +19,7 @@ class SRScheduleViewController: UIViewController {
             $0.completed
         })
     }
+    
     var topic:Topics?
     fileprivate func setup() {
         mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
