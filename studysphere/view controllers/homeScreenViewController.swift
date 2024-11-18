@@ -36,12 +36,17 @@ class homeScreenViewController:UIViewController {
     @IBOutlet weak var studyTechniquesStackView: UIStackView!
     @IBOutlet weak var spacedRepetitionTextView: UITextView!
     @IBOutlet weak var spacedRepetitionCompletedLabel: UILabel!
+    
     @IBOutlet weak var spacedRepetitionProgressLabel: UILabel!
+    
     @IBOutlet weak var activeRecallTextView: UITextView!
     @IBOutlet weak var activeRecallCompletedLabel: UILabel!
+    
     @IBOutlet weak var activeRecallProgressLabel: UILabel!
+    
     @IBOutlet weak var summariserTextView: UITextView!
     @IBOutlet weak var summariserCompletedLabel: UILabel!
+    
     @IBOutlet weak var summariserProgressLabel: UILabel!
     
     var homeScreenData: DashboardData?

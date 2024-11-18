@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="103" width="394" height="759"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DaM-f1-6Gb">
-                                        <rect key="frame" x="0.0" y="-4" width="393" height="1200"/>
+                                        <rect key="frame" x="0.0" y="-4" width="393" height="950"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hHC-RK-blh">
                                                 <rect key="frame" x="0.0" y="0.0" width="393" height="96"/>
@@ -561,7 +561,7 @@
                                             <constraint firstItem="3ch-l3-mTz" firstAttribute="leading" secondItem="bho-yJ-zrQ" secondAttribute="leading" id="cqe-fH-lCm"/>
                                             <constraint firstItem="sf0-E7-vrp" firstAttribute="top" secondItem="vdD-6S-0hJ" secondAttribute="bottom" constant="9" id="ejS-nj-bUi"/>
                                             <constraint firstItem="cgR-HY-Lrv" firstAttribute="top" secondItem="sf0-E7-vrp" secondAttribute="bottom" constant="19" id="kkJ-Kl-Mde"/>
-                                            <constraint firstAttribute="height" constant="1200" id="kyd-8A-l73"/>
+                                            <constraint firstAttribute="height" constant="950" id="kyd-8A-l73"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2AQ-R2-Yym" secondAttribute="trailing" constant="20" symbolic="YES" id="nQS-YK-SPr"/>
                                             <constraint firstItem="2AQ-R2-Yym" firstAttribute="leading" secondItem="DaM-f1-6Gb" secondAttribute="leading" constant="16" id="pgF-7s-rFN"/>
                                             <constraint firstItem="vdD-6S-0hJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DaM-f1-6Gb" secondAttribute="leading" constant="16" id="sgq-dl-SUU"/>
@@ -692,10 +692,10 @@
             </objects>
             <point key="canvasLocation" x="6615" y="904"/>
         </scene>
-        <!--Summary main-->
+        <!--Summariser -->
         <scene sceneID="ngZ-Uk-O9Q">
             <objects>
-                <viewController title="Summary main" id="jcz-Zh-nQ0" customClass="SummariserViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Summariser " id="jcz-Zh-nQ0" customClass="SummariserViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pys-3r-DYg">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1137,11 +1137,12 @@
                         <outlet property="searchBar" destination="KP9-BL-Lr7" id="8h4-RP-FwX"/>
                         <outlet property="subjectSegmentControl" destination="nP6-Em-uvj" id="9v4-gF-qsA"/>
                         <segue destination="KzB-74-32G" kind="show" identifier="toSRSchedule" id="vbk-8J-x7B"/>
+                        <segue destination="ivI-JP-b7I" kind="show" identifier="toSummary" id="bKo-Mu-DbJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7382" y="904"/>
+            <point key="canvasLocation" x="7364" y="904"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="bis-Ya-wBD">
@@ -1534,7 +1535,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SGw-IU-2PL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6454" y="1660"/>
+            <point key="canvasLocation" x="6511" y="1660"/>
         </scene>
         <!--Schedule-->
         <scene sceneID="lME-GN-Idg">
@@ -1650,10 +1651,10 @@
             </objects>
             <point key="canvasLocation" x="7506" y="3089"/>
         </scene>
-        <!--create-->
+        <!--Create-->
         <scene sceneID="EBS-1N-gOa">
             <objects>
-                <viewController id="065-Ov-wae" customClass="CreateViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Create" id="065-Ov-wae" customClass="CreateViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cZo-Fm-QYW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2849,7 +2850,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -3277,13 +3278,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oaC-zs-Cyh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2937" y="3051"/>
+            <point key="canvasLocation" x="3700" y="3051"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="vbk-8J-x7B"/>
+        <segue reference="PO4-kN-YgS"/>
         <segue reference="VsD-Mw-nb3"/>
         <segue reference="sfi-Wn-OdW"/>
+        <segue reference="bKo-Mu-DbJ"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Screenshot_2024-11-13_at_12.03.16_PM-removebg-preview" width="440" height="566"/>

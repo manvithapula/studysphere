@@ -47,33 +47,23 @@ class SummariserViewController: UIViewController, UITextViewDelegate {
        }
        
        func setupProgressBar() {
-           // Configure progress bar
            progressBar.progress = progress
            progressBar.tintColor = .systemBlue
-           
-           // Configure label
            progressLabel.text = "\(Int(progress * 100))%"
            progressLabel.font = UIFont.systemFont(ofSize: 14)
            progressLabel.textColor = .black
            progressLabel.textAlignment = .center
-
-           // Add progress bar and label to the view
            view.addSubview(progressBar)
            view.addSubview(progressLabel)
-
-           // Enable Auto Layout
            progressBar.translatesAutoresizingMaskIntoConstraints = false
            progressLabel.translatesAutoresizingMaskIntoConstraints = false
-
-           // Set constraints for the progress bar
            NSLayoutConstraint.activate([
                progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                progressBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
                progressBar.heightAnchor.constraint(equalToConstant: 4)
            ])
-           
-           // Set constraints for the progress label
+          
            NSLayoutConstraint.activate([
                progressLabel.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 5),
                progressLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
@@ -81,23 +71,19 @@ class SummariserViewController: UIViewController, UITextViewDelegate {
        }
        
        func updateProgress() {
-           // Update the progress bar and the label
            progressBar.progress = progress
            progressLabel.text = "\(Int(progress * 100))%"
        }
        
-       // UIScrollViewDelegate method to track scrolling
        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-           // Calculate progress based on the scroll position and content height
            let contentHeight = scrollView.contentSize.height
            let visibleHeight = scrollView.frame.size.height
            let offsetY = scrollView.contentOffset.y
-           
-           // Calculate the scroll progress
+        
            if contentHeight > visibleHeight {
                progress = Float(offsetY / (contentHeight - visibleHeight))
            } else {
-               progress = 1.0 // Full progress if content height is less than visible height
+               progress = 1.0
            }
        }
    }

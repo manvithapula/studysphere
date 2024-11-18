@@ -93,14 +93,14 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "toSummary",
                let destinationVC = segue.destination as? SummariserViewController,
-               let selectedIndex = sender as? Int { // Extract the tag passed as sender
-                let selectedCard = filteredCards[selectedIndex] // Get the card using the tag
-                destinationVC.topic = selectedCard // Pass the data to the destination VC
+               let selectedIndex = sender as? Int {
+                let selectedCard = filteredCards[selectedIndex]
+                destinationVC.topic = selectedCard
             }
         }
 
         @objc func detailButtonTapped(_ sender: UIButton) {
-            performSegue(withIdentifier: "toSummary", sender: sender.tag) // Pass the tag as the sender
+            performSegue(withIdentifier: "toSummary", sender: sender.tag)
         }
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
