@@ -28,12 +28,14 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
             var filterState: FilterState = .ongoing
             override func viewDidLoad() {
                 super.viewDidLoad()
+                print(summaryDb.findAll())
                 summaryList.dataSource = self
                 summaryList.delegate = self
                 summaryList.setCollectionViewLayout(generateLayout(), animated: true)
                 segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
                 searchBar.delegate = self
-                cards = topicsDb.findAll(where: ["type": TopicsType.flashcards])
+                cards = topicsDb.findAll(where: ["type": TopicsType.summary])
+                print(cards)
             }
            
             @objc func segmentChanged() {
@@ -47,7 +49,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
             
           
             func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-                return filteredCards.count
+                return cards.count
             }
             
             func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -56,20 +58,20 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
             
             func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath)
-                let card = filteredCards[indexPath.item]
+                let card = cards[indexPath.item]
                 
-                if let cell = cell as? spacedCollectionViewCell {
+                if let cell = cell as? SummaryCollectionViewCell {
                     cell.titleLabel.text = card.title
-                    cell.subtitleLabel.text = card.subtitle
+                    cell.subTitleLabel.text = card.subtitle
                     
                     if card.completed {
-                        cell.continueButtonTapped.setTitle("Review", for: .normal)
+                        cell.continueButton.setTitle("Review", for: .normal)
                     } else {
-                        cell.continueButtonTapped.setTitle("Continue Studying", for: .normal)
+                        cell.continueButton.setTitle("Continue Studying", for: .normal)
                     }
                     
-                    cell.continueButtonTapped.tag = indexPath.item // Use the tag to identify
-                    cell.continueButtonTapped.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
+                    cell.continueButton.tag = indexPath.item // Use the tag to identify
+                    cell.continueButton.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
                 }
                 
                 return cell
@@ -102,7 +104,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
         }
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-            cards = topicsDb.findAll(where: ["type": TopicsType.flashcards])
+            cards = topicsDb.findAll(where: ["type": TopicsType.summary])
             summaryList.reloadData()
         }
 

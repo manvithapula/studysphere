@@ -63,6 +63,7 @@ struct Flashcard:Codable,Identifiable {
 struct Summary:Codable,Identifiable{
     var id:String
     var topic:String
+    var data:String
 }
 
 struct Schedule:Codable,Identifiable{
@@ -289,6 +290,7 @@ class AuthManager {
 
 let userDB = FakeDb<UserDetailsType>(name: "usertemp")
 let flashCardDb = FakeDb<Flashcard>(name: "flashcardtemp")
+let summaryDb = FakeDb<Summary>(name: "summarytemp")
 let subjectDb = FakeDb<Subject>(name: "subjecttemp")
 let topicsDb = FakeDb<Topics>(name: "topictemp")
 let schedulesDb = FakeDb<Schedule>(name: "schedulestemp")
