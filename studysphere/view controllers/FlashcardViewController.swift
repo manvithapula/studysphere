@@ -156,4 +156,11 @@ class FlashcardViewController: UIViewController {
             animateCardTransition(direction: .left)
         }
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? TestResultViewController {
+            destination.memorised = Float(memorisedNumCount)
+            destination.needPractice = Float(practiceNumCount)
+        }
+    }
 }

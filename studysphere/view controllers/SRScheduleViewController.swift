@@ -52,6 +52,9 @@ class SRScheduleViewController: UIViewController {
         scheduleTable.dataSource = self
         setup()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
     
     
     

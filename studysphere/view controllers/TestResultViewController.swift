@@ -13,6 +13,8 @@ class TestResultViewController: UIViewController {
     // MARK: - Properties
 //    private var animationView: LottieAnimationView?
     private var tickAnimation: LottieAnimationView?
+    var memorised:Float = 0
+    var needPractice:Float = 0
     
     @IBOutlet private weak var tickView: UIView!
     
@@ -22,7 +24,6 @@ class TestResultViewController: UIViewController {
         setupNavigationBar()
         setupAnimations()
         startAnimations()
-//        scheduleNavigation()
     }
     
     // MARK: - Setup Methods
@@ -56,16 +57,16 @@ class TestResultViewController: UIViewController {
         print(        tickAnimation?.animation?.duration as Any
 )
         DispatchQueue.main.asyncAfter(deadline: .now() + (tickAnimation?.animation?.duration ?? 5) + 1) { [weak self] in
-            self?.performSegue(withIdentifier: "gotoFlash", sender: nil)
+            self?.performSegue(withIdentifier: "toflresult", sender: nil)
         }
         
     }
     
-    
-    // MARK: - Navigation
-    private func scheduleNavigation() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 7) { [weak self] in
-            self?.performSegue(withIdentifier: "gotoFlash", sender: nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? FlashcardResultViewController {
+            destination.memorised = memorised
+            destination.needPractice = needPractice
         }
     }
     

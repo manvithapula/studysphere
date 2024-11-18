@@ -191,16 +191,5 @@ class homeScreenViewController:UIViewController {
                 studyTechniques: studyTechniques
             )
         }
-    @IBAction func comeHere(segue:UIStoryboardSegue) {
-        StreakManager.shared.updateStreak()
-        updateStreakDisplay()
-        
-        // Sample data
-        let sampleData = createSampleDashboardData()
-        setupDashboard(with: sampleData)
-    }
     // In HomeViewController (destination)
-    @IBAction func unwindToHome(_ unwindSegue: UIStoryboardSegue) {
-        // This method needs to exist, but can be empty
-    }
     }

@@ -63,6 +63,7 @@ class SelectTechniqueViewController: UIViewController {
     }
     
     @IBAction func createSummarizer(_ sender: Any) {
+        
     }
     private func createFlashCards(topic:String) -> [Flashcard]{
         let flashcards1: [Flashcard] = [
