@@ -92,6 +92,23 @@ enum TopicsType: String, Codable {
     case summary = "summary"
 }
 
+struct Questions: Codable, Identifiable {
+    var id: String
+    var questionLabel: String
+    var question: String
+    var correctanswer: String
+    var option1 : String
+    var option2 : String
+    var option3 : String
+    var option4 : String
+    var topic : String
+}
+
+var ARQuestions : [Questions] = [
+    Questions(id: "", questionLabel: "1", question: "Who will win election in india ?", correctanswer: "Narendra Modi", option1: "Narendra Modi", option2: "Rahul Gandhi", option3: "Kejrival ", option4: "Umman Chandi", topic: ""),
+    Questions(id: "", questionLabel: "2", question: "Where was the first General Indian Post", correctanswer: "Mumbai", option1: "Kolkata", option2: "Mumbai", option3: "Delhi", option4: "Chennai", topic: "")
+]
+
 var flashcards1: [Flashcard] = [
     Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic: ""),
     Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: ""),
@@ -294,3 +311,6 @@ let summaryDb = FakeDb<Summary>(name: "summarytemp")
 let subjectDb = FakeDb<Subject>(name: "subjecttemp")
 let topicsDb = FakeDb<Topics>(name: "topictemp")
 let schedulesDb = FakeDb<Schedule>(name: "schedulestemp")
+let questionsDb = FakeDb<Questions>(name: "questionstemp")
+
+

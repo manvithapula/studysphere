@@ -56,7 +56,28 @@ class SelectTechniqueViewController: UIViewController {
         
     }
     @IBAction func createAR(_ sender: Any) {
-        
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,completed: false,subtitle: "")
+        newTopic = topicsDb.create(&newTopic)
+        for var question in ARQuestions{
+            question.topic = newTopic.id
+            let _ = questionsDb.create(&question)
+        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
+                   let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
+                    homeVC.performSegue(withIdentifier: "toArList", sender: nil)
+                } else {
+                    print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
+                }
+            }
+        } else {
+            print("Error: Could not instantiate TabBarController.")
+        }
     }
     
     @IBAction func createSummarizer(_ sender: Any) {
