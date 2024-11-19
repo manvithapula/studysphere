@@ -6,14 +6,73 @@
 //
 
 import Foundation
-//struct Card{
-//    var title:String
-//    var subtitle:String
-//    var isCompleted:Bool
-//}
 
 protocol Identifiable {
     var id: String { get set }
+}
+//homescreen
+
+// nav bar
+struct UserProfile {
+    let name: String
+    let profilePictureURL: URL?
+    let motivationalMessage: String
+}
+
+// streak
+struct StreakDay {
+    let dayOfWeek: String
+    let isCompleted: Bool
+}
+
+// todays learning
+struct ScheduleItem {
+    let title: String
+    let progress: Float
+}
+
+// study technique
+struct StudyTechnique {
+    let name: String
+    let completedSessions: Int
+    let totalSessions: Int
+}
+
+struct DashboardData {
+    let userProfile: UserProfile
+    let streak: [StreakDay]
+    let todaySchedule: [ScheduleItem]
+    let subjects: [Subject]
+    let studyTechniques: [StudyTechnique]
+}
+/*let streakValues = [
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+]*/
+
+//subject
+struct Subject:Codable,Identifiable{
+    var id:String
+    let name:String
+}
+//list referencing
+struct Topics:Codable,Identifiable {
+    var id:String
+    var title:String
+    var subject:String
+    var type:TopicsType
+    var completed:Bool
+    var subtitle:String
+}
+enum TopicsType: String, Codable {
+    case flashcards = "flashcards"
+    case quizzes = "quizzes"
+    case summary = "summary"
 }
 struct ProgressType{
     var completed:Int
@@ -22,6 +81,8 @@ struct ProgressType{
         Double(completed)/Double(total)
     }
 }
+
+//profile
 struct UserDetailsType:Codable,Identifiable{
     var id:String
     var firstName:String
@@ -53,6 +114,7 @@ struct UserDetailsType:Codable,Identifiable{
 var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true,email: "test@test.com",password: "password")
 
 
+//flashcard view controller
 struct Flashcard:Codable,Identifiable {
     var id:String
     var question: String
@@ -60,38 +122,7 @@ struct Flashcard:Codable,Identifiable {
     var topic:String
 }
 
-struct Summary:Codable,Identifiable{
-    var id:String
-    var topic:String
-    var data:String
-}
-
-struct Schedule:Codable,Identifiable{
-    var id:String
-    var title:String
-    var date:Date
-    var time:String
-    var completed:Bool
-    var topic:String
-}
-struct Subject:Codable,Identifiable{
-    var id:String
-    let name:String
-}
-struct Topics:Codable,Identifiable {
-    var id:String
-    var title:String
-    var subject:String
-    var type:TopicsType
-    var completed:Bool
-    var subtitle:String
-}
-enum TopicsType: String, Codable {
-    case flashcards = "flashcards"
-    case quizzes = "quizzes"
-    case summary = "summary"
-}
-
+// ar view controller 
 struct Questions: Codable, Identifiable {
     var id: String
     var questionLabel: String
@@ -103,49 +134,26 @@ struct Questions: Codable, Identifiable {
     var option4 : String
     var topic : String
 }
-struct UserProfile {
-    let name: String
-    let profilePictureURL: URL?
-    let motivationalMessage: String
+
+//summariser view controller
+struct Summary:Codable,Identifiable{
+    var id:String
+    var topic:String
+    var data:String
 }
 
-// Streak Model
-struct StreakDay {
-    let dayOfWeek: String
-    let isCompleted: Bool
+// active recall and spaced repetition schedule view controller
+struct Schedule:Codable,Identifiable{
+    var id:String
+    var title:String
+    var date:Date
+    var time:String
+    var completed:Bool
+    var topic:String
 }
 
-// Today’s Schedule Model
-struct ScheduleItem {
-    let title: String
-    let progress: Float
-}
 
 
-
-// Study Technique Model
-struct StudyTechnique {
-    let name: String
-    let completedSessions: Int
-    let totalSessions: Int
-}
-
-struct DashboardData {
-    let userProfile: UserProfile
-    let streak: [StreakDay]
-    let todaySchedule: [ScheduleItem]
-    let subjects: [Subject]
-    let studyTechniques: [StudyTechnique]
-}
-let streakValues = [
-    false,
-    false,
-    true,
-    true,
-    true,
-    true,
-    true
-]
 
 var ARQuestions : [Questions] = [
     Questions(id: "", questionLabel: "1", question: "Who will win election in india ?", correctanswer: "Narendra Modi", option1: "Narendra Modi", option2: "Rahul Gandhi", option3: "Kejrival ", option4: "Umman Chandi", topic: ""),
@@ -356,4 +364,8 @@ let topicsDb = FakeDb<Topics>(name: "topictemp")
 let schedulesDb = FakeDb<Schedule>(name: "schedulestemp")
 let questionsDb = FakeDb<Questions>(name: "questionstemp")
 
-
+//struct Card{
+//    var title:String
+//    var subtitle:String
+//    var isCompleted:Bool
+//}

@@ -95,7 +95,6 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
               let selectedCard = filteredCards[selectedIndex]
               destinationVC.topic = selectedCard
               
-              // Completion handler to update the topic when returning
               destinationVC.completionHandler = { [weak self] updatedTopic in
                   guard let self = self else { return }
                   

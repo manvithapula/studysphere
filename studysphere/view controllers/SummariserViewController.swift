@@ -18,7 +18,7 @@ class SummariserViewController: UIViewController, UITextViewDelegate {
        var heading: String = "English Summary"
        var summaryText: String = "aaaaaa"
        var topic: Topics?
-       var completionHandler: ((Topics) -> Void)? // Completion handler to notify list view
+       var completionHandler: ((Topics) -> Void)?
 
        private let progressBar = UIProgressView(progressViewStyle: .default)
        private let progressLabel = UILabel()
