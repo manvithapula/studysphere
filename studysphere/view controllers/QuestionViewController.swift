@@ -23,7 +23,7 @@ class QuestionViewController: UIViewController {
     // MARK: - Properties
     private var currentQuestionIndex = 0
     private var score = 0
-    private let totalQuestions = 10
+    private let totalQuestions = 2
 
     // MARK: - Lifecycle
     var topic:Topics?
@@ -64,7 +64,7 @@ class QuestionViewController: UIViewController {
         let currentQuestion = questions[currentQuestionIndex]
         
         // Update labels
-        questionLabel.text = currentQuestion.questionLabel
+        questionLabel.text =  " Questions \(currentQuestionIndex + 1)/\(totalQuestions)"
         Askedquestion.text = currentQuestion.question
         
         // Update buttons
