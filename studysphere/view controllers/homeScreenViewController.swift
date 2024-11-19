@@ -12,6 +12,7 @@ class homeScreenViewController:UIViewController {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var introMessage: UILabel!
     
+    @IBOutlet weak var scrollView: UIScrollView!
     //streak
     @IBOutlet var streaks: [UIImageView]!
     @IBOutlet weak var streakLabel: UILabel!

@@ -601,6 +601,7 @@
                         <outlet property="activeRecallTextView" destination="Cet-QD-LsM" id="2x1-CX-wwF"/>
                         <outlet property="introMessage" destination="66A-GW-fnh" id="UnW-z8-mgX"/>
                         <outlet property="name" destination="fVS-WK-6f4" id="Y2j-n2-hs7"/>
+                        <outlet property="scrollView" destination="jNI-iz-DnV" id="eK8-Jn-Vra"/>
                         <outlet property="spacedRepetitionCompletedLabel" destination="FsP-sy-ucw" id="4eR-YA-9kj"/>
                         <outlet property="spacedRepetitionProgressLabel" destination="ZXK-V4-LNm" id="6H1-r3-C9i"/>
                         <outlet property="spacedRepetitionTextView" destination="XWe-Ma-ORG" id="F4j-F1-4S8"/>
@@ -2513,7 +2514,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2647,7 +2648,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
