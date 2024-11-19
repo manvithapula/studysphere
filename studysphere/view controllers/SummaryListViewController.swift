@@ -80,7 +80,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
           let item = NSCollectionLayoutItem(layoutSize: itemSize)
           item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
           
-          let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.27))
+          let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.22))
           let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
           
           let section = NSCollectionLayoutSection(group: group)

@@ -13,27 +13,32 @@ class ARScheduleViewController: UIViewController {
     @IBOutlet weak var ARprogresswheel: CircularProgressView!
     @IBOutlet weak var ARtable: UITableView!
     @IBOutlet weak var ARremaningnumber: UILabel!
+    private var mySchedules: [Schedule] = []
+
     var completedSchedules: [Schedule]{
-        schedules.filter({
+        mySchedules.filter({
             $0.completed
         })
     }
     var topic: Topics?
-    private var mySchedules: [Schedule] = []
     fileprivate func setup() {
+        mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
         ARprogresswheel.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
         ProgressNum.text = "\(completedSchedules.count)/\(schedules.count)"
-        let countDiff = schedules.count - completedSchedules.count
+        let countDiff = mySchedules.count - completedSchedules.count
         if(countDiff == 0){
             ARremaningnumber.text = "All schedules are completed"
+            topic?.subtitle = "All schedules are completed"
+            topic?.completed = true
         }
         else{
             ARremaningnumber.text = "\(countDiff) more to go"
+            topic?.subtitle = "\(countDiff) more to go"
         }
+        topicsDb.update(topic!)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
         // Do any additional setup after loading the view.
         ARtable.delegate = self
         ARtable.dataSource = self
@@ -41,11 +46,26 @@ class ARScheduleViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "toQuestionVC" {
+            if segue.identifier == "toQuestionVCBtn" {
                 if let destinationVC = segue.destination as? QuestionViewController {
                     destinationVC.topic = topic
+                    if completedSchedules.count == mySchedules.count {
+                        destinationVC.schedule = mySchedules.last!
+                        return
+                    }
+                    destinationVC.schedule = mySchedules[completedSchedules.count]
                 }
             }
+        if segue.identifier == "toQuestionVC" {
+            if let destinationVC = segue.destination as? QuestionViewController ,
+            let index = ARtable.indexPathForSelectedRow{
+                destinationVC.topic = topic
+                destinationVC.schedule = mySchedules[index.row]
+            }
+            
+        }
+
+        
 
         }
     @IBAction func comeHere(segue:UIStoryboardSegue) {

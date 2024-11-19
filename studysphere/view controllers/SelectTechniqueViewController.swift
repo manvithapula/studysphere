@@ -56,7 +56,7 @@ class SelectTechniqueViewController: UIViewController {
         
     }
     @IBAction func createAR(_ sender: Any) {
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,completed: false,subtitle: "")
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,completed: false,subtitle: "6 more to go")
         newTopic = topicsDb.create(&newTopic)
         for var question in ARQuestions{
             question.topic = newTopic.id

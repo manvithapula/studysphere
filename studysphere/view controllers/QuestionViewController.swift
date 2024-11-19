@@ -17,26 +17,18 @@ class QuestionViewController: UIViewController {
     @IBOutlet weak var Option4: UIButton!
     @IBOutlet weak var RightAnswer: UIButton!
     @IBOutlet weak var Next: UIButton!
+    private var incorrectNumCount: Int = 0
+    private var correctNumCount: Int = 0
     
     // MARK: - Properties
     private var currentQuestionIndex = 0
     private var score = 0
     private let totalQuestions = 10
-    
-    // Quiz questions array
-//    private let questions = [
-//        Question(
-//            questionNumber: "Question 1/10",
-//            text: "Under which calendar year is New Years Day Jan.1",
-//            options: ["Julian Calendar", "Gregorian Calendar", "Jewish Calendar", "Chinese Calendar"],
-//            correctAnswer: 1
-//        ),
-//        // Add more questions as needed
-//    ]
-    
+
     // MARK: - Lifecycle
     var topic:Topics?
     var questions:[Questions] = []
+    var schedule:Schedule?
     override func viewDidLoad() {
         super.viewDidLoad()
         questions = questionsDb.findAll(where: ["topic":topic!.id])
@@ -83,8 +75,7 @@ class QuestionViewController: UIViewController {
         
         // Reset button states
         resetButtonStates()
-        
-        // Update progress bar
+
     }
     
     private func resetButtonStates() {
@@ -145,18 +136,9 @@ class QuestionViewController: UIViewController {
     }
     
     private func showFinalScore() {
-        let alert = UIAlertController(
-            title: "Quiz Complete!",
-            message: "Your score is \(score) out of \(questions.count)",
-            preferredStyle: .alert
-        )
-        
-        let restartAction = UIAlertAction(title: "Restart", style: .default) { [weak self] _ in
-            self?.restartQuiz()
-        }
-        
-        alert.addAction(restartAction)
-        present(alert, animated: true)
+        schedule?.completed = true
+        schedulesDb.update(schedule!)
+        performSegue(withIdentifier: "toARAnimation", sender: nil)
     }
     
     private func restartQuiz() {
@@ -164,12 +146,19 @@ class QuestionViewController: UIViewController {
         score = 0
         loadQuestion()
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? ARTestResultViewController {
+            destination.correct = score
+            destination.incorrect = questions.count - score
+        }
+    }
 }
-
-// MARK: - Question Model
-struct Question {
-    let questionNumber: String
-    let text: String
-    let options: [String]
-    let correctAnswer: Int
-}
+//
+//// MARK: - Question Model
+//struct Question {
+//    let questionNumber: String
+//    let text: String
+//    let options: [String]
+//    let correctAnswer: Int
+//}
