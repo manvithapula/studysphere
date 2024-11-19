@@ -103,6 +103,49 @@ struct Questions: Codable, Identifiable {
     var option4 : String
     var topic : String
 }
+struct UserProfile {
+    let name: String
+    let profilePictureURL: URL?
+    let motivationalMessage: String
+}
+
+// Streak Model
+struct StreakDay {
+    let dayOfWeek: String
+    let isCompleted: Bool
+}
+
+// Today’s Schedule Model
+struct ScheduleItem {
+    let title: String
+    let progress: Float
+}
+
+
+
+// Study Technique Model
+struct StudyTechnique {
+    let name: String
+    let completedSessions: Int
+    let totalSessions: Int
+}
+
+struct DashboardData {
+    let userProfile: UserProfile
+    let streak: [StreakDay]
+    let todaySchedule: [ScheduleItem]
+    let subjects: [Subject]
+    let studyTechniques: [StudyTechnique]
+}
+let streakValues = [
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+]
 
 var ARQuestions : [Questions] = [
     Questions(id: "", questionLabel: "1", question: "Who will win election in india ?", correctanswer: "Narendra Modi", option1: "Narendra Modi", option2: "Rahul Gandhi", option3: "Kejrival ", option4: "Umman Chandi", topic: ""),
