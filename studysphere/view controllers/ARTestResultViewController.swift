@@ -13,7 +13,8 @@ class ARTestResultViewController: UIViewController {
     // MARK: - Properties
 //    private var animationView: LottieAnimationView?
     private var tickAnimation: LottieAnimationView?
-    
+    var correct = 0
+    var incorrect = 0
     @IBOutlet private weak var tickView: UIView!
     
     // MARK: - Lifecycle
@@ -56,7 +57,7 @@ class ARTestResultViewController: UIViewController {
         print(        tickAnimation?.animation?.duration as Any
 )
         DispatchQueue.main.asyncAfter(deadline: .now() + (tickAnimation?.animation?.duration ?? 5) + 1) { [weak self] in
-            self?.performSegue(withIdentifier: "gotoFlash", sender: nil)
+            self?.performSegue(withIdentifier: "toQuestionResultProgress", sender: nil)
         }
         
     }
@@ -66,6 +67,13 @@ class ARTestResultViewController: UIViewController {
     private func scheduleNavigation() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 7) { [weak self] in
             self?.performSegue(withIdentifier: "gotoFlash", sender: nil)
+        }
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? QuestionResultViewController {
+            destination.memorised = Float(correct)
+            destination.needPractice = Float(incorrect)
         }
     }
     

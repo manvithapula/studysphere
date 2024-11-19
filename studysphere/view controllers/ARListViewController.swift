@@ -65,12 +65,12 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "spacedrepetition", for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AR", for: indexPath)
             let question = filteredquestions[indexPath.item]
             
-            if let cell = cell as? spacedCollectionViewCell {
+            if let cell = cell as? ARCollectionViewCell {
                 cell.titleLabel.text = question.title
-                cell.subtitleLabel.text = question.subtitle
+                cell.subtitleLabel.text = question.subtitle == "" ? "6 more to go" : question.subtitle
                 
                 if question.completed {
                     cell.continueButtonTapped.setTitle("Review", for: .normal)
@@ -90,7 +90,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.27))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.30))
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
