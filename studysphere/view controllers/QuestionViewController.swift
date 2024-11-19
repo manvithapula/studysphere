@@ -7,7 +7,7 @@
 import UIKit
 
 class QuestionViewController: UIViewController {
-    // MARK: - Outlets
+    
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var ARProgressBar: UIProgressView!
     @IBOutlet weak var Askedquestion: UILabel!
@@ -20,12 +20,12 @@ class QuestionViewController: UIViewController {
     private var incorrectNumCount: Int = 0
     private var correctNumCount: Int = 0
     
-    // MARK: - Properties
+    //properties
     private var currentQuestionIndex = 0
     private var score = 0
     private let totalQuestions = 2
 
-    // MARK: - Lifecycle
+    //lifecycle
     var topic:Topics?
     var questions:[Questions] = []
     var schedule:Schedule?
@@ -36,7 +36,7 @@ class QuestionViewController: UIViewController {
         loadQuestion()
     }
     
-    // MARK: - UI Setup
+    // UI
     private func setupUI() {
         // Style all option buttons
         [Option1, Option2, Option3, Option4].forEach { button in
@@ -91,7 +91,7 @@ class QuestionViewController: UIViewController {
         ARProgressBar.setProgress(progress, animated: true)
     }
     
-    // MARK: - Actions
+    //actions
     @IBAction func optionButtonTapped(_ sender: UIButton) {
         // Disable all options
         [Option1, Option2, Option3, Option4].forEach { $0?.isEnabled = false }
@@ -108,7 +108,7 @@ class QuestionViewController: UIViewController {
         default: selectedAnswer = ""
         }
         
-        // Check answer
+        // answer check
         if selectedAnswer == currentQuestion.correctanswer {
             sender.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.3)
             score += 1
@@ -155,7 +155,7 @@ class QuestionViewController: UIViewController {
     }
 }
 //
-//// MARK: - Question Model
+
 //struct Question {
 //    let questionNumber: String
 //    let text: String

@@ -9,7 +9,7 @@ import UIKit
 
 class SignupViewController: UIViewController {
 
-    // Outlets
+
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!

@@ -15,7 +15,7 @@ class ProfileMainViewController: UIViewController {
     @IBOutlet weak var preferencesTable: UITableView!
 
     
-    // MARK: - Table Height Constraint
+    //Table Height Constraint
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
@@ -71,7 +71,7 @@ class ProfileMainViewController: UIViewController {
         // Set row height
         preferencesTable.rowHeight = 44
         
-        // Remove extra separators
+        //extra separators
         preferencesTable.tableFooterView = UIView()
         
         // Set separator style
@@ -99,7 +99,7 @@ class ProfileMainViewController: UIViewController {
         detailsButton.layer.cornerRadius = 12
         detailsButton.contentHorizontalAlignment = .left
         
-        // Add chevron to details button
+        //cheveron to buttons
         let chevronImage = UIImage(systemName: "chevron.right")
         let chevronImageView = UIImageView(image: chevronImage)
         chevronImageView.tintColor = .systemGray
@@ -133,7 +133,7 @@ class ProfileMainViewController: UIViewController {
         }
 }
 
-// MARK: - TableView DataSource & Delegate
+//TableView DataSource & Delegate
 extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -208,12 +208,13 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
                         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = navVC
         }
         }
+    //notifications and face id 
     @objc private func toggleValueChanged(_ sender: UISwitch) {
             switch sender.tag {
-            case 0:  // Push notifications
+            case 0:
                 user.pushNotificationEnabled = sender.isOn
                 
-            case 1:  // Face ID
+            case 1:
                 user.faceIdEnabled = sender.isOn
                 
             default:

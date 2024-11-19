@@ -9,7 +9,7 @@ import UIKit
 
 class SummariserViewController: UIViewController, UITextViewDelegate {
     
-    // Outlets
+    
     @IBOutlet weak var headingLabel: UILabel!
     @IBOutlet weak var summaryTextView: UITextView!
     

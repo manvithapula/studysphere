@@ -7,25 +7,25 @@
 import UIKit
 
 class ARResultViewController: UIViewController {
-    // MARK: - Outlets
+    
     @IBOutlet weak var circularProgress: ProgressViewCIrcle!
     @IBOutlet weak var correctLabel: UILabel!
     @IBOutlet weak var incorrectLabel: UILabel!
     @IBOutlet weak var totalPercentageLabel: UILabel!
 
-    // MARK: - Properties
+    
     var correctAnswers: Int = 0
     var incorrectAnswers: Int = 0
 
-    // MARK: - Lifecycle
-    override func viewDidLoad() {
+    
+    override func viewDidLoad() {  // lifrcycle
         super.viewDidLoad()
 
         setupNavigationBar()
         updateUI()
     }
 
-    // MARK: - Private Methods
+    //methods
     private func setupNavigationBar() {
         let leftButton = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = leftButton
@@ -41,7 +41,7 @@ class ARResultViewController: UIViewController {
         totalPercentageLabel.text = "(\(Int(percentage * 100)))%"
     }
 
-    // MARK: - Actions
+    //actions
     @objc private func backButtonTapped() {
         performSegue(withIdentifier: "backToHome", sender: nil)
     }

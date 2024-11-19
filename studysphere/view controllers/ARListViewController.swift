@@ -107,7 +107,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
 
     @objc func detailButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "toARschedule", sender: sender.tag) // Pass the tag as the sender
+        performSegue(withIdentifier: "toARschedule", sender: sender.tag)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

@@ -143,7 +143,7 @@ class FlashcardViewController: UIViewController {
     }
 
     
-    // MARK: - Optional: Button Actions for arrow buttons
+    // arrow buttons
     
     @IBAction func previousCardButton(_ sender: UIButton) {
         if currentCardIndex > 0 {

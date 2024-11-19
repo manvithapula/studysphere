@@ -8,7 +8,7 @@
 import UIKit
 
 class homeScreenViewController:UIViewController {
-    //
+    //general labels
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var introMessage: UILabel!
     
@@ -203,5 +203,5 @@ class homeScreenViewController:UIViewController {
                 studyTechniques: studyTechniques
             )
         }
-    // In HomeViewController (destination)
+    
     }

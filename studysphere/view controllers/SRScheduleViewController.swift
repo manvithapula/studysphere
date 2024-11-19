@@ -48,7 +48,7 @@ class SRScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        
         scheduleTable.delegate = self
         scheduleTable.dataSource = self
         setup()

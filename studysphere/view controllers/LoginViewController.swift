@@ -10,7 +10,7 @@ import UIKit
 class LoginViewController: UIViewController {
 
 
-        // Outlets
+        
         @IBOutlet weak var emailTextField: UITextField!
         @IBOutlet weak var passwordTextField: UITextField!
         @IBOutlet weak var loginButton: UIButton!
@@ -30,7 +30,7 @@ class LoginViewController: UIViewController {
     }
         
         private func setupUI() {
-            // Customize the login button
+            //login button
             loginButton.layer.cornerRadius = 8
             loginButton.clipsToBounds = true
         }
@@ -65,12 +65,12 @@ class LoginViewController: UIViewController {
         }
         
         @IBAction func forgotPasswordButtonTapped(_ sender: UIButton) {
-            // Handle forgot password action
+            //forgot pass
             print("Forgot password tapped")
         }
         
         @IBAction func googleSignInButtonTapped(_ sender: UIButton) {
-            // Handle Google sign-in action
+            // signin
             print("Sign in with Google tapped")
         }
         
@@ -96,18 +96,4 @@ class LoginViewController: UIViewController {
     }
 
 
-   
-        // Do any additional setup after loading the view.
-
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 

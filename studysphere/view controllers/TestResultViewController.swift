@@ -10,7 +10,7 @@ import Lottie
 
 class TestResultViewController: UIViewController {
     
-    // MARK: - Properties
+    //Properties
 //    private var animationView: LottieAnimationView?
     private var tickAnimation: LottieAnimationView?
     var memorised:Float = 0
@@ -18,7 +18,7 @@ class TestResultViewController: UIViewController {
     
     @IBOutlet private weak var tickView: UIView!
     
-    // MARK: - Lifecycle
+    //lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
@@ -26,7 +26,7 @@ class TestResultViewController: UIViewController {
         startAnimations()
     }
     
-    // MARK: - Setup Methods
+    //setup methods
     private func setupNavigationBar() {
         navigationItem.hidesBackButton = true
     }

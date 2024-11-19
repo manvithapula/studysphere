@@ -45,7 +45,7 @@ class AReditViewController: UIViewController {
         
         setupTableView()
 
-        // Do any additional setup after loading the view.
+        
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -69,8 +69,8 @@ extension AReditViewController: UITableViewDelegate, UITableViewDataSource {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 120, height: 30)
         button.setTitle(formatDateToString(date: schedule.date), for: .normal)
-        // Update the button action to show date picker
-        button.tag = indexPath.row  // Add tag to identify which row was tapped
+        
+        button.tag = indexPath.row
         button.addTarget(self, action: #selector(dateButtonTapped(_:)), for: .touchUpInside)
         button.tintColor = .gray
         button.backgroundColor = .clear
@@ -92,7 +92,7 @@ extension AReditViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     func showDatePicker(for indexPath: IndexPath) {
-            // Create date picker and toolbar if they don't exist
+            
             if datePicker == nil {
                 setupDatePicker()
             }

@@ -8,7 +8,7 @@
 import UIKit
 
 class ProfileDetailsViewController: UIViewController {
-    // MARK: - Outlets
+    
     @IBOutlet private weak var profileImageView: UIImageView!
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var firstNameLabel: UILabel!
@@ -18,12 +18,12 @@ class ProfileDetailsViewController: UIViewController {
     @IBOutlet private weak var dateOfBirthLabel: UILabel!
     @IBOutlet private weak var dateOfBirthValueLabel: UILabel!
     
-    // MARK: - Text Fields for Edit Mode
+    //text field
     private lazy var firstNameTextField: UITextField = createTextField(withText: firstNameValueLabel.text)
     private lazy var lastNameTextField: UITextField = createTextField(withText: lastNameValueLabel.text)
     private lazy var dateTextField: UITextField = createTextField(withText: dateOfBirthValueLabel.text)
     
-    // MARK: - Properties
+    //properties
     private var isEditMode = false
     private let datePicker = UIDatePicker()
     
@@ -102,7 +102,7 @@ class ProfileDetailsViewController: UIViewController {
         datePicker.preferredDatePickerStyle = .wheels
         dateTextField.inputView = datePicker
         
-        // Add toolbar with Done button
+       //done button
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDonePressed))
@@ -120,7 +120,7 @@ class ProfileDetailsViewController: UIViewController {
         }
     }
     
-    // MARK: - Edit Mode Handling
+    //model handling
     private func toggleEditMode() {
         isEditMode.toggle()
         
@@ -182,7 +182,7 @@ class ProfileDetailsViewController: UIViewController {
         // saveToDataSource()
     }
     
-    // MARK: - Actions
+    //Actions
     @objc private func editTapped() {
         toggleEditMode()
     }
@@ -205,7 +205,7 @@ class ProfileDetailsViewController: UIViewController {
     }
 }
 
-// MARK: - UIImagePickerControllerDelegate
+//UIImagePickerControllerDelegate
 extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let editedImage = info[.editedImage] as? UIImage {

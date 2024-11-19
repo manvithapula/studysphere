@@ -6,7 +6,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     let picker = UIPickerView()
     var thisSaturday: Date!
 
-    // Outlets
+    
     @IBOutlet weak var Topic: UITextField!
     @IBOutlet weak var Date: UITextField!
     @IBOutlet weak var NextButton: UIButton!
@@ -18,12 +18,12 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // Dropdown TableView for subjects
     var dropdownTableView: UITableView!
-    var subjects: [Subject] = [] // Referenced dynamically from SubjectListTableViewController
+    var subjects: [Subject] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Initial setup
+        //intial setup
         Topic.returnKeyType = .done
         Topic.autocorrectionType = .no
         Date.returnKeyType = .done
@@ -105,7 +105,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    // MARK: - UITableViewDataSource and UITableViewDelegate
+    //DataSource and tableDelegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return subjects.count + 1 // Include "Add Subject" button
