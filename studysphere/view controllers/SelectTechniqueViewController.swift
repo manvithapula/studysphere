@@ -30,7 +30,7 @@ class SelectTechniqueViewController: UIViewController {
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Date(),updatedAt: Date())
         newTopic = topicsDb.create(&newTopic)
         let flashcards = createFlashCards(topic: newTopic.id)
-        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id)
+        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.flashcards)
         for var schedule in mySchedules{
             let _ = schedulesDb.create(&schedule)
         }
@@ -62,7 +62,7 @@ class SelectTechniqueViewController: UIViewController {
             question.topic = newTopic.id
             let _ = questionsDb.create(&question)
         }
-        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id)
+        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.quizzes)
         for var schedule in mySchedules{
             let _ = schedulesDb.create(&schedule)
         }
@@ -88,7 +88,7 @@ class SelectTechniqueViewController: UIViewController {
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,subtitle: "",createdAt: Date(),updatedAt: Date())
         newTopic = topicsDb.create(&newTopic)
         let summary = createSummary(topic: newTopic.id)
-        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id)
+        let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.summary)
         for var schedule in mySchedules{
             let _ = schedulesDb.create(&schedule)
         }

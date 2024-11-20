@@ -164,6 +164,7 @@ struct Schedule:Codable,Identifiable{
     var time:String
     var completed:Date?
     var topic:String
+    var topicType:TopicsType
     var createdAt:Date
     var updatedAt:Date
 }
@@ -199,16 +200,16 @@ var date:Date?{
     formatDateFromString(date: unformattedDate)
 }
 
-var schedules:[Schedule] = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title: "Swift fundamentals ",topic: "Swift")
+var schedules:[Schedule] = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title: "Swift fundamentals ",topic: "Swift",topicsType: TopicsType.flashcards)
 
 import Foundation
 
-func spacedRepetitionSchedule(startDate: Date,title:String,topic:String) -> [Schedule] {
+func spacedRepetitionSchedule(startDate: Date,title:String,topic:String,topicsType:TopicsType) -> [Schedule] {
     let intervals = [0, 1, 3, 7, 14, 30]
     let calendar = Calendar.current
     let schedule = intervals.map { interval in
         let date = calendar.date(byAdding: .day, value: interval, to: startDate)!
-        return Schedule(id:"",title: title, date: date, time: "10:00 AM", topic: topic,createdAt:Date(),updatedAt:Date())
+        return Schedule(id:"",title: title, date: date, time: "10:00 AM", topic: topic,topicType: topicsType, createdAt:Date(),updatedAt:Date())
     }
     
     return schedule

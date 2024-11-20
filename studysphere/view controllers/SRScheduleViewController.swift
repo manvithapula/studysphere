@@ -25,7 +25,7 @@ class SRScheduleViewController: UIViewController {
         mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
         circularProgressV.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(mySchedules.count))
         if(mySchedules.count == 0){
-            mySchedules = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title:topic!.title,topic: topic!.id)
+            mySchedules = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title:topic!.title,topic: topic!.id,topicsType: TopicsType.flashcards)
             for var schedule in mySchedules{
                 let _ = schedulesDb.create(&schedule)
             }
