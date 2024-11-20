@@ -80,7 +80,12 @@ class FlashcardViewController: UIViewController {
     private func animateCardTransition(direction: UIRectEdge) {
         let translation = direction == .left ? -cardView.frame.width : cardView.frame.width
         let rotation = direction == .left ? Double.pi/6 : -Double.pi/6
-
+        //change background color
+        if direction == .left {
+            self.view.backgroundColor = .systemGreen
+        } else {
+            self.view.backgroundColor = .systemOrange
+        }
         UIView.animate(withDuration: 0.3,
                       delay: 0,
                       usingSpringWithDamping: 0.8,  // Add springiness
@@ -111,6 +116,7 @@ class FlashcardViewController: UIViewController {
                           animations: {
                 self.cardView.transform = .identity
                 self.cardView.alpha = 1
+                self.view.backgroundColor = .white
             })
             
             self.updateCountLabels()
@@ -124,6 +130,11 @@ class FlashcardViewController: UIViewController {
     private func animateOut(direction: UIRectEdge){
         let translation = direction == .left ? -cardView.frame.width : cardView.frame.width
         let rotation = direction == .left ? Double.pi/6 : -Double.pi/6
+        if direction == .left {
+            self.view.backgroundColor = .systemGreen
+        } else {
+            self.view.backgroundColor = .systemOrange
+        }
         UIView.animate(withDuration: 0.3,
                       delay: 0,
                       usingSpringWithDamping: 0.8,  // Add springiness
@@ -134,10 +145,12 @@ class FlashcardViewController: UIViewController {
                 .rotated(by: rotation)
             self.cardView.transform = transform
             self.cardView.alpha = 0
+            
         }) { _ in
             self.isShowingAnswer = false
             self.answerLabel.text = self.flashcards[self.currentCardIndex].question
             self.updateCompletion()
+            self.view.backgroundColor = .white
             self.performSegue(withIdentifier: "TestResultViewController", sender: nil)
         }
     }
