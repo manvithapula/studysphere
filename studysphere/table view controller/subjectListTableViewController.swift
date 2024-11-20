@@ -36,7 +36,7 @@ class subjectListTableViewController: UITableViewController {
           }
           
         addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-            var newSubject = Subject(id:"",name: newSubjectName)
+            var newSubject = Subject(id:"",name: newSubjectName, createdAt: Date(), updatedAt: Date())
             newSubject = subjectDb.create(&newSubject)
             self?.subjects.append(newSubject)
             self?.tableView.reloadData()  // Reload the table view to show the new subject

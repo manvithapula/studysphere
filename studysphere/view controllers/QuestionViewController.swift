@@ -136,8 +136,8 @@ class QuestionViewController: UIViewController {
     }
     
     private func showFinalScore() {
-        schedule?.completed = true
-        schedulesDb.update(schedule!)
+        schedule?.completed = Date()
+        schedulesDb.update(&schedule!)
         performSegue(withIdentifier: "toARAnimation", sender: nil)
     }
     

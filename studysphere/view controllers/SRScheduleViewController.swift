@@ -16,7 +16,7 @@ class SRScheduleViewController: UIViewController {
     private var mySchedules: [Schedule] = []
     var completedSchedules: [Schedule]{
         mySchedules.filter({
-            $0.completed
+            $0.completed != nil
         })
     }
     
@@ -36,13 +36,13 @@ class SRScheduleViewController: UIViewController {
         if(countDiff == 0){
             remainingNumberL.text = "All schedules are completed"
             topic?.subtitle = "All schedules are completed"
-            topic?.completed = true
+            topic?.completed = Date()
         }
         else{
             remainingNumberL.text = "\(countDiff) more to go"
             topic?.subtitle = "\(countDiff) more to go"
         }
-        topicsDb.update(topic!)
+        topicsDb.update(&topic!)
     }
     
     override func viewDidLoad() {
@@ -107,7 +107,7 @@ extension SRScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         let scedules = mySchedules[indexPath.row]
         
         if let cell = cell as? SRScheduleTableViewCell {
-            cell.completionImage.image = UIImage(systemName: scedules.completed ? "checkmark.circle.fill" : "circle.dashed")
+            cell.completionImage.image = UIImage(systemName: scedules.completed != nil ? "checkmark.circle.fill" : "circle.dashed")
             cell.titleL.text = scedules.title
             cell.dateL.text = "Date: " + formatDateToString(date: scedules.date)
             cell.timeL.text = "Time: " + scedules.time

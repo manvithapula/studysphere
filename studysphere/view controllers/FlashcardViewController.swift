@@ -15,7 +15,7 @@ class FlashcardViewController: UIViewController {
     @IBOutlet weak var memorisedCount: UILabel!
     private var practiceNumCount: Int = 0
     private var memorisedNumCount: Int = 0
-    var flashcards: [Flashcard] = flashcards1
+    var flashcards: [Flashcard] = []
     var schedule:Schedule?
     
     var currentCardIndex = 0
@@ -58,8 +58,8 @@ class FlashcardViewController: UIViewController {
     
     // Handle swipe right (Memorised count)
     fileprivate func updateCompletion() {
-        schedule?.completed = true
-        schedulesDb.update(schedule!)
+        schedule?.completed = Date()
+        schedulesDb.update(&schedule!)
     }
     
     @IBAction func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {

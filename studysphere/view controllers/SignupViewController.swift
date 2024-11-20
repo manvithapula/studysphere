@@ -54,15 +54,15 @@ class SignupViewController: UIViewController {
             return
         }
         
-        var newUser = UserDetailsType(id: "", firstName: firstName, lastName: lastName, dob: datePicker.date, pushNotificationEnabled: false, faceIdEnabled: false, email: email, password: password)
+        var newUser = UserDetailsType(id: "", firstName: firstName, lastName: lastName, dob: datePicker.date, pushNotificationEnabled: false, faceIdEnabled: false, email: email, password: password, createdAt: Date(), updatedAt: Date())
         
-        let user = userDB.findFirst(where: ["email":email])
+        var user = userDB.findFirst(where: ["email":email])
         if  user != nil{
             showAlert(message: "User with email \(email) already exists.")
             return
         }
         
-        userDB.create(&newUser)
+        user = userDB.create(&newUser)
         dismiss(animated: true)
         print("Signing up with email: \(email), name: \(firstName) \(lastName)")
     }

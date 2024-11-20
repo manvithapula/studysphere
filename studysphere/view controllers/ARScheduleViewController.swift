@@ -17,7 +17,7 @@ class ARScheduleViewController: UIViewController {
 
     var completedSchedules: [Schedule]{
         mySchedules.filter({
-            $0.completed
+            $0.completed != nil
         })
     }
     var topic: Topics?
@@ -29,13 +29,13 @@ class ARScheduleViewController: UIViewController {
         if(countDiff == 0){
             ARremaningnumber.text = "All schedules are completed"
             topic?.subtitle = "All schedules are completed"
-            topic?.completed = true
+            topic?.completed = Date()
         }
         else{
             ARremaningnumber.text = "\(countDiff) more to go"
             topic?.subtitle = "\(countDiff) more to go"
         }
-        topicsDb.update(topic!)
+        topicsDb.update(&topic!)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,7 +90,7 @@ extension ARScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         let scedules = mySchedules[indexPath.row]
         
         if let cell = cell as? ARScheduleTableViewCell {
-            cell.ARcompletionImage.image = UIImage(systemName: scedules.completed ? "checkmark.circle.fill" : "circle.dashed")
+            cell.ARcompletionImage.image = UIImage(systemName: (scedules.completed != nil) ? "checkmark.circle.fill" : "circle.dashed")
             cell.ARtitle.text = scedules.title
             cell.ARdate.text = "Date: " + formatDateToString(date: scedules.date)
             cell.ARtime.text = "Time: " + scedules.time

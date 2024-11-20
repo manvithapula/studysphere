@@ -220,6 +220,6 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             default:
                 break
             }
-        userDB.update(user)
+        userDB.update(&user)
         }
 }

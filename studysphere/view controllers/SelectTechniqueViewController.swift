@@ -27,7 +27,7 @@ class SelectTechniqueViewController: UIViewController {
      }
      */
     @IBAction func createSR(_ sender: Any) {
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,completed: false,subtitle: "6 more to go")
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Date(),updatedAt: Date())
         newTopic = topicsDb.create(&newTopic)
         let flashcards = createFlashCards(topic: newTopic.id)
         let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id)
@@ -56,7 +56,7 @@ class SelectTechniqueViewController: UIViewController {
         
     }
     @IBAction func createAR(_ sender: Any) {
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,completed: false,subtitle: "6 more to go")
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,subtitle: "6 more to go",createdAt: Date(),updatedAt: Date())
         newTopic = topicsDb.create(&newTopic)
         for var question in ARQuestions{
             question.topic = newTopic.id
@@ -85,7 +85,7 @@ class SelectTechniqueViewController: UIViewController {
     }
     
     @IBAction func createSummarizer(_ sender: Any) {
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,completed: false,subtitle: "")
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,subtitle: "",createdAt: Date(),updatedAt: Date())
         newTopic = topicsDb.create(&newTopic)
         let summary = createSummary(topic: newTopic.id)
         let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id)
@@ -112,7 +112,7 @@ class SelectTechniqueViewController: UIViewController {
       
         }
     private func createSummary(topic:String) -> Summary{
-        var summary:Summary = Summary( id: "", topic: topic,data: "sdfasasdsadad")
+        var summary:Summary = Summary( id: "", topic: topic,data: "sdfasasdsadad", createdAt: Date(), updatedAt: Date())
         summary = summaryDb.create(&summary)
 
         return summary
@@ -120,13 +120,13 @@ class SelectTechniqueViewController: UIViewController {
             
             private func createFlashCards(topic:String) -> [Flashcard]{
                 let flashcards1: [Flashcard] = [
-                    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic:topic),
-                    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: topic),
-                    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: topic),
-                    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: topic),
-                    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: topic),
-                    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: topic),
-                    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: topic),
+                    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic:topic, createdAt: Date(), updatedAt: Date()),
+                    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: topic, createdAt: Date(), updatedAt: Date()),
+                    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: topic, createdAt: Date(), updatedAt: Date()),
+                    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: topic, createdAt: Date(), updatedAt: Date()),
+                    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: topic, createdAt: Date(), updatedAt: Date()),
+                    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: topic, createdAt: Date(), updatedAt: Date()),
+                    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: topic, createdAt: Date(), updatedAt: Date()),
                 ]
                 for var flashcard in flashcards1{
                     let _ = flashCardDb.create(&flashcard)

@@ -23,7 +23,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
     var filteredCards: [Topics] {
             return cards.filter { card in
                
-                let matchesSegment = filterState == .ongoing ? !card.completed : card.completed
+                let matchesSegment = filterState == .ongoing ? (card.completed == nil) : card.completed != nil
                 let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
                 return matchesSegment && matchesSearch
             }
@@ -71,7 +71,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
                 cell.titleLabel.text = card.title
                 cell.subtitleLabel.text = card.subtitle
                 
-                if card.completed {
+                if (card.completed != nil) {
                     cell.continueButtonTapped.setTitle("Review", for: .normal)
                 } else {
                     cell.continueButtonTapped.setTitle("Continue Studying", for: .normal)

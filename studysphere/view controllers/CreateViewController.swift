@@ -1,6 +1,7 @@
 import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
+import Foundation
 
 class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let picker = UIPickerView()
@@ -146,8 +147,8 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             
             addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-                var newSubject = Subject(id:"",name: newSubjectName)
-                subjectDb.create(&newSubject)
+                var newSubject = Subject(id:"",name: newSubjectName, createdAt: Foundation.Date(), updatedAt: Foundation.Date())
+                newSubject = subjectDb.create(&newSubject)
                 self?.subjects.append(newSubject)
                 self?.selectedSubject = newSubject
                 self?.dropdownTableView.reloadData()

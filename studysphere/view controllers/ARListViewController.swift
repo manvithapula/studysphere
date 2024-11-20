@@ -24,7 +24,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
     var filteredquestions: [Topics] {
             return questions.filter { que in
                
-                let matchesSegment = filterState == .ongoing ? !que.completed : que.completed
+                let matchesSegment = filterState == .ongoing ? (que.completed == nil) : que.completed != nil
                 let matchesSearch = searchBar.text?.isEmpty ?? true || que.title.lowercased().contains(searchBar.text!.lowercased())
                 return matchesSegment && matchesSearch
             }
@@ -72,7 +72,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
                 cell.titleLabel.text = question.title
                 cell.subtitleLabel.text = question.subtitle == "" ? "6 more to go" : question.subtitle
                 
-                if question.completed {
+                if (question.completed != nil) {
                     cell.continueButtonTapped.setTitle("Review", for: .normal)
                 } else {
                     cell.continueButtonTapped.setTitle("Continue Studying", for: .normal)

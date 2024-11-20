@@ -9,6 +9,8 @@ import Foundation
 
 protocol Identifiable {
     var id: String { get set }
+    var createdAt: Date { get set }
+    var updatedAt: Date { get set }
 }
 //homescreen
 
@@ -59,6 +61,8 @@ struct DashboardData {
 struct Subject:Codable,Identifiable{
     var id:String
     let name:String
+    var createdAt:Date
+    var updatedAt:Date
 }
 //list referencing
 struct Topics:Codable,Identifiable {
@@ -66,8 +70,10 @@ struct Topics:Codable,Identifiable {
     var title:String
     var subject:String
     var type:TopicsType
-    var completed:Bool
+    var completed:Date?
     var subtitle:String
+    var createdAt:Date
+    var updatedAt:Date
 }
 enum TopicsType: String, Codable {
     case flashcards = "flashcards"
@@ -92,6 +98,8 @@ struct UserDetailsType:Codable,Identifiable{
     var faceIdEnabled:Bool
     var email:String
     var password:String
+    var createdAt:Date
+    var updatedAt:Date
     
     static var ArchiveURL: URL {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -111,7 +119,7 @@ struct UserDetailsType:Codable,Identifiable{
         return try! plistDecoder.decode(UserDetailsType.self, from: data)
     }
 }
-var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true,email: "test@test.com",password: "password")
+var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: date!, pushNotificationEnabled: false, faceIdEnabled: true,email: "test@test.com",password: "password",createdAt:Date(),updatedAt:Date())
 
 
 //flashcard view controller
@@ -120,6 +128,8 @@ struct Flashcard:Codable,Identifiable {
     var question: String
     var answer: String
     var topic:String
+    var createdAt:Date
+    var updatedAt:Date
 }
 
 // ar view controller 
@@ -133,6 +143,8 @@ struct Questions: Codable, Identifiable {
     var option3 : String
     var option4 : String
     var topic : String
+    var createdAt:Date
+    var updatedAt:Date
 }
 
 //summariser view controller
@@ -140,6 +152,8 @@ struct Summary:Codable,Identifiable{
     var id:String
     var topic:String
     var data:String
+    var createdAt:Date
+    var updatedAt:Date
 }
 
 // active recall and spaced repetition schedule view controller
@@ -148,36 +162,20 @@ struct Schedule:Codable,Identifiable{
     var title:String
     var date:Date
     var time:String
-    var completed:Bool
+    var completed:Date?
     var topic:String
+    var createdAt:Date
+    var updatedAt:Date
 }
 
 
 
 
 var ARQuestions : [Questions] = [
-    Questions(id: "", questionLabel: "1", question: "Who will win election in india ?", correctanswer: "Narendra Modi", option1: "Narendra Modi", option2: "Rahul Gandhi", option3: "Kejrival ", option4: "Umman Chandi", topic: ""),
-    Questions(id: "", questionLabel: "2", question: "Where was the first General Indian Post", correctanswer: "Mumbai", option1: "Kolkata", option2: "Mumbai", option3: "Delhi", option4: "Chennai", topic: "")
+    Questions(id: "", questionLabel: "1", question: "Who will win election in india ?", correctanswer: "Narendra Modi", option1: "Narendra Modi", option2: "Rahul Gandhi", option3: "Kejrival ", option4: "Umman Chandi", topic: "",createdAt:Date(),updatedAt:Date()),
+    Questions(id: "", questionLabel: "2", question: "Where was the first General Indian Post", correctanswer: "Mumbai", option1: "Kolkata", option2: "Mumbai", option3: "Delhi", option4: "Chennai", topic: "",createdAt:Date(),updatedAt:Date())
 ]
 
-var flashcards1: [Flashcard] = [
-    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: ""),
-]
-var flc : [Flashcard] = [
-    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: ""),
-    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: ""),
-]
 let unformattedDate = "14 Jan 2001"
 
 func formatDateFromString(date:String) -> Date?{
@@ -210,7 +208,7 @@ func spacedRepetitionSchedule(startDate: Date,title:String,topic:String) -> [Sch
     let calendar = Calendar.current
     let schedule = intervals.map { interval in
         let date = calendar.date(byAdding: .day, value: interval, to: startDate)!
-        return Schedule(id:"",title: title, date: date, time: "10:00 AM", completed: false,topic: topic)
+        return Schedule(id:"",title: title, date: date, time: "10:00 AM", topic: topic,createdAt:Date(),updatedAt:Date())
     }
     
     return schedule
@@ -249,6 +247,7 @@ class FakeDb<T: Codable & Identifiable> {
     
     public func create(_ item: inout T) -> T{
         item.id = UUID().uuidString
+        item.createdAt = Date()
         items.append(item)
         saveData()
         return item
@@ -290,7 +289,8 @@ class FakeDb<T: Codable & Identifiable> {
         }
     }
     
-    public func update(_ item: T) {
+    public func update(_ item: inout T) {
+        item.updatedAt = Date()
         if let index = items.firstIndex(where: { $0.id == item.id }) {
             items[index] = item
             saveData()

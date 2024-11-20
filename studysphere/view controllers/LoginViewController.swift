@@ -36,6 +36,7 @@ class LoginViewController: UIViewController {
         }
     private func checkAndNavigate() {
         if AuthManager.shared.isLoggedIn {
+            guard userDB.findFirst(where: ["email": AuthManager.shared.userEmail!]) != nil else { return }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
                         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC

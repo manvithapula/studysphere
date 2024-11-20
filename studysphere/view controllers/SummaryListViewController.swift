@@ -20,7 +20,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
       var cards: [Topics] = []
       var filteredCards: [Topics] {
           return cards.filter { card in
-              let matchesSegment = filterState == .ongoing ? !card.completed : card.completed
+              let matchesSegment = filterState == .ongoing ? card.completed == nil : card.completed != nil
               let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
               return matchesSegment && matchesSearch
           }
@@ -65,7 +65,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
               cell.subTitleLabel.text = card.subtitle
               
               // Update button title based on completion
-              cell.continueButton.setTitle(card.completed ? "Review" : "Continue Studying", for: .normal)
+              cell.continueButton.setTitle((card.completed != nil) ? "Review" : "Continue Studying", for: .normal)
               
               // Handle button tap
               cell.continueButton.tag = indexPath.item

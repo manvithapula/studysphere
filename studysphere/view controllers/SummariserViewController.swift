@@ -88,7 +88,7 @@ class SummariserViewController: UIViewController, UITextViewDelegate {
 
        private func checkCompletion() {
            if progress >= 1.0 {
-               topic?.completed = true
+               topic?.completed = Date()
                if let completedTopic = topic {
                    completionHandler?(completedTopic)
                    navigationController?.popViewController(animated: true)
