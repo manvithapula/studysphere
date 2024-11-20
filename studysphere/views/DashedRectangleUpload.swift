@@ -107,7 +107,7 @@ extension DashedRectangleUpload: UIDocumentPickerDelegate {
             let fileName = selectedFileUrl.lastPathComponent
             
             // Get file size
-            let fileSize = fileData.count
+            _ = fileData.count
             
             // Here you can implement your file upload logic
             uploadFile(data: fileData, fileName: fileName)

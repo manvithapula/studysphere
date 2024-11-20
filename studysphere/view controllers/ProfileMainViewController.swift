@@ -26,7 +26,7 @@ class ProfileMainViewController: UIViewController {
             user = item
             print(item)
         }else{
-            userDB.create(&user)
+            user = userDB.create(&user)
         }
         setupUI()
         setupTableView()
