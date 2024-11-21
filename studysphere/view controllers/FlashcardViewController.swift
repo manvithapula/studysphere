@@ -14,166 +14,165 @@ class FlashcardViewController: UIViewController {
     @IBOutlet weak var needsPracticeCount: UILabel!
     @IBOutlet weak var memorisedCount: UILabel!
     private var practiceNumCount: Int = 0
-    private var memorisedNumCount: Int = 0
-    var flashcards: [Flashcard] = []
-    var schedule:Schedule?
-    
-    var currentCardIndex = 0
-    var isShowingAnswer = false
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupInitialCard()
-    }
-    
-    private func setupInitialCard() {
-        answerLabel?.text = self.flashcards[0].question
-        updateCountLabels()
-    }
-    
-    // Handle tap to reveal answer
-    @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
-        UIView.transition(with: cardView, duration: 0.3, options: .transitionFlipFromRight) {
-            self.isShowingAnswer.toggle()
-            self.answerLabel.text = self.isShowingAnswer ?
-            self.flashcards[self.currentCardIndex].answer :
-            self.flashcards[self.currentCardIndex].question
+        private var memorisedNumCount: Int = 0
+        var flashcards: [Flashcard] = []
+        var schedule: Schedule?
+        
+        var currentCardIndex = 0
+        var isShowingAnswer = false
+        
+        // New properties for drag interaction
+        private var initialTouchPoint: CGPoint = .zero
+        private var cardInitialCenter: CGPoint = .zero
+        private let dragThreshold: CGFloat = 100 // Distance to trigger card change
+        private var isDragging = false
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            setupInitialCard()
+            setupPanGesture()
+            // hide tabbar
+            tabBarController?.isTabBarHidden = true
         }
+      override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.isTabBarHidden = false
     }
-    
-    // Handle swipe left (Practice count)
-    @IBAction func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
-        guard currentCardIndex < flashcards.count - 1 else {
-            updateCompletion()
-            // navigate to TestResultViewController after animation
-            memorisedNumCount += 1
-            updateCountLabels()
-            animateOut(direction: .left)
-            return
-            
+        
+        private func setupPanGesture() {
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+            cardView.addGestureRecognizer(panGesture)
         }
-        memorisedNumCount += 1
-        animateCardTransition(direction: .left)
-    }
-    
-    // Handle swipe right (Memorised count)
-    fileprivate func updateCompletion() {
-        schedule?.completed = Date()
-        schedulesDb.update(&schedule!)
-    }
-    
-    @IBAction func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
-        guard currentCardIndex < flashcards.count - 1 else {
-            updateCompletion()
-            // navigate to TestResultViewController after animation
-            practiceNumCount += 1
-            updateCountLabels()
-            animateOut(direction: .right)
-            return
+        
+        @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+            let translation = gesture.translation(in: view)
             
+            switch gesture.state {
+            case .began:
+                // Store initial touch and card position
+                initialTouchPoint = gesture.location(in: view)
+                cardInitialCenter = cardView.center
+                isDragging = true
+            
+            case .changed:
+                guard isDragging else { return }
+                
+                // Move the card with the drag
+                cardView.center = CGPoint(
+                    x: cardInitialCenter.x + translation.x,
+                    y: cardInitialCenter.y + translation.y
+                )
+                
+                // Rotate the card based on drag
+                let rotationStrength = translation.x / view.bounds.width
+                let rotation = rotationStrength * (Double.pi / 6)
+                cardView.transform = CGAffineTransform(rotationAngle: rotation)
+                
+                // Change opacity and background based on drag direction
+                let absoluteTranslation = abs(translation.x)
+                cardView.alpha = 1 - (absoluteTranslation / (view.bounds.width / 2))
+                
+                if translation.x > 0 {
+                    view.backgroundColor = .systemGreen.withAlphaComponent(absoluteTranslation / view.bounds.width)
+                } else {
+                    view.backgroundColor = .systemOrange.withAlphaComponent(absoluteTranslation / view.bounds.width)
+                }
+            
+            case .ended:
+                isDragging = false
+                let velocity = gesture.velocity(in: view)
+                
+                // Determine if card should be swiped away
+                if abs(translation.x) > dragThreshold || abs(velocity.x) > 500 {
+                    // Swipe away
+                    performCardSwipe(direction: translation.x > 0 ? .left : .right)
+                } else {
+                    // Snap back to original position
+                    UIView.animate(withDuration: 0.3) {
+                        self.cardView.center = self.cardInitialCenter
+                        self.cardView.transform = .identity
+                        self.cardView.alpha = 1
+                        self.view.backgroundColor = .white
+                    }
+                }
+            
+            default:
+                break
+            }
         }
-        practiceNumCount += 1
-        animateCardTransition(direction: .right)
-    }
-    
-    // Card transition animation
-    private func animateCardTransition(direction: UIRectEdge) {
-        let translation = direction == .left ? -cardView.frame.width : cardView.frame.width
-        let rotation = direction == .left ? Double.pi/6 : -Double.pi/6
-        //change background color
-        if direction == .left {
-            self.view.backgroundColor = .systemGreen
-        } else {
-            self.view.backgroundColor = .systemOrange
-        }
-        UIView.animate(withDuration: 0.3,
-                      delay: 0,
-                      usingSpringWithDamping: 0.8,  // Add springiness
-                      initialSpringVelocity: 0.5,
-                      options: [.curveEaseOut],
-                      animations: {
-            let transform = CGAffineTransform(translationX: -translation, y: 0)
-                .rotated(by: rotation)
-            self.cardView.transform = transform
-            self.cardView.alpha = 0
-        }) { _ in
-            // Update card content
-            self.currentCardIndex += 1
-            self.isShowingAnswer = false
-            self.answerLabel.text = self.flashcards[self.currentCardIndex].question
+        
+        private func performCardSwipe(direction: UIRectEdge) {
+            let translation = direction == .left ? -cardView.frame.width : cardView.frame.width
+            let rotation = direction == .left ? Double.pi/6 : -Double.pi/6
             
-            // Reset position with opposite rotation
-            let entranceTransform = CGAffineTransform(translationX: translation, y: 0)
-                .rotated(by: -rotation)
-            self.cardView.transform = entranceTransform
-            
-            // Animate card coming back with spring effect
             UIView.animate(withDuration: 0.3,
-                          delay: 0,
-                          usingSpringWithDamping: 0.7,
-                          initialSpringVelocity: 0.5,
-                          options: [.curveEaseOut],
-                          animations: {
-                self.cardView.transform = .identity
-                self.cardView.alpha = 1
-                self.view.backgroundColor = .white
-            })
-            
-            self.updateCountLabels()
+                           delay: 0,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.5,
+                           options: [.curveEaseOut],
+                           animations: {
+                let transform = CGAffineTransform(translationX: -translation, y: 0)
+                    .rotated(by: rotation)
+                self.cardView.transform = transform
+                self.cardView.alpha = 0
+            }) { _ in
+                // Update counts based on swipe direction
+                if direction == .left {
+                    self.memorisedNumCount += 1
+                } else {
+                    self.practiceNumCount += 1
+                }
+                
+                // Move to next card or finish session
+                if self.currentCardIndex < self.flashcards.count - 1 {
+                    self.currentCardIndex += 1
+                    self.isShowingAnswer = false
+                    self.answerLabel.text = self.flashcards[self.currentCardIndex].question
+                    self.updateCountLabels()
+                    
+                    // Reset card position
+                    self.cardView.center = self.cardInitialCenter
+                    self.cardView.transform = .identity
+                    self.cardView.alpha = 1
+                    self.view.backgroundColor = .white
+                } else {
+                    // Last card - navigate to result screen
+                    self.updateCompletion()
+                    self.performSegue(withIdentifier: "TestResultViewController", sender: nil)
+                }
+            }
+        }
+        
+        // Existing methods (setupInitialCard, updateCompletion, etc.) remain the same
+        private func setupInitialCard() {
+            answerLabel?.text = self.flashcards[0].question
+            updateCountLabels()
+        }
+        
+        private func updateCompletion() {
+            schedule?.completed = Date()
+            schedulesDb.update(&schedule!)
+        }
+        
+        private func updateCountLabels() {
+            needsPracticeCount?.text = "\(practiceNumCount)"
+            memorisedCount?.text = "\(memorisedNumCount)"
+        }
+        
+        // Existing prepare for segue method
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            super.prepare(for: segue, sender: sender)
+            if let destination = segue.destination as? TestResultViewController {
+                destination.memorised = Float(memorisedNumCount)
+                destination.needPractice = Float(practiceNumCount)
+            }
+        }
+    @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
+            UIView.transition(with: cardView, duration: 0.3, options: .transitionFlipFromRight) {
+                self.isShowingAnswer.toggle()
+                self.answerLabel.text = self.isShowingAnswer ?
+                self.flashcards[self.currentCardIndex].answer :
+                self.flashcards[self.currentCardIndex].question
+            }
         }
     }
-    
-    private func updateCountLabels() {
-        needsPracticeCount?.text = "\(practiceNumCount)"
-        memorisedCount?.text = "\(memorisedNumCount)"
-    }
-    private func animateOut(direction: UIRectEdge){
-        let translation = direction == .left ? -cardView.frame.width : cardView.frame.width
-        let rotation = direction == .left ? Double.pi/6 : -Double.pi/6
-        if direction == .left {
-            self.view.backgroundColor = .systemGreen
-        } else {
-            self.view.backgroundColor = .systemOrange
-        }
-        UIView.animate(withDuration: 0.3,
-                      delay: 0,
-                      usingSpringWithDamping: 0.8,  // Add springiness
-                      initialSpringVelocity: 0.5,
-                      options: [.curveEaseOut],
-                      animations: {
-            let transform = CGAffineTransform(translationX: -translation, y: 0)
-                .rotated(by: rotation)
-            self.cardView.transform = transform
-            self.cardView.alpha = 0
-            
-        }) { _ in
-            self.isShowingAnswer = false
-            self.answerLabel.text = self.flashcards[self.currentCardIndex].question
-            self.updateCompletion()
-            self.view.backgroundColor = .white
-            self.performSegue(withIdentifier: "TestResultViewController", sender: nil)
-        }
-    }
-
-    
-    // arrow buttons
-    
-    @IBAction func previousCardButton(_ sender: UIButton) {
-        if currentCardIndex > 0 {
-            animateCardTransition(direction: .right)
-        }
-    }
-    
-    @IBAction func nextCardButton(_ sender: UIButton) {
-        if currentCardIndex < flashcards.count - 1 {
-            animateCardTransition(direction: .left)
-        }
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? TestResultViewController {
-            destination.memorised = Float(memorisedNumCount)
-            destination.needPractice = Float(practiceNumCount)
-        }
-    }
-}
