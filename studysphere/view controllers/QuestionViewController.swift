@@ -7,7 +7,7 @@
 import UIKit
 
 class QuestionViewController: UIViewController {
-    
+  
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var ARProgressBar: UIProgressView!
     @IBOutlet weak var Askedquestion: UILabel!
@@ -36,13 +36,15 @@ class QuestionViewController: UIViewController {
         loadQuestion()
     }
     
+ 
+    
     // UI
     private func setupUI() {
         // Style all option buttons
         [Option1, Option2, Option3, Option4].forEach { button in
             button?.layer.cornerRadius = 8
             button?.layer.borderWidth = 1
-            button?.layer.borderColor = UIColor.systemBlue.cgColor
+            button?.layer.borderColor = UIColor.systemGray.cgColor
             button?.backgroundColor = .clear
         }
         
