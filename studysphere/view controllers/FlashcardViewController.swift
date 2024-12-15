@@ -73,9 +73,9 @@ class FlashcardViewController: UIViewController {
                 cardView.alpha = 1 - (absoluteTranslation / (view.bounds.width / 2))
                 
                 if translation.x > 0 {
-                    view.backgroundColor = .systemGreen.withAlphaComponent(absoluteTranslation / view.bounds.width)
+                    view.backgroundColor = .systemGreen.withAlphaComponent((absoluteTranslation / view.bounds.width)+0.2)
                 } else {
-                    view.backgroundColor = .systemOrange.withAlphaComponent(absoluteTranslation / view.bounds.width)
+                    view.backgroundColor = .systemRed.withAlphaComponent((absoluteTranslation / view.bounds.width)+0.2)
                 }
             
             case .ended:
@@ -92,7 +92,7 @@ class FlashcardViewController: UIViewController {
                         self.cardView.center = self.cardInitialCenter
                         self.cardView.transform = .identity
                         self.cardView.alpha = 1
-                        self.view.backgroundColor = .white
+                        self.view.backgroundColor = .button
                     }
                 }
             
@@ -134,7 +134,7 @@ class FlashcardViewController: UIViewController {
                     self.cardView.center = self.cardInitialCenter
                     self.cardView.transform = .identity
                     self.cardView.alpha = 1
-                    self.view.backgroundColor = .white
+                    self.view.backgroundColor = .button
                 } else {
                     // Last card - navigate to result screen
                     self.updateCompletion()

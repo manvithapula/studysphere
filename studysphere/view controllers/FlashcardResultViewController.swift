@@ -26,7 +26,7 @@ class FlashcardResultViewController: UIViewController {
         circularPV.setProgress(value: CGFloat(needPractice/(memorised + needPractice)))
         memorisedL.text = "\(memorised)"
         needPracticeL.text = "\(needPractice)"
-        percentageL.text = "\(Int(needPractice/(memorised + needPractice)*100))%"
+        percentageL.text = "\(Int(memorised/(memorised + needPractice)*100))%"
     }
     @objc func backButtonTapped() {
         performSegue(withIdentifier: "toScheduleUnwind", sender: nil)
