@@ -8,6 +8,8 @@
 import UIKit
 
 class homeScreenViewController:UIViewController {
+    private let gradientLayer = CAGradientLayer()
+   
     //general labels
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var introMessage: UILabel!
@@ -59,7 +61,7 @@ class homeScreenViewController:UIViewController {
         // Update streak when the home screen loads
         StreakManager.shared.updateStreak()
         updateStreakDisplay()
-        
+        setupGradientLayer()
         // Sample data
         let sampleData = createSampleDashboardData()
         setupDashboard(with: sampleData)
@@ -72,7 +74,7 @@ class homeScreenViewController:UIViewController {
         for (index, streakImageView) in streaks.enumerated() {
             if index < currentStreak {
                 streakImageView.image = UIImage(systemName: "flame")
-                streakImageView.tintColor = .red
+                streakImageView.tintColor = .systemIndigo
             } else {
                 streakImageView.image = UIImage(systemName: "circle.dotted")
                 streakImageView.tintColor = .black
@@ -89,7 +91,24 @@ class homeScreenViewController:UIViewController {
         
     }
     
-    
+    private func setupGradientLayer() {
+        let mainColor = UIColor.systemIndigo
+        
+        gradientLayer.colors = [
+            mainColor.withAlphaComponent(1.0).cgColor,
+            mainColor.withAlphaComponent(0.0).cgColor
+        ]
+        gradientLayer.locations = [0.0, 0.75]
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 200)
+        view.layer.addSublayer(gradientLayer)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset.y
+        let maxFadeOffset: CGFloat = 50
+        let opacity = max(0, 1 - offset / maxFadeOffset)
+        gradientLayer.opacity = Float(opacity)
+    }
     
     //profile icon
     
