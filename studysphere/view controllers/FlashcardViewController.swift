@@ -73,9 +73,9 @@ class FlashcardViewController: UIViewController {
                 cardView.alpha = 1 - (absoluteTranslation / (view.bounds.width / 2))
                 
                 if translation.x > 0 {
-                    view.backgroundColor = .systemGreen.withAlphaComponent((absoluteTranslation / view.bounds.width)+0.2)
+                    view.backgroundColor = .systemGreen.withAlphaComponent(0.7)
                 } else {
-                    view.backgroundColor = .systemRed.withAlphaComponent((absoluteTranslation / view.bounds.width)+0.2)
+                    view.backgroundColor = .systemRed.withAlphaComponent(0.7)
                 }
             
             case .ended:
