@@ -8,10 +8,26 @@
 import UIKit
 
 class TestQuestionViewController: UIViewController {
+        var memorised:Float = 0
+        var needPractice:Float = 0
+        @IBOutlet weak var memorisedL: UILabel!
+        @IBOutlet weak var needPracticeL: UILabel!
+        @IBOutlet weak var percentageL: UILabel!
+        override func viewDidLoad() {
+            super.viewDidLoad()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+            // Do any additional setup after loading the view.
+            // make left navigation button
+            let leftButton = UIBarButtonItem(title:"Schedule",style: .plain, target: self, action: #selector(backButtonTapped))
+            navigationItem.leftBarButtonItem = leftButton
+            memorisedL.text = "\(memorised)"
+            needPracticeL.text = "\(needPractice)"
+            percentageL.text = "\(Int(memorised/(memorised + needPractice)*100))%"
+        }
+        @objc func backButtonTapped() {
+            performSegue(withIdentifier: "toQuestionBack", sender: nil)
+        }
+        
         // Do any additional setup after loading the view.
     }
     
@@ -26,4 +42,3 @@ class TestQuestionViewController: UIViewController {
     }
     */
 
-}
