@@ -15,6 +15,8 @@ class QuestionResultViewController: UIViewController {
     @IBOutlet weak var memorisedL: UILabel!
     @IBOutlet weak var needPracticeL: UILabel!
     @IBOutlet weak var percentageL: UILabel!
+    @IBOutlet weak var youGot: UILabel!
+    @IBOutlet weak var thatsBetter: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,15 +25,16 @@ class QuestionResultViewController: UIViewController {
         let leftButton = UIBarButtonItem(title:"Schedule",style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = leftButton
         
-        circularPV.setProgress(value: CGFloat(needPractice/(memorised + needPractice)))
-        memorisedL.text = "\(memorised)"
-        needPracticeL.text = "\(needPractice)"
-        percentageL.text = "\(Int(memorised/(memorised + needPractice)*100))%"
+        let total = memorised + needPractice
+        youGot.text = "You got \(memorised)/\(total) questions Correct"
+        thatsBetter.text = "That's better than \(Int(memorised/(total)*100))% of means"
     }
     @objc func backButtonTapped() {
         performSegue(withIdentifier: "toQuestionBack", sender: nil)
     }
-    
+    @IBAction func goBack(_ sender: Any) {
+        performSegue(withIdentifier: "toQuestionBack", sender: nil)
+    }
 
     /*
     // MARK: - Navigation

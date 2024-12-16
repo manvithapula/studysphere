@@ -137,6 +137,7 @@ class QuestionViewController: UIViewController {
         currentQuestionIndex += 1
         updateProgress()
         loadQuestion()
+        self.view.backgroundColor = .systemIndigo
     }
     
     private func showFinalScore() {

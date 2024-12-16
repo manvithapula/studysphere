@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcp-kn-L0O">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="31H-mw-hQE">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -758,10 +758,10 @@
             </objects>
             <point key="canvasLocation" x="9305" y="1660"/>
         </scene>
-        <!--Test Question View Controller-->
+        <!--Flashcard Result View Controller-->
         <scene sceneID="kjQ-JB-qVh">
             <objects>
-                <viewController id="OFi-lM-saL" customClass="TestQuestionViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="OFi-lM-saL" customClass="FlashcardResultViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YQr-ZL-jx6">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -812,15 +812,25 @@
                                 <color key="tintColor" red="0.34117650989999998" green="0.33725491169999999" blue="0.80392158030000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal" title="Next"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Next"/>
+                                <connections>
+                                    <action selector="goBack:" destination="OFi-lM-saL" eventType="touchUpInside" id="kRG-Vd-qk4"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yu3-ng-fqS"/>
                         <color key="backgroundColor" red="0.73725497719999999" green="0.73333334920000004" blue="0.92156863209999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
+                    <navigationItem key="navigationItem" id="qdc-DL-Jf1"/>
+                    <connections>
+                        <outlet property="thatsBetter" destination="8ic-zT-7yx" id="FFB-ky-TTl"/>
+                        <outlet property="youGot" destination="xjg-QD-Ror" id="Sh3-tS-iaG"/>
+                        <segue destination="tdE-Rc-szL" kind="unwind" identifier="toScheduleUnwind" unwindAction="comeHereWithSegue:" id="FIx-Uu-uSm"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OMK-Mj-gQX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="tdE-Rc-szL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="7363" y="3743"/>
+            <point key="canvasLocation" x="3700" y="3743"/>
         </scene>
         <!--Select Technique-->
         <scene sceneID="9om-rs-JPu">
@@ -1752,7 +1762,7 @@
                     <navigationItem key="navigationItem" id="NXG-UC-7st"/>
                     <connections>
                         <outlet property="tickView" destination="pUa-bS-Qhz" id="U4N-HN-N0I"/>
-                        <segue destination="Z3K-0R-GjF" kind="show" identifier="toflresult" id="WTn-6u-mTy"/>
+                        <segue destination="OFi-lM-saL" kind="show" identifier="toflresult" id="961-LY-nh0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Eh-r5-2Nw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1787,7 +1797,7 @@
                     <connections>
                         <outlet property="tickView" destination="xxw-CT-vjW" id="0W2-wo-2jp"/>
                         <segue destination="7Ig-aY-LMO" kind="unwind" identifier="gotoFlash" unwindAction="comeHereWithSegue:" id="ym1-KW-KHo"/>
-                        <segue destination="ces-GG-yb1" kind="show" identifier="toQuestionResultProgress" id="YJZ-U1-mrI"/>
+                        <segue destination="r3D-Bs-KK1" kind="show" identifier="toQuestionResultProgress" id="Ch3-LU-Swa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nhM-Kh-kas" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2581,7 +2591,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2651,7 +2661,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PqP-Tx-D2M" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="QSW-1B-VTG" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2164" y="2361"/>
         </scene>
@@ -2715,7 +2724,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2785,7 +2794,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="cqd-V2-rT9" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="5738" y="2345"/>
         </scene>
@@ -3129,7 +3137,6 @@
                         <outlet property="memorisedL" destination="cEg-fa-2nR" id="SB6-QI-hr8"/>
                         <outlet property="needPracticeL" destination="qwT-Xo-Rof" id="942-gV-Z4m"/>
                         <outlet property="percentageL" destination="6Gw-3B-YLP" id="8gW-dz-Lda"/>
-                        <segue destination="QSW-1B-VTG" kind="unwind" identifier="toScheduleUnwind" unwindAction="comeHereWithSegue:" id="Xek-3h-rIc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oaC-zs-Cyh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3218,7 +3225,6 @@
                         <outlet property="memorisedL" destination="DVe-nZ-z2k" id="VMt-kx-fpm"/>
                         <outlet property="needPracticeL" destination="1jk-AZ-E7P" id="fAI-ED-Ig1"/>
                         <outlet property="percentageL" destination="rKa-3c-j0D" id="ZfP-bf-uXS"/>
-                        <segue destination="cqd-V2-rT9" kind="unwind" identifier="toQuestionBack" unwindAction="comeHereWithSegue:" id="UTv-CP-QIT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="emm-il-rOC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3228,7 +3234,7 @@
         <!--onBoarding-->
         <scene sceneID="xU7-Ko-Wrb">
             <objects>
-                <viewController storyboardIdentifier="onBoardingV2ViewController" title="onBoarding" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FtK-if-6rg" customClass="onBoardingV2ViewController" customModule="DeskBreak_Test" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="onBoardingV2ViewController" title="onBoarding" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FtK-if-6rg" customClass="onBoardingV2ViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pzZ-zw-N29">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3464,11 +3470,85 @@
             </objects>
             <point key="canvasLocation" x="7610" y="-1001"/>
         </scene>
+        <!--Question Result View Controller-->
+        <scene sceneID="MQX-mR-nnE">
+            <objects>
+                <viewController id="r3D-Bs-KK1" customClass="QuestionResultViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tcu-Qq-2UV">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="trophy.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="EzL-Gy-nrg">
+                                <rect key="frame" x="89" y="163" width="214" height="188"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" systemColor="systemYellowColor"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Congratulations!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I8E-OS-qwp">
+                                <rect key="frame" x="98" y="392" width="197" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You Successfully Passed The Challenge " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2J-yP-U1i">
+                                <rect key="frame" x="65" y="406" width="263" height="109"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You got 3/5 Question Correct!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jOB-bN-nNq">
+                                <rect key="frame" x="73" y="502" width="250" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="That's Better than 60% of means!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vB9-1T-A82">
+                                <rect key="frame" x="60" y="532" width="284" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IBR-Rk-ayu">
+                                <rect key="frame" x="49" y="630" width="114" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.34117650989999998" green="0.33725491169999999" blue="0.8078432083" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Review"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Review"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IEF-zh-6ez">
+                                <rect key="frame" x="230" y="630" width="114" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.34117650989999998" green="0.33725491169999999" blue="0.80392158030000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Next"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Next"/>
+                                <connections>
+                                    <action selector="goBack:" destination="r3D-Bs-KK1" eventType="touchUpInside" id="Eo1-jv-CfD"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="clf-2C-sro"/>
+                        <color key="backgroundColor" red="0.73725497719999999" green="0.73333334920000004" blue="0.92156863209999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="qkY-mS-wLV"/>
+                    <connections>
+                        <outlet property="thatsBetter" destination="vB9-1T-A82" id="yKR-1K-lLg"/>
+                        <outlet property="youGot" destination="jOB-bN-nNq" id="gEC-RV-9AA"/>
+                        <segue destination="IYq-eS-AfP" kind="unwind" identifier="toQuestionBack" unwindAction="comeHereWithSegue:" id="aJE-9a-quM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CSP-le-3V4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="IYq-eS-AfP" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="6657" y="4406"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="bfc-Hh-3ad"/>
         <segue reference="PO4-kN-YgS"/>
-        <segue reference="coH-rd-R45"/>
+        <segue reference="VsD-Mw-nb3"/>
         <segue reference="sfi-Wn-OdW"/>
         <segue reference="paQ-p4-NU6"/>
     </inferredMetricsTieBreakers>
