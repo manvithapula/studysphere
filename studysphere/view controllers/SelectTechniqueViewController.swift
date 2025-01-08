@@ -101,7 +101,7 @@ class SelectTechniqueViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
                    let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                    homeVC.performSegue(withIdentifier: "toSummaryList", sender: nil)
+                    homeVC.performSegue(withIdentifier: "toSuListView", sender: nil)
                 } else {
                     print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
                 }
