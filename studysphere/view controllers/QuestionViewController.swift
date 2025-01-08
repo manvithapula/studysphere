@@ -5,6 +5,7 @@
 //  Created by Dev on 18/11/24.
 //
 import UIKit
+import FirebaseCore
 
 class QuestionViewController: UIViewController {
   
@@ -31,7 +32,9 @@ class QuestionViewController: UIViewController {
     var schedule:Schedule?
     override func viewDidLoad() {
         super.viewDidLoad()
-        questions = questionsDb.findAll(where: ["topic":topic!.id])
+        Task{
+            questions = try await questionsDb.findAll(where: ["topic":topic!.id])
+        }
         setupUI()
         loadQuestion()
     }
@@ -141,9 +144,12 @@ class QuestionViewController: UIViewController {
     }
     
     private func showFinalScore() {
-        schedule?.completed = Date()
-        schedulesDb.update(&schedule!)
-        performSegue(withIdentifier: "toARAnimation", sender: nil)
+        Task{
+            schedule?.completed = Timestamp()
+            var scheduleTemp = schedule
+            try await schedulesDb.update(&scheduleTemp!)
+            performSegue(withIdentifier: "toARAnimation", sender: nil)
+        }
     }
     
     private func restartQuiz() {

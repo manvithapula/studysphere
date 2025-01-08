@@ -29,14 +29,15 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
 
       override func viewDidLoad() {
           super.viewDidLoad()
-          print(summaryDb.findAll())
           summaryList.dataSource = self
           summaryList.delegate = self
           summaryList.setCollectionViewLayout(generateLayout(), animated: true)
           segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
           searchBar.delegate = self
-          cards = topicsDb.findAll(where: ["type": TopicsType.summary])
-          print(cards)
+          Task{
+              cards = try await topicsDb.findAll(where: ["type": TopicsType.summary.rawValue])
+              print(cards)
+          }
       }
       
       @objc func segmentChanged() {
@@ -113,7 +114,9 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
 
       override func viewWillAppear(_ animated: Bool) {
           super.viewWillAppear(animated)
-          cards = topicsDb.findAll(where: ["type": TopicsType.summary])
+          Task{
+              cards = try await topicsDb.findAll(where: ["type": TopicsType.summary.rawValue])
+          }
           summaryList.reloadData()
       }
   }

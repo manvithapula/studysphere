@@ -77,17 +77,21 @@ class ProgressViewController: UIViewController {
     }
     private func getLastWeekCount(type:TopicsType,timeInterval:Calendar.Component) -> Int {
         let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: Date())!
-        let schedules = schedulesDb.findAll(where: ["topicType":type])
+        Task{
+            let schedules = try await schedulesDb.findAll(where: ["topicType":type.rawValue])
+        }
         let lastWeekSchedules = schedules.filter{
-            $0.date >= lastWeek && $0.date <= Date()
+            $0.date.dateValue() >= lastWeek && $0.date.dateValue() <= Date()
         }
         return lastWeekSchedules.count
     }
     private func getLastWeekCompletedCount(type:TopicsType,timeInterval:Calendar.Component) -> Int {
         let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: Date())!
-        let schedules = schedulesDb.findAll(where: ["topicType":type])
+        Task{
+            let schedules = try await schedulesDb.findAll(where: ["topicType":type.rawValue])
+        }
         let lastWeekSchedules = schedules.filter{
-            $0.date >= lastWeek && $0.date <= Date() && $0.completed != nil
+            $0.date.dateValue() >= lastWeek && $0.date.dateValue() <= Date() && $0.completed != nil
         }
         return lastWeekSchedules.count
     }

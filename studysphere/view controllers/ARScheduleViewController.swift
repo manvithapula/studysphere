@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class ARScheduleViewController: UIViewController {
 
@@ -22,20 +23,26 @@ class ARScheduleViewController: UIViewController {
     }
     var topic: Topics?
     fileprivate func setup() {
-        mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
+        Task{
+            mySchedules = try await schedulesDb.findAll(where: ["topic":topic!.id])
+        }
         ARprogresswheel.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
         ProgressNum.text = "\(completedSchedules.count)/\(schedules.count)"
         let countDiff = mySchedules.count - completedSchedules.count
         if(countDiff == 0){
             ARremaningnumber.text = "All schedules are completed"
             topic?.subtitle = "All schedules are completed"
-            topic?.completed = Date()
+            topic?.completed = Timestamp()
         }
         else{
             ARremaningnumber.text = "\(countDiff) more to go"
             topic?.subtitle = "\(countDiff) more to go"
         }
-        topicsDb.update(&topic!)
+        Task{
+            var topicsTemp = topic
+            try await topicsDb.update(&topicsTemp!)
+        }
+        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,7 +99,7 @@ extension ARScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         if let cell = cell as? ARScheduleTableViewCell {
             cell.ARcompletionImage.image = UIImage(systemName: (scedules.completed != nil) ? "checkmark.circle.fill" : "circle.dashed")
             cell.ARtitle.text = scedules.title
-            cell.ARdate.text = "Date: " + formatDateToString(date: scedules.date)
+            cell.ARdate.text = "Date: " + formatDateToString(date: scedules.date.dateValue())
             cell.ARtime.text = "Time: " + scedules.time
             cell.selectionStyle = .none
 

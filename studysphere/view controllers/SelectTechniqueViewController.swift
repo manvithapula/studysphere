@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class SelectTechniqueViewController: UIViewController {
     var topic:String?
@@ -27,7 +28,7 @@ class SelectTechniqueViewController: UIViewController {
      }
      */
     @IBAction func createSR(_ sender: Any) {
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Date(),updatedAt: Date())
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         _ = createFlashCards(topic: newTopic.id)
         let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.flashcards)
@@ -43,7 +44,7 @@ class SelectTechniqueViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
                    let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                    homeVC.performSegue(withIdentifier: "toSRList", sender: nil)
+                    homeVC.performSegue(withIdentifier: "toSrListView", sender: nil)
                 } else {
                     print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
                 }
@@ -56,7 +57,7 @@ class SelectTechniqueViewController: UIViewController {
         
     }
     @IBAction func createAR(_ sender: Any) {
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,subtitle: "6 more to go",createdAt: Date(),updatedAt: Date())
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         for var question in ARQuestions{
             question.topic = newTopic.id
@@ -74,7 +75,7 @@ class SelectTechniqueViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
                    let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                    homeVC.performSegue(withIdentifier: "toArList", sender: nil)
+                    homeVC.performSegue(withIdentifier: "toArListView", sender: nil)
                 } else {
                     print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
                 }
@@ -85,7 +86,7 @@ class SelectTechniqueViewController: UIViewController {
     }
     
     @IBAction func createSummarizer(_ sender: Any) {
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,subtitle: "",createdAt: Date(),updatedAt: Date())
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,subtitle: "",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         _ = createSummary(topic: newTopic.id)
         let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.summary)
@@ -112,7 +113,7 @@ class SelectTechniqueViewController: UIViewController {
       
         }
     private func createSummary(topic:String) -> Summary{
-        var summary:Summary = Summary( id: "", topic: topic,data: "sdfasasdsadad", createdAt: Date(), updatedAt: Date())
+        var summary:Summary = Summary( id: "", topic: topic,data: "sdfasasdsadad", createdAt: Timestamp(), updatedAt: Timestamp())
         summary = summaryDb.create(&summary)
 
         return summary
@@ -120,13 +121,13 @@ class SelectTechniqueViewController: UIViewController {
             
             private func createFlashCards(topic:String) -> [Flashcard]{
                 let flashcards1: [Flashcard] = [
-                    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic:topic, createdAt: Date(), updatedAt: Date()),
-                    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: topic, createdAt: Date(), updatedAt: Date()),
-                    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: topic, createdAt: Date(), updatedAt: Date()),
-                    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: topic, createdAt: Date(), updatedAt: Date()),
-                    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: topic, createdAt: Date(), updatedAt: Date()),
-                    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: topic, createdAt: Date(), updatedAt: Date()),
-                    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: topic, createdAt: Date(), updatedAt: Date()),
+                    Flashcard(id: "", question: "What is the capital of France?", answer: "Paris",topic:topic, createdAt: Timestamp(), updatedAt: Timestamp()),
+                    Flashcard(id: "", question: "What is the capital of Germany?", answer: "Berlin",topic: topic, createdAt: Timestamp(), updatedAt: Timestamp()),
+                    Flashcard(id: "", question: "What is the capital of Italy?", answer: "Rome",topic: topic, createdAt: Timestamp(), updatedAt: Timestamp()),
+                    Flashcard(id: "", question: "What is the capital of Spain?", answer: "Madrid",topic: topic, createdAt: Timestamp(), updatedAt: Timestamp()),
+                    Flashcard(id: "", question: "What is the capital of Sweden?", answer: "Stockholm",topic: topic, createdAt: Timestamp(), updatedAt: Timestamp()),
+                    Flashcard(id: "", question: "What is the capital of Norway?", answer: "Oslo",topic: topic, createdAt: Timestamp(), updatedAt: Timestamp()),
+                    Flashcard(id: "", question: "What is the capital of Finland?", answer: "Helsinki",topic: topic, createdAt: Timestamp(), updatedAt: Timestamp()),
                 ]
                 for var flashcard in flashcards1{
                     let _ = flashCardDb.create(&flashcard)

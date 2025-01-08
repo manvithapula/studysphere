@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class SRScheduleViewController: UIViewController {
 
@@ -22,27 +23,25 @@ class SRScheduleViewController: UIViewController {
     
     var topic:Topics?
     fileprivate func setup() {
-        mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
-        circularProgressV.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(mySchedules.count))
-        if(mySchedules.count == 0){
-            mySchedules = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title:topic!.title,topic: topic!.id,topicsType: TopicsType.flashcards)
-            for var schedule in mySchedules{
-                let _ = schedulesDb.create(&schedule)
+        Task{
+            print(topic)
+            mySchedules = try await schedulesDb.findAll(where: ["topic":topic!.id])
+            circularProgressV.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(mySchedules.count))
+            progressL.text = "\(completedSchedules.count)/\(mySchedules.count)"
+            let countDiff = mySchedules.count - completedSchedules.count
+            if(countDiff == 0){
+                remainingNumberL.text = "All schedules are completed"
+                topic?.subtitle = "All schedules are completed"
+                topic?.completed = Timestamp()
             }
-            mySchedules = schedulesDb.findAll(where: ["topic":topic!.id])
+            else{
+                remainingNumberL.text = "\(countDiff) more to go"
+                topic?.subtitle = "\(countDiff) more to go"
+            }
+            var topicTemp = topic
+            try await topicsDb.update(&topicTemp!)
+            scheduleTable.reloadData()
         }
-        progressL.text = "\(completedSchedules.count)/\(mySchedules.count)"
-        let countDiff = mySchedules.count - completedSchedules.count
-        if(countDiff == 0){
-            remainingNumberL.text = "All schedules are completed"
-            topic?.subtitle = "All schedules are completed"
-            topic?.completed = Date()
-        }
-        else{
-            remainingNumberL.text = "\(countDiff) more to go"
-            topic?.subtitle = "\(countDiff) more to go"
-        }
-        topicsDb.update(&topic!)
     }
     
     override func viewDidLoad() {
@@ -64,7 +63,8 @@ class SRScheduleViewController: UIViewController {
             if segue.identifier == "showScheduleDetail" {
                 if let destinationVC = segue.destination as? FlashcardViewController,
                    let index = scheduleTable.indexPathForSelectedRow {
-                    destinationVC.flashcards = flashCardDb.findAll(where: ["topic":topic!.id])
+                    
+                    destinationVC.topic = topic!.id
                     destinationVC.schedule = mySchedules[index.row]
                 }
             }
@@ -73,12 +73,14 @@ class SRScheduleViewController: UIViewController {
                 
             }
             if let destinationVC = segue.destination as? FlashcardViewController{
-                destinationVC.flashcards = flashCardDb.findAll(where: ["topic":topic!.id])
-                if completedSchedules.count == mySchedules.count {
-                    destinationVC.schedule = mySchedules.last
-                    return
+                Task{
+                    destinationVC.topic = topic!.id
+                    if completedSchedules.count == mySchedules.count {
+                        destinationVC.schedule = mySchedules.last
+                        return
+                    }
+                    destinationVC.schedule = mySchedules[completedSchedules.count]
                 }
-                destinationVC.schedule = mySchedules[completedSchedules.count]
             }
         }
         }
@@ -109,7 +111,7 @@ extension SRScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         if let cell = cell as? SRScheduleTableViewCell {
             cell.completionImage.image = UIImage(systemName: scedules.completed != nil ? "checkmark.circle.fill" : "circle.dashed")
             cell.titleL.text = scedules.title
-            cell.dateL.text = "Date: " + formatDateToString(date: scedules.date)
+            cell.dateL.text = "Date: " + formatDateToString(date: scedules.date.dateValue())
             cell.timeL.text = "Time: " + scedules.time
             cell.selectionStyle = .none
 

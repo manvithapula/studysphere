@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class SignupViewController: UIViewController {
 
@@ -54,7 +55,7 @@ class SignupViewController: UIViewController {
             return
         }
         
-        var newUser = UserDetailsType(id: "", firstName: firstName, lastName: lastName, dob: datePicker.date, pushNotificationEnabled: false, faceIdEnabled: false, email: email, password: password, createdAt: Date(), updatedAt: Date())
+        var newUser = UserDetailsType(id: "", firstName: firstName, lastName: lastName, dob: Timestamp(date:datePicker.date), pushNotificationEnabled: false, faceIdEnabled: false, email: email, password: password, createdAt: Timestamp(), updatedAt: Timestamp())
         
         var user = userDB.findFirst(where: ["email":email])
         if  user != nil{

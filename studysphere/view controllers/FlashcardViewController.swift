@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class FlashcardViewController: UIViewController {
     
@@ -17,6 +18,7 @@ class FlashcardViewController: UIViewController {
         private var memorisedNumCount: Int = 0
         var flashcards: [Flashcard] = []
         var schedule: Schedule?
+    var topic:String = ""
         
         var currentCardIndex = 0
         var isShowingAnswer = false
@@ -29,10 +31,13 @@ class FlashcardViewController: UIViewController {
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            setupInitialCard()
-            setupPanGesture()
+            Task{
+                self.flashcards = try await flashCardDb.findAll(where: ["topic":topic])
+                setupInitialCard()
+                setupPanGesture()
+                tabBarController?.isTabBarHidden = true
+            }
             // hide tabbar
-            tabBarController?.isTabBarHidden = true
         }
       override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -150,8 +155,11 @@ class FlashcardViewController: UIViewController {
         }
         
         private func updateCompletion() {
-            schedule?.completed = Date()
-            schedulesDb.update(&schedule!)
+            Task{
+                schedule?.completed = Timestamp()
+                var scheduleTemp = schedule
+                try await schedulesDb.update(&scheduleTemp!)
+            }
         }
         
         private func updateCountLabels() {

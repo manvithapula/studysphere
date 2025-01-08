@@ -43,7 +43,12 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
           
             searchBar.delegate = self
-            questions = topicsDb.findAll(where: ["type": TopicsType.quizzes])
+            Task{
+                questions = try await topicsDb.findAll(where: ["type": TopicsType.quizzes.rawValue])
+                
+            }
+            ARList.reloadData()
+
         }
        
         @objc func segmentChanged() {
@@ -111,8 +116,10 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        questions = topicsDb.findAll(where: ["type": TopicsType.quizzes])
-        ARList.reloadData()
+        Task{
+            questions = try await topicsDb.findAll(where: ["type": TopicsType.quizzes.rawValue])
+            ARList.reloadData()
+        }
     }
 
 }

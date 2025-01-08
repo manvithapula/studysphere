@@ -42,7 +42,10 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
           
             searchBar.delegate = self
-            cards = topicsDb.findAll(where: ["type": TopicsType.flashcards])
+            Task{
+                cards = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
+                SpacedRepetitionList.reloadData()
+            }
         }
        
         @objc func segmentChanged() {
@@ -110,7 +113,9 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        cards = topicsDb.findAll(where: ["type": TopicsType.flashcards])
+        Task{
+            cards = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
+        }
         SpacedRepetitionList.reloadData()
     }
 

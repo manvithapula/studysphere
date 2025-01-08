@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class ProfileDetailsViewController: UIViewController {
     
@@ -80,12 +81,12 @@ class ProfileDetailsViewController: UIViewController {
         dateOfBirthLabel.text = "Date of Birth"
         firstNameValueLabel.text = user.firstName
         lastNameValueLabel.text = user.lastName
-        dateOfBirthValueLabel.text = formatDateToString(date: user.dob)
+        dateOfBirthValueLabel.text = formatDateToString(date: user.dob.dateValue())
         
         firstNameTextField.text = user.firstName
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMMM yyyy"
-        dateOfBirthValueLabel.text = dateFormatter.string(from: user.dob)
+        dateOfBirthValueLabel.text = dateFormatter.string(from: user.dob.dateValue())
     }
     
     private func createTextField(withText text: String?) -> UITextField {
@@ -175,8 +176,10 @@ class ProfileDetailsViewController: UIViewController {
         if let lastname = lastNameTextField.text, !lastname.isEmpty {
             user.lastName = lastname
         }
-        user.dob = datePicker.date
-        userDB.update(&user)
+        user.dob = Timestamp(date:datePicker.date)
+        Task{
+            try await userDB.update(&user)
+        }
         
         // Here you would typically save to your data source
         // saveToDataSource()

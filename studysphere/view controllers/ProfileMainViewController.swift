@@ -220,6 +220,8 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             default:
                 break
             }
-        userDB.update(&user)
+        Task{
+            try await userDB.update(&user)
+        }
         }
 }

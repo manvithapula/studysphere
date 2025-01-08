@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseCore
 import MobileCoreServices
 import UniformTypeIdentifiers
 import Foundation
@@ -34,7 +35,9 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         setupDropdownTableView() // Initialize the dropdown table view
         
         subject.addTarget(self, action: #selector(showDropdown), for: .editingDidBegin) // Show dropdown when editing starts
-        subjects = subjectDb.findAll()
+        Task{
+            subjects = try await subjectDb.findAll()
+        }
     }
 
     @IBAction func Topic(_ sender: Any) {}
@@ -147,7 +150,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             
             addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-                var newSubject = Subject(id:"",name: newSubjectName, createdAt: Foundation.Date(), updatedAt: Foundation.Date())
+                var newSubject = Subject(id:"",name: newSubjectName, createdAt: Timestamp(), updatedAt: Timestamp())
                 newSubject = subjectDb.create(&newSubject)
                 self?.subjects.append(newSubject)
                 self?.selectedSubject = newSubject

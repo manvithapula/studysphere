@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class subjectListTableViewController: UITableViewController {
     
@@ -14,7 +15,9 @@ class subjectListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadSubjects()
-        subjects = subjectDb.findAll()
+        Task{
+            subjects = try await subjectDb.findAll()
+        }
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showAddSubjectModal))
                 navigationItem.rightBarButtonItem = addButton
@@ -36,7 +39,7 @@ class subjectListTableViewController: UITableViewController {
           }
           
         addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-            var newSubject = Subject(id:"",name: newSubjectName, createdAt: Date(), updatedAt: Date())
+            var newSubject = Subject(id:"",name: newSubjectName, createdAt: Timestamp(), updatedAt: Timestamp())
             newSubject = subjectDb.create(&newSubject)
             self?.subjects.append(newSubject)
             self?.tableView.reloadData()  // Reload the table view to show the new subject

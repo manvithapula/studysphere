@@ -41,15 +41,17 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         SubjectCollectionView.reloadData()
     }
     private func updateCards(){
-        switch subjectSegmentControl.selectedSegmentIndex{
-        case 0:
-            self.cards = topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.flashcards])
-        case 1:
-            self.cards = topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.quizzes])
-        case 2:
-            self.cards = topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.summary])
-        default:
-            break
+        Task{
+            switch subjectSegmentControl.selectedSegmentIndex{
+            case 0:
+                self.cards = try await topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.flashcards])
+            case 1:
+                self.cards = try await topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.quizzes.rawValue])
+            case 2:
+                self.cards = try await topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.summary.rawValue])
+            default:
+                break
+            }
         }
     }
     

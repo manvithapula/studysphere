@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class SREditScheduleViewController: UIViewController {
 
@@ -70,7 +71,7 @@ extension SREditScheduleViewController: UITableViewDelegate, UITableViewDataSour
         
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 120, height: 30)
-        button.setTitle(formatDateToString(date: schedule.date), for: .normal)
+        button.setTitle(formatDateToString(date: schedule.date.dateValue()), for: .normal)
         // Update the button action to show date picker
         button.tag = indexPath.row  // Add tag to identify which row was tapped
         button.addTarget(self, action: #selector(dateButtonTapped(_:)), for: .touchUpInside)
@@ -89,7 +90,7 @@ extension SREditScheduleViewController: UITableViewDelegate, UITableViewDataSour
     }
     @objc func dateChanged(_ sender: UIDatePicker) {
         if let indexPath = activeIndexPath {
-            schedules[indexPath.row].date = sender.date
+            schedules[indexPath.row].date = Timestamp(date:sender.date)
             tableView.reloadRows(at: [indexPath], with: .none)
         }
     }
@@ -100,7 +101,7 @@ extension SREditScheduleViewController: UITableViewDelegate, UITableViewDataSour
             }
             
             // Set current date
-            datePicker?.date = schedules[indexPath.row].date
+        datePicker?.date = schedules[indexPath.row].date.dateValue()
             activeIndexPath = indexPath
             
             // Show date picker and toolbar

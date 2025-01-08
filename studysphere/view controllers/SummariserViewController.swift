@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 class SummariserViewController: UIViewController, UITextViewDelegate {
     
@@ -88,7 +89,7 @@ class SummariserViewController: UIViewController, UITextViewDelegate {
 
        private func checkCompletion() {
            if progress >= 1.0 {
-               topic?.completed = Date()
+               topic?.completed = Timestamp()
                if let completedTopic = topic {
                    completionHandler?(completedTopic)
                    navigationController?.popViewController(animated: true)
