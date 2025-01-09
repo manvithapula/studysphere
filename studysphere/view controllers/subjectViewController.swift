@@ -28,6 +28,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(subject)
         updateCards()
         SubjectCollectionView.dataSource = self
         SubjectCollectionView.delegate = self
@@ -44,7 +45,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         Task{
             switch subjectSegmentControl.selectedSegmentIndex{
             case 0:
-                self.cards = try await topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.flashcards])
+                self.cards = try await topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.flashcards.rawValue])
             case 1:
                 self.cards = try await topicsDb.findAll(where: ["subject":subject!.id,"type":TopicsType.quizzes.rawValue])
             case 2:
@@ -52,6 +53,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
             default:
                 break
             }
+            SubjectCollectionView.reloadData()
         }
     }
     

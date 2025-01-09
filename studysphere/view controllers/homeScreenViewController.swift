@@ -39,17 +39,23 @@ class homeScreenViewController: UIViewController {
         ]
         
         private var sectionTitles = ["", "Today's Learning", "Subjects", "Study Techniques"]
-        private var subjects: [String] = ["Mathematics", "Physics", "Chemistry", "Biology"]
+        private var subjects: [Subject] = []
         private var studyTechniques: [String] = ["Flashcards", "Active Recall", "Review"]
         private var streakStartDate: Date = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
         
         override func viewDidLoad() {
             print("Home loaded")
             super.viewDidLoad()
-            setupGradient()
-            setupHeaderLabels()
-            setupCollectionView()
-            setupNavigationBar()
+            
+            Task{
+                subjects = try await subjectDb.findAll()
+                collectionView.reloadData()
+                setupGradient()
+                setupHeaderLabels()
+                setupCollectionView()
+                setupNavigationBar()
+            }
+
             
         }
         
@@ -228,7 +234,10 @@ class homeScreenViewController: UIViewController {
                     return UICollectionViewCell()
                 }
                
-                cell.subjectTitle.text = subjects[indexPath.row]
+                cell.subjectTitle.text = subjects[indexPath.row].name
+                cell.button.addAction(UIAction { [weak self] _ in
+                    self?.performSegue(withIdentifier: "toSubjectList", sender: self?.subjects[indexPath.row])
+                    }, for: .touchUpInside)
                 cell.layer.cornerRadius = 12
                 cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
                 return cell
@@ -319,6 +328,15 @@ class homeScreenViewController: UIViewController {
                 print("Tapped")
             default:
                 break
+            }
+        }
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "toSubjectList" {
+                let destination = segue.destination as! subjectViewController
+                if let subject = sender as? Subject {
+                    destination.subject = subject
+                }
+                
             }
         }
 
