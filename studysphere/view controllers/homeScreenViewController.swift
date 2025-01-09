@@ -34,7 +34,7 @@ class homeScreenViewController: UIViewController {
         }()
         
         private var scheduleItems: [ScheduleItem] = [
-            ScheduleItem(iconName: "book.", title: "Introduction to Swift", subtitle: "2 chapters remaining", progress: 0.7),
+            ScheduleItem(iconName: "book", title: "Introduction to Swift", subtitle: "2 chapters remaining", progress: 0.7),
             ScheduleItem(iconName: "pencil", title: "UI Design Basics", subtitle: "1 chapter remaining", progress: 0.3)
         ]
         
@@ -49,6 +49,20 @@ class homeScreenViewController: UIViewController {
             
             Task{
                 subjects = try await subjectDb.findAll()
+                let schedules = try await  schedulesDb.findAll()
+                let today = formatDateToString(date: Date())
+                var filterSchedules:[Schedule]{
+                    return schedules.filter { schedule in
+                        
+                        let date = formatDateToString(date: schedule.date.dateValue())
+                        return date == today
+                    }
+                }
+                scheduleItems = []
+                for schedule in filterSchedules{
+                    let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: (schedule.completed != nil) ? 1 : 0)
+                    scheduleItems.append(scheduleItem)
+                }
                 collectionView.reloadData()
                 setupGradient()
                 setupHeaderLabels()
