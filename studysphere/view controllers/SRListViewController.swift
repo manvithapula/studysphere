@@ -115,8 +115,8 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
         super.viewWillAppear(animated)
         Task{
             cards = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
+            SpacedRepetitionList.reloadData()
         }
-        SpacedRepetitionList.reloadData()
     }
 
 }

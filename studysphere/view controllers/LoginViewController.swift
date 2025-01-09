@@ -55,7 +55,7 @@ class LoginViewController: UIViewController {
             // Perform login action
             let user = userDB.findFirst(where: ["email": email])
             if user != nil {
-                AuthManager.shared.logIn(email: email)
+                AuthManager.shared.logIn(email: email,firstName: user!.firstName, lastName: user!.lastName,id: String(user!.id))
                 if password != user?.password {
                     showAlert(message: "Invalid password.")
                     return

@@ -24,8 +24,8 @@ class SRScheduleViewController: UIViewController {
     var topic:Topics?
     fileprivate func setup() {
         Task{
-            print(topic)
             mySchedules = try await schedulesDb.findAll(where: ["topic":topic!.id])
+            scheduleTable.reloadData()
             circularProgressV.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(mySchedules.count))
             progressL.text = "\(completedSchedules.count)/\(mySchedules.count)"
             let countDiff = mySchedules.count - completedSchedules.count
@@ -40,7 +40,6 @@ class SRScheduleViewController: UIViewController {
             }
             var topicTemp = topic
             try await topicsDb.update(&topicTemp!)
-            scheduleTable.reloadData()
         }
     }
     

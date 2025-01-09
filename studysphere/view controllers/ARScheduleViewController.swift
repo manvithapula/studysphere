@@ -25,20 +25,19 @@ class ARScheduleViewController: UIViewController {
     fileprivate func setup() {
         Task{
             mySchedules = try await schedulesDb.findAll(where: ["topic":topic!.id])
-        }
-        ARprogresswheel.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
-        ProgressNum.text = "\(completedSchedules.count)/\(schedules.count)"
-        let countDiff = mySchedules.count - completedSchedules.count
-        if(countDiff == 0){
-            ARremaningnumber.text = "All schedules are completed"
-            topic?.subtitle = "All schedules are completed"
-            topic?.completed = Timestamp()
-        }
-        else{
-            ARremaningnumber.text = "\(countDiff) more to go"
-            topic?.subtitle = "\(countDiff) more to go"
-        }
-        Task{
+            ARtable.reloadData()
+            ARprogresswheel.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
+            ProgressNum.text = "\(completedSchedules.count)/\(schedules.count)"
+            let countDiff = mySchedules.count - completedSchedules.count
+            if(countDiff == 0){
+                ARremaningnumber.text = "All schedules are completed"
+                topic?.subtitle = "All schedules are completed"
+                topic?.completed = Timestamp()
+            }
+            else{
+                ARremaningnumber.text = "\(countDiff) more to go"
+                topic?.subtitle = "\(countDiff) more to go"
+            }
             var topicsTemp = topic
             try await topicsDb.update(&topicsTemp!)
         }

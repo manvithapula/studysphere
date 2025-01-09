@@ -22,12 +22,12 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         
        
     var filteredquestions: [Topics] {
-            return questions.filter { que in
-               
-                let matchesSegment = filterState == .ongoing ? (que.completed == nil) : que.completed != nil
-                let matchesSearch = searchBar.text?.isEmpty ?? true || que.title.lowercased().contains(searchBar.text!.lowercased())
-                return matchesSegment && matchesSearch
-            }
+        return questions.filter { card in
+           
+            let matchesSegment = filterState == .ongoing ? (card.completed == nil) : card.completed != nil
+            let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
+            return matchesSegment && matchesSearch
+        }
         }
         var filterState: FilterState = .ongoing
         
@@ -45,9 +45,9 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             searchBar.delegate = self
             Task{
                 questions = try await topicsDb.findAll(where: ["type": TopicsType.quizzes.rawValue])
+                ARList.reloadData()
                 
             }
-            ARList.reloadData()
 
         }
        

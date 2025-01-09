@@ -36,7 +36,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
           searchBar.delegate = self
           Task{
               cards = try await topicsDb.findAll(where: ["type": TopicsType.summary.rawValue])
-              print(cards)
+              summaryList.reloadData()
           }
       }
       
@@ -116,7 +116,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
           super.viewWillAppear(animated)
           Task{
               cards = try await topicsDb.findAll(where: ["type": TopicsType.summary.rawValue])
+              summaryList.reloadData()
           }
-          summaryList.reloadData()
       }
   }

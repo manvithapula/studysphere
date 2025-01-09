@@ -34,9 +34,9 @@ class QuestionViewController: UIViewController {
         super.viewDidLoad()
         Task{
             questions = try await questionsDb.findAll(where: ["topic":topic!.id])
+            setupUI()
+            loadQuestion()
         }
-        setupUI()
-        loadQuestion()
     }
     
  

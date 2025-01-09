@@ -364,6 +364,7 @@ let monthlyStreak = 17
 class FakeDb<T: Codable & Identifiable> {
     private var name: String
     private let db: Firestore
+    private var collection: CollectionReference { db.collection("userdata").document(String(AuthManager.shared.id!)).collection(name) }
     private var ArchiveURL: URL {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let archiveURL = documentDirectory.appendingPathComponent("\(self.name).plist")
@@ -405,7 +406,7 @@ class FakeDb<T: Codable & Identifiable> {
         item.id = UUID().uuidString
         item.createdAt = Timestamp()
         items.append(item)
-        try! db.collection(name).document(item.id).setData(item.asDictionary());
+        try! collection.document(item.id).setData(item.asDictionary());
         saveData()
         return item
     }
@@ -413,7 +414,6 @@ class FakeDb<T: Codable & Identifiable> {
 
     public func findAll(where conditions: [String: Any]? = nil) async throws -> [T] {
         // Initialize Firestore collection reference
-        let collection = db.collection(name)
         
         // If no conditions are provided, fetch all documents
         var query: Query = collection
@@ -467,13 +467,7 @@ class FakeDb<T: Codable & Identifiable> {
         // Update the `updatedAt` property
         item.updatedAt = Timestamp()
 
-        // Check if the item exists in the in-memory list
-        if let index = items.firstIndex(where: { $0.id == item.id }) {
-            // Update the in-memory list
-            items[index] = item
-
-            // Save the updated data to Firestore
-            let documentRef = db.collection(name).document(item.id)
+            let documentRef = collection.document(item.id)
             do {
                 // Convert the item to a dictionary
                 let data = try item.asDictionary()
@@ -484,10 +478,6 @@ class FakeDb<T: Codable & Identifiable> {
                 throw error
             }
 
-            // Persist locally if needed
-        } else {
-            print("Item with id \(item.id) not found.")
-        }
     }
 
     
@@ -538,9 +528,21 @@ class AuthManager {
     var userEmail: String? {
         return UserDefaults.standard.string(forKey: "userEmail")
     }
+    var firstName: String? {
+        return UserDefaults.standard.string(forKey: "firstName")
+    }
+    var lastName: String? {
+        return UserDefaults.standard.string(forKey: "lastName")
+    }
+    var id: String? {
+        return UserDefaults.standard.string(forKey: "id")
+    }
     
-    func logIn(email: String) {
+    func logIn(email: String,firstName:String,lastName:String,id:String) {
         UserDefaults.standard.set(email, forKey: "userEmail")
+        UserDefaults.standard.set(firstName, forKey: "firstName")
+        UserDefaults.standard.set(lastName, forKey: "lastName")
+        UserDefaults.standard.set(id, forKey: "id")
     }
     
     func logOut() {

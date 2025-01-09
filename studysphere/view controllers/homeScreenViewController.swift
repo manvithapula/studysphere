@@ -19,7 +19,7 @@ class homeScreenViewController: UIViewController {
             let label = UILabel()
             label.font = .systemFont(ofSize: 34, weight: .bold)
             label.textColor = .black
-            label.text = "Amitesh"
+            label.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
@@ -50,6 +50,7 @@ class homeScreenViewController: UIViewController {
             setupHeaderLabels()
             setupCollectionView()
             setupNavigationBar()
+            
         }
         
         override func viewDidLayoutSubviews() {
@@ -93,7 +94,7 @@ class homeScreenViewController: UIViewController {
         
         // Configure constraints within the container
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
+            nameLabel.topAnchor.constraint(equalTo: titleView.topAnchor,constant: -26),
             nameLabel.leadingAnchor.constraint(equalTo: titleView.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
             
