@@ -294,10 +294,9 @@ class homeScreenViewController: UIViewController {
     // MARK: - UICollectionViewDelegate
 extension homeScreenViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Tapped")
         switch indexPath.section {
         case 0:
-            print("Streak cell tapped")
+            performSegue(withIdentifier: "CalenderViewSegue", sender: self)
         case 1:
             let item = scheduleItems[indexPath.row]
             print("Learning item tapped: \(item.title)")
@@ -310,7 +309,9 @@ extension homeScreenViewController: UICollectionViewDelegate {
             break
         }
     }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+}
+    
+func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toSubjectList" {
             let destination = segue.destination as! subjectViewController
             if let subject = sender as? Subject {
@@ -320,4 +321,4 @@ extension homeScreenViewController: UICollectionViewDelegate {
         }
     }
     
-}
+
