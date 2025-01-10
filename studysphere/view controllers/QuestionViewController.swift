@@ -140,7 +140,7 @@ class QuestionViewController: UIViewController {
         currentQuestionIndex += 1
         updateProgress()
         loadQuestion()
-        self.view.backgroundColor = .systemIndigo
+        self.view.backgroundColor = UIColor.main
     }
     
     private func showFinalScore() {
@@ -165,11 +165,3 @@ class QuestionViewController: UIViewController {
         }
     }
 }
-//
-
-//struct Question {
-//    let questionNumber: String
-//    let text: String
-//    let options: [String]
-//    let correctAnswer: Int
-//}
