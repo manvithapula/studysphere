@@ -23,8 +23,7 @@ class homeScreenViewController: UIViewController {
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
-        
-        // Removed standalone labels since they'll be part of the navigation title
+    
         
         private var scheduleItems: [ScheduleItem] = [
             ScheduleItem(iconName: "book", title: "Introduction to Swift", subtitle: "2 chapters remaining", progress: 0.7),
@@ -33,7 +32,7 @@ class homeScreenViewController: UIViewController {
         
         private var sectionTitles = ["Your Streak", "Today's Learning", "Subjects", "Study Techniques"]
         private var subjects: [Subject] = []
-        private var studyTechniques: [String] = ["Flashcards", "Active Recall", "Review"]
+        private var studyTechniques: [String] = ["Spaced Repetition", "Active Recall", "Summariser"]
 
         private var streakStartDate: Date = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
         
@@ -59,16 +58,37 @@ class homeScreenViewController: UIViewController {
                 }
                 setupGradient()
                 setupCollectionView()
-                setupNavigationBar()
+                navigationItem.title = "StudySphere"
+                
             }
 
             
         }
         
-        override func viewDidLayoutSubviews() {
-            super.viewDidLayoutSubviews()
-            gradientLayer.frame = view.bounds
-        }
+    override func viewDidLayoutSubviews() {
+          super.viewDidLayoutSubviews()
+        gradientLayer.frame = view.bounds
+          // Adding an accessory view with a profile button
+          let accessoryView = UIButton()
+          let image = UIImage(named: "profile-avatar")
+          if let image = UIImage(named: "profile-avatar") {
+              accessoryView.setImage(image, for: .normal)
+          } else {
+              print("Image not found.")
+          }
+          
+          
+          accessoryView.setImage(image, for: .normal)
+          accessoryView.frame.size = CGSize(width: 34, height: 34)
+          
+          if let largeTitleView = navigationController?.navigationBar.subviews.first(where: { subview in
+              String(describing: type(of: subview)) == "_UINavigationBarLargeTitleView"
+          }) {
+              largeTitleView.perform(Selector(("setAccessoryView:")), with: accessoryView)
+              largeTitleView.perform(Selector(("setAlignAccessoryViewToTitleBaseline:")), with: nil)
+              largeTitleView.perform(Selector(("updateContent")))
+          }
+      }
         
         private func setupGradient() {
             let mainColor = UIColor.orange
@@ -82,35 +102,77 @@ class homeScreenViewController: UIViewController {
             view.layer.addSublayer(gradientLayer)
         }
 
-        
 
         
-        private func setupNavigationBar() {
-            navigationController?.navigationBar.prefersLargeTitles = false
-            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            navigationController?.navigationBar.shadowImage = UIImage()
-            navigationController?.navigationBar.isTranslucent = true
-            
-            // Create labels for the navigation title
-            let nameLabel = UILabel()
-            nameLabel.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
-            nameLabel.font = .systemFont(ofSize: 28, weight: .bold)
-            nameLabel.textColor = .black
-            
-            let motivationalLabel = UILabel()
-            motivationalLabel.text = "Ready to learn something new today?"
-            motivationalLabel.font = .systemFont(ofSize: 14, weight: .regular)
-            motivationalLabel.textColor = .black
-            
-            // Stack view for the labels
-            let titleStackView = UIStackView(arrangedSubviews: [nameLabel, motivationalLabel])
-            titleStackView.axis = .vertical
-            titleStackView.alignment = .leading
-            titleStackView.spacing = 4
-            
-            // Set as the navigation title
-            navigationItem.titleView = titleStackView
+   /* private func setupNavigationBar() {
+       
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        
+        let accessoryView = UIButton()
+        if let image = UIImage(named: "profile-avatar") {
+            accessoryView.setImage(image, for: .normal)
+            accessoryView.translatesAutoresizingMaskIntoConstraints = false
+            accessoryView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            accessoryView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            accessoryView.layer.cornerRadius = 20
+            accessoryView.clipsToBounds = true
         }
+    
+        let nameLabel = UILabel()
+        nameLabel.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
+        nameLabel.font = .systemFont(ofSize: 28, weight: .bold)
+        nameLabel.textColor = .black
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+       
+        let motivationalLabel = UILabel()
+        motivationalLabel.text = "Ready to learn something new today?"
+        motivationalLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        motivationalLabel.textColor = .black
+        motivationalLabel.translatesAutoresizingMaskIntoConstraints = false
+        motivationalLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        motivationalLabel.setContentHuggingPriority(.required, for: .horizontal)
+        
+
+        let titleStackView = UIStackView(arrangedSubviews: [nameLabel, motivationalLabel])
+        titleStackView.axis = .vertical
+        titleStackView.alignment = .leading
+        titleStackView.spacing = 4
+        titleStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+
+        let horizontalStack = UIStackView(arrangedSubviews: [titleStackView, accessoryView])
+        horizontalStack.axis = .horizontal
+        horizontalStack.alignment = .center
+        horizontalStack.spacing = 12
+        horizontalStack.distribution = .equalSpacing
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        
+      
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(horizontalStack)
+        NSLayoutConstraint.activate([
+            horizontalStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            horizontalStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            horizontalStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+            horizontalStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+            
+            
+            titleStackView.widthAnchor.constraint(lessThanOrEqualToConstant: 250),
+            motivationalLabel.widthAnchor.constraint(lessThanOrEqualTo: titleStackView.widthAnchor),
+            nameLabel.widthAnchor.constraint(lessThanOrEqualTo: titleStackView.widthAnchor)
+        ])
+        navigationItem.titleView = containerView
+        if let containerWidth = navigationController?.navigationBar.frame.width {
+            containerView.widthAnchor.constraint(equalToConstant: containerWidth).isActive = true
+        }
+        containerView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }*/
+
+       
         
         private func setupCollectionView() {
             collectionView.delegate = self
@@ -128,8 +190,6 @@ class homeScreenViewController: UIViewController {
             layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
             layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50)
             collectionView.collectionViewLayout = layout
-            
-            // Remove the top content inset since we're using the navigation bar
             collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         }
         
@@ -172,14 +232,14 @@ class homeScreenViewController: UIViewController {
                 titleLabel.text = sectionTitles[indexPath.section]
                 titleLabel.translatesAutoresizingMaskIntoConstraints = false
                 
-                // Add chevron for both Today's Learning and Subjects sections
+            
                 if indexPath.section == 1 || indexPath.section == 2 {
                     let chevronButton = UIButton(type: .system)
                     let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
                     chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
                     chevronButton.translatesAutoresizingMaskIntoConstraints = false
                     
-                    // Set different selector based on section
+        
                     if indexPath.section == 1 {
                         chevronButton.addTarget(self, action: #selector(chevronButtonTapped), for: .touchUpInside)
                     } else {
