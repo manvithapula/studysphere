@@ -29,20 +29,22 @@ class ProgressViewController: UIViewController {
     fileprivate func updateUI() {
         // Do any additional setup after loading the view.
         let timeInterval = progressT.selectedSegmentIndex == 0 ? Calendar.Component.weekOfYear: Calendar.Component.month
-        let flashcardsProgress = createProgress(type: TopicsType.flashcards,timeInterval:timeInterval)
-        let questionsProgress = createProgress(type: TopicsType.quizzes,timeInterval: timeInterval)
-        
-        multiProgressRing.setProgress(blue: hours.progress, green: questionsProgress.progress, red: flashcardsProgress.progress, animated: true)
-        flashcardMainL.text = "\(flashcardsProgress.completed) Flashcards"
-        questionMainL.text = "\(questionsProgress.completed) Questions"
-        hourMainL.text = "\(hours.completed) Hours"
-        
-        flashcardSecondaryL.text = "\(flashcardsProgress.total) Flashcards reviewed"
-        questionSecondaryL.text = "\(questionsProgress.total) Questions reviewed"
-        
-        flashcardP.setProgress(Float(flashcardsProgress.progress), animated: true)
-        questionP.setProgress(Float(questionsProgress.progress), animated: true)
-        updateTimeNStreak(time: weeklyTime, streak: weeklyStreak)
+        Task{
+            let flashcardsProgress = await createProgress(type: TopicsType.flashcards,timeInterval:timeInterval)
+            let questionsProgress = await createProgress(type: TopicsType.quizzes,timeInterval: timeInterval)
+            
+            multiProgressRing.setProgress(blue: hours.progress, green: questionsProgress.progress, red: flashcardsProgress.progress, animated: true)
+            flashcardMainL.text = "\(flashcardsProgress.completed) Flashcards"
+            questionMainL.text = "\(questionsProgress.completed) Questions"
+            hourMainL.text = "\(hours.completed) Hours"
+            
+            flashcardSecondaryL.text = "\(flashcardsProgress.total) Flashcards reviewed"
+            questionSecondaryL.text = "\(questionsProgress.total) Questions reviewed"
+            
+            flashcardP.setProgress(Float(flashcardsProgress.progress), animated: true)
+            questionP.setProgress(Float(questionsProgress.progress), animated: true)
+            updateTimeNStreak(time: weeklyTime, streak: weeklyStreak)
+        }
     }
     
     func updateTimeNStreak(time:Int,streak:Int) {
@@ -75,29 +77,31 @@ class ProgressViewController: UIViewController {
     @IBAction func toggleAction(_ sender: UISegmentedControl) {
         updateUI()
     }
-    private func getLastWeekCount(type:TopicsType,timeInterval:Calendar.Component) -> Int {
+    private func getLastWeekCount(type: TopicsType, timeInterval: Calendar.Component) async throws -> Int {
         let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: Date())!
-        Task{
-            let schedules = try await schedulesDb.findAll(where: ["topicType":type.rawValue])
-        }
-        let lastWeekSchedules = schedules.filter{
+        
+        // Get schedules asynchronously
+        let schedules = try await schedulesDb.findAll(where: ["topicType": type.rawValue])
+        
+        // Filter schedules
+        let lastWeekSchedules = schedules.filter {
             $0.date.dateValue() >= lastWeek && $0.date.dateValue() <= Date()
         }
+        
         return lastWeekSchedules.count
     }
-    private func getLastWeekCompletedCount(type:TopicsType,timeInterval:Calendar.Component) -> Int {
+    private func getLastWeekCompletedCount(type:TopicsType,timeInterval:Calendar.Component)async throws -> Int {
         let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: Date())!
-        Task{
-            let schedules = try await schedulesDb.findAll(where: ["topicType":type.rawValue])
-        }
+        let schedules = try await schedulesDb.findAll(where: ["topicType":type.rawValue])
+
         let lastWeekSchedules = schedules.filter{
             $0.date.dateValue() >= lastWeek && $0.date.dateValue() <= Date() && $0.completed != nil
         }
         return lastWeekSchedules.count
     }
-    private func createProgress(type:TopicsType,timeInterval:Calendar.Component) -> ProgressType {
-        let lastWeekCount = getLastWeekCount(type: type,timeInterval: timeInterval)
-        let lastWeekCompletedCount = getLastWeekCompletedCount(type: type,timeInterval: .weekOfYear)
+    private func createProgress(type:TopicsType,timeInterval:Calendar.Component) async -> ProgressType {
+        let lastWeekCount = try! await getLastWeekCount(type: type,timeInterval: timeInterval)
+        let lastWeekCompletedCount = try! await getLastWeekCompletedCount(type: type,timeInterval: .weekOfYear)
         return ProgressType(completed: lastWeekCompletedCount, total: lastWeekCount)
     }
 }
