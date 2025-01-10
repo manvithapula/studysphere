@@ -17,6 +17,7 @@ class subjectListTableViewController: UITableViewController {
         loadSubjects()
         Task{
             subjects = try await subjectDb.findAll()
+            subjectTableView.reloadData()
         }
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showAddSubjectModal))
