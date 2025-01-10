@@ -39,7 +39,7 @@ class homeScreenViewController: UIViewController {
         override func viewDidLoad() {
             print("Home loaded")
             super.viewDidLoad()
-            
+            navigationController?.navigationBar.prefersLargeTitles = false
             Task{
                 subjects = try await subjectDb.findAll()
                 let schedules = try await  schedulesDb.findAll()
@@ -226,46 +226,64 @@ class homeScreenViewController: UIViewController {
                     ofKind: kind,
                     withReuseIdentifier: "HeaderView",
                     for: indexPath)
-                
-                let titleLabel = UILabel()
-                titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
-                titleLabel.text = sectionTitles[indexPath.section]
-                titleLabel.translatesAutoresizingMaskIntoConstraints = false
-                
-            
-                if indexPath.section == 1 || indexPath.section == 2 {
-                    let chevronButton = UIButton(type: .system)
-                    let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
-                    chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
-                    chevronButton.translatesAutoresizingMaskIntoConstraints = false
-                    
-        
-                    if indexPath.section == 1 {
-                        chevronButton.addTarget(self, action: #selector(chevronButtonTapped), for: .touchUpInside)
-                    } else {
-                        chevronButton.addTarget(self, action: #selector(subjectsChevronButtonTapped), for: .touchUpInside)
-                    }
-                    
-                    headerView.addSubview(chevronButton)
-                    headerView.addSubview(titleLabel)
-                    
-                    NSLayoutConstraint.activate([
-                        titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-                        titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-                        
-                        chevronButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-                        chevronButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-                        chevronButton.widthAnchor.constraint(equalToConstant: 30),
-                        chevronButton.heightAnchor.constraint(equalToConstant: 30)
-                    ])
+
+                // Get the title label (create if it doesn't exist)
+                let titleLabel: UILabel
+                if let existingLabel = headerView.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                    titleLabel = existingLabel
                 } else {
+                    titleLabel = UILabel()
+                    titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+                    titleLabel.translatesAutoresizingMaskIntoConstraints = false
                     headerView.addSubview(titleLabel)
                     NSLayoutConstraint.activate([
                         titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
                         titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
                     ])
                 }
-                
+                titleLabel.text = sectionTitles[indexPath.section] // Configure the text
+
+                let chevronButtonTag = 100
+                if indexPath.section == 1 || indexPath.section == 2 {
+                    let chevronButton: UIButton
+                    if let existingButton = headerView.viewWithTag(chevronButtonTag) as? UIButton {
+                        chevronButton = existingButton
+                    } else {
+                        chevronButton = UIButton(type: .system)
+                        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
+                        chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
+                        chevronButton.translatesAutoresizingMaskIntoConstraints = false
+                        chevronButton.tag = chevronButtonTag
+                        headerView.addSubview(chevronButton)
+
+                        NSLayoutConstraint.activate([
+                            chevronButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+                            chevronButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+                            chevronButton.widthAnchor.constraint(equalToConstant: 30),
+                            chevronButton.heightAnchor.constraint(equalToConstant: 30)
+                        ])
+
+                        if indexPath.section == 1 {
+                            chevronButton.addTarget(self, action: #selector(chevronButtonTapped), for: .touchUpInside)
+                        } else {
+                            chevronButton.addTarget(self, action: #selector(subjectsChevronButtonTapped), for: .touchUpInside)
+                        }
+                    }
+                    // Ensure titleLabel is added for these sections
+                    if !headerView.subviews.contains(titleLabel) {
+                        headerView.addSubview(titleLabel)
+                    }
+                } else {
+                    // Ensure titleLabel is added for other sections
+                    if !headerView.subviews.contains(titleLabel) {
+                        headerView.addSubview(titleLabel)
+                    }
+                    // Remove chevron button if it exists for other sections
+                    if let existingButton = headerView.viewWithTag(chevronButtonTag) {
+                        existingButton.removeFromSuperview()
+                    }
+                }
+
                 return headerView
             }
             return UICollectionReusableView()
@@ -294,6 +312,7 @@ class homeScreenViewController: UIViewController {
                 }
                
                 cell.subjectTitle.text = subjects[indexPath.row].name
+                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
                 cell.button.addAction(UIAction { [weak self] _ in
                     self?.performSegue(withIdentifier: "toSubjectList", sender: self?.subjects[indexPath.row])
                     }, for: .touchUpInside)
@@ -309,6 +328,7 @@ class homeScreenViewController: UIViewController {
                 cell.techniqueName.text = techniqueName
                 cell.completed.text = "Completed"
                 cell.completionStatus.text = "12/18"
+                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
                 cell.button.addAction(UIAction { [weak self] _ in
                     switch indexPath.row {
                     case 0:
@@ -369,16 +389,17 @@ extension homeScreenViewController: UICollectionViewDelegate {
             break
         }
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "toSubjectList" {
+                let destination = segue.destination as! subjectViewController
+                if let subject = sender as? Subject {
+                    destination.subject = subject
+                }
+                
+            }
+        }
 }
     
-func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toSubjectList" {
-            let destination = segue.destination as! subjectViewController
-            if let subject = sender as? Subject {
-                destination.subject = subject
-            }
-            
-        }
-    }
+
     
 
