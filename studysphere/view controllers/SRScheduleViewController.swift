@@ -25,6 +25,10 @@ class SRScheduleViewController: UIViewController {
     fileprivate func setup() {
         Task{
             mySchedules = try await schedulesDb.findAll(where: ["topic":topic!.id])
+            let sortedSchedules = mySchedules.sorted(by: { (schedule1, schedule2) -> Bool in
+                return schedule1.date.dateValue() < schedule2.date.dateValue()
+            })
+            mySchedules = sortedSchedules
             scheduleTable.reloadData()
             circularProgressV.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(mySchedules.count))
             progressL.text = "\(completedSchedules.count)/\(mySchedules.count)"
@@ -109,7 +113,7 @@ extension SRScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         
         if let cell = cell as? SRScheduleTableViewCell {
             cell.completionImage.image = UIImage(systemName: scedules.completed != nil ? "checkmark.circle.fill" : "circle.dashed")
-            cell.titleL.text = scedules.title
+            cell.titleL.text = "Revision \(indexPath.row + 1)"
             cell.dateL.text = "Date: " + formatDateToString(date: scedules.date.dateValue())
             cell.timeL.text = "Time: " + scedules.time
             cell.selectionStyle = .none

@@ -25,6 +25,11 @@ class ARScheduleViewController: UIViewController {
     fileprivate func setup() {
         Task{
             mySchedules = try await schedulesDb.findAll(where: ["topic":topic!.id])
+            mySchedules = try await schedulesDb.findAll(where: ["topic":topic!.id])
+            let sortedSchedules = mySchedules.sorted(by: { (schedule1, schedule2) -> Bool in
+                return schedule1.date.dateValue() < schedule2.date.dateValue()
+            })
+            mySchedules = sortedSchedules
             ARtable.reloadData()
             ARprogresswheel.setProgress(value: CGFloat(completedSchedules.count) / CGFloat(schedules.count))
             ProgressNum.text = "\(completedSchedules.count)/\(schedules.count)"
@@ -97,7 +102,7 @@ extension ARScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         
         if let cell = cell as? ARScheduleTableViewCell {
             cell.ARcompletionImage.image = UIImage(systemName: (scedules.completed != nil) ? "checkmark.circle.fill" : "circle.dashed")
-            cell.ARtitle.text = scedules.title
+            cell.ARtitle.text = "Revision \(indexPath.row + 1)"
             cell.ARdate.text = "Date: " + formatDateToString(date: scedules.date.dateValue())
             cell.ARtime.text = "Time: " + scedules.time
             cell.selectionStyle = .none
