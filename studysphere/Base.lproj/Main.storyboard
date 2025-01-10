@@ -71,7 +71,7 @@
                                                             <state key="normal" title="Button"/>
                                                             <buttonConfiguration key="configuration" style="plain"/>
                                                             <connections>
-                                                                <segue destination="3GX-il-ghx" kind="presentation" identifier="CalenderViewSegue" id="l0s-nC-XeS"/>
+                                                                <segue destination="anA-Ga-bs3" kind="presentation" identifier="CalenderViewSegue" id="l0s-nC-XeS"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -174,7 +174,7 @@
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain"/>
                                                     <connections>
-                                                        <segue destination="YsD-7I-uby" kind="presentation" identifier="TodaysLearningSegue" id="Fyw-hc-009"/>
+                                                        <segue destination="K64-T5-C6F" kind="presentation" identifier="TodaysLearningSegue" id="Fyw-hc-009"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -329,7 +329,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="481-eY-8Zo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6615" y="904"/>
+            <point key="canvasLocation" x="8467.9389312977091" y="903.52112676056345"/>
         </scene>
         <!--Calendar View Controller-->
         <scene sceneID="8aS-2e-7y7">
@@ -345,7 +345,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAL-Dg-doG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4471" y="651"/>
+            <point key="canvasLocation" x="5397.7099236641216" y="650.70422535211276"/>
         </scene>
         <!--Subjects-->
         <scene sceneID="l41-vd-9Uv">
@@ -404,7 +404,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TXM-Cc-caX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7541.221374045801" y="903.52112676056345"/>
+            <point key="canvasLocation" x="9394.6564885496173" y="903.52112676056345"/>
         </scene>
         <!--Summariser -->
         <scene sceneID="ngZ-Uk-O9Q">
@@ -474,7 +474,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="408-hT-Bp9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9304.5801526717551" y="1659.8591549295775"/>
+            <point key="canvasLocation" x="10231.297709923663" y="1659.8591549295775"/>
         </scene>
         <!--Flashcard Result View Controller-->
         <scene sceneID="kjQ-JB-qVh">
@@ -594,7 +594,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OMK-Mj-gQX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="tdE-Rc-szL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3700" y="3742.9577464788736"/>
+            <point key="canvasLocation" x="4626.7175572519081" y="3742.9577464788736"/>
         </scene>
         <!--Select Technique-->
         <scene sceneID="9om-rs-JPu">
@@ -719,7 +719,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GDq-Xl-Jhg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="10231.297709923663" y="903.52112676056345"/>
+            <point key="canvasLocation" x="12083.206106870228" y="903.52112676056345"/>
         </scene>
         <!--Summary List-->
         <scene sceneID="dfB-A8-qHs">
@@ -845,7 +845,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QEZ-QD-Kq4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8479" y="1660"/>
+            <point key="canvasLocation" x="9405.3435114503809" y="1659.8591549295775"/>
         </scene>
         <!--Subject List-->
         <scene sceneID="iOy-po-6S0">
@@ -977,7 +977,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8289.3129770992364" y="903.52112676056345"/>
+            <point key="canvasLocation" x="10142.748091603053" y="903.52112676056345"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="bis-Ya-wBD">
@@ -1379,7 +1379,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SGw-IU-2PL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6510.6870229007627" y="1659.8591549295775"/>
+            <point key="canvasLocation" x="7437.4045801526718" y="1659.8591549295775"/>
         </scene>
         <!--Create-->
         <scene sceneID="EBS-1N-gOa">
@@ -1464,7 +1464,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="9469" y="904"/>
+            <point key="canvasLocation" x="11321.374045801525" y="903.52112676056345"/>
         </scene>
         <!--Test Result View Controller-->
         <scene sceneID="p8X-mc-ex4">
@@ -1534,7 +1534,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nhM-Kh-kas" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="7Ig-aY-LMO" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="5793" y="3743"/>
+            <point key="canvasLocation" x="6718.320610687023" y="3742.9577464788736"/>
         </scene>
         <!--Progress-->
         <scene sceneID="MJg-jR-ZIQ">
@@ -1743,7 +1743,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KTr-dd-BYJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11456" y="904"/>
+            <point key="canvasLocation" x="13309.16030534351" y="903.52112676056345"/>
         </scene>
         <!--Profile-->
         <scene sceneID="ABU-gI-MsY">
@@ -2043,7 +2043,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Cma-01-BTG">
-                                <rect key="frame" x="16" y="177" width="361" height="440"/>
+                                <rect key="frame" x="16" y="233" width="361" height="440"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="440" id="dV5-EM-Kh3"/>
@@ -2092,7 +2092,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gRB-IE-Yk8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2164" y="3051"/>
+            <point key="canvasLocation" x="3133.5877862595416" y="3394.3661971830988"/>
         </scene>
         <!--AREdit-->
         <scene sceneID="bGI-HP-k1c">
@@ -2152,7 +2152,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUH-ud-opZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4947" y="3089"/>
+            <point key="canvasLocation" x="5872.5190839694651" y="3088.7323943661972"/>
         </scene>
         <!--Flashcard View Controller-->
         <scene sceneID="9KI-vw-K7Y">
@@ -2323,11 +2323,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-<<<<<<< HEAD
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
-=======
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
->>>>>>> 657e0b8f64162a47d8b02426faf5873c272759bb
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2381,7 +2377,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit Schedule"/>
                                 <connections>
-                                    <segue destination="eFB-fG-Qnj" kind="presentation" id="AXk-Kr-dZy"/>
+                                    <segue destination="VfO-Zb-FcX" kind="presentation" id="AXk-Kr-dZy"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2460,11 +2456,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-<<<<<<< HEAD
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
-=======
                                                     <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
->>>>>>> 657e0b8f64162a47d8b02426faf5873c272759bb
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2695,7 +2687,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lBz-gO-2nA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4471" y="1389"/>
+            <point key="canvasLocation" x="5397.7099236641216" y="1388.7323943661972"/>
         </scene>
         <!--Active Recall List-->
         <scene sceneID="u9Z-Ze-Nd8">
@@ -2806,7 +2798,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sgj-88-yrj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5754.9618320610689" y="1659.8591549295775"/>
+            <point key="canvasLocation" x="6681.679389312977" y="1659.8591549295775"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Uhr-Ol-Aim">
@@ -2931,7 +2923,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oaC-zs-Cyh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3700" y="3050.7042253521126"/>
+            <point key="canvasLocation" x="4626.7175572519081" y="3050.7042253521126"/>
         </scene>
         <!--Question Result View Controller-->
         <scene sceneID="5ZY-7r-T8J">
@@ -3020,7 +3012,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="emm-il-rOC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6615" y="3743"/>
+            <point key="canvasLocation" x="7541.221374045801" y="3742.9577464788736"/>
         </scene>
         <!--onBoarding-->
         <scene sceneID="xU7-Ko-Wrb">
@@ -3389,17 +3381,67 @@
             </objects>
             <point key="canvasLocation" x="13031.297709923663" y="-702.11267605633805"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="OLB-r0-tr9">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="anA-Ga-bs3" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="aGi-Zn-EO3">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="3GX-il-ghx" kind="relationship" relationship="rootViewController" id="yaR-nd-8St"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jPW-nG-oQQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4470.9923664122134" y="650.70422535211276"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="5ev-bD-Cn3">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="VfO-Zb-FcX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="JWr-GH-hqS">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="eFB-fG-Qnj" kind="relationship" relationship="rootViewController" id="5C5-Gr-Wqx"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3hZ-SV-ASA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2206.8702290076335" y="3394.3661971830988"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Q3c-Ek-Him">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="K64-T5-C6F" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8AW-yM-fc7">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="YsD-7I-uby" kind="relationship" relationship="rootViewController" id="YXW-kX-Sc3"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="r3P-Ig-TS8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4470.9923664122134" y="1388.7323943661972"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="llO-ze-ygf"/>
         <segue reference="vbk-8J-x7B"/>
         <segue reference="VsD-Mw-nb3"/>
         <segue reference="xRt-nh-R8f"/>
-<<<<<<< HEAD
         <segue reference="qtl-9G-7g1"/>
-=======
-        <segue reference="JZj-Ft-ERv"/>
->>>>>>> 657e0b8f64162a47d8b02426faf5873c272759bb
         <segue reference="qdn-Bb-u7i"/>
     </inferredMetricsTieBreakers>
     <resources>

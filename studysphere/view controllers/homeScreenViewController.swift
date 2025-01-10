@@ -52,9 +52,16 @@ class homeScreenViewController: UIViewController {
                     }
                 }
                 scheduleItems = []
+                var i = 0
                 for schedule in filterSchedules{
-                    let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: (schedule.completed != nil) ? 1 : 0)
-                    scheduleItems.append(scheduleItem)
+                    if i > 2{
+                        break
+                    }
+                    if(schedule.completed == nil){
+                        let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: 0)
+                        scheduleItems.append(scheduleItem)
+                        i += 1
+                    }
                 }
                 setupGradient()
                 setupCollectionView()
