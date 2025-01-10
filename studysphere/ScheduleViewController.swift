@@ -38,7 +38,7 @@ class ScheduleViewController: UIViewController {
       private var scheduleItems: [ScheduleItem]{
           var temp:[ScheduleItem] = []
           for schedule in filterSchedules{
-              let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: (schedule.completed != nil) ? 1 : 0)
+              let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: (schedule.completed != nil) ? 1 : 0,topicType: schedule.topicType,topicId: schedule.topic)
               temp.append(scheduleItem)
           }
           return temp

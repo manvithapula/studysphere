@@ -173,9 +173,6 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="393" height="148"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain"/>
-                                                    <connections>
-                                                        <segue destination="K64-T5-C6F" kind="presentation" identifier="TodaysLearningSegue" id="Fyw-hc-009"/>
-                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -191,6 +188,7 @@
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="393" height="156"/>
                                         <connections>
+                                            <outlet property="button" destination="AtD-uZ-0kP" id="Zbe-ov-qp1"/>
                                             <outlet property="containerView" destination="aUv-g8-LFs" id="b74-9V-FSf"/>
                                             <outlet property="moduleIcon" destination="Vzb-RK-b7x" id="2Ub-rV-xsY"/>
                                             <outlet property="progressView" destination="cFd-nq-hBq" id="8oR-he-ShP"/>
@@ -325,6 +323,9 @@
                         <segue destination="ivI-JP-b7I" kind="show" identifier="toSuListView" id="czB-x8-mGf"/>
                         <segue destination="Xu4-hE-HiR" kind="show" identifier="toSubjectList" id="JZj-Ft-ERv"/>
                         <segue destination="Xu4-hE-HiR" kind="show" id="qtl-9G-7g1"/>
+                        <segue destination="KzB-74-32G" kind="show" identifier="toFLS" id="yUW-6S-VXD"/>
+                        <segue destination="vhf-AP-aDg" kind="show" identifier="toQTS" id="651-AB-nO7"/>
+                        <segue destination="K64-T5-C6F" kind="presentation" identifier="TodaysLearningSegue" id="lSl-Lg-anb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="481-eY-8Zo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2290,7 +2291,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Review Flashcard" cornerStyle="capsule">
-                                    <color key="baseBackgroundColor" name="Main Color"/>
+                                    <color key="baseBackgroundColor" name="Main"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <segue destination="RJg-4G-O5d" kind="show" identifier="showScheduleDetailBtn" id="coH-rd-R45"/>
@@ -2323,7 +2324,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2423,7 +2424,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Take Quiz" cornerStyle="capsule">
-                                    <color key="baseBackgroundColor" name="Main Color"/>
+                                    <color key="baseBackgroundColor" name="Main"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <segue destination="Kdx-Zo-MPf" kind="show" identifier="toQuestionVCBtn" id="xRt-nh-R8f"/>
@@ -3422,6 +3423,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="K64-T5-C6F" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="lAM-l1-DuU"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8AW-yM-fc7">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -3437,8 +3439,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="llO-ze-ygf"/>
-        <segue reference="vbk-8J-x7B"/>
+        <segue reference="651-AB-nO7"/>
+        <segue reference="yUW-6S-VXD"/>
         <segue reference="VsD-Mw-nb3"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="qtl-9G-7g1"/>

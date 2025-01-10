@@ -25,10 +25,7 @@ class homeScreenViewController: UIViewController {
         }()
     
         
-        private var scheduleItems: [ScheduleItem] = [
-            ScheduleItem(iconName: "book", title: "Introduction to Swift", subtitle: "2 chapters remaining", progress: 0.7),
-            ScheduleItem(iconName: "pencil", title: "UI Design Basics", subtitle: "1 chapter remaining", progress: 0.3)
-        ]
+        private var scheduleItems: [ScheduleItem] = []
         
         private var sectionTitles = ["Your Streak", "Today's Learning", "Subjects", "Study Techniques"]
         private var subjects: [Subject] = []
@@ -58,7 +55,7 @@ class homeScreenViewController: UIViewController {
                         break
                     }
                     if(schedule.completed == nil){
-                        let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: 0)
+                        let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: 0,topicType: schedule.topicType,topicId: schedule.topic)
                         scheduleItems.append(scheduleItem)
                         i += 1
                     }
@@ -311,6 +308,13 @@ class homeScreenViewController: UIViewController {
                 }
                 let module = scheduleItems[indexPath.row]
                 cell.configure(with: module)
+                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
+                cell.button.addAction(UIAction { [weak self] _ in
+                    Task{
+                        let topic = try await topicsDb.findAll(where: ["id":module.topicId]).first
+                        self?.performSegue(withIdentifier:module.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+                    }
+                    }, for: .touchUpInside)
                 return cell
                 
             case 2:
@@ -404,6 +408,17 @@ extension homeScreenViewController: UICollectionViewDelegate {
                 }
                 
             }
+        if segue.identifier == "toFLS" || segue.identifier == "toQTS"{
+            if let destinationVC = segue.destination as? SRScheduleViewController {
+                if let topic = sender as? Topics {
+                    destinationVC.topic = topic
+                }
+            } else if let destinationVC = segue.destination as? ARScheduleViewController {
+                if let topic = sender as? Topics {
+                    destinationVC.topic = topic
+                }
+            }
+        }
         }
 }
     
