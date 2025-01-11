@@ -37,22 +37,9 @@
 		350226342CCF5C51006F019D /* studysphereUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studysphereUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3502263C2CCF5C51006F019D /* Exceptions for "studysphere" folder in "studysphere" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 350226132CCF5C50006F019D /* studysphere */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		350226162CCF5C50006F019D /* studysphere */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				3502263C2CCF5C51006F019D /* Exceptions for "studysphere" folder in "studysphere" target */,
-			);
 			path = studysphere;
 			sourceTree = "<group>";
 		};

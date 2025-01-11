@@ -62,8 +62,9 @@ class SignupViewController: UIViewController {
             showAlert(message: "User with email \(email) already exists.")
             return
         }
-        
+        let db = FirestoreManager.shared.db
         user = userDB.create(&newUser)
+        try? db.collection("usertemp").document(user!.id).setData(user!.asDictionary());
         dismiss(animated: true)
         print("Signing up with email: \(email), name: \(firstName) \(lastName)")
     }
