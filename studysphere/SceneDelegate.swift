@@ -29,11 +29,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //                
 //                window?.makeKeyAndVisible()
     }
-    func setHomeAsRoot() {
-            let homeVC = homeScreenViewController()
-            let nav = UINavigationController(rootViewController: homeVC)
-            window?.rootViewController = nav
-        }
         
         func setLoginAsRoot() {
             let loginVC = LoginViewController()

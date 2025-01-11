@@ -23,24 +23,20 @@ class homeScreenViewController: UIViewController {
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
+    
         
-        // Removed standalone labels since they'll be part of the navigation title
-        
-        private var scheduleItems: [ScheduleItem] = [
-            ScheduleItem(iconName: "book", title: "Introduction to Swift", subtitle: "2 chapters remaining", progress: 0.7),
-            ScheduleItem(iconName: "pencil", title: "UI Design Basics", subtitle: "1 chapter remaining", progress: 0.3)
-        ]
+        private var scheduleItems: [ScheduleItem] = []
         
         private var sectionTitles = ["Your Streak", "Today's Learning", "Subjects", "Study Techniques"]
         private var subjects: [Subject] = []
-        private var studyTechniques: [String] = ["Flashcards", "Active Recall", "Review"]
+        private var studyTechniques: [String] = ["Spaced Repetition", "Active Recall", "Summariser"]
 
         private var streakStartDate: Date = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
         
         override func viewDidLoad() {
             print("Home loaded")
             super.viewDidLoad()
-            
+            navigationController?.navigationBar.prefersLargeTitles = false
             Task{
                 subjects = try await subjectDb.findAll()
                 let schedules = try await  schedulesDb.findAll()
@@ -53,22 +49,50 @@ class homeScreenViewController: UIViewController {
                     }
                 }
                 scheduleItems = []
+                var i = 0
                 for schedule in filterSchedules{
-                    let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: (schedule.completed != nil) ? 1 : 0)
-                    scheduleItems.append(scheduleItem)
+                    if i > 2{
+                        break
+                    }
+                    if(schedule.completed == nil){
+                        let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: 0,topicType: schedule.topicType,topicId: schedule.topic)
+                        scheduleItems.append(scheduleItem)
+                        i += 1
+                    }
                 }
                 setupGradient()
                 setupCollectionView()
-                setupNavigationBar()
+                navigationItem.title = "StudySphere"
+                
             }
 
             
         }
         
-        override func viewDidLayoutSubviews() {
-            super.viewDidLayoutSubviews()
-            gradientLayer.frame = view.bounds
-        }
+    override func viewDidLayoutSubviews() {
+          super.viewDidLayoutSubviews()
+        gradientLayer.frame = view.bounds
+          // Adding an accessory view with a profile button
+          let accessoryView = UIButton()
+          let image = UIImage(named: "profile-avatar")
+          if let image = UIImage(named: "profile-avatar") {
+              accessoryView.setImage(image, for: .normal)
+          } else {
+              print("Image not found.")
+          }
+          
+          
+          accessoryView.setImage(image, for: .normal)
+          accessoryView.frame.size = CGSize(width: 34, height: 34)
+          
+          if let largeTitleView = navigationController?.navigationBar.subviews.first(where: { subview in
+              String(describing: type(of: subview)) == "_UINavigationBarLargeTitleView"
+          }) {
+              largeTitleView.perform(Selector(("setAccessoryView:")), with: accessoryView)
+              largeTitleView.perform(Selector(("setAlignAccessoryViewToTitleBaseline:")), with: nil)
+              largeTitleView.perform(Selector(("updateContent")))
+          }
+      }
         
         private func setupGradient() {
             let mainColor = UIColor.orange
@@ -82,35 +106,77 @@ class homeScreenViewController: UIViewController {
             view.layer.addSublayer(gradientLayer)
         }
 
-        
 
         
-        private func setupNavigationBar() {
-            navigationController?.navigationBar.prefersLargeTitles = false
-            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            navigationController?.navigationBar.shadowImage = UIImage()
-            navigationController?.navigationBar.isTranslucent = true
-            
-            // Create labels for the navigation title
-            let nameLabel = UILabel()
-            nameLabel.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
-            nameLabel.font = .systemFont(ofSize: 28, weight: .bold)
-            nameLabel.textColor = .black
-            
-            let motivationalLabel = UILabel()
-            motivationalLabel.text = "Ready to learn something new today?"
-            motivationalLabel.font = .systemFont(ofSize: 14, weight: .regular)
-            motivationalLabel.textColor = .black
-            
-            // Stack view for the labels
-            let titleStackView = UIStackView(arrangedSubviews: [nameLabel, motivationalLabel])
-            titleStackView.axis = .vertical
-            titleStackView.alignment = .leading
-            titleStackView.spacing = 4
-            
-            // Set as the navigation title
-            navigationItem.titleView = titleStackView
+   /* private func setupNavigationBar() {
+       
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        
+        let accessoryView = UIButton()
+        if let image = UIImage(named: "profile-avatar") {
+            accessoryView.setImage(image, for: .normal)
+            accessoryView.translatesAutoresizingMaskIntoConstraints = false
+            accessoryView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            accessoryView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            accessoryView.layer.cornerRadius = 20
+            accessoryView.clipsToBounds = true
         }
+    
+        let nameLabel = UILabel()
+        nameLabel.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
+        nameLabel.font = .systemFont(ofSize: 28, weight: .bold)
+        nameLabel.textColor = .black
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+       
+        let motivationalLabel = UILabel()
+        motivationalLabel.text = "Ready to learn something new today?"
+        motivationalLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        motivationalLabel.textColor = .black
+        motivationalLabel.translatesAutoresizingMaskIntoConstraints = false
+        motivationalLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        motivationalLabel.setContentHuggingPriority(.required, for: .horizontal)
+        
+
+        let titleStackView = UIStackView(arrangedSubviews: [nameLabel, motivationalLabel])
+        titleStackView.axis = .vertical
+        titleStackView.alignment = .leading
+        titleStackView.spacing = 4
+        titleStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+
+        let horizontalStack = UIStackView(arrangedSubviews: [titleStackView, accessoryView])
+        horizontalStack.axis = .horizontal
+        horizontalStack.alignment = .center
+        horizontalStack.spacing = 12
+        horizontalStack.distribution = .equalSpacing
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        
+      
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(horizontalStack)
+        NSLayoutConstraint.activate([
+            horizontalStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            horizontalStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            horizontalStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+            horizontalStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+            
+            
+            titleStackView.widthAnchor.constraint(lessThanOrEqualToConstant: 250),
+            motivationalLabel.widthAnchor.constraint(lessThanOrEqualTo: titleStackView.widthAnchor),
+            nameLabel.widthAnchor.constraint(lessThanOrEqualTo: titleStackView.widthAnchor)
+        ])
+        navigationItem.titleView = containerView
+        if let containerWidth = navigationController?.navigationBar.frame.width {
+            containerView.widthAnchor.constraint(equalToConstant: containerWidth).isActive = true
+        }
+        containerView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }*/
+
+       
         
         private func setupCollectionView() {
             collectionView.delegate = self
@@ -128,8 +194,6 @@ class homeScreenViewController: UIViewController {
             layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
             layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50)
             collectionView.collectionViewLayout = layout
-            
-            // Remove the top content inset since we're using the navigation bar
             collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         }
         
@@ -166,46 +230,64 @@ class homeScreenViewController: UIViewController {
                     ofKind: kind,
                     withReuseIdentifier: "HeaderView",
                     for: indexPath)
-                
-                let titleLabel = UILabel()
-                titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
-                titleLabel.text = sectionTitles[indexPath.section]
-                titleLabel.translatesAutoresizingMaskIntoConstraints = false
-                
-                // Add chevron for both Today's Learning and Subjects sections
-                if indexPath.section == 1 || indexPath.section == 2 {
-                    let chevronButton = UIButton(type: .system)
-                    let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
-                    chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
-                    chevronButton.translatesAutoresizingMaskIntoConstraints = false
-                    
-                    // Set different selector based on section
-                    if indexPath.section == 1 {
-                        chevronButton.addTarget(self, action: #selector(chevronButtonTapped), for: .touchUpInside)
-                    } else {
-                        chevronButton.addTarget(self, action: #selector(subjectsChevronButtonTapped), for: .touchUpInside)
-                    }
-                    
-                    headerView.addSubview(chevronButton)
-                    headerView.addSubview(titleLabel)
-                    
-                    NSLayoutConstraint.activate([
-                        titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-                        titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-                        
-                        chevronButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-                        chevronButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-                        chevronButton.widthAnchor.constraint(equalToConstant: 30),
-                        chevronButton.heightAnchor.constraint(equalToConstant: 30)
-                    ])
+
+                // Get the title label (create if it doesn't exist)
+                let titleLabel: UILabel
+                if let existingLabel = headerView.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                    titleLabel = existingLabel
                 } else {
+                    titleLabel = UILabel()
+                    titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+                    titleLabel.translatesAutoresizingMaskIntoConstraints = false
                     headerView.addSubview(titleLabel)
                     NSLayoutConstraint.activate([
                         titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
                         titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
                     ])
                 }
-                
+                titleLabel.text = sectionTitles[indexPath.section] // Configure the text
+
+                let chevronButtonTag = 100
+                if indexPath.section == 1 || indexPath.section == 2 {
+                    let chevronButton: UIButton
+                    if let existingButton = headerView.viewWithTag(chevronButtonTag) as? UIButton {
+                        chevronButton = existingButton
+                    } else {
+                        chevronButton = UIButton(type: .system)
+                        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
+                        chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
+                        chevronButton.translatesAutoresizingMaskIntoConstraints = false
+                        chevronButton.tag = chevronButtonTag
+                        headerView.addSubview(chevronButton)
+
+                        NSLayoutConstraint.activate([
+                            chevronButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+                            chevronButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+                            chevronButton.widthAnchor.constraint(equalToConstant: 30),
+                            chevronButton.heightAnchor.constraint(equalToConstant: 30)
+                        ])
+
+                        if indexPath.section == 1 {
+                            chevronButton.addTarget(self, action: #selector(chevronButtonTapped), for: .touchUpInside)
+                        } else {
+                            chevronButton.addTarget(self, action: #selector(subjectsChevronButtonTapped), for: .touchUpInside)
+                        }
+                    }
+                    // Ensure titleLabel is added for these sections
+                    if !headerView.subviews.contains(titleLabel) {
+                        headerView.addSubview(titleLabel)
+                    }
+                } else {
+                    // Ensure titleLabel is added for other sections
+                    if !headerView.subviews.contains(titleLabel) {
+                        headerView.addSubview(titleLabel)
+                    }
+                    // Remove chevron button if it exists for other sections
+                    if let existingButton = headerView.viewWithTag(chevronButtonTag) {
+                        existingButton.removeFromSuperview()
+                    }
+                }
+
                 return headerView
             }
             return UICollectionReusableView()
@@ -226,6 +308,13 @@ class homeScreenViewController: UIViewController {
                 }
                 let module = scheduleItems[indexPath.row]
                 cell.configure(with: module)
+                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
+                cell.button.addAction(UIAction { [weak self] _ in
+                    Task{
+                        let topic = try await topicsDb.findAll(where: ["id":module.topicId]).first
+                        self?.performSegue(withIdentifier:module.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+                    }
+                    }, for: .touchUpInside)
                 return cell
                 
             case 2:
@@ -234,6 +323,7 @@ class homeScreenViewController: UIViewController {
                 }
                
                 cell.subjectTitle.text = subjects[indexPath.row].name
+                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
                 cell.button.addAction(UIAction { [weak self] _ in
                     self?.performSegue(withIdentifier: "toSubjectList", sender: self?.subjects[indexPath.row])
                     }, for: .touchUpInside)
@@ -249,6 +339,7 @@ class homeScreenViewController: UIViewController {
                 cell.techniqueName.text = techniqueName
                 cell.completed.text = "Completed"
                 cell.completionStatus.text = "12/18"
+                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
                 cell.button.addAction(UIAction { [weak self] _ in
                     switch indexPath.row {
                     case 0:
@@ -309,16 +400,28 @@ extension homeScreenViewController: UICollectionViewDelegate {
             break
         }
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "toSubjectList" {
+                let destination = segue.destination as! subjectViewController
+                if let subject = sender as? Subject {
+                    destination.subject = subject
+                }
+                
+            }
+        if segue.identifier == "toFLS" || segue.identifier == "toQTS"{
+            if let destinationVC = segue.destination as? SRScheduleViewController {
+                if let topic = sender as? Topics {
+                    destinationVC.topic = topic
+                }
+            } else if let destinationVC = segue.destination as? ARScheduleViewController {
+                if let topic = sender as? Topics {
+                    destinationVC.topic = topic
+                }
+            }
+        }
+        }
 }
     
-func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toSubjectList" {
-            let destination = segue.destination as! subjectViewController
-            if let subject = sender as? Subject {
-                destination.subject = subject
-            }
-            
-        }
-    }
+
     
 

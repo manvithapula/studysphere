@@ -24,16 +24,25 @@ class ScheduleViewController: UIViewController {
       private let themeDarkNavy = UIColor(red: 20/255, green: 20/255, blue: 40/255, alpha: 1)
       private let themeOrange = UIColor(red: 255/255, green: 149/255, blue: 0/255, alpha: 1)
       
-      private var scheduleItems: [ScheduleItem] = [
-          ScheduleItem(iconName: "book.fill",
-                      title: "Introduction to Swift",
-                      subtitle: "2 chapters remaining",
-                      progress: 0.7),
-          ScheduleItem(iconName: "pencil",
-                      title: "UI Design Basics",
-                      subtitle: "1 chapter remaining",
-                      progress: 0.3)
-      ]
+      private var schedules : [Schedule] = []
+    private var offset = 0
+    var filterSchedules:[Schedule]{
+        let date = calendar.date(byAdding: .day, value: offset, to: Date())
+        let today = formatDateToString(date: date!)
+        return schedules.filter { schedule in
+            
+            let date = formatDateToString(date: schedule.date.dateValue())
+            return date == today
+        }
+    }
+      private var scheduleItems: [ScheduleItem]{
+          var temp:[ScheduleItem] = []
+          for schedule in filterSchedules{
+              let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: (schedule.completed != nil) ? 1 : 0,topicType: schedule.topicType,topicId: schedule.topic)
+              temp.append(scheduleItem)
+          }
+          return temp
+      }
       
       private let numberOfDaysToShow = 5
       private let calendar = Calendar.current
@@ -42,10 +51,13 @@ class ScheduleViewController: UIViewController {
       // MARK: - Lifecycle
       override func viewDidLoad() {
           super.viewDidLoad()
-          setupUI()
-          setupTableView()
-          setupDateViews()
-          setupNavigationBar() // Added
+          Task{
+            schedules = try await  schedulesDb.findAll()
+              setupUI()
+              setupTableView()
+              setupDateViews()
+              setupNavigationBar() // Added
+          }
       }
       
       // MARK: - Setup
@@ -154,6 +166,7 @@ class ScheduleViewController: UIViewController {
       // MARK: - Actions
       @objc private func dateViewTapped(_ gesture: UITapGestureRecognizer) {
           guard let index = gesture.view?.tag else { return }
+          offset = index
           updateSelectedDateView(index: index)
           loadScheduleItems()
       }

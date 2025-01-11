@@ -50,11 +50,10 @@ struct ScheduleItem {
     let title: String
     let subtitle: String
     let progress: Float
+    let topicType:TopicsType
+    let topicId:String
 }
-private var ScheduleItems: [ScheduleItem] = [
-    ScheduleItem(iconName: "book.fill", title: "Introduction to Swift", subtitle: "2 chapters remaining", progress: 0.7),
-    ScheduleItem(iconName: "pencil", title: "UI Design Basics", subtitle: "1 chapter remaining", progress: 0.3)
-]
+
 
   
 
