@@ -38,8 +38,8 @@ class ProgressViewController: UIViewController {
             questionMainL.text = "\(questionsProgress.completed) Questions"
             hourMainL.text = "\(hours.completed) Hours"
             
-            flashcardSecondaryL.text = "\(flashcardsProgress.total) Flashcards reviewed"
-            questionSecondaryL.text = "\(questionsProgress.total) Questions reviewed"
+            flashcardSecondaryL.text = "\(flashcardsProgress.completed) Flashcards reviewed"
+            questionSecondaryL.text = "\(questionsProgress.completed) Questions reviewed"
             
             flashcardP.setProgress(Float(flashcardsProgress.progress), animated: true)
             questionP.setProgress(Float(questionsProgress.progress), animated: true)
@@ -78,30 +78,35 @@ class ProgressViewController: UIViewController {
         updateUI()
     }
     private func getLastWeekCount(type: TopicsType, timeInterval: Calendar.Component) async throws -> Int {
-        let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: Date())!
+        let today = Calendar.current.startOfDay(for: Date())
+        let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: today)!
         
         // Get schedules asynchronously
         let schedules = try await schedulesDb.findAll(where: ["topicType": type.rawValue])
         
         // Filter schedules
         let lastWeekSchedules = schedules.filter {
-            $0.date.dateValue() >= lastWeek && $0.date.dateValue() <= Date()
-        }
+                let scheduleDate = Calendar.current.startOfDay(for: $0.date.dateValue())
+                return scheduleDate >= lastWeek && scheduleDate <= today
+            }
         
         return lastWeekSchedules.count
     }
     private func getLastWeekCompletedCount(type:TopicsType,timeInterval:Calendar.Component)async throws -> Int {
-        let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: Date())!
+        let today = Calendar.current.startOfDay(for: Date())
+        let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: today)!
         let schedules = try await schedulesDb.findAll(where: ["topicType":type.rawValue])
 
         let lastWeekSchedules = schedules.filter{
-            $0.date.dateValue() >= lastWeek && $0.date.dateValue() <= Date() && $0.completed != nil
+            let scheduleDate = Calendar.current.startOfDay(for: $0.date.dateValue())
+            return scheduleDate >= lastWeek && scheduleDate <= today  && $0.completed != nil
         }
         return lastWeekSchedules.count
     }
     private func createProgress(type:TopicsType,timeInterval:Calendar.Component) async -> ProgressType {
         let lastWeekCount = try! await getLastWeekCount(type: type,timeInterval: timeInterval)
-        let lastWeekCompletedCount = try! await getLastWeekCompletedCount(type: type,timeInterval: .weekOfYear)
+        let lastWeekCompletedCount = try! await getLastWeekCompletedCount(type: type,timeInterval: timeInterval)
+        print(type,lastWeekCount,lastWeekCompletedCount)
         return ProgressType(completed: lastWeekCompletedCount, total: lastWeekCount)
     }
 }
