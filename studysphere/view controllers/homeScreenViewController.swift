@@ -32,7 +32,37 @@ class homeScreenViewController: UIViewController {
         private var studyTechniques: [String] = ["Spaced Repetition", "Active Recall", "Summariser"]
 
         private var streakStartDate: Date = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
-        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Task{
+            Task{
+                subjects = try await subjectDb.findAll()
+                let schedules = try await  schedulesDb.findAll()
+                let today = formatDateToString(date: Date())
+                var filterSchedules:[Schedule]{
+                    return schedules.filter { schedule in
+                        
+                        let date = formatDateToString(date: schedule.date.dateValue())
+                        return date == today
+                    }
+                }
+                scheduleItems = []
+                var i = 0
+                for schedule in filterSchedules{
+                    if i > 2{
+                        break
+                    }
+                    if(schedule.completed == nil){
+                        let scheduleItem = ScheduleItem(iconName: schedule.topicType == TopicsType.flashcards ? "square.stack.3d.down.forward":"clipboard", title: schedule.title,subtitle: "", progress: 0,topicType: schedule.topicType,topicId: schedule.topic)
+                        scheduleItems.append(scheduleItem)
+                        i += 1
+                    }
+                }
+                collectionView.reloadData()
+                
+            }
+        }
+    }
         override func viewDidLoad() {
             print("Home loaded")
             super.viewDidLoad()
