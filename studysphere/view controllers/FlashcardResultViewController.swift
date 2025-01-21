@@ -24,7 +24,7 @@ class FlashcardResultViewController: UIViewController {
         let leftButton = UIBarButtonItem(title:"Schedule",style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = leftButton
         let total = memorised + needPractice
-        youGot.text = "\(memorised)"
+        youGot.text = "\(Int(memorised))"
         thatsBetter.text = "\(Int(memorised/(total)*100))%"
        
     }

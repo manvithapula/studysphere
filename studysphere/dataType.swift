@@ -370,6 +370,7 @@ class FakeDb<T: Codable & Identifiable> {
         return archiveURL
     }
     private var items: [T]
+    private var loaded = false
     init(name: String) {
         self.name = name
         self.db = FirestoreManager.shared.db
@@ -415,33 +416,22 @@ class FakeDb<T: Codable & Identifiable> {
         // Initialize Firestore collection reference
         
         // If no conditions are provided, fetch all documents
-        var query: Query = collection
-        if let conditions = conditions {
-            print(conditions)
-            for (key, value) in conditions {
-                query = query.whereField(key, isEqualTo: value)
-            }
-        }
-        
-        // Perform the query and wait for results
-        let snapshot = try await query.getDocuments()
-        
-        // Decode the documents into the desired type
-        var fetchedItems: [T] = []
-        for document in snapshot.documents {
-            let data = document.data()
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                let item = try decoder.decode(T.self, from: jsonData)
-                fetchedItems.append(item)
-            } catch {
-                print("Error decoding document: \(document.documentID), error: \(error)")
-            }
-        }
-        
-        return fetchedItems
+        let items = await self.loadData()
+        guard let conditions = conditions else {
+                    return items
+                }
+                
+                // Filter items based on conditions
+                return items.filter { item in
+                    guard let itemDict = try? item.asDictionary() else { return false }
+                    
+                    return conditions.allSatisfy { key, value in
+                        if let itemValue = itemDict[key] {
+                            return String(describing: itemValue) == String(describing: value)
+                        }
+                        return false
+                    }
+                }
     }
 
     
@@ -463,19 +453,20 @@ class FakeDb<T: Codable & Identifiable> {
     }
     
     public func update(_ item: inout T) async throws {
-        // Update the `updatedAt` property
         item.updatedAt = Timestamp()
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            items[index] = item
+        }
 
-            let documentRef = collection.document(item.id)
-            do {
-                // Convert the item to a dictionary
-                let data = try item.asDictionary()
-                try await documentRef.updateData(data)
-                print("Document with id \(item.id) successfully updated.")
-            } catch {
-                print("Error updating document: \(error)")
-                throw error
-            }
+        let documentRef = collection.document(item.id)
+        do {
+            let data = try item.asDictionary()
+            try await documentRef.updateData(data)
+            print("Document with id \(item.id) successfully updated.")
+        } catch {
+            print("Error updating document: \(error)")
+            throw error
+        }
 
     }
 
@@ -485,16 +476,36 @@ class FakeDb<T: Codable & Identifiable> {
         saveData()
     }
     
-    private func loadData() -> [T]? {
-        let plistDecoder = PropertyListDecoder()
-        guard let data = try? Data(contentsOf: ArchiveURL) else {
-            return nil
+    @available(iOS 15.0, *)
+    private func loadData() async -> [T] {
+        if loaded {
+            return items
         }
+
         do {
-            return try plistDecoder.decode([T].self, from: data)
+            let querySnapshot = try await collection.getDocuments()
+
+            let documents = querySnapshot.documents
+
+            var fetchedItems: [T] = []
+            for document in documents {
+                let data = document.data()
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    let item = try decoder.decode(T.self, from: jsonData)
+                    fetchedItems.append(item)
+                } catch {
+                    print("Error decoding document: \(document.documentID), error: \(error)")
+                }
+            }
+            self.items = fetchedItems
+            self.loaded = true
+            return fetchedItems
         } catch {
-            print("Error decoding data: \(error)")
-            return nil
+            print("Error getting documents: \(error)")
+            return []
         }
     }
     
