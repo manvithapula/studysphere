@@ -368,7 +368,18 @@ class homeScreenViewController: UIViewController {
                 let techniqueName = studyTechniques[indexPath.row]
                 cell.techniqueName.text = techniqueName
                 cell.completed.text = "Completed"
-                cell.completionStatus.text = "12/18"
+                var topic: TopicsType
+                switch indexPath.row {
+                case 0:
+                    topic = TopicsType.flashcards
+                case 1:
+                    topic = TopicsType.quizzes
+                case 2:
+                    topic = TopicsType.summary
+                default:
+                    topic = TopicsType.flashcards
+                }
+                cell.updateCompletionStatus(topic: topic)
                 cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
                 cell.button.addAction(UIAction { [weak self] _ in
                     switch indexPath.row {

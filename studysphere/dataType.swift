@@ -363,7 +363,12 @@ let monthlyStreak = 17
 class FakeDb<T: Codable & Identifiable> {
     private var name: String
     private let db: Firestore
-    private var collection: CollectionReference { db.collection("userdata").document(String(AuthManager.shared.id!)).collection(name) }
+    private var collection: CollectionReference {
+        if(name == "usertemp"){
+            return db.collection("usertemp")
+        }
+        return db.collection("userdata").document(String(AuthManager.shared.id!)).collection(name)
+    }
     private var ArchiveURL: URL {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let archiveURL = documentDirectory.appendingPathComponent("\(self.name).plist")
@@ -375,30 +380,8 @@ class FakeDb<T: Codable & Identifiable> {
         self.name = name
         self.db = FirestoreManager.shared.db
         self.items = []
-        db.collection(name).getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error getting documents: \(error)")
-                return
-            }
-            
-            guard let documents = querySnapshot?.documents else {
-                print("No documents found")
-                return
-            }
-            
-            documents.forEach { document in
-                let data = document.data()
-                do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .secondsSince1970
-                    let item = try decoder.decode(T.self, from: jsonData)
-                    self.items.append(item)
-                } catch {
-                    print("Error decoding document: \(document.documentID), error: \(error)")
-                }
-                
-            }
+        Task{
+            _ = await self.loadData()
         }
     }
     
