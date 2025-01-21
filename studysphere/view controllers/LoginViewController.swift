@@ -53,16 +53,18 @@ class LoginViewController: UIViewController {
             }
             
             // Perform login action
-            let user = userDB.findFirst(where: ["email": email])
-            if user != nil {
-                AuthManager.shared.logIn(email: email,firstName: user!.firstName, lastName: user!.lastName,id: String(user!.id))
-                if password != user?.password {
-                    showAlert(message: "Invalid password.")
-                    return
+            Task{
+                let user = try await userDB.findAll(where: ["email": email]).first
+                if user != nil {
+                    AuthManager.shared.logIn(email: email,firstName: user!.firstName, lastName: user!.lastName,id: String(user!.id))
+                    if password != user?.password {
+                        showAlert(message: "Invalid password.")
+                        return
+                    }
+                    checkAndNavigate()
                 }
-                checkAndNavigate()
+                showAlert(message: "User not found.")
             }
-            showAlert(message: "User not found.")
         }
         
         @IBAction func forgotPasswordButtonTapped(_ sender: UIButton) {
