@@ -52,7 +52,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     private func setupDatePicker() {
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 260))
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 300))
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDone))
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
