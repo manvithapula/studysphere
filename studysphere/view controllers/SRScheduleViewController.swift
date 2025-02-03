@@ -57,6 +57,7 @@ class SRScheduleViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tabBarController?.isTabBarHidden = false
     }
     
     
@@ -86,6 +87,14 @@ class SRScheduleViewController: UIViewController {
                 }
             }
         }
+        if segue.identifier == "toSREditSchedule"{
+            if let navController = segue.destination as? UINavigationController {
+                if let destinationVC = navController.topViewController as? SREditScheduleViewController {
+                    destinationVC.schedules1 = mySchedules
+                        }
+                    }
+        }
+        
         }
     
     

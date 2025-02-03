@@ -24,7 +24,7 @@ class QuestionViewController: UIViewController {
     //properties
     private var currentQuestionIndex = 0
     private var score = 0
-    private let totalQuestions = 2
+    private var totalQuestions = 2
 
     //lifecycle
     var topic:Topics?
@@ -34,6 +34,7 @@ class QuestionViewController: UIViewController {
         super.viewDidLoad()
         Task{
             questions = try await questionsDb.findAll(where: ["topic":topic!.id])
+            totalQuestions = questions.count
             setupUI()
             loadQuestion()
         }
@@ -43,6 +44,8 @@ class QuestionViewController: UIViewController {
     
     // UI
     private func setupUI() {
+        questionLabel.translatesAutoresizingMaskIntoConstraints = false
+
         // Style all option buttons
         [Option1, Option2, Option3, Option4].forEach { button in
             button?.layer.cornerRadius = 8
@@ -163,5 +166,9 @@ class QuestionViewController: UIViewController {
             destination.correct = score
             destination.incorrect = questions.count - score
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.isTabBarHidden = true
     }
 }

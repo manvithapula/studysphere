@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42463A422D3FB9CC00137839 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 42463A412D3FB9CC00137839 /* GoogleGenerativeAI */; };
 		424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 424AE6FE2CE5BA4500E7376F /* Lottie */; };
 		427DD1762D2D35F400B1F6DE /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 427DD1752D2D35F400B1F6DE /* FirebaseAuth */; };
 		427DD1782D2D35F400B1F6DE /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 427DD1772D2D35F400B1F6DE /* FirebaseCore */; };
@@ -76,6 +77,7 @@
 				424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */,
 				427DD17A2D2D35F400B1F6DE /* FirebaseFirestore in Frameworks */,
 				427DD1782D2D35F400B1F6DE /* FirebaseCore in Frameworks */,
+				42463A422D3FB9CC00137839 /* GoogleGenerativeAI in Frameworks */,
 				427DD17C2D2D35F400B1F6DE /* FirebaseStorage in Frameworks */,
 				427DD1762D2D35F400B1F6DE /* FirebaseAuth in Frameworks */,
 			);
@@ -151,6 +153,7 @@
 				427DD1772D2D35F400B1F6DE /* FirebaseCore */,
 				427DD1792D2D35F400B1F6DE /* FirebaseFirestore */,
 				427DD17B2D2D35F400B1F6DE /* FirebaseStorage */,
+				42463A412D3FB9CC00137839 /* GoogleGenerativeAI */,
 			);
 			productName = studysphere;
 			productReference = 350226142CCF5C50006F019D /* studysphere.app */;
@@ -237,6 +240,7 @@
 			packageReferences = (
 				424AE6FC2CE5BA3300E7376F /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				427DD1742D2D35F400B1F6DE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				42463A402D3FB9CC00137839 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 350226152CCF5C50006F019D /* Products */;
@@ -595,6 +599,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		42463A402D3FB9CC00137839 /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google-gemini/generative-ai-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
 		424AE6FC2CE5BA3300E7376F /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
@@ -614,6 +626,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		42463A412D3FB9CC00137839 /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 42463A402D3FB9CC00137839 /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
+		};
 		424AE6FE2CE5BA4500E7376F /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 424AE6FC2CE5BA3300E7376F /* XCRemoteSwiftPackageReference "lottie-ios" */;

@@ -25,7 +25,9 @@ class LoginViewController: UIViewController {
         }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        checkAndNavigate()
+        Task{
+            await checkAndNavigate()
+        }
 
     }
         
@@ -34,9 +36,9 @@ class LoginViewController: UIViewController {
             loginButton.layer.cornerRadius = 8
             loginButton.clipsToBounds = true
         }
-    private func checkAndNavigate() {
+    private func checkAndNavigate() async {
         if AuthManager.shared.isLoggedIn {
-            guard userDB.findFirst(where: ["email": AuthManager.shared.userEmail!]) != nil else { return }
+            guard try! await userDB.findAll(where: ["email": AuthManager.shared.userEmail!]).first != nil else { return }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
                         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
@@ -61,7 +63,7 @@ class LoginViewController: UIViewController {
                         showAlert(message: "Invalid password.")
                         return
                     }
-                    checkAndNavigate()
+                    await checkAndNavigate()
                 }
                 showAlert(message: "User not found.")
             }

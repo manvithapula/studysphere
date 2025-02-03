@@ -52,9 +52,9 @@ class DashedRectangleUpload: UIView {
     
     // MARK: - Setup
     private func setupView() {
-        self.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
-        self.addGestureRecognizer(tapGesture)
+//        self.isUserInteractionEnabled = true
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+//        self.addGestureRecognizer(tapGesture)
     }
     
     func setup(in viewController: UIViewController) {

@@ -39,11 +39,7 @@ class FlashcardViewController: UIViewController {
             }
             // hide tabbar
         }
-      override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        tabBarController?.isTabBarHidden = false
-    }
-        
+
         private func setupPanGesture() {
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
             cardView.addGestureRecognizer(panGesture)

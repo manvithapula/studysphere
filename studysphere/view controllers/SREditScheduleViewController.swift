@@ -14,7 +14,9 @@ class SREditScheduleViewController: UIViewController {
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
     var datePicker: UIDatePicker?
     var activeIndexPath: IndexPath?
-    var datePickerToolbar: UIToolbar?  
+    var datePickerToolbar: UIToolbar?
+    
+    var schedules1: [Schedule] = schedules
 
     fileprivate func setupTableView() {
         tableView.delegate = self
@@ -27,7 +29,7 @@ class SREditScheduleViewController: UIViewController {
     }
     private func updateTableHeight() {
         // Calculate total height of all rows
-        let numberOfRows = schedules.count
+        let numberOfRows = schedules1.count
         var totalHeight: CGFloat = 0
         
         for _ in 0..<numberOfRows {
@@ -60,11 +62,11 @@ class SREditScheduleViewController: UIViewController {
 
 extension SREditScheduleViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return schedules.count
+        return schedules1.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let schedule = schedules[indexPath.row]
+        let schedule = schedules1[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "SRScheduleCell", for: indexPath)
         cell.textLabel?.text = "Session \(indexPath.row + 1)"
         cell.detailTextLabel?.text = ""
@@ -90,8 +92,12 @@ extension SREditScheduleViewController: UITableViewDelegate, UITableViewDataSour
     }
     @objc func dateChanged(_ sender: UIDatePicker) {
         if let indexPath = activeIndexPath {
-            schedules[indexPath.row].date = Timestamp(date:sender.date)
-            tableView.reloadRows(at: [indexPath], with: .none)
+            schedules1[indexPath.row].date = Timestamp(date:sender.date)
+            var schedule = schedules1[indexPath.row]
+            Task{
+                try await schedulesDb.update(&schedule)
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
         }
     }
     func showDatePicker(for indexPath: IndexPath) {
@@ -101,7 +107,7 @@ extension SREditScheduleViewController: UITableViewDelegate, UITableViewDataSour
             }
             
             // Set current date
-        datePicker?.date = schedules[indexPath.row].date.dateValue()
+        datePicker?.date = schedules1[indexPath.row].date.dateValue()
             activeIndexPath = indexPath
             
             // Show date picker and toolbar

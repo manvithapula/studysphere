@@ -4,7 +4,7 @@ import MobileCoreServices
 import UniformTypeIdentifiers
 import Foundation
 
-class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIDocumentPickerDelegate {
     let picker = UIPickerView()
     var thisSaturday: Date!
 
@@ -16,6 +16,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var subject: UITextField!
 
     private var selectedSubject: Subject?
+    private var document:URL? = nil
     var datePicker = UIDatePicker()
     
     // Dropdown TableView for subjects
@@ -31,13 +32,26 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         Date.returnKeyType = .done
         Date.keyboardType = .numbersAndPunctuation
         fileUploadView.setup(in: self)
+        fileUploadView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectPDF))
+        fileUploadView.addGestureRecognizer(tapGesture)
         setupDatePicker()
         setupDropdownTableView() // Initialize the dropdown table view
-        
-        subject.addTarget(self, action: #selector(showDropdown), for: .editingDidBegin) // Show dropdown when editing starts
+        subject.addTarget(self, action: #selector(showDropdown), for: .allTouchEvents) // Show dropdown when editing starts
         Task{
             subjects = try await subjectDb.findAll()
         }
+    }
+    @objc func selectPDF() {
+            let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.pdf], asCopy: true)
+            documentPicker.delegate = self
+            present(documentPicker, animated: true, completion: nil)
+        }
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let selectedFileURL = urls.first else {
+            return
+        }
+        document = selectedFileURL
     }
 
     @IBAction func Topic(_ sender: Any) {}
@@ -171,6 +185,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 destinationVC.date = datePicker.date
                 destinationVC.topic = Topic.text
                 destinationVC.subject = selectedSubject
+                destinationVC.document = document
             }
         }
     }
@@ -191,6 +206,11 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
             // Check if subject is selected
             guard selectedSubject != nil else {
                 showAlert(title: "Missing Subject", message: "Please select a subject before continuing.")
+                return false
+            }
+            //check if document is selected
+            guard document != nil else {
+                showAlert(title: "Missing Document", message: "Please select a document before continuing.")
                 return false
             }
             

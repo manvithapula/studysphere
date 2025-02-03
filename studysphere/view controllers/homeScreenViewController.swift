@@ -296,6 +296,7 @@ class homeScreenViewController: UIViewController {
                             chevronButton.widthAnchor.constraint(equalToConstant: 30),
                             chevronButton.heightAnchor.constraint(equalToConstant: 30)
                         ])
+                        chevronButton.removeTarget(nil, action: nil, for: .touchUpInside)
 
                         if indexPath.section == 1 {
                             chevronButton.addTarget(self, action: #selector(chevronButtonTapped), for: .touchUpInside)

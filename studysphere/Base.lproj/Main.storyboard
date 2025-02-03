@@ -1274,13 +1274,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dvz-Fg-9aE" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
-                                <rect key="frame" x="16" y="236" width="361" height="254"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dvz-Fg-9aE" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
+                                <rect key="frame" x="16" y="236" width="361" height="53"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Question 5/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nlz-gL-jkD">
-                                        <rect key="frame" x="8" y="8" width="168" height="45"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question 5/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nlz-gL-jkD">
+                                        <rect key="frame" x="8" y="8" width="345" height="37"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1288,31 +1286,24 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="nlz-gL-jkD" secondAttribute="trailing" constant="8" id="6SH-of-h0D"/>
+                                    <constraint firstAttribute="bottom" secondItem="nlz-gL-jkD" secondAttribute="bottom" constant="8" id="V7o-CP-5jd"/>
+                                    <constraint firstItem="nlz-gL-jkD" firstAttribute="top" secondItem="Dvz-Fg-9aE" secondAttribute="top" constant="8" id="lBX-6g-bN6"/>
+                                    <constraint firstItem="nlz-gL-jkD" firstAttribute="leading" secondItem="Dvz-Fg-9aE" secondAttribute="leading" constant="8" id="pIo-dd-EQI"/>
+                                </constraints>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VRC-Pv-3Jp" customClass="CardView" customModule="studysphere" customModuleProvider="target">
-                                <rect key="frame" x="16" y="293" width="361" height="433"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VRC-Pv-3Jp" customClass="CardView" customModule="studysphere" customModuleProvider="target">
+                                <rect key="frame" x="16" y="293" width="361" height="317.66666666666674"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Under which calendar year is New Years Day Jan.1" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUj-24-PiK">
-                                        <rect key="frame" x="15" y="0.0" width="338" height="75"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Under which calendar year is New Years Day Jan.1" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUj-24-PiK">
+                                        <rect key="frame" x="15" y="8" width="331" height="48"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zlu-J9-JyJ">
-                                        <rect key="frame" x="16" y="166" width="330" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Gregorian Calendar"/>
-                                        <connections>
-                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="eu0-0d-SSh"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOy-pg-6Rg">
-                                        <rect key="frame" x="16" y="100" width="330" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOy-pg-6Rg">
+                                        <rect key="frame" x="15" y="71" width="331" height="34.333333333333343"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Julian Calendar"/>
@@ -1320,9 +1311,17 @@
                                             <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="Dxd-je-Npc"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ddj-Ev-hd8">
-                                        <rect key="frame" x="16" y="227" width="330" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zlu-J9-JyJ">
+                                        <rect key="frame" x="15" y="120.3333333333333" width="331" height="34.333333333333329"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Gregorian Calendar"/>
+                                        <connections>
+                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="eu0-0d-SSh"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ddj-Ev-hd8">
+                                        <rect key="frame" x="15" y="169.66666666666669" width="331" height="34.333333333333343"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Jewish Calendar"/>
@@ -1330,9 +1329,8 @@
                                             <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="bRx-GC-TCJ"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rek-RD-Fiy">
-                                        <rect key="frame" x="16" y="292" width="330" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rek-RD-Fiy">
+                                        <rect key="frame" x="15" y="219" width="331" height="34.333333333333343"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Chinese Calendar"/>
@@ -1340,9 +1338,11 @@
                                             <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="Qny-aC-EHo"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9CU-OI-LUa">
-                                        <rect key="frame" x="103" y="371" width="155" height="41"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9CU-OI-LUa">
+                                        <rect key="frame" x="103" y="268.33333333333337" width="155" height="34.333333333333314"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="34.329999999999998" id="xmn-vb-H66"/>
+                                        </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Next" cornerStyle="capsule">
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1354,16 +1354,48 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Zlu-J9-JyJ" secondAttribute="trailing" constant="15" id="2HO-HE-G8w"/>
+                                    <constraint firstItem="ddj-Ev-hd8" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="2kt-nc-UJc"/>
+                                    <constraint firstAttribute="trailing" secondItem="nUj-24-PiK" secondAttribute="trailing" constant="15" id="98I-C3-lZq"/>
+                                    <constraint firstAttribute="trailing" secondItem="9CU-OI-LUa" secondAttribute="trailing" constant="103" id="AGd-7O-D9H"/>
+                                    <constraint firstItem="Zlu-J9-JyJ" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="BNu-Hq-RmM"/>
+                                    <constraint firstItem="Rek-RD-Fiy" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="KgZ-yc-iHk"/>
+                                    <constraint firstItem="xOy-pg-6Rg" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="Pw7-ib-blQ"/>
+                                    <constraint firstItem="nUj-24-PiK" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="QNl-Mz-PPg"/>
+                                    <constraint firstItem="9CU-OI-LUa" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="103" id="RdE-SO-sp8"/>
+                                    <constraint firstItem="ddj-Ev-hd8" firstAttribute="top" secondItem="Zlu-J9-JyJ" secondAttribute="bottom" constant="15" id="a5q-6E-HxW"/>
+                                    <constraint firstItem="9CU-OI-LUa" firstAttribute="top" secondItem="Rek-RD-Fiy" secondAttribute="bottom" constant="15" id="aN2-fY-moI"/>
+                                    <constraint firstAttribute="trailing" secondItem="ddj-Ev-hd8" secondAttribute="trailing" constant="15" id="aPV-Bv-XuN"/>
+                                    <constraint firstItem="xOy-pg-6Rg" firstAttribute="top" secondItem="nUj-24-PiK" secondAttribute="bottom" constant="15" id="fnd-z7-FOY"/>
+                                    <constraint firstAttribute="bottom" secondItem="9CU-OI-LUa" secondAttribute="bottom" constant="15" id="lOV-ec-FAk"/>
+                                    <constraint firstAttribute="trailing" secondItem="Rek-RD-Fiy" secondAttribute="trailing" constant="15" id="ofz-aZ-9c6"/>
+                                    <constraint firstItem="Rek-RD-Fiy" firstAttribute="top" secondItem="ddj-Ev-hd8" secondAttribute="bottom" constant="15" id="pJU-wY-TXk"/>
+                                    <constraint firstItem="Zlu-J9-JyJ" firstAttribute="top" secondItem="xOy-pg-6Rg" secondAttribute="bottom" constant="15" id="tQW-rX-BaB"/>
+                                    <constraint firstAttribute="trailing" secondItem="xOy-pg-6Rg" secondAttribute="trailing" constant="15" id="toT-gC-neL"/>
+                                    <constraint firstItem="nUj-24-PiK" firstAttribute="top" secondItem="VRC-Pv-3Jp" secondAttribute="top" constant="8" id="ybD-Bn-ebm"/>
+                                </constraints>
                             </view>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="STb-fP-etu">
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="STb-fP-etu">
                                 <rect key="frame" x="16" y="205" width="361" height="4"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" systemColor="systemOrangeColor"/>
                             </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gQp-8e-6Se"/>
                         <color key="backgroundColor" name="Main"/>
+                        <constraints>
+                            <constraint firstItem="STb-fP-etu" firstAttribute="leading" secondItem="gQp-8e-6Se" secondAttribute="leading" constant="16" id="3xp-WK-z00"/>
+                            <constraint firstItem="VRC-Pv-3Jp" firstAttribute="top" secondItem="Dvz-Fg-9aE" secondAttribute="bottom" constant="4" id="Dn9-bU-yIm"/>
+                            <constraint firstItem="Dvz-Fg-9aE" firstAttribute="top" secondItem="STb-fP-etu" secondAttribute="bottom" constant="27" id="Dxb-GG-uPK"/>
+                            <constraint firstItem="VRC-Pv-3Jp" firstAttribute="top" secondItem="STb-fP-etu" secondAttribute="bottom" constant="84" id="Hxt-VZ-1rZ"/>
+                            <constraint firstItem="STb-fP-etu" firstAttribute="top" secondItem="gQp-8e-6Se" secondAttribute="top" constant="102" id="P7D-uN-CMD"/>
+                            <constraint firstItem="Dvz-Fg-9aE" firstAttribute="leading" secondItem="gQp-8e-6Se" secondAttribute="leading" constant="16" id="Xun-DE-eIY"/>
+                            <constraint firstItem="gQp-8e-6Se" firstAttribute="trailing" secondItem="Dvz-Fg-9aE" secondAttribute="trailing" constant="16" id="bEY-qK-XFx"/>
+                            <constraint firstItem="gQp-8e-6Se" firstAttribute="trailing" secondItem="STb-fP-etu" secondAttribute="trailing" constant="16" id="j6S-oI-HNt"/>
+                            <constraint firstItem="gQp-8e-6Se" firstAttribute="trailing" secondItem="VRC-Pv-3Jp" secondAttribute="trailing" constant="16" id="uRa-7b-WB3"/>
+                            <constraint firstItem="VRC-Pv-3Jp" firstAttribute="leading" secondItem="gQp-8e-6Se" secondAttribute="leading" constant="16" id="z6d-u1-3S6"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="RSk-3p-aCT"/>
                     <connections>
@@ -2089,6 +2121,7 @@
                     <connections>
                         <outlet property="tableHeightConstraint" destination="dV5-EM-Kh3" id="pBF-b2-8vT"/>
                         <outlet property="tableView" destination="Cma-01-BTG" id="ZSs-In-e2k"/>
+                        <segue destination="JRD-RL-VWT" kind="unwind" identifier="unwindToSchedule" unwindAction="comeHereWithSegue:" id="M0Z-2F-Ugd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gRB-IE-Yk8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2166,8 +2199,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gpe-co-1iO">
                                 <rect key="frame" x="20" y="226" width="353" height="400"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to reveal answer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bai-AD-VOj">
-                                        <rect key="frame" x="87" y="188" width="179" height="24"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to reveal answer" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bai-AD-VOj">
+                                        <rect key="frame" x="8" y="80" width="337" height="240"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -2176,9 +2209,11 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <constraints>
+                                    <constraint firstItem="Bai-AD-VOj" firstAttribute="leading" secondItem="Gpe-co-1iO" secondAttribute="leading" constant="8" id="JgB-LP-Kpc"/>
                                     <constraint firstAttribute="height" constant="400" id="VgS-xc-LPR"/>
-                                    <constraint firstItem="Bai-AD-VOj" firstAttribute="centerY" secondItem="Gpe-co-1iO" secondAttribute="centerY" id="YjI-Qc-Iex"/>
-                                    <constraint firstItem="Bai-AD-VOj" firstAttribute="centerX" secondItem="Gpe-co-1iO" secondAttribute="centerX" id="hFm-Lk-U1t"/>
+                                    <constraint firstItem="Bai-AD-VOj" firstAttribute="top" secondItem="Gpe-co-1iO" secondAttribute="top" constant="80" id="Vxy-n3-LeB"/>
+                                    <constraint firstAttribute="trailing" secondItem="Bai-AD-VOj" secondAttribute="trailing" constant="8" id="cUs-FF-OCg"/>
+                                    <constraint firstAttribute="bottom" secondItem="Bai-AD-VOj" secondAttribute="bottom" constant="80" id="cl5-hI-1eB"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -2262,7 +2297,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2937" y="2361"/>
+            <point key="canvasLocation" x="2935.1145038167938" y="2360.5633802816901"/>
         </scene>
         <!--Schedule-->
         <scene sceneID="o9e-lq-GCT">
@@ -2324,7 +2359,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uog-hn-Do6">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cqg-wd-L9z">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2378,7 +2413,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit Schedule"/>
                                 <connections>
-                                    <segue destination="VfO-Zb-FcX" kind="presentation" id="AXk-Kr-dZy"/>
+                                    <segue destination="VfO-Zb-FcX" kind="presentation" identifier="toSREditSchedule" id="AXk-Kr-dZy"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2394,6 +2429,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PqP-Tx-D2M" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="JRD-RL-VWT" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2164" y="2361"/>
         </scene>
@@ -2457,7 +2493,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
