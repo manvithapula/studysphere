@@ -33,8 +33,8 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         Date.keyboardType = .numbersAndPunctuation
         fileUploadView.setup(in: self)
         fileUploadView.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectPDF))
-        fileUploadView.addGestureRecognizer(tapGesture)
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectPDF))
+//        fileUploadView.addGestureRecognizer(tapGesture)
         setupDatePicker()
         setupDropdownTableView() // Initialize the dropdown table view
         subject.addTarget(self, action: #selector(showDropdown), for: .allTouchEvents) // Show dropdown when editing starts
@@ -66,7 +66,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     private func setupDatePicker() {
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 260))
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 300))
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDone))
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -185,7 +185,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 destinationVC.date = datePicker.date
                 destinationVC.topic = Topic.text
                 destinationVC.subject = selectedSubject
-                destinationVC.document = document
+                destinationVC.document = fileUploadView.document
             }
         }
     }
@@ -209,7 +209,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 return false
             }
             //check if document is selected
-            guard document != nil else {
+            guard fileUploadView.document != nil else {
                 showAlert(title: "Missing Document", message: "Please select a document before continuing.")
                 return false
             }
