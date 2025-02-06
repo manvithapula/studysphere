@@ -44,7 +44,7 @@ class SummariserViewController: UIViewController, UITextViewDelegate, AVSpeechSy
         super.viewDidLoad()
         heading = topic?.title ?? "Summary"
         if let summary = summaryDb.findFirst(where: ["topic": topic?.id ?? 0]) {
-            summaryText = "summary" // Ensure that summaryText is correctly set from the summary database
+            summaryText = summary.data// Ensure that summaryText is correctly set from the summary database
         } else {
             summaryText = "No summary available"
         }

@@ -148,35 +148,53 @@ class SelectTechniqueViewController: UIViewController {
     }
     
     @IBAction func createSummarizer(_ sender: Any) {
+        if let apiKey = apiKey {
+            let config = GenerationConfig(
+                temperature: 1,
+                topP: 0.95,
+                topK: 64,
+                maxOutputTokens: 8192,
+                responseMIMEType: "application/json",
+                responseSchema: Schema(type: .object,properties:[
+                    "response":Schema(type: .object,properties: [
+                        "data":Schema(type: .object,properties: [
+                            "summary":Schema(type: .string)
+                        ])
+                    ])
+                ])
+                
+                
+            )
+            generativeModel = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey,generationConfig: config)
+        } else {
+            print("API Key not found!")
+        }
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,subtitle: "",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        _ = createSummary(topic: newTopic.id)
-        
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
-                   let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                    homeVC.performSegue(withIdentifier: "toSuListView", sender: nil)
-                } else {
-                    print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
+        showLoading()
+        Task{
+            _ = await createSummary(topic: newTopic.id)
+            hideLoading()
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
+                       let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
+                        homeVC.performSegue(withIdentifier: "toSuListView", sender: nil)
+                    } else {
+                        print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
+                    }
                 }
+            } else {
+                print("Error: Could not instantiate TabBarController.")
             }
-        } else {
-            print("Error: Could not instantiate TabBarController.")
         }
-        
       
         }
-    private func createSummary(topic:String) -> Summary{
-        var summary:Summary = Summary( id: "", topic: topic,data: "sdfasasdsadad", createdAt: Timestamp(), updatedAt: Timestamp())
-        summary = summaryDb.create(&summary)
-
-        return summary
-    }
+    
     
     private func getFileUri() async -> String? {
         guard let pdfData = try? Data(contentsOf: document!) else {
@@ -224,7 +242,56 @@ class SelectTechniqueViewController: UIViewController {
             return nil
         }
     }
+    private func createSummary(topic:String)async -> Summary{
+        
+        var summary:Summary = Summary( id: "", topic: topic,data: "sdfasasdsadad", createdAt: Timestamp(), updatedAt: Timestamp())
+  
+        do{
+            guard let fileURI = await getFileUri() else {
+                throw NSError(domain: "PDFUploader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to get file URI"])
+            }
+            let prompt = """
+            Create Summary for this PDF document.
+            Focus on key concepts and important details from the content.
+            so that i can give a quick look before the exam
+            """
             
+            let content = ModelContent(role: "user", parts: [
+                        ModelContent.Part.text(prompt),
+                        ModelContent.Part.fileData(mimetype: "application/pdf", uri: fileURI)
+                    ])
+                    
+                    // Generate content using the model
+            let respons = try await generativeModel?.generateContent([content])
+            print(respons as Any)
+                // Parse the response and create flashcards
+            if let jsonData = respons?.text?.data(using: .utf8),
+               let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+               let responseData = json["response"] as? [String: Any],
+               let data = responseData["data"] as? [String: Any],
+               let summaryText = data["summary"] as? String {
+                
+                var summary = Summary(
+                    id: "",
+                    topic: topic,
+                    data: summaryText,
+                    createdAt: Timestamp(),
+                    updatedAt: Timestamp()
+                )
+                summary = summaryDb.create(&summary)
+                return summary
+            }
+                
+            return summary
+        }
+        catch{
+            print(error)
+            return summary
+        }
+        
+
+        return summary
+    }
     private func createFlashCards(topic:String) async -> [Flashcard]{
                 guard let pdfData = try? Data(contentsOf: document!) else {
                             print("Error reading PDF data")
