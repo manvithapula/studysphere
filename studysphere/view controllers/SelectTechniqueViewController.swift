@@ -60,7 +60,7 @@ class SelectTechniqueViewController: UIViewController {
         }
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading()
+        showLoading(text:"Generating flashcards...")
         Task{
             _ = await createFlashCards(topic: newTopic.id)
             
@@ -119,7 +119,7 @@ class SelectTechniqueViewController: UIViewController {
         }
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading()
+        showLoading(text:"Generating Quiz...")
         Task{
             let ques = await createQuestions(topic: newTopic.id)
             print(ques)
@@ -320,10 +320,7 @@ class SelectTechniqueViewController: UIViewController {
                     }
             }
     private func createQuestions(topic: String) async -> [Questions] {
-        guard let pdfData = try? Data(contentsOf: document!) else {
-                    print("Error reading PDF data")
-                    return []
-                }
+        
   
         do{
             guard let fileURI = await getFileUri() else {
@@ -397,10 +394,10 @@ class SelectTechniqueViewController: UIViewController {
                 present(alert, animated: true)
             }
     
-    private func showLoading() {
+    private func showLoading(text:String) {
             let loadingView = LoadingView()
             loadingView.tag = 999 // Tag for easy removal
-            
+            loadingView.text = text
             view.addSubview(loadingView)
             loadingView.translatesAutoresizingMaskIntoConstraints = false
             
@@ -426,6 +423,7 @@ class LoadingView: UIView {
     private let activityIndicator: UIActivityIndicatorView
     private let messageLabel: UILabel
     private let blurEffect: UIVisualEffectView
+    var text = "Generating..."
     
     init() {
         // Create blur effect
@@ -438,7 +436,7 @@ class LoadingView: UIView {
         
         // Create message label
         messageLabel = UILabel()
-        messageLabel.text = "Generating flashcards..."
+        messageLabel.text = text
         messageLabel.textColor = .white
         messageLabel.textAlignment = .center
         messageLabel.font = .systemFont(ofSize: 16, weight: .medium)
