@@ -456,6 +456,7 @@ class FakeDb<T: Codable & Identifiable> {
     
     public func delete(id: String) {
         items.removeAll { $0.id == id }
+        collection.document(id).delete()
         saveData()
     }
     

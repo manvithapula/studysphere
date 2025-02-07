@@ -62,7 +62,13 @@ class SelectTechniqueViewController: UIViewController {
         newTopic = topicsDb.create(&newTopic)
         showLoading(text:"Generating flashcards...")
         Task{
-            _ = await createFlashCards(topic: newTopic.id)
+            let cards = await createFlashCards(topic: newTopic.id)
+            if(cards.isEmpty){
+                hideLoading()
+                showError(message: "Faled to generate flashcards")
+                topicsDb.delete(id: newTopic.id)
+                return
+            }
             
             let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.flashcards)
             for var schedule in mySchedules{
@@ -122,7 +128,12 @@ class SelectTechniqueViewController: UIViewController {
         showLoading(text:"Generating Quiz...")
         Task{
             let ques = await createQuestions(topic: newTopic.id)
-            print(ques)
+            if(ques.isEmpty){
+                hideLoading()
+                showError(message: "Failed to generate Quiz")
+                topicsDb.delete(id: newTopic.id)
+                return
+            }
             let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.quizzes)
             for var schedule in mySchedules{
                 let _ = schedulesDb.create(&schedule)
@@ -173,8 +184,13 @@ class SelectTechniqueViewController: UIViewController {
         newTopic = topicsDb.create(&newTopic)
         showLoading(text:"Generating summary...")
         Task{
-            _ = await createSummary(topic: newTopic.id)
+            let summary = await createSummary(topic: newTopic.id)
             hideLoading()
+            if(summary == nil){
+                showError(message: "Failed to create summary")
+                topicsDb.delete(id:newTopic.id)
+                return
+            }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
@@ -242,9 +258,9 @@ class SelectTechniqueViewController: UIViewController {
             return nil
         }
     }
-    private func createSummary(topic:String)async -> Summary{
+    private func createSummary(topic:String)async -> Summary?{
         
-        var summary:Summary = Summary( id: "", topic: topic,data: "sdfasasdsadad", createdAt: Timestamp(), updatedAt: Timestamp())
+        
   
         do{
             guard let fileURI = await getFileUri() else {
@@ -282,15 +298,13 @@ class SelectTechniqueViewController: UIViewController {
                 return summary
             }
                 
-            return summary
+            return nil
         }
         catch{
             print(error)
-            return summary
+            return nil
         }
         
-
-        return summary
     }
     private func createFlashCards(topic:String) async -> [Flashcard]{
                 guard let pdfData = try? Data(contentsOf: document!) else {
@@ -483,6 +497,11 @@ class SelectTechniqueViewController: UIViewController {
                 loadingView.removeFromSuperview()
             }
         }
+    private func showError(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
         }
         
 
