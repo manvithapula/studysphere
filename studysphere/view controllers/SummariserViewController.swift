@@ -125,11 +125,6 @@ class SummariserViewController: UIViewController {
         ])
     }
     
-  /*  private func setupCompleteButton() {
-        let completeButton = UIBarButtonItem(title: "Complete", style: .done, target: self, action: #selector(completeReading))
-        navigationItem.rightBarButtonItem = completeButton
-        completeButton.isEnabled = false
-    } */
     
     private func loadContent() {
         headingLabel.text = topic?.title ?? "Summary"
