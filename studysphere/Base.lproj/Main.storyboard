@@ -1066,7 +1066,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySc-sw-aL0">
-                                <rect key="frame" x="49" y="489.33333333333331" width="313" height="35"/>
+                                <rect key="frame" x="49" y="488.66666666666669" width="313" height="35.000000000000057"/>
                                 <color key="tintColor" name="Main"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Login" cornerStyle="large">
@@ -1088,8 +1088,8 @@
                                     <constraint firstAttribute="height" constant="34" id="DBk-l0-9mW"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="  Continue with Google" cornerStyle="large">
-                                    <color key="baseBackgroundColor" systemColor="underPageBackgroundColor"/>
+                                <buttonConfiguration key="configuration" style="filled" image="Google" title="Google" cornerStyle="large">
+                                    <color key="baseBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="googleSignInButtonTapped:" destination="VOf-GR-pQt" eventType="touchUpInside" id="m5w-AF-LWg"/>
@@ -1101,7 +1101,7 @@
                                     <constraint firstAttribute="height" constant="35" id="OOE-gO-9lO"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="apple.logo" catalog="system" title="  Continue with Apple" cornerStyle="large">
+                                <buttonConfiguration key="configuration" style="filled" image="apple.logo" catalog="system" title="Apple" cornerStyle="large">
                                     <color key="baseBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                                 <connections>
@@ -1136,8 +1136,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="───── or Log in ─────" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DE2-KY-KqH">
-                                <rect key="frame" x="74" y="544.33333333333337" width="245" height="20.333333333333371"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="───── or  ─────" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DE2-KY-KqH">
+                                <rect key="frame" x="97" y="543.66666666666663" width="199" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -3471,6 +3471,7 @@
         <segue reference="qdn-Bb-u7i"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="Google" width="24" height="24"/>
         <image name="apple.logo" catalog="system" width="105" height="128"/>
         <image name="arrow.turn.up.left" catalog="system" width="128" height="99"/>
         <image name="arrow.turn.up.right" catalog="system" width="128" height="99"/>
@@ -3531,9 +3532,6 @@
         </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="underPageBackgroundColor">
-            <color red="0.70980392156862748" green="0.71764705882352942" blue="0.74117647058823533" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
