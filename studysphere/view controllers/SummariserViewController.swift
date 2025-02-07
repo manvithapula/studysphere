@@ -43,17 +43,20 @@ class SummariserViewController: UIViewController, UITextViewDelegate, AVSpeechSy
     override func viewDidLoad() {
         super.viewDidLoad()
         heading = topic?.title ?? "Summary"
-        if let summary = summaryDb.findFirst(where: ["topic": topic?.id ?? 0]) {
-            summaryText = summary.data// Ensure that summaryText is correctly set from the summary database
-        } else {
-            summaryText = "No summary available"
+        Task{
+            let allItems = try await summaryDb.findAll(where: ["topic": topic?.id ?? 0])
+            if let summary = allItems.first{
+                summaryText = summary.data
+            } else {
+                summaryText = "No summary available"
+            }
+            
+            synthesizer.delegate = self
+            setupView()
+            setupProgressView()
+            setupActionButtons()
+            summaryTextView.delegate = self
         }
-        
-        synthesizer.delegate = self
-        setupView()
-        setupProgressView()
-        setupActionButtons()
-        summaryTextView.delegate = self
     }
     
     // MARK: - Setup Methods
@@ -198,9 +201,12 @@ class SummariserViewController: UIViewController, UITextViewDelegate, AVSpeechSy
     private func checkCompletion() {
         if progress >= 1.0 {
             topic?.completed = Timestamp()
-            if let completedTopic = topic {
-                completionHandler?(completedTopic)
-                navigationController?.popViewController(animated: true)
+            Task{
+                var newTopic = topic!
+                try await topicsDb.update(&newTopic)
+                if let completedTopic = topic {
+                    completionHandler?(completedTopic)
+                }
             }
         }
     }
