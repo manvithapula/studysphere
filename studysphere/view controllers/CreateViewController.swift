@@ -7,6 +7,7 @@ import Foundation
 class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIDocumentPickerDelegate {
     let picker = UIPickerView()
     var thisSaturday: Date!
+    
 
     
     @IBOutlet weak var Topic: UITextField!
@@ -14,7 +15,8 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var NextButton: UIButton!
     @IBOutlet weak var fileUploadView: DashedRectangleUpload!
     @IBOutlet weak var subject: UITextField!
-
+    @IBOutlet weak var selectTechnique: UITextField!
+    
     private var selectedSubject: Subject?
     private var document:URL? = nil
     var datePicker = UIDatePicker()
@@ -22,6 +24,9 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // Dropdown TableView for subjects
     var dropdownTableView: UITableView!
     var subjects: [Subject] = []
+    private var techniqueDropdownTableView: UITableView!
+    private let techniques = ["Space Repetition", "Active Recall", "Summarizer"]
+    private var selectedTechnique: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +46,40 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         Task{
             subjects = try await subjectDb.findAll()
         }
+        setupTechniqueDropdown()
+        selectTechnique.addTarget(self, action: #selector(showTechniqueDropdown), for: .allTouchEvents)
+    }
+    private func setupTechniqueDropdown() {
+        techniqueDropdownTableView = UITableView(frame: CGRect.zero)
+        techniqueDropdownTableView.delegate = self
+        techniqueDropdownTableView.dataSource = self
+        techniqueDropdownTableView.isHidden = true
+        techniqueDropdownTableView.layer.borderWidth = 1
+        techniqueDropdownTableView.layer.borderColor = UIColor.lightGray.cgColor
+        techniqueDropdownTableView.layer.cornerRadius = 5
+        techniqueDropdownTableView.backgroundColor = .white
+        techniqueDropdownTableView.separatorStyle = .singleLine
+        techniqueDropdownTableView.tag = 2 // To distinguish from subject dropdown
+        self.view.addSubview(techniqueDropdownTableView)
+    }
+
+    @objc private func showTechniqueDropdown() {
+        // Hide subject dropdown if it's visible
+        dropdownTableView.isHidden = true
+        
+        let dropdownHeight: CGFloat = CGFloat(techniques.count) * 44
+        techniqueDropdownTableView.frame = CGRect(
+            x: selectTechnique.frame.minX,
+            y: selectTechnique.frame.maxY + 5,
+            width: selectTechnique.frame.width,
+            height: dropdownHeight
+        )
+        techniqueDropdownTableView.isHidden = false
+        techniqueDropdownTableView.reloadData()
+    }
+
+    private func hideTechniqueDropdown() {
+        techniqueDropdownTableView.isHidden = true
     }
     @objc func selectPDF() {
             let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.pdf], asCopy: true)
@@ -124,60 +163,76 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     //DataSource and tableDelegate
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return subjects.count + 1 // Include "Add Subject" button
+        if tableView.tag == 2 {
+            return techniques.count
+        }
+        return subjects.count + 1 // Original subject dropdown logic
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row < subjects.count {
-            // Subject Cell
-            let cell = UITableViewCell(style: .default, reuseIdentifier: "subjectCell")
-            cell.textLabel?.text = subjects[indexPath.row].name
+        if tableView.tag == 2 {
+            // Technique dropdown
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "techniqueCell")
+            cell.textLabel?.text = techniques[indexPath.row]
             cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
             cell.textLabel?.textColor = .black
             return cell
         } else {
-            // "Add Subject" Cell
-            let cell = UITableViewCell(style: .default, reuseIdentifier: "addSubjectCell")
-            cell.textLabel?.text = "➕ Add Subject"
-            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-            cell.textLabel?.textColor = UIColor.systemBlue
-            cell.backgroundColor = UIColor.systemGray6
-            return cell
+            // Original subject dropdown logic
+            if indexPath.row < subjects.count {
+                let cell = UITableViewCell(style: .default, reuseIdentifier: "subjectCell")
+                cell.textLabel?.text = subjects[indexPath.row].name
+                cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+                cell.textLabel?.textColor = .black
+                return cell
+            } else {
+                let cell = UITableViewCell(style: .default, reuseIdentifier: "addSubjectCell")
+                cell.textLabel?.text = "➕ Add Subject"
+                cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+                cell.textLabel?.textColor = UIColor.systemBlue
+                cell.backgroundColor = UIColor.systemGray6
+                return cell
+            }
         }
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row < subjects.count {
-            // Select an existing subject
-            subject.text = subjects[indexPath.row].name
-            selectedSubject = subjects[indexPath.row]
-            hideDropdown()
+        if tableView.tag == 2 {
+            // Technique selection
+            selectedTechnique = techniques[indexPath.row]
+            selectTechnique.text = selectedTechnique
+            hideTechniqueDropdown()
         } else {
-            // Add New Subject
-            let addSubjectVC = AddSubjectViewController()
-            addSubjectVC.modalPresentationStyle = .pageSheet
-            if let sheet = addSubjectVC.sheetPresentationController {
-                sheet.detents = [.medium()]
-                sheet.prefersGrabberVisible = true
+            // Original subject selection logic
+            if indexPath.row < subjects.count {
+                subject.text = subjects[indexPath.row].name
+                selectedSubject = subjects[indexPath.row]
+                hideDropdown()
+            } else {
+                let addSubjectVC = AddSubjectViewController()
+                addSubjectVC.modalPresentationStyle = .pageSheet
+                if let sheet = addSubjectVC.sheetPresentationController {
+                    sheet.detents = [.medium()]
+                    sheet.prefersGrabberVisible = true
+                }
+                
+                addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
+                    var newSubject = Subject(id:"",name: newSubjectName, createdAt: Timestamp(), updatedAt: Timestamp())
+                    newSubject = subjectDb.create(&newSubject)
+                    self?.subjects.append(newSubject)
+                    self?.selectedSubject = newSubject
+                    self?.dropdownTableView.reloadData()
+                }
+                
+                present(addSubjectVC, animated: true, completion: nil)
             }
-            
-            addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-                var newSubject = Subject(id:"",name: newSubjectName, createdAt: Timestamp(), updatedAt: Timestamp())
-                newSubject = subjectDb.create(&newSubject)
-                self?.subjects.append(newSubject)
-                self?.selectedSubject = newSubject
-                self?.dropdownTableView.reloadData()
-            }
-            
-            present(addSubjectVC, animated: true, completion: nil)
         }
     }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        hideDropdown() // Hide dropdown when tapping outside
+        hideDropdown()
+        hideTechniqueDropdown()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "selectTechnique" {
@@ -186,6 +241,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 destinationVC.topic = Topic.text
                 destinationVC.subject = selectedSubject
                 destinationVC.document = fileUploadView.document
+//                destinationVC.technique = selectedTechnique
             }
         }
     }
@@ -208,6 +264,10 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 showAlert(title: "Missing Subject", message: "Please select a subject before continuing.")
                 return false
             }
+            guard selectedTechnique != nil else {
+                showAlert(title: "Missing Technique", message: "Please select a learning technique before continuing.")
+                return false
+            }
             //check if document is selected
             guard fileUploadView.document != nil else {
                 showAlert(title: "Missing Document", message: "Please select a document before continuing.")
@@ -218,6 +278,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         return true
     }
+    
 
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(
