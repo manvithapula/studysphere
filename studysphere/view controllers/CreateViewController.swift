@@ -1,8 +1,15 @@
 import UIKit
-import FirebaseCore
 import MobileCoreServices
 import UniformTypeIdentifiers
 import Foundation
+
+import FirebaseCore
+import GoogleGenerativeAI
+
+
+struct Technique{
+  var name: String
+}
 
 class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIDocumentPickerDelegate {
     let picker = UIPickerView()
@@ -18,20 +25,25 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var selectTechnique: UITextField!
     
     private var selectedSubject: Subject?
-    private var document:URL? = nil
     var datePicker = UIDatePicker()
     
     // Dropdown TableView for subjects
     var dropdownTableView: UITableView!
     var subjects: [Subject] = []
     private var techniqueDropdownTableView: UITableView!
-    private let techniques = ["Space Repetition", "Active Recall", "Summarizer"]
-    private var selectedTechnique: String?
+    private let techniques = [Technique(name: "Space Repetition"), Technique(name: "Active Recall"), Technique(name: "Summarizer")]
+    private var selectedTechnique: Technique?
+    
+    var generativeModel: GenerativeModel?
+    var apiKey: String? // Replace with your actual API key
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //intial setup
+        apiKey = "AIzaSyAPoKc-EWHZYQp-7bXbmUxyKTdZOCLgFco"
+
         Topic.returnKeyType = .done
         Topic.autocorrectionType = .no
         Date.returnKeyType = .done
@@ -80,17 +92,6 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     private func hideTechniqueDropdown() {
         techniqueDropdownTableView.isHidden = true
-    }
-    @objc func selectPDF() {
-            let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.pdf], asCopy: true)
-            documentPicker.delegate = self
-            present(documentPicker, animated: true, completion: nil)
-        }
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let selectedFileURL = urls.first else {
-            return
-        }
-        document = selectedFileURL
     }
 
     @IBAction func Topic(_ sender: Any) {}
@@ -174,7 +175,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if tableView.tag == 2 {
             // Technique dropdown
             let cell = UITableViewCell(style: .default, reuseIdentifier: "techniqueCell")
-            cell.textLabel?.text = techniques[indexPath.row]
+            cell.textLabel?.text = techniques[indexPath.row].name
             cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
             cell.textLabel?.textColor = .black
             return cell
@@ -201,7 +202,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if tableView.tag == 2 {
             // Technique selection
             selectedTechnique = techniques[indexPath.row]
-            selectTechnique.text = selectedTechnique
+            selectTechnique.text = selectedTechnique?.name
             hideTechniqueDropdown()
         } else {
             // Original subject selection logic
@@ -245,8 +246,7 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
     }
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if identifier == "selectTechnique" {
+    func shouldCreate() -> Bool {
             
             // Check if topic is entered
             guard let topic = Topic.text, !topic.isEmpty else {
@@ -273,10 +273,14 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 showAlert(title: "Missing Document", message: "Please select a document before continuing.")
                 return false
             }
+            // check if technique is selected
+            guard selectedTechnique != nil else {
+                showAlert(title: "Missing Technique", message: "Please select a learning technique before continuing.")
+                return false
+            }
             
             return true
-        }
-        return true
+        
     }
     
 
@@ -288,6 +292,486 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    @IBAction func createButtonTapped(_ sender: UIButton) {
+        if(!shouldCreate()){ return}
+        switch(selectedTechnique?.name){
+            case techniques[0].name:
+                createSR(sender)
+                break
+            case techniques[1].name:
+                createAR(sender)
+                break
+            case techniques[2].name:
+                createSummarizer(sender)
+                break
+            default:
+                break
+        }
+    }
+    
+    
+    
+    
+    
+    func createSR(_ sender: Any) {
+        if let apiKey = apiKey {
+            let config = GenerationConfig(
+                temperature: 1,
+                topP: 0.95,
+                topK: 64,
+                maxOutputTokens: 8192,
+                responseMIMEType: "application/json",
+                responseSchema: Schema(type: .object,properties:[
+                    "response":Schema(type: .object,properties: [
+                        "data":Schema(type: .array,items:Schema(type: .object,properties: [
+                            "question":Schema(type: .string),
+                            "answer":Schema(type: .string)
+                        ]))
+                    ])
+                ])
+                
+                
+            )
+            generativeModel = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey,generationConfig: config)
+        } else {
+            print("API Key not found!")
+        }
+        var newTopic = Topics(id: "", title: Topic.text!, subject: selectedSubject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
+        newTopic = topicsDb.create(&newTopic)
+        showLoading(text:"Generating flashcards...")
+        Task{
+            let cards = await createFlashCards(topic: newTopic.id)
+            if(cards.isEmpty){
+                hideLoading()
+                showError(message: "Faled to generate flashcards")
+                topicsDb.delete(id: newTopic.id)
+                return
+            }
+            
+            let mySchedules = spacedRepetitionSchedule(startDate: Foundation.Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.flashcards)
+            for var schedule in mySchedules{
+                let _ = schedulesDb.create(&schedule)
+            }
+            hideLoading()
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            
+            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
+                       let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
+                        homeVC.performSegue(withIdentifier: "toSrListView", sender: nil)
+                    } else {
+                        print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
+                    }
+                }
+            } else {
+                print("Error: Could not instantiate TabBarController.")
+            }
+            
+        }
+        
+    }
+    func createAR(_ sender: Any) {
+        if let apiKey = apiKey {
+            let config = GenerationConfig(
+                temperature: 1,
+                topP: 0.95,
+                topK: 64,
+                maxOutputTokens: 8192,
+                responseMIMEType: "application/json",
+                responseSchema: Schema(type: .object,properties:[
+                    "response":Schema(type: .object,properties: [
+                        "data":Schema(type: .array,items:Schema(type: .object,properties: [
+                            "question":Schema(type: .string),
+                            "option1":Schema(type: .string),
+                            "option2":Schema(type: .string),
+                            "option3":Schema(type: .string),
+                            "option4":Schema(type: .string),
+                            "correctOption":Schema(type: .string)
+                        ]))
+                    ])
+                ])
+                
+                
+            )
+            generativeModel = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey,generationConfig: config)
+        } else {
+            print("API Key not found!")
+        }
+        var newTopic = Topics(id: "", title: Topic.text!, subject: selectedSubject!.id, type: .quizzes,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
+        newTopic = topicsDb.create(&newTopic)
+        showLoading(text:"Generating Quiz...")
+        Task{
+            let ques = await createQuestions(topic: newTopic.id)
+            if(ques.isEmpty){
+                hideLoading()
+                showError(message: "Failed to generate Quiz")
+                topicsDb.delete(id: newTopic.id)
+                return
+            }
+            let mySchedules = spacedRepetitionSchedule(startDate: Foundation.Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.quizzes)
+            for var schedule in mySchedules{
+                let _ = schedulesDb.create(&schedule)
+            }
+            hideLoading()
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
+                       let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
+                        homeVC.performSegue(withIdentifier: "toArListView", sender: nil)
+                    } else {
+                        print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
+                    }
+                }
+            } else {
+                print("Error: Could not instantiate TabBarController.")
+            }
+        }
+    }
+    
+    func createSummarizer(_ sender: Any) {
+        if let apiKey = apiKey {
+            let config = GenerationConfig(
+                temperature: 1,
+                topP: 0.95,
+                topK: 64,
+                maxOutputTokens: 8192,
+                responseMIMEType: "application/json",
+                responseSchema: Schema(type: .object,properties:[
+                    "response":Schema(type: .object,properties: [
+                        "data":Schema(type: .object,properties: [
+                            "summary":Schema(type: .string)
+                        ])
+                    ])
+                ])
+                
+                
+            )
+            generativeModel = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey,generationConfig: config)
+        } else {
+            print("API Key not found!")
+        }
+        var newTopic = Topics(id: "", title: Topic.text!, subject: selectedSubject!.id, type: .summary,subtitle: "",createdAt: Timestamp(),updatedAt: Timestamp())
+        newTopic = topicsDb.create(&newTopic)
+        showLoading(text:"Generating summary...")
+        Task{
+            let summary = await createSummary(topic: newTopic.id)
+            hideLoading()
+            if(summary == nil){
+                showError(message: "Failed to create summary")
+                topicsDb.delete(id:newTopic.id)
+                return
+            }
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
+                       let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
+                        homeVC.performSegue(withIdentifier: "toSuListView", sender: nil)
+                    } else {
+                        print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
+                    }
+                }
+            } else {
+                print("Error: Could not instantiate TabBarController.")
+            }
+        }
+      
+        }
+    
+    
+    private func getFileUri() async -> String? {
+        guard let pdfData = try? Data(contentsOf: fileUploadView.document!) else {
+                    print("Error reading PDF data")
+                    return nil
+                }
+        print(pdfData)
+        let baseURL = "https://generativelanguage.googleapis.com"
+        let fileSize = pdfData.count
+        do {
+            // Create upload URL request
+            var urlComponents = URLComponents(string: "\(baseURL)/upload/v1beta/files")!
+            urlComponents.queryItems = [URLQueryItem(name: "key", value: apiKey)]
+            
+            var request = URLRequest(url: urlComponents.url!)
+            request.httpMethod = "POST"
+            request.setValue("resumable", forHTTPHeaderField: "X-Goog-Upload-Protocol")
+            request.setValue("start", forHTTPHeaderField: "X-Goog-Upload-Command")
+            request.setValue("\(fileSize)", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Length")
+            request.setValue("application/pdf", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Type")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let metadata = ["file": ["display_name": "PDF_Document"]]
+            request.httpBody = try JSONSerialization.data(withJSONObject: metadata)
+            
+            // Get upload URL
+            let (_, response) = try await URLSession.shared.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  let uploadURL = httpResponse.value(forHTTPHeaderField: "X-Goog-Upload-URL") else {
+                throw NSError(domain: "PDFUploader", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to get upload URL"])
+            }
+            
+            // Upload the PDF
+            var uploadRequest = URLRequest(url: URL(string: uploadURL)!)
+            uploadRequest.httpMethod = "POST"
+            uploadRequest.setValue("\(fileSize)", forHTTPHeaderField: "Content-Length")
+            uploadRequest.setValue("0", forHTTPHeaderField: "X-Goog-Upload-Offset")
+            uploadRequest.setValue("upload, finalize", forHTTPHeaderField: "X-Goog-Upload-Command")
+            uploadRequest.httpBody = pdfData
+            
+            let (fileInfoData, _) = try await URLSession.shared.data(for: uploadRequest)
+            let fileInfo = try JSONSerialization.jsonObject(with: fileInfoData) as! [String: Any]
+            return (fileInfo["file"] as? [String: Any])?["uri"] as? String
+        }
+        catch{
+            return nil
+        }
+    }
+    private func createSummary(topic:String)async -> Summary?{
+        
+        
+  
+        do{
+            guard let fileURI = await getFileUri() else {
+                throw NSError(domain: "PDFUploader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to get file URI"])
+            }
+            let prompt = """
+            Create Summary for this PDF document.
+            Focus on key concepts and important details from the content.
+            so that i can give a quick look before the exam
+            """
+            
+            let content = ModelContent(role: "user", parts: [
+                        ModelContent.Part.text(prompt),
+                        ModelContent.Part.fileData(mimetype: "application/pdf", uri: fileURI)
+                    ])
+                    
+                    // Generate content using the model
+            let respons = try await generativeModel?.generateContent([content])
+            print(respons as Any)
+                // Parse the response and create flashcards
+            if let jsonData = respons?.text?.data(using: .utf8),
+               let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+               let responseData = json["response"] as? [String: Any],
+               let data = responseData["data"] as? [String: Any],
+               let summaryText = data["summary"] as? String {
+                
+                var summary = Summary(
+                    id: "",
+                    topic: topic,
+                    data: summaryText,
+                    createdAt: Timestamp(),
+                    updatedAt: Timestamp()
+                )
+                summary = summaryDb.create(&summary)
+                return summary
+            }
+                
+            return nil
+        }
+        catch{
+            print(error)
+            return nil
+        }
+        
+    }
+    private func createFlashCards(topic:String) async -> [Flashcard]{
+                guard let pdfData = try? Data(contentsOf: fileUploadView.document!) else {
+                            print("Error reading PDF data")
+                            return []
+                        }
+                let baseURL = "https://generativelanguage.googleapis.com"
+                let fileSize = pdfData.count
+                        // Send the request to the model
+//                let response = try await model.generateContent(prompt, parts: [part])
+//                print(response)
+                do {
+                        // Create upload URL request
+                        var urlComponents = URLComponents(string: "\(baseURL)/upload/v1beta/files")!
+                        urlComponents.queryItems = [URLQueryItem(name: "key", value: apiKey)]
+                        
+                        var request = URLRequest(url: urlComponents.url!)
+                        request.httpMethod = "POST"
+                        request.setValue("resumable", forHTTPHeaderField: "X-Goog-Upload-Protocol")
+                        request.setValue("start", forHTTPHeaderField: "X-Goog-Upload-Command")
+                        request.setValue("\(fileSize)", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Length")
+                        request.setValue("application/pdf", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Type")
+                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                        
+                        let metadata = ["file": ["display_name": "PDF_Document"]]
+                        request.httpBody = try JSONSerialization.data(withJSONObject: metadata)
+                        
+                        // Get upload URL
+                        let (_, response) = try await URLSession.shared.data(for: request)
+                        guard let httpResponse = response as? HTTPURLResponse,
+                              let uploadURL = httpResponse.value(forHTTPHeaderField: "X-Goog-Upload-URL") else {
+                            throw NSError(domain: "PDFUploader", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to get upload URL"])
+                        }
+                        
+                        // Upload the PDF
+                        var uploadRequest = URLRequest(url: URL(string: uploadURL)!)
+                        uploadRequest.httpMethod = "POST"
+                        uploadRequest.setValue("\(fileSize)", forHTTPHeaderField: "Content-Length")
+                        uploadRequest.setValue("0", forHTTPHeaderField: "X-Goog-Upload-Offset")
+                        uploadRequest.setValue("upload, finalize", forHTTPHeaderField: "X-Goog-Upload-Command")
+                        uploadRequest.httpBody = pdfData
+                        
+                        let (fileInfoData, _) = try await URLSession.shared.data(for: uploadRequest)
+                        let fileInfo = try JSONSerialization.jsonObject(with: fileInfoData) as! [String: Any]
+                        guard let fileURI = (fileInfo["file"] as? [String: Any])?["uri"] as? String else {
+                            throw NSError(domain: "PDFUploader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to get file URI"])
+                        }
+                        
+                        // Create prompt for flashcard generation
+                        let prompt = """
+                        Create flashcards from this PDF document.
+                        Focus on key concepts and important details from the content.
+                        Please provide at least 7 question-answer pairs.
+                        """
+                        
+                    let content = ModelContent(role: "user", parts: [
+                                ModelContent.Part.text(prompt),
+                                ModelContent.Part.fileData(mimetype: "application/pdf", uri: fileURI)
+                            ])
+                            
+                            // Generate content using the model
+                    let respons = try await generativeModel?.generateContent([content])
+                    print(respons as Any)
+                        // Parse the response and create flashcards
+                    if let jsonData = respons?.text?.data(using: .utf8),
+                           let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+                           let responseData = json["response"] as? [String: Any],
+                           let cards = responseData["data"] as? [[String: String]] {
+                            
+                            var flashcards: [Flashcard] = []
+                            for cardData in cards {
+                                if let question = cardData["question"],
+                                   let answer = cardData["answer"] {
+                                    var flashcard = Flashcard(
+                                        id: "",
+                                        question: question,
+                                        answer: answer,
+                                        topic: topic,
+                                        createdAt: Timestamp(),
+                                        updatedAt: Timestamp()
+                                    )
+                                    let _ = flashCardDb.create(&flashcard)
+                                    flashcards.append(flashcard)
+                                }
+                            }
+                            return flashcards
+                        }
+                        
+                        return []
+                        
+                    } catch {
+                        print("Error processing PDF: \(error)")
+                        return []
+                    }
+            }
+    private func createQuestions(topic: String) async -> [Questions] {
+        
+  
+        do{
+            guard let fileURI = await getFileUri() else {
+                print("Failed to upload")
+                throw NSError(domain: "PDFUploader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to get file URI"])
+            }
+            let prompt = """
+            Create Questions from this PDF document.
+            Focus on key concepts and important details from the content.
+            make sure the answers are small as possible and fit in one line.
+            one of the option should be the correct answer and randomize this option
+            Please provide at least 5 questions
+            """
+            
+            let content = ModelContent(role: "user", parts: [
+                        ModelContent.Part.text(prompt),
+                        ModelContent.Part.fileData(mimetype: "application/pdf", uri: fileURI)
+                    ])
+                    
+                    // Generate content using the model
+            let respons = try await generativeModel?.generateContent([content])
+            print(respons as Any)
+                // Parse the response and create flashcards
+            if let jsonData = respons?.text?.data(using: .utf8),
+                   let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+                   let responseData = json["response"] as? [String: Any],
+                   let cards = responseData["data"] as? [[String: String]] {
+                    
+                var questions: [Questions] = []
+                    var i = 1
+                    for cardData in cards {
+                        print(cardData)
+                        if let question = cardData["question"],
+                           let answer = cardData["correctOption"],
+                           let a = cardData["option1"],
+                           let b = cardData["option2"],
+                           let c = cardData["option3"],
+                           let d = cardData["option4"]{
+                            var question1 = Questions(
+                                id:"",
+                                questionLabel: "\(i)",
+                                question: question,
+                                correctanswer: answer,
+                                option1: a,
+                                option2: b,
+                                option3: c,
+                                option4: d,
+                                topic: topic
+                            )
+                            let _ = questionsDb.create(&question1)
+                            questions.append(question1)
+                            i += 1
+                        }
+                    }
+                return questions
+                }
+                
+                return []
+        }
+        catch{
+            return []
+        }
+        
+    }
+    private func showLoading(text:String) {
+            let loadingView = LoadingView()
+            loadingView.tag = 999 // Tag for easy removal
+            loadingView.text = text
+            view.addSubview(loadingView)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                loadingView.topAnchor.constraint(equalTo: view.topAnchor),
+                loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+            
+            loadingView.show()
+        }
+        
+        private func hideLoading() {
+            if let loadingView = view.viewWithTag(999) {
+                loadingView.removeFromSuperview()
+            }
+        }
+    private func showError(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
 
