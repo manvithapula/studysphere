@@ -73,15 +73,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             if let cell = cell as? spacedCollectionViewCell {
                 cell.titleLabel.text = card.title
                 cell.subtitleLabel.text = card.subtitle
-                
-                if (card.completed != nil) {
-                    cell.continueButtonTapped.setTitle("Review", for: .normal)
-                } else {
-                    cell.continueButtonTapped.setTitle("Continue Studying", for: .normal)
-                }
-                
-                cell.continueButtonTapped.tag = indexPath.item // Use the tag to identify
-                cell.continueButtonTapped.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
+
             }
             
             return cell
@@ -92,7 +84,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.30))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.20))
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
@@ -117,6 +109,9 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             cards = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
             SpacedRepetitionList.reloadData()
         }
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toSRSchedule", sender: indexPath.row)
     }
 
 }

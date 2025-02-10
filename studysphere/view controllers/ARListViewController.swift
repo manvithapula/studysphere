@@ -77,14 +77,6 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
                 cell.titleLabel.text = question.title
                 cell.subtitleLabel.text = question.subtitle == "" ? "6 more to go" : question.subtitle
                 
-                if (question.completed != nil) {
-                    cell.continueButtonTapped.setTitle("Review", for: .normal)
-                } else {
-                    cell.continueButtonTapped.setTitle("Continue Studying", for: .normal)
-                }
-                
-                cell.continueButtonTapped.tag = indexPath.item // Use the tag to identify
-                cell.continueButtonTapped.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
             }
             
             return cell
@@ -95,7 +87,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.30))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.20))
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
@@ -111,6 +103,9 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
 
+    @IBAction func tapped(_ sender: Any) {
+        performSegue(withIdentifier: "toARschedule", sender: sender)
+    }
     @objc func detailButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "toARschedule", sender: sender.tag)
     }
@@ -120,6 +115,9 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             questions = try await topicsDb.findAll(where: ["type": TopicsType.quizzes.rawValue])
             ARList.reloadData()
         }
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toARschedule", sender: indexPath.row)
     }
 
 }

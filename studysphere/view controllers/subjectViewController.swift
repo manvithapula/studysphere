@@ -28,7 +28,6 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(subject)
         updateCards()
         SubjectCollectionView.dataSource = self
         SubjectCollectionView.delegate = self
@@ -79,11 +78,9 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subject", for: indexPath)
         let card = filteredCards[indexPath.row]
-        if let cell = cell as? subjectCellCollectionViewCell {
+        if let cell = cell as? ARCollectionViewCell {
             cell.titleLabel.text = card.title
-            cell.subTitleLabel.text = card.subtitle
-            cell.continueButtonTapped.tag = indexPath.item
-            cell.continueButtonTapped.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
+            cell.subtitleLabel.text = card.subtitle
             
         }
         return cell
@@ -107,7 +104,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.22))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.20))
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
@@ -137,5 +134,17 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         SubjectCollectionView.reloadData()
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch subjectSegmentControl.selectedSegmentIndex{
+        case 0:
+            performSegue(withIdentifier: "toSRSchedule", sender: indexPath.row)
+        case 1:
+            performSegue(withIdentifier: "toARSchedule", sender: indexPath.row)
+        case 2:
+            performSegue(withIdentifier: "toSummary", sender: indexPath.row)
+        default:
+            break
+        }
     }
 }
