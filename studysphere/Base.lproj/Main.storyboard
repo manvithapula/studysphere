@@ -2477,6 +2477,9 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="Schedule" id="DCF-Zl-A4h"/>
+                    <connections>
+                        <segue destination="Kdx-Zo-MPf" kind="show" identifier="toQuestionVC" id="clq-nv-CKB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2740,7 +2743,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="6681.679389312977" y="1659.8591549295775"/>
+            <point key="canvasLocation" x="6248" y="1568"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Uhr-Ol-Aim">
@@ -3408,9 +3411,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-
-        <segue reference="651-AB-nO7"/>
+        <segue reference="bfc-Hh-3ad"/>
         <segue reference="yUW-6S-VXD"/>
+        <segue reference="clq-nv-CKB"/>
         <segue reference="qtl-9G-7g1"/>
         <segue reference="qdn-Bb-u7i"/>
     </inferredMetricsTieBreakers>

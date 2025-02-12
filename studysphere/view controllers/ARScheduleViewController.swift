@@ -200,7 +200,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
         
         if segue.identifier == "toQuestionVC",
            let destinationVC = segue.destination as? QuestionViewController,
-           let index = tableView.indexPathForSelectedRow {
+           let index = sender as? IndexPath {
             destinationVC.topic = topic
             destinationVC.schedule = mySchedules[index.row]
         }
@@ -228,6 +228,10 @@ extension ARScheduleViewController: UITableViewDelegate {
             isCompleted: schedule.completed != nil,
             retention: schedule.completed != nil ? "89% retained" : nil
         )
+        cell.startButton.removeTarget(nil, action: nil, for: .touchUpInside)
+        cell.startButton.addAction(UIAction { [weak self] _ in
+            self?.performSegue(withIdentifier: "toQuestionVC", sender: indexPath)
+            }, for: .touchUpInside)
         
         return cell
     }
@@ -327,7 +331,7 @@ class ReviewCell: UITableViewCell {
         return label
     }()
     
-    private let startButton: UIButton = {
+     let startButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Start Review", for: .normal)
         button.backgroundColor = .systemBlue
@@ -336,6 +340,7 @@ class ReviewCell: UITableViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
