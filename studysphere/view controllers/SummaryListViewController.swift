@@ -64,13 +64,8 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
           if let cell = cell as? SummaryCollectionViewCell {
               cell.titleLabel.text = card.title
               cell.subTitleLabel.text = card.subtitle
-              
-              // Update button title based on completion
-              cell.continueButton.setTitle((card.completed != nil) ? "Review" : "Continue Studying", for: .normal)
-              
-              // Handle button tap
-              cell.continueButton.tag = indexPath.item
-              cell.continueButton.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
+              cell.updateSubject(topic: card)
+
           }
           
           return cell
@@ -81,7 +76,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
           let item = NSCollectionLayoutItem(layoutSize: itemSize)
           item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
           
-          let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.22))
+          let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.18))
           let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
           
           let section = NSCollectionLayoutSection(group: group)

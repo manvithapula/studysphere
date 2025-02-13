@@ -14,7 +14,8 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         @IBOutlet weak var subTitleLabel: UILabel!
         @IBOutlet weak var continueButton: UIButton!
         
- 
+    @IBOutlet weak var subjectButton: UIButton!
+    
         var buttonTapped: (() -> Void)?
         
     @IBOutlet weak var view: RoundNShadow!
@@ -33,5 +34,14 @@ class SummaryCollectionViewCell: UICollectionViewCell {
                             view.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10)
                         ])
                 }
+    
+    func updateSubject(topic:Topics){
+        Task{
+            let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
+            if let subject = allSubjects.first{
+                subjectButton.setTitle(subject.name, for: .normal)
+            }
+        }
+    }
     }
 
