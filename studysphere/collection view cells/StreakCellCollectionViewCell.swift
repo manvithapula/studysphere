@@ -196,10 +196,12 @@ class StreakCellCollectionViewCell: UICollectionViewCell {
       }
       
       func configure(with startDate: Date) {
-          let streakDays = calculateStreakDays(from: startDate)
+          StreakManager.shared.updateStreak()
+          let streakDays = StreakManager.shared.currentStreak
+          var streakStartDate: Date = Calendar.current.date(byAdding: .day, value: -streakDays, to: Date())!
           streakTitleLabel.text = "\(streakDays)-day streak"
           subtitleLabel.text = "Study next week to keep your streak going!"
-          updateWeekView(withStreakDays: streakDays, startDate: startDate)
+          updateWeekView(withStreakDays: streakDays, startDate: streakStartDate)
       }
   }
 
