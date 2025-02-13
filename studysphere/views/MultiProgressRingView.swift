@@ -45,7 +45,7 @@ class MultiProgressRingView: UIView {
         redTrack = createTrackLayer(color: .systemRed)
         
         // Add track layers
-        layer.addSublayer(blueTrack)
+//        layer.addSublayer(blueTrack)
         layer.addSublayer(greenTrack)
         layer.addSublayer(redTrack)
         
@@ -54,7 +54,7 @@ class MultiProgressRingView: UIView {
         greenRing = createRingLayer(color: .systemGreen)
         redRing = createRingLayer(color: .systemRed)
         
-        layer.addSublayer(blueRing)
+//        layer.addSublayer(blueRing)
         layer.addSublayer(greenRing)
         layer.addSublayer(redRing)
         
