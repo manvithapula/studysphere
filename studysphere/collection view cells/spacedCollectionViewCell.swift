@@ -14,6 +14,7 @@ class spacedCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var continueButtonTapped: UIButton!
     
+    @IBOutlet weak var subjectButtonSR: UIButton!
     
     
     var buttonTapped: (() -> Void)?

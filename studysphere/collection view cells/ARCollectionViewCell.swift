@@ -14,6 +14,7 @@ class ARCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var continueButtonTapped: UIButton!
     
+    @IBOutlet weak var subjectButtonAR: UIButton!
     
     
     var buttonTapped: (() -> Void)?
