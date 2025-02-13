@@ -76,7 +76,8 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             if let cell = cell as? ARCollectionViewCell {
                 cell.titleLabel.text = question.title
                 cell.subtitleLabel.text = question.subtitle == "" ? "6 more to go" : question.subtitle
-                
+                cell.updateSubject(topic: question)
+
             }
             
             return cell

@@ -35,5 +35,13 @@ class ARCollectionViewCell: UICollectionViewCell {
             viewSr.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10)
         ])
     }
+    func updateSubject(topic:Topics){
+        Task{
+            let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
+            if let subject = allSubjects.first{
+                subjectButtonAR.setTitle(subject.name, for: .normal)
+            }
+        }
+    }
     
 }
