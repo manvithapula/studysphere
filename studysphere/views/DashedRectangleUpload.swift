@@ -59,7 +59,7 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
         let imageView = UIImageView()
         let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .light)
         imageView.image = UIImage(systemName: "arrow.up.doc.fill", withConfiguration: config)
-        imageView.tintColor = .systemBlue.withAlphaComponent(0.8)
+        imageView.tintColor = .black.withAlphaComponent(0.8)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -68,7 +68,7 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
         let label = UILabel()
         label.text = "Upload PDF"
         label.font = .systemFont(ofSize: 17, weight: .semibold)
-        label.textColor = .systemBlue
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -344,7 +344,7 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
         // Update icon to show selected state
         let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .light)
         uploadIcon.image = UIImage(systemName: "doc.fill.badge.checkmark", withConfiguration: config)
-        uploadIcon.tintColor = .systemGreen
+        uploadIcon.tintColor = .systemBlue.withAlphaComponent(0.8)
         
         // Add animation for success state
         UIView.animate(withDuration: 0.3) {
