@@ -55,6 +55,16 @@ class SignupViewController: UIViewController {
             return
         }
         
+        guard email.hasSuffix("@gmail.com") else{
+            showAlert(message: "Invalid email format")
+            return
+        }
+        
+        guard password.count >= 6 else {
+            showAlert(message: "Password is too short")
+            return
+        }
+        
         var newUser = UserDetailsType(id: "", firstName: firstName, lastName: lastName, dob: Timestamp(date:datePicker.date), pushNotificationEnabled: false, faceIdEnabled: false, email: email, password: password, createdAt: Timestamp(), updatedAt: Timestamp())
         
         var user = userDB.findFirst(where: ["email":email])

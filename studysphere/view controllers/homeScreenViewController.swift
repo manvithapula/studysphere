@@ -260,65 +260,48 @@ class homeScreenViewController: UIViewController {
                     ofKind: kind,
                     withReuseIdentifier: "HeaderView",
                     for: indexPath)
-
-                // Get the title label (create if it doesn't exist)
-                let titleLabel: UILabel
-                if let existingLabel = headerView.subviews.first(where: { $0 is UILabel }) as? UILabel {
-                    titleLabel = existingLabel
-                } else {
-                    titleLabel = UILabel()
-                    titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
-                    titleLabel.translatesAutoresizingMaskIntoConstraints = false
-                    headerView.addSubview(titleLabel)
-                    NSLayoutConstraint.activate([
-                        titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-                        titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
-                    ])
-                }
-                titleLabel.text = sectionTitles[indexPath.section] // Configure the text
-
-                let chevronButtonTag = 100
+                
+                // Clear existing subviews to handle reuse properly
+                headerView.subviews.forEach { $0.removeFromSuperview() }
+                
+                // Create and configure title label
+                let titleLabel = UILabel()
+                titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+                titleLabel.translatesAutoresizingMaskIntoConstraints = false
+                headerView.addSubview(titleLabel)
+                NSLayoutConstraint.activate([
+                    titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+                    titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+                ])
+                titleLabel.text = sectionTitles[indexPath.section]
+                
+                // Add chevron button only for sections 1 and 2
                 if indexPath.section == 1 || indexPath.section == 2 {
-                    let chevronButton: UIButton
-                    if let existingButton = headerView.viewWithTag(chevronButtonTag) as? UIButton {
-                        chevronButton = existingButton
-                    } else {
-                        chevronButton = UIButton(type: .system)
-                        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
-                        chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
-                        chevronButton.translatesAutoresizingMaskIntoConstraints = false
-                        chevronButton.tag = chevronButtonTag
-                        headerView.addSubview(chevronButton)
-
-                        NSLayoutConstraint.activate([
-                            chevronButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-                            chevronButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-                            chevronButton.widthAnchor.constraint(equalToConstant: 30),
-                            chevronButton.heightAnchor.constraint(equalToConstant: 30)
-                        ])
-                        chevronButton.removeTarget(nil, action: nil, for: .touchUpInside)
-
-                        if indexPath.section == 1 {
-                            chevronButton.addTarget(self, action: #selector(chevronButtonTapped), for: .touchUpInside)
-                        } else {
-                            chevronButton.addTarget(self, action: #selector(subjectsChevronButtonTapped), for: .touchUpInside)
-                        }
-                    }
-                    // Ensure titleLabel is added for these sections
-                    if !headerView.subviews.contains(titleLabel) {
-                        headerView.addSubview(titleLabel)
-                    }
-                } else {
-                    // Ensure titleLabel is added for other sections
-                    if !headerView.subviews.contains(titleLabel) {
-                        headerView.addSubview(titleLabel)
-                    }
-                    // Remove chevron button if it exists for other sections
-                    if let existingButton = headerView.viewWithTag(chevronButtonTag) {
-                        existingButton.removeFromSuperview()
-                    }
+                    let chevronButton = UIButton(type: .system)
+                    let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
+                    chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
+                    chevronButton.translatesAutoresizingMaskIntoConstraints = false
+                    chevronButton.tintColor = .systemOrange
+                    headerView.addSubview(chevronButton)
+                    
+                    NSLayoutConstraint.activate([
+                        chevronButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+                        chevronButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+                        chevronButton.widthAnchor.constraint(equalToConstant: 30),
+                        chevronButton.heightAnchor.constraint(equalToConstant: 30)
+                    ])
+                    
+                    // Store the section information in the button's tag
+                    chevronButton.tag = indexPath.section
+                    
+                    // Add action with the correct segue identifier based on section
+                    chevronButton.addAction(UIAction { [weak self] action in
+                        guard let button = action.sender as? UIButton else { return }
+                        let segueIdentifier = button.tag == 1 ? "TodaysLearningSegue" : "SubjectListViewSegue"
+                        self?.performSegue(withIdentifier: segueIdentifier, sender: self)
+                    }, for: .touchUpInside)
                 }
-
+                
                 return headerView
             }
             return UICollectionReusableView()

@@ -73,6 +73,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             if let cell = cell as? spacedCollectionViewCell {
                 cell.titleLabel.text = card.title
                 cell.subtitleLabel.text = card.subtitle
+                cell.updateSubject(topic: card)
 
             }
             

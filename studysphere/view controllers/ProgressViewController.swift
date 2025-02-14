@@ -36,7 +36,6 @@ class ProgressViewController: UIViewController {
             multiProgressRing.setProgress(blue: hours.progress, green: questionsProgress.progress, red: flashcardsProgress.progress, animated: true)
             flashcardMainL.text = "\(flashcardsProgress.completed) Flashcards"
             questionMainL.text = "\(questionsProgress.completed) Questions"
-            hourMainL.text = "\(hours.completed) Hours"
             
             flashcardSecondaryL.text = "\(flashcardsProgress.completed) Flashcards reviewed"
             questionSecondaryL.text = "\(questionsProgress.completed) Questions reviewed"
@@ -48,21 +47,6 @@ class ProgressViewController: UIViewController {
     }
     
     func updateTimeNStreak(time:Int,streak:Int) {
-        if(time < 1000 * 60){
-            timeValueL.text = "\(time/1000)"
-            timeTypeL.text = "secs"
-        }
-        else if (time < 1000 * 60 * 60){
-            let minutes = time/1000/60
-            timeValueL.text = "\(minutes)"
-            timeTypeL.text = "mins"
-        }
-        else{
-            let hours = time/1000/60/60
-            timeValueL.text = "\(hours)"
-            timeTypeL.text = "hours"
-        }
-        streakValueL.text = "\(streak)"
     }
     
     override func viewDidLoad() {

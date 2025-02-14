@@ -14,6 +14,7 @@ class ARCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var continueButtonTapped: UIButton!
     
+    @IBOutlet weak var subjectButtonAR: UIButton!
     
     
     var buttonTapped: (() -> Void)?
@@ -33,6 +34,14 @@ class ARCollectionViewCell: UICollectionViewCell {
             viewSr.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             viewSr.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10)
         ])
+    }
+    func updateSubject(topic:Topics){
+        Task{
+            let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
+            if let subject = allSubjects.first{
+                subjectButtonAR.setTitle(subject.name, for: .normal)
+            }
+        }
     }
     
 }

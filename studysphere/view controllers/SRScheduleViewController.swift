@@ -313,7 +313,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
         
         if segue.identifier == "showScheduleDetail",
            let destinationVC = segue.destination as? FlashcardViewController,
-           let index = tableView.indexPathForSelectedRow {
+           let index = sender as? IndexPath {
             destinationVC.topic = topic!.id
             destinationVC.schedule = mySchedules[index.row]
         }
@@ -347,6 +347,11 @@ extension SRScheduleViewController: UITableViewDelegate {
             isCompleted: schedule.completed != nil,
             retention: schedule.completed != nil ? "85% retained" : nil
         )
+        cell.startButton.removeTarget(nil, action: nil, for: .touchUpInside)
+        cell.startButton.addAction(UIAction { [weak self] _ in
+            self?.performSegue(withIdentifier: "showScheduleDetail", sender: indexPath)
+            }, for: .touchUpInside)
+        
         
         return cell
     }

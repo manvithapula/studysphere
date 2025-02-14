@@ -17,6 +17,7 @@ class StudyTechniquesCollectionViewCell: UICollectionViewCell {
     func updateCompletionStatus(topic:TopicsType) {
         Task {
             do {
+                completionStatus.textColor = .systemOrange
                 let cards = try await topicsDb.findAll(where: ["type": topic.rawValue])
                 let filteredCards = cards.filter { card in
                     card.completed != nil
