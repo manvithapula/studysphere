@@ -114,4 +114,7 @@ class SummaryListViewController: UIViewController, UICollectionViewDelegate, UIC
               summaryList.reloadData()
           }
       }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toSummary", sender: indexPath.row)
+    }
   }
