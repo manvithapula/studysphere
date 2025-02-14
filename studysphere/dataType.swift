@@ -10,6 +10,27 @@ import Firebase
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
+
+
+
+struct AppTheme {
+    static let primary = UIColor(red: 37/255, green: 99/255, blue: 235/255, alpha: 1.0)
+    static let secondary = UIColor(red: 99/255, green: 102/255, blue: 241/255, alpha: 1.0)
+    static let background = UIColor.white
+    static let cardBackground = UIColor(red: 249/255, green: 250/255, blue: 251/255, alpha: 1.0)
+    
+    static func getSubjectColor(_ index: Int) -> UIColor {
+        return index % 2 == 0 ? primary : secondary
+    }
+}
+
+struct StudyModule {
+    let technique: String
+    let subject: String
+    let dueDate: Date
+    let title: String
+    let progress: Double
+}
 protocol Identifiable {
     var id: String { get set }
     var createdAt: Timestamp { get set }

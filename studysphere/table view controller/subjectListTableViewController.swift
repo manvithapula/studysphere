@@ -11,25 +11,41 @@ import FirebaseCore
 class subjectListTableViewController: UITableViewController {
     
     @IBOutlet var subjectTableView: UITableView!
-    var subjects: [Subject] = []
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        loadSubjects()
-        Task{
-            subjects = try await subjectDb.findAll()
-            subjectTableView.reloadData()
-        }
-        
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showAddSubjectModal))
-                navigationItem.rightBarButtonItem = addButton
-        
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-    }
+    
+    public var subjects: [Subject] = []
+      
+      override func viewDidLoad() {
+          super.viewDidLoad()
+          setupUI()
+          loadSubjects()
+          Task {
+              subjects = try await subjectDb.findAll()
+              tableView.reloadData()
+          }
+      }
+      
+      private func setupUI() {
+          // Configure navigation bar
+          title = "My Subjects"
+          navigationController?.navigationBar.prefersLargeTitles = true
+          
+          let addButton = UIBarButtonItem(
+              image: UIImage(systemName: "plus.circle.fill"),
+              style: .plain,
+              target: self,
+              action: #selector(showAddSubjectModal)
+          )
+          addButton.tintColor = AppTheme.primary
+          navigationItem.rightBarButtonItem = addButton
+          
+          // Configure table view
+          tableView.backgroundColor = .systemGray6
+          tableView.separatorStyle = .none
+          tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
+          
+          // Register custom cell
+          tableView.register(subjectListTableViewCell.self, forCellReuseIdentifier: "subjectCell")
+      }
     
     @objc func showAddSubjectModal() {
           let addSubjectVC = AddSubjectViewController()
@@ -74,92 +90,26 @@ class subjectListTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
-}
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return subjects.count
-}
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "subjectcell", for: indexPath) as! subjectListTableViewCell
-        let subject = subjects[indexPath.row]
-        cell.subjectListButton.setTitle(subject.name, for: .normal)
-        cell.subjectListButton.addTarget(self, action: #selector(detailButtonTapped(_:)), for: .touchUpInside)
-
-        return cell
-}
-
-    
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 70
-}
-    @objc func detailButtonTapped(_ sender: UIButton) {
-        if let cell = sender.superview?.superview as? subjectListTableViewCell,
-           let indexPath = self.tableView.indexPath(for: cell) {
-            performSegue(withIdentifier: "toSubjectDetails", sender: indexPath)
-        }
-    }
-    //can select row
-    
-}
-    
-    
-    
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-    // Set the height for each row to add spacing
-    
+          return 1
+      }
+      
+      override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+          return subjects.count
+      }
+      
+      override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+          let cell = tableView.dequeueReusableCell(withIdentifier: "subjectCell", for: indexPath) as! subjectListTableViewCell
+          let subject = subjects[indexPath.row]
+          cell.configure(with: subject, index: indexPath.row)
+          return cell
+      }
+      
+      override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+          return 90
+      }
+      
+      override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+          performSegue(withIdentifier: "toSubjectDetails", sender: indexPath)
+          tableView.deselectRow(at: indexPath, animated: true)
+      }
+  }

@@ -1,439 +1,130 @@
-//
-//  homeScreenViewController.swift
-//  studysphere
-//
-//  Created by admin64 on 04/11/24.
-//
-
 import UIKit
 
 class homeScreenViewController: UIViewController {
     
+    private var subjects: [Subject] = []
+    private var scheduleItems: [ScheduleItem] = []
+    private var studyTechniques: [String] = ["Spaced Repetition", "Active Recall", "Summariser"]
     
-    @IBOutlet weak var collectionView: UICollectionView!
-
-        
-   
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private var gradientLayer = CAGradientLayer()
-        private let nameLabel: UILabel = {
-            let label = UILabel()
-            label.font = .systemFont(ofSize: 34, weight: .bold)
-            label.textColor = .black
-            label.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
     
-        
-        private var scheduleItems: [ScheduleItem] = []
-        
-        private var sectionTitles = ["Your Streak", "Today's Learning", "Subjects", "Study Techniques"]
-        private var subjects: [Subject] = []
-        private var studyTechniques: [String] = ["Spaced Repetition", "Active Recall", "Summariser"]
-
-        private var streakStartDate: Date = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = false
+        setupUI()
+        loadData()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Task{
-            Task{
-                subjects = try await subjectDb.findAll()
-                let schedules = try await  schedulesDb.findAll()
-                let today = formatDateToString(date: Date())
-                var filterSchedules:[Schedule]{
-                    return schedules.filter { schedule in
-                        
-                        let date = formatDateToString(date: schedule.date.dateValue())
-                        return date == today
+        Task {
+            subjects = try await subjectDb.findAll()
+            let schedules = try await schedulesDb.findAll()
+            let today = formatDateToString(date: Date())
+            
+            scheduleItems = schedules
+                .filter { formatDateToString(date: $0.date.dateValue()) == today }
+                .prefix(3)
+                .compactMap { schedule in
+                    if schedule.completed == nil {
+                        return ScheduleItem(
+                            iconName: schedule.topicType == TopicsType.flashcards ? "square.stack.3d.down.forward" : "clipboard",
+                            title: schedule.title,
+                            subtitle: "",
+                            progress: 0,
+                            topicType: schedule.topicType,
+                            topicId: schedule.topic
+                        )
                     }
+                    return nil
                 }
-                scheduleItems = []
-                var i = 0
-                for schedule in filterSchedules{
-                    if i > 2{
-                        break
-                    }
-                    if(schedule.completed == nil){
-                        let scheduleItem = ScheduleItem(iconName: schedule.topicType == TopicsType.flashcards ? "square.stack.3d.down.forward":"clipboard", title: schedule.title,subtitle: "", progress: 0,topicType: schedule.topicType,topicId: schedule.topic)
-                        scheduleItems.append(scheduleItem)
-                        i += 1
-                    }
-                }
-                collectionView.reloadData()
-                
-            }
+            
+            setupGradient()
+            contentView.setNeedsLayout()
         }
     }
-        override func viewDidLoad() {
-            print("Home loaded")
-            super.viewDidLoad()
-            navigationController?.navigationBar.prefersLargeTitles = false
-            Task{
-                subjects = try await subjectDb.findAll()
-                let schedules = try await  schedulesDb.findAll()
-                let today = formatDateToString(date: Date())
-                var filterSchedules:[Schedule]{
-                    return schedules.filter { schedule in
-                        
-                        let date = formatDateToString(date: schedule.date.dateValue())
-                        return date == today
-                    }
-                }
-                scheduleItems = []
-                var i = 0
-                for schedule in filterSchedules{
-                    if i > 2{
-                        break
-                    }
-                    if(schedule.completed == nil){
-                        let scheduleItem = ScheduleItem(iconName: "pencil", title: schedule.title,subtitle: "", progress: 0,topicType: schedule.topicType,topicId: schedule.topic)
-                        scheduleItems.append(scheduleItem)
-                        i += 1
-                    }
-                }
-                setupGradient()
-                setupCollectionView()
-                navigationItem.title = "StudySphere"
-                
-            }
-
-            
-        }
-        
-    override func viewDidLayoutSubviews() {
-          super.viewDidLayoutSubviews()
-        gradientLayer.frame = view.bounds
-          // Adding an accessory view with a profile button
-          let accessoryView = UIButton()
-          let image = UIImage(named: "profile-avatar")
-          if let image = UIImage(named: "profile-avatar") {
-              accessoryView.setImage(image, for: .normal)
-          } else {
-              print("Image not found.")
-          }
-          
-          
-          accessoryView.setImage(image, for: .normal)
-          accessoryView.frame.size = CGSize(width: 34, height: 34)
-          
-          if let largeTitleView = navigationController?.navigationBar.subviews.first(where: { subview in
-              String(describing: type(of: subview)) == "_UINavigationBarLargeTitleView"
-          }) {
-              largeTitleView.perform(Selector(("setAccessoryView:")), with: accessoryView)
-              largeTitleView.perform(Selector(("setAlignAccessoryViewToTitleBaseline:")), with: nil)
-              largeTitleView.perform(Selector(("updateContent")))
-          }
-      }
-        
-        private func setupGradient() {
-            let mainColor = UIColor.orange
-            
-            gradientLayer.colors = [
-                mainColor.withAlphaComponent(1.0).cgColor,
-                mainColor.withAlphaComponent(0.0).cgColor
-            ]
-            gradientLayer.locations = [0.0, 0.15]
-            gradientLayer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 10)
-            view.layer.addSublayer(gradientLayer)
-        }
-
-
-        
-   /* private func setupNavigationBar() {
-       
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-        
-        let accessoryView = UIButton()
-        if let image = UIImage(named: "profile-avatar") {
-            accessoryView.setImage(image, for: .normal)
-            accessoryView.translatesAutoresizingMaskIntoConstraints = false
-            accessoryView.widthAnchor.constraint(equalToConstant: 40).isActive = true
-            accessoryView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-            accessoryView.layer.cornerRadius = 20
-            accessoryView.clipsToBounds = true
-        }
     
-        let nameLabel = UILabel()
-        nameLabel.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
-        nameLabel.font = .systemFont(ofSize: 28, weight: .bold)
-        nameLabel.textColor = .black
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-       
-        let motivationalLabel = UILabel()
-        motivationalLabel.text = "Ready to learn something new today?"
-        motivationalLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        motivationalLabel.textColor = .black
-        motivationalLabel.translatesAutoresizingMaskIntoConstraints = false
-        motivationalLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-        motivationalLabel.setContentHuggingPriority(.required, for: .horizontal)
-        
-
-        let titleStackView = UIStackView(arrangedSubviews: [nameLabel, motivationalLabel])
-        titleStackView.axis = .vertical
-        titleStackView.alignment = .leading
-        titleStackView.spacing = 4
-        titleStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-
-        let horizontalStack = UIStackView(arrangedSubviews: [titleStackView, accessoryView])
-        horizontalStack.axis = .horizontal
-        horizontalStack.alignment = .center
-        horizontalStack.spacing = 12
-        horizontalStack.distribution = .equalSpacing
-        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
-        
-      
-        let containerView = UIView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(horizontalStack)
-        NSLayoutConstraint.activate([
-            horizontalStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            horizontalStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            horizontalStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-            horizontalStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+    private func loadData() {
+        Task {
+            subjects = try await subjectDb.findAll()
+            let schedules = try await schedulesDb.findAll()
+            let today = formatDateToString(date: Date())
             
-            
-            titleStackView.widthAnchor.constraint(lessThanOrEqualToConstant: 250),
-            motivationalLabel.widthAnchor.constraint(lessThanOrEqualTo: titleStackView.widthAnchor),
-            nameLabel.widthAnchor.constraint(lessThanOrEqualTo: titleStackView.widthAnchor)
-        ])
-        navigationItem.titleView = containerView
-        if let containerWidth = navigationController?.navigationBar.frame.width {
-            containerView.widthAnchor.constraint(equalToConstant: containerWidth).isActive = true
-        }
-        containerView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-    }*/
-
-       
-        
-        private func setupCollectionView() {
-            collectionView.delegate = self
-            collectionView.dataSource = self
-            collectionView.backgroundColor = .clear
-            
-            collectionView.register(UICollectionReusableView.self,
-                                  forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                  withReuseIdentifier: "HeaderView")
-            
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .vertical
-            layout.minimumInteritemSpacing = 8
-            layout.minimumLineSpacing = 8
-            layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-            layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50)
-            collectionView.collectionViewLayout = layout
-            collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        }
-        
-    @objc private func chevronButtonTapped() {
-        performSegue(withIdentifier: "TodaysLearningSegue", sender: self)
-    }
-    @objc private func subjectsChevronButtonTapped() {
-        performSegue(withIdentifier: "SubjectListViewSegue", sender: self)
-    }
-    }
-
-    
-    
-
-    // MARK: - UICollectionViewDataSource
-    extension homeScreenViewController: UICollectionViewDataSource {
-        func numberOfSections(in collectionView: UICollectionView) -> Int {
-            return 4
-        }
-        
-        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            switch section {
-            case 0: return 1
-            case 1: return scheduleItems.count
-            case 2: return subjects.count
-            case 3: return studyTechniques.count
-            default: return 0
-            }
-        }
-        
-        func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-            if kind == UICollectionView.elementKindSectionHeader {
-                let headerView = collectionView.dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: "HeaderView",
-                    for: indexPath)
-                
-                // Clear existing subviews to handle reuse properly
-                headerView.subviews.forEach { $0.removeFromSuperview() }
-                
-                // Create and configure title label
-                let titleLabel = UILabel()
-                titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
-                titleLabel.translatesAutoresizingMaskIntoConstraints = false
-                headerView.addSubview(titleLabel)
-                NSLayoutConstraint.activate([
-                    titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-                    titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
-                ])
-                titleLabel.text = sectionTitles[indexPath.section]
-                
-                // Add chevron button only for sections 1 and 2
-                if indexPath.section == 1 || indexPath.section == 2 {
-                    let chevronButton = UIButton(type: .system)
-                    let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
-                    chevronButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
-                    chevronButton.translatesAutoresizingMaskIntoConstraints = false
-                    chevronButton.tintColor = .systemOrange
-                    headerView.addSubview(chevronButton)
-                    
-                    NSLayoutConstraint.activate([
-                        chevronButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-                        chevronButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-                        chevronButton.widthAnchor.constraint(equalToConstant: 30),
-                        chevronButton.heightAnchor.constraint(equalToConstant: 30)
-                    ])
-                    
-                    // Store the section information in the button's tag
-                    chevronButton.tag = indexPath.section
-                    
-                    // Add action with the correct segue identifier based on section
-                    chevronButton.addAction(UIAction { [weak self] action in
-                        guard let button = action.sender as? UIButton else { return }
-                        let segueIdentifier = button.tag == 1 ? "TodaysLearningSegue" : "SubjectListViewSegue"
-                        self?.performSegue(withIdentifier: segueIdentifier, sender: self)
-                    }, for: .touchUpInside)
-                }
-                
-                return headerView
-            }
-            return UICollectionReusableView()
-        }
-        
-        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            switch indexPath.section {
-            case 0:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StreakCell", for: indexPath) as? StreakCellCollectionViewCell else {
-                    return UICollectionViewCell()
-                }
-                cell.configure(with: streakStartDate)
-                return cell
-                
-            case 1:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodaysLearningCell", for: indexPath) as? TodaysLearningCollectionViewCell else {
-                    return UICollectionViewCell()
-                }
-                let module = scheduleItems[indexPath.row]
-                cell.configure(with: module)
-                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
-                cell.button.addAction(UIAction { [weak self] _ in
-                    Task{
-                        let topic = try await topicsDb.findAll(where: ["id":module.topicId]).first
-                        self?.performSegue(withIdentifier:module.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+            scheduleItems = schedules
+                .filter { formatDateToString(date: $0.date.dateValue()) == today }
+                .prefix(3)
+                .compactMap { schedule in
+                    if schedule.completed == nil {
+                        return ScheduleItem(
+                            iconName: "pencil",
+                            title: schedule.title,
+                            subtitle: "",
+                            progress: 0,
+                            topicType: schedule.topicType,
+                            topicId: schedule.topic
+                        )
                     }
-                    }, for: .touchUpInside)
-                return cell
-                
-            case 2:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SubjectsHomeCell", for: indexPath) as? SubjectsHomeCollectionViewCell else {
-                    return UICollectionViewCell()
+                    return nil
                 }
-               
-                cell.subjectTitle.text = subjects[indexPath.row].name
-                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
-                cell.button.addAction(UIAction { [weak self] _ in
-                    self?.performSegue(withIdentifier: "toSubjectList", sender: self?.subjects[indexPath.row])
-                    }, for: .touchUpInside)
-                cell.layer.cornerRadius = 12
-                cell.backgroundColor = UIColor.main
-                return cell
-                
-            case 3:
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "studytechniques", for: indexPath) as? StudyTechniquesCollectionViewCell else {
-                    return UICollectionViewCell()
-                }
-                let techniqueName = studyTechniques[indexPath.row]
-                cell.techniqueName.text = techniqueName
-                cell.completed.text = "Completed"
-                var topic: TopicsType
-                switch indexPath.row {
-                case 0:
-                    topic = TopicsType.flashcards
-                case 1:
-                    topic = TopicsType.quizzes
-                case 2:
-                    topic = TopicsType.summary
-                default:
-                    topic = TopicsType.flashcards
-                }
-                cell.updateCompletionStatus(topic: topic)
-                cell.button.removeTarget(nil, action: nil, for: .touchUpInside)
-                cell.button.addAction(UIAction { [weak self] _ in
-                    switch indexPath.row {
-                    case 0:
-                        self?.performSegue(withIdentifier: "toSrListView", sender: self)
-                    case 1:
-                        self?.performSegue(withIdentifier: "toArListView", sender: self)
-                    case 2:
-                        self?.performSegue(withIdentifier: "toSuListView", sender: self)
-                    default:
-                        break
-                    }
-                }, for: .touchUpInside)
-                cell.layer.cornerRadius = 12
-                cell.backgroundColor = UIColor.systemIndigo.withAlphaComponent(0.2)
-                return cell
-                
-            default:
-                return UICollectionViewCell()
-            }
-        }
-    }
-
-    // MARK: - UICollectionViewDelegateFlowLayout
-    extension homeScreenViewController: UICollectionViewDelegateFlowLayout {
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            let width = collectionView.bounds.width - 32
             
-            switch indexPath.section {
-            case 0:
-                return CGSize(width: 350, height: 330)
-            case 1:
-                return CGSize(width: width, height: 80)
-            case 2:
-                return CGSize(width: (width - 16), height: 80)
-            case 3:
-                return CGSize(width: (width - 16) / 3, height: 120)
-            default:
-                return .zero
-            }
+            contentView.setNeedsLayout()
         }
     }
-
-    // MARK: - UICollectionViewDelegate
-extension homeScreenViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 0:
-            performSegue(withIdentifier: "CalenderViewSegue", sender: self)
-        case 1:
-            let item = scheduleItems[indexPath.row]
-            print("Learning item tapped: \(item.title)")
-        case 2:
-            let subject = subjects[indexPath.row]
-            print("Subject tapped: \(subject)")
-        case 3:
-            print("Tapped")
-        default:
-            break
-        }
+    
+    private func setupGradient() {
+        let mainColor = UIColor.orange
+        gradientLayer.colors = [
+            mainColor.withAlphaComponent(1.0).cgColor,
+            mainColor.withAlphaComponent(0.0).cgColor
+        ]
+        gradientLayer.locations = [0.0, 0.15]
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 10)
+        view.layer.addSublayer(gradientLayer)
     }
+    
+    // MARK: - Actions
+    
+    @objc private func profileButtonTapped() {
+        // Handle profile button tap
+        print("Profile tapped")
+    }
+    
+    @objc private func bellButtonTapped() {
+        // Handle bell button tap
+        print("Bell tapped")
+    }
+    
+    @objc private func seeAllButtonTapped() {
+        performSegue(withIdentifier: "TodaysLearningSegue", sender: nil)
+    }
+    
+    @objc private func startButtonTapped() {
+        // Handle start button tap
+        print("Start tapped")
+    }
+    
+    @objc private func addButtonTapped() {
+        // Handle add button tap
+        print("Add tapped")
+    }
+    
+    // MARK: - Navigation
+    
+    // Update prepare for segue to handle the new "See All" navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "toSubjectList" {
-                let destination = segue.destination as! subjectViewController
-                if let subject = sender as? Subject {
-                    destination.subject = subject
-                }
-                
+        if segue.identifier == "toSubjectList" {
+            let destination = segue.destination as! subjectViewController
+            if let subject = sender as? Subject {
+                destination.subject = subject
             }
-        if segue.identifier == "toFLS" || segue.identifier == "toQTS"{
+        } else if segue.identifier == "toSubjectList" {
+            let destination = segue.destination as! subjectListTableViewController
+            destination.subjects = self.subjects
+        }
+        
+        if segue.identifier == "toFLS" || segue.identifier == "toQTS" {
             if let destinationVC = segue.destination as? SRScheduleViewController {
                 if let topic = sender as? Topics {
                     destinationVC.topic = topic
@@ -444,9 +135,426 @@ extension homeScreenViewController: UICollectionViewDelegate {
                 }
             }
         }
-        }
+    }
 }
-    
 
+// MARK: - View Creation Methods
+extension homeScreenViewController {
+    private func setupUI() {
+        view.backgroundColor = .systemGray6
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+        
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(stackView)
+        
+        stackView.addArrangedSubview(createProfileHeaderView())
+        stackView.addArrangedSubview(createTodayScheduleView())
+        stackView.addArrangedSubview(createStudyTechniquesView())
+        stackView.addArrangedSubview(createSubjectsGridView())
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+        ])
+    }
     
+    private func createProfileHeaderView() -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 16
+        
+        let profileButton = UIButton()
+        profileButton.setImage(UIImage(systemName: "person.crop.circle.fill"), for: .normal)
+        profileButton.tintColor = AppTheme.primary
+        profileButton.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
+        profileButton.layer.cornerRadius = 25
+        profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
+        
+        let nameLabel = UILabel()
+        nameLabel.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
+        nameLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        
+        let welcomeLabel = UILabel()
+        welcomeLabel.text = "Welcome back,"
+        welcomeLabel.font = .systemFont(ofSize: 14)
+        welcomeLabel.textColor = .secondaryLabel
+        
+        let labelStack = UIStackView(arrangedSubviews: [welcomeLabel, nameLabel])
+        labelStack.axis = .vertical
+        labelStack.spacing = 4
+        
+        let bellButton = UIButton()
+        bellButton.setImage(UIImage(systemName: "bell.fill"), for: .normal)
+        bellButton.tintColor = AppTheme.primary
+        bellButton.addTarget(self, action: #selector(bellButtonTapped), for: .touchUpInside)
+        
+        [profileButton, labelStack, bellButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview($0)
+        }
+        
+        NSLayoutConstraint.activate([
+            containerView.heightAnchor.constraint(equalToConstant: 100),
+            
+            profileButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            profileButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            profileButton.widthAnchor.constraint(equalToConstant: 50),
+            profileButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            labelStack.leadingAnchor.constraint(equalTo: profileButton.trailingAnchor, constant: 16),
+            labelStack.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            bellButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            bellButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            bellButton.widthAnchor.constraint(equalToConstant: 30),
+            bellButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
+        return containerView
+    }
+    private func createScheduleItemView(for item: ScheduleItem) -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 12
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.05
+        containerView.layer.shadowRadius = 5
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let titleLabel = UILabel()
+        titleLabel.text = item.title
+        titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let iconView = UIImageView()
+        iconView.image = UIImage(systemName: item.iconName)
+        iconView.tintColor = AppTheme.primary
+        iconView.contentMode = .scaleAspectFit
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let startButton = UIButton()
+        startButton.setTitle("Start", for: .normal)
+        startButton.setTitleColor(.white, for: .normal)
+        startButton.backgroundColor = AppTheme.primary
+        startButton.layer.cornerRadius = 16
+        startButton.translatesAutoresizingMaskIntoConstraints = false
+        startButton.addAction(UIAction { [weak self] _ in
+            Task {
+                let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
+                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+            }
+        }, for: .touchUpInside)
+        
+        containerView.addSubview(iconView)
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(startButton)
+        
+        NSLayoutConstraint.activate([
+            containerView.heightAnchor.constraint(equalToConstant: 80),
+            
+            iconView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            iconView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 24),
+            iconView.heightAnchor.constraint(equalToConstant: 24),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 12),
+            titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            startButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            startButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            startButton.widthAnchor.constraint(equalToConstant: 80),
+            startButton.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        
+        return containerView
+    }
 
+    private func createSubjectsGridView() -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 16
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "My Subjects"
+        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let seeAllButton = UIButton()
+        seeAllButton.setTitle("See All", for: .normal)
+        seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
+        seeAllButton.addTarget(self, action: #selector(seeAllSubjectsButtonTapped), for: .touchUpInside)
+        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let headerStack = UIStackView(arrangedSubviews: [titleLabel, seeAllButton])
+        headerStack.axis = .horizontal
+        headerStack.distribution = .equalSpacing
+        headerStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        let subjectsStack = UIStackView()
+        subjectsStack.axis = .vertical
+        subjectsStack.spacing = 12
+        subjectsStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Only show first 3 subjects
+        let displayedSubjects = subjects.prefix(3)
+        for (index, subject) in displayedSubjects.enumerated() {
+            let subjectCard = createSubjectCard(subject: subject, index: index)
+            subjectsStack.addArrangedSubview(subjectCard)
+        }
+        
+        let mainStack = UIStackView(arrangedSubviews: [headerStack, subjectsStack])
+        mainStack.axis = .vertical
+        mainStack.spacing = 16
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(mainStack)
+        
+        NSLayoutConstraint.activate([
+            mainStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            mainStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            mainStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            mainStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+        ])
+        
+        return containerView
+    }
+    
+    @objc private func seeAllSubjectsButtonTapped() {
+        performSegue(withIdentifier: "toSubjectList", sender: nil)
+    }
+
+ 
+
+    private func createSubjectCard(subject: Subject, index: Int) -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 12
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.05
+        containerView.layer.shadowRadius = 5
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let iconContainer = UIView()
+        iconContainer.backgroundColor = AppTheme.getSubjectColor(index).withAlphaComponent(0.1)
+        iconContainer.layer.cornerRadius = 20
+        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        let iconView = UIImageView()
+        iconView.image = UIImage(systemName: "book.fill")
+        iconView.tintColor = AppTheme.getSubjectColor(index)
+        iconView.contentMode = .scaleAspectFit
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let titleLabel = UILabel()
+        titleLabel.text = subject.name
+        titleLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction { [weak self] _ in
+            self?.performSegue(withIdentifier: "toSubjectList", sender: subject)
+        }, for: .touchUpInside)
+        
+        containerView.addSubview(iconContainer)
+        iconContainer.addSubview(iconView)
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(button)
+        
+        NSLayoutConstraint.activate([
+            containerView.heightAnchor.constraint(equalToConstant: 80),
+            
+            iconContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            iconContainer.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            iconContainer.widthAnchor.constraint(equalToConstant: 40),
+            iconContainer.heightAnchor.constraint(equalToConstant: 40),
+            
+            iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 20),
+            iconView.heightAnchor.constraint(equalToConstant: 20),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 12),
+            titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            button.topAnchor.constraint(equalTo: containerView.topAnchor),
+            button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            button.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        return containerView
+    }
+    
+    private func createTodayScheduleView() -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 16
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "Today's Schedule"
+        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        
+        let seeAllButton = UIButton()
+        seeAllButton.setTitle("See All", for: .normal)
+        seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
+        seeAllButton.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
+        
+        let headerStack = UIStackView(arrangedSubviews: [titleLabel, seeAllButton])
+        headerStack.axis = .horizontal
+        headerStack.distribution = .equalSpacing
+        
+        let scheduleStack = UIStackView()
+        scheduleStack.axis = .vertical
+        scheduleStack.spacing = 12
+        
+        for item in scheduleItems {
+            scheduleStack.addArrangedSubview(createScheduleItemView(for: item))
+        }
+        
+        let mainStack = UIStackView(arrangedSubviews: [headerStack, scheduleStack])
+        mainStack.axis = .vertical
+        mainStack.spacing = 16
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(mainStack)
+        
+        NSLayoutConstraint.activate([
+            mainStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            mainStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            mainStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            mainStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+        ])
+        
+        return containerView
+    }
+    
+    
+    private func createStudyTechniquesView() -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 16
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "Study Techniques"
+        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let techniquesStack = UIStackView()
+        techniquesStack.axis = .horizontal
+        techniquesStack.distribution = .fillEqually
+        techniquesStack.spacing = 12
+        techniquesStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        let techniques = [
+            ("Spaced Repetition", "clock.fill", TopicsType.flashcards, "toSrListView"),
+            ("Active Recall", "brain.head.profile", TopicsType.quizzes, "toArListView"),
+            ("Summariser", "doc.text.fill", TopicsType.summary, "toSuListView")
+        ]
+        
+        for (title, icon, type, segue) in techniques {
+            let techniqueView = createTechniqueCard(title: title, icon: icon, type: type, segueIdentifier: segue)
+            techniquesStack.addArrangedSubview(techniqueView)
+        }
+        
+        let mainStack = UIStackView(arrangedSubviews: [titleLabel, techniquesStack])
+        mainStack.axis = .vertical
+        mainStack.spacing = 16
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(mainStack)
+        
+        NSLayoutConstraint.activate([
+            mainStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            mainStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            mainStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            mainStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            techniquesStack.heightAnchor.constraint(equalToConstant: 120)
+        ])
+        
+        return containerView
+    }
+    
+    private func createTechniqueCard(title: String, icon: String, type: TopicsType, segueIdentifier: String) -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 12
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.05
+        containerView.layer.shadowRadius = 5
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        
+        let iconContainer = UIView()
+        iconContainer.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
+        iconContainer.layer.cornerRadius = 20
+        
+        let iconView = UIImageView()
+        iconView.image = UIImage(systemName: icon)
+        iconView.tintColor = AppTheme.primary
+        iconView.contentMode = .scaleAspectFit
+        
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 2
+        
+        let button = UIButton()
+        button.addAction(UIAction { [weak self] _ in
+            self?.performSegue(withIdentifier: segueIdentifier, sender: nil)
+        }, for: .touchUpInside)
+        
+        [iconContainer, iconView, titleLabel, button].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview($0)
+        }
+        
+        NSLayoutConstraint.activate([
+            iconContainer.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            iconContainer.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            iconContainer.widthAnchor.constraint(equalToConstant: 40),
+            iconContainer.heightAnchor.constraint(equalToConstant: 40),
+            
+            iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 20),
+            iconView.heightAnchor.constraint(equalToConstant: 20),
+            
+            titleLabel.topAnchor.constraint(equalTo: iconContainer.bottomAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            
+            button.topAnchor.constraint(equalTo: containerView.topAnchor),
+            button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            button.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        return containerView
+    }
+}
