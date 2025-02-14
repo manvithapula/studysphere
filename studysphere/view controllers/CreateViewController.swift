@@ -692,7 +692,6 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
             Create Questions from this PDF document.
             Focus on key concepts and important details from the content.
             make sure the answers are small as possible and fit in one line.
-            one of the option should be the correct answer and randomize this option
             Please provide at least 5 questions
             """
             
@@ -720,15 +719,18 @@ class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDa
                            let b = cardData["option2"],
                            let c = cardData["option3"],
                            let d = cardData["option4"]{
+                            var optionsArray: [String] = [a,b,c,d]
+                            let randomIndex = Int.random(in: 0..<optionsArray.count)
+                            optionsArray[randomIndex] = answer
                             var question1 = Questions(
                                 id:"",
                                 questionLabel: "\(i)",
                                 question: question,
                                 correctanswer: answer,
-                                option1: a,
-                                option2: b,
-                                option3: c,
-                                option4: d,
+                                option1: optionsArray[0],
+                                option2: optionsArray[1],
+                                option3: optionsArray[2],
+                                option4: optionsArray[3],
                                 topic: topic
                             )
                             let _ = questionsDb.create(&question1)

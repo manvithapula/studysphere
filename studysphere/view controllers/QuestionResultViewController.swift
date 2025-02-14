@@ -29,17 +29,16 @@ class QuestionResultViewController: UIViewController {
         let total = memorised + needPractice
         
         // Convert label text to Float
-        if let correctText = correct.text,
-           let correctValue = Float(correctText) {
+        let correctValue = Float(memorised)
             youGot.text = "\(correctValue)"
-            
-            if total > 0 {
-                let percentage = (correctValue/total) * 100
-                thatsBetter.text = "\(percentage)%"
-            } else {
-                thatsBetter.text = "0%"
-            }
-        }
+            Incorrect.text = "\(total)"
+//            if total > 0 {
+//                let percentage = (correctValue/total) * 100
+//                thatsBetter.text = "\(percentage)%"
+//            } else {
+//                thatsBetter.text = "0%"
+//            }
+        
     }
     
     @objc func backButtonTapped() {
