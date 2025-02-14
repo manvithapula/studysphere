@@ -141,29 +141,33 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
     
     private func setup() {
         Task {
-            mySchedules = try await schedulesDb.findAll(where: ["topic": topic!.id])
-            let sortedSchedules = mySchedules.sorted { $0.date.dateValue() < $1.date.dateValue() }
-            mySchedules = sortedSchedules
-            
-            // Update UI
-            titleLabel.text = topic?.title ?? "Sample Topic"
-            updateProgress()
-            updateStats()
-            tableView.reloadData()
-            
-            // Update topic status
-            let countDiff = mySchedules.count - completedSchedules.count
-            if countDiff == 0 {
-                subtitleLabel.text = "All schedules completed"
-                topic?.subtitle = "All schedules completed"
-                topic?.completed = Timestamp()
-            } else {
-                subtitleLabel.text = "\(countDiff) more to go"
-                topic?.subtitle = "\(countDiff) more to go"
+            print(topic)
+            if var topic = topic{
+                mySchedules = try await schedulesDb.findAll(where: ["topic": topic.id])
+                let sortedSchedules = mySchedules.sorted { $0.date.dateValue() < $1.date.dateValue() }
+                mySchedules = sortedSchedules
+                
+                // Update UI
+                titleLabel.text = topic.title ?? "Sample Topic"
+                updateProgress()
+                updateStats()
+                tableView.reloadData()
+                
+                // Update topic status
+                let countDiff = mySchedules.count - completedSchedules.count
+                if countDiff == 0 {
+                    subtitleLabel.text = "All schedules completed"
+                    topic.subtitle = "All schedules completed"
+                    topic.completed = Timestamp()
+                } else {
+                    subtitleLabel.text = "\(countDiff) more to go"
+                    topic.subtitle = "\(countDiff) more to go"
+                }
+                
+                var topicsTemp = topic
+                try await topicsDb.update(&topicsTemp)
             }
             
-            var topicsTemp = topic
-            try await topicsDb.update(&topicsTemp!)
         }
     }
     

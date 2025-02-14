@@ -96,10 +96,12 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             return UICollectionViewCompositionalLayout(section: section)
         }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print(sender)
         if segue.identifier == "toARschedule",
            let destinationVC = segue.destination as? ARScheduleViewController,
            let selectedIndex = sender as? Int { // Extract the tag passed as sender
             let selectedCard = filteredquestions[selectedIndex] // Get the card using the tag
+            print(selectedCard)
             destinationVC.topic = selectedCard // Pass the data to the destination VC
         }
     }
@@ -118,6 +120,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("tapped")
         performSegue(withIdentifier: "toARschedule", sender: indexPath.row)
     }
 

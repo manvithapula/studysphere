@@ -64,6 +64,7 @@ class LoginViewController: UIViewController {
                 return
             }
             
+            
             // Perform login action
             Task{
                 let user = try await userDB.findAll(where: ["email": email]).first
