@@ -28,8 +28,8 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
     
     private let progressView: UIProgressView = {
         let progress = UIProgressView(progressViewStyle: .bar)
-        progress.trackTintColor = .systemGray5
-        progress.progressTintColor = .systemBlue
+        progress.trackTintColor = .main
+        progress.progressTintColor = .systemOrange
         progress.layer.cornerRadius = 4
         progress.clipsToBounds = true
         progress.translatesAutoresizingMaskIntoConstraints = false

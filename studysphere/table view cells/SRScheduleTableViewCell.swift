@@ -58,9 +58,9 @@ class SRScheduleTableViewCell: UITableViewCell {
     
     private let startReviewButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Review Cards", for: .normal)
+        button.setTitle("Start Review", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .main
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
         button.translatesAutoresizingMaskIntoConstraints = false
