@@ -35,6 +35,8 @@ class LoginViewController: UIViewController {
             //login button
             loginButton.layer.cornerRadius = 8
             loginButton.clipsToBounds = true
+            forgotPasswordButton.setTitleColor(UIColor.orange, for: .normal)
+            signUpButton.setTitleColor(UIColor.orange,for: .normal)
         }
     private func checkAndNavigate() async {
         if AuthManager.shared.isLoggedIn {
@@ -45,12 +47,20 @@ class LoginViewController: UIViewController {
                     }
         }
     }
-        
+    
         // Actions
         @IBAction func loginButtonTapped(_ sender: UIButton) {
             guard let email = emailTextField.text, !email.isEmpty,
                   let password = passwordTextField.text, !password.isEmpty else {
                 showAlert(message: "Please enter both email and password.")
+                return
+            }
+            guard email.hasSuffix("@gmail.com") else {
+                showAlert(message: "Please add valid email address")
+                return
+            }
+            guard password.count >= 6 else {
+                showAlert(message: "Password is too short")
                 return
             }
             

@@ -43,7 +43,7 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
     
     private let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.03)
+        view.backgroundColor = UIColor.orange.withAlphaComponent(0.20)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -380,7 +380,9 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
     @objc private func resetUploadView() {
         // Reset to initial state
         uploadLabel.text = "Upload PDF"
+        uploadLabel.textColor = .black.withAlphaComponent(0.8)
         subtitleLabel.text = "Tap to browse files"
+        uploadLabel.textColor = .black.withAlphaComponent(0.8)
         
         let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .light)
         uploadIcon.image = UIImage(systemName: "arrow.up.doc.fill", withConfiguration: config)

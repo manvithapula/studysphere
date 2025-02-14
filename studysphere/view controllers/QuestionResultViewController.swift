@@ -12,37 +12,41 @@ class QuestionResultViewController: UIViewController {
     @IBOutlet weak var circularPV: ProgressViewCIrcle!
     var memorised:Float = 0
     var needPractice:Float = 0
-    @IBOutlet weak var memorisedL: UILabel!
-    @IBOutlet weak var needPracticeL: UILabel!
+    @IBOutlet weak var correct: UILabel!
+    @IBOutlet weak var Incorrect: UILabel!
     @IBOutlet weak var percentageL: UILabel!
     @IBOutlet weak var youGot: UILabel!
     @IBOutlet weak var thatsBetter: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         // make left navigation button
-        let leftButton = UIBarButtonItem(title:"Schedule",style: .plain, target: self, action: #selector(backButtonTapped))
+        let leftButton = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = leftButton
         
         let total = memorised + needPractice
-        youGot.text = "You got \(memorised)/\(total) questions Correct"
-        thatsBetter.text = "That's better than \(Int(memorised/(total)*100))% of means"
+        
+        // Convert label text to Float
+        if let correctText = correct.text,
+           let correctValue = Float(correctText) {
+            youGot.text = "\(correctValue)"
+            
+            if total > 0 {
+                let percentage = (correctValue/total) * 100
+                thatsBetter.text = "\(percentage)%"
+            } else {
+                thatsBetter.text = "0%"
+            }
+        }
     }
+    
     @objc func backButtonTapped() {
-        performSegue(withIdentifier: "toQuestionBack", sender: nil)
+        performSegue(withIdentifier: "toScheduleUnwind", sender: nil)
     }
+    
     @IBAction func goBack(_ sender: Any) {
-        performSegue(withIdentifier: "toQuestionBack", sender: nil)
+        performSegue(withIdentifier: "toScheduleUnwind", sender: nil)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 }
