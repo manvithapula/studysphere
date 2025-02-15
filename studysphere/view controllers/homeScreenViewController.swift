@@ -87,9 +87,10 @@ class homeScreenViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func profileButtonTapped() {
-        // Handle profile button tap
-        print("Profile tapped")
+        let profileVC = ProfileMainViewController()
+        navigationController?.pushViewController(profileVC, animated: true)
     }
+
     
     @objc private func bellButtonTapped() {
         // Handle bell button tap
