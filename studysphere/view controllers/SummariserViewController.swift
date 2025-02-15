@@ -6,62 +6,65 @@ class SummariserViewController: UIViewController {
     
     // MARK: - UI Components
     private lazy var headingLabel: UILabel = {
-            let label = UILabel()
-            label.font = .systemFont(ofSize: 28, weight: .bold)
-            label.textColor = .black // Changed to black for white background
-            label.textAlignment = .left
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
-        
-        private lazy var summaryTextView: UITextView = {
-            let textView = UITextView()
-            textView.font = .systemFont(ofSize: fontSize, weight: .regular)
-            textView.backgroundColor = .main
-            textView.textColor = .white
-            textView.layer.cornerRadius = 12
-            textView.textContainerInset = UIEdgeInsets(top: 16, left: 12, bottom: 16, right: 12)
-            textView.translatesAutoresizingMaskIntoConstraints = false
-            textView.isEditable = false
-            textView.showsVerticalScrollIndicator = true
-            textView.delegate = self
-            return textView
-        }()
-        
-        private lazy var buttonStack: UIStackView = {
-            let stack = UIStackView()
-            stack.axis = .horizontal
-            stack.distribution = .equalSpacing
-            stack.spacing = 20
-            stack.translatesAutoresizingMaskIntoConstraints = false
-            return stack
-        }()
-        
-        private lazy var progressView: UIProgressView = {
-            let progress = UIProgressView(progressViewStyle: .default)
-            progress.progressTintColor = .systemOrange // Changed to system orange
-            progress.trackTintColor = .systemGray5 // Light gray for white background
-            progress.layer.cornerRadius = 2
-            progress.clipsToBounds = true
-            progress.translatesAutoresizingMaskIntoConstraints = false
-            return progress
-        }()
-        
-        private lazy var progressLabel: UILabel = {
-            let label = UILabel()
-            label.font = .systemFont(ofSize: 14, weight: .medium)
-            label.textColor = .black // Changed to black for white background
-            label.textAlignment = .right
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
-        
-    // MARK: - Properties
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 22, weight: .bold)
+        label.textColor = .label
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var summaryTextView: UITextView = {
+        let textView = UITextView()
+        textView.font = .systemFont(ofSize: fontSize, weight: .regular)
+        textView.backgroundColor = .white
+        textView.textColor = .label
+        textView.layer.cornerRadius = 16
+        textView.layer.shadowColor = UIColor.black.cgColor
+        textView.layer.shadowOpacity = 0.05
+        textView.layer.shadowRadius = 5
+        textView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        textView.textContainerInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.isEditable = false
+        textView.showsVerticalScrollIndicator = true
+        textView.delegate = self
+        return textView
+    }()
+    
+    private lazy var buttonStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.distribution = .equalSpacing
+        stack.spacing = 24
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    private lazy var progressView: UIProgressView = {
+        let progress = UIProgressView(progressViewStyle: .default)
+        progress.progressTintColor = AppTheme.primary
+        progress.trackTintColor = AppTheme.primary.withAlphaComponent(0.1)
+        progress.layer.cornerRadius = 4
+        progress.clipsToBounds = true
+        progress.translatesAutoresizingMaskIntoConstraints = false
+        return progress
+    }()
+    
+    private lazy var progressLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textColor = AppTheme.primary
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    // MARK: - Properties (Keeping existing)
     private var fontSize: CGFloat = 16
     private var isPlayingAudio: Bool = false
-    private let synthesizer = AVSpeechSynthesizer()
+    private var synthesizer = AVSpeechSynthesizer()
     private var hasCompletedReading: Bool = false
-    
     var topic: Topics?
     var completionHandler: ((Topics) -> Void)?
     
@@ -77,12 +80,12 @@ class SummariserViewController: UIViewController {
         setupUI()
         configureSynthesizer()
         loadContent()
-        //setupCompleteButton()
+        setupCompleteButton()
     }
     
     // MARK: - Setup
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray6
         
         view.addSubview(headingLabel)
         view.addSubview(summaryTextView)
@@ -100,7 +103,7 @@ class SummariserViewController: UIViewController {
         buttons.forEach { buttonStack.addArrangedSubview($0) }
         
         NSLayoutConstraint.activate([
-            headingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            headingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             headingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             headingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
@@ -121,8 +124,65 @@ class SummariserViewController: UIViewController {
             buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            buttonStack.heightAnchor.constraint(equalToConstant: 40) // Reduced from 44 to 40
+            buttonStack.heightAnchor.constraint(equalToConstant: 44)
         ])
+    }
+    
+    private func createButton(imageName: String, action: Selector) -> UIButton {
+        let button = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+        button.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
+        button.tintColor = AppTheme.primary
+        button.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
+        button.layer.cornerRadius = 22
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return button
+    }
+    
+    private func setupCompleteButton() {
+        let completeButton = UIBarButtonItem(
+            title: "Complete",
+            style: .done,
+            target: self,
+            action: #selector(completeReading)
+        )
+        completeButton.tintColor = AppTheme.primary
+        navigationItem.rightBarButtonItem = completeButton
+        completeButton.isEnabled = false
+    }
+    
+    private func showToast(message: String) {
+        let toast = UILabel()
+        toast.backgroundColor = AppTheme.primary
+        toast.textColor = .white
+        toast.textAlignment = .center
+        toast.font = .systemFont(ofSize: 14, weight: .medium)
+        toast.text = "  \(message)  " // Added padding
+        toast.alpha = 0
+        toast.layer.cornerRadius = 16
+        toast.clipsToBounds = true
+        toast.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(toast)
+        
+        NSLayoutConstraint.activate([
+            toast.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            toast.bottomAnchor.constraint(equalTo: buttonStack.topAnchor, constant: -20),
+            toast.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -40),
+            toast.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            toast.alpha = 1
+        }) { _ in
+            UIView.animate(withDuration: 0.3, delay: 1.5, options: .curveEaseOut, animations: {
+                toast.alpha = 0
+            }) { _ in
+                toast.removeFromSuperview()
+            }
+        }
     }
     
     
@@ -202,55 +262,7 @@ class SummariserViewController: UIViewController {
         fontSize = sizes[(currentIndex + 1) % sizes.count]
         summaryTextView.font = .systemFont(ofSize: fontSize, weight: .regular)
     }
-    
-    private func createButton(imageName: String, action: Selector) -> UIButton {
-           let button = UIButton(type: .system)
-           let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .medium)
-           button.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
-           button.tintColor = .systemOrange // Changed to system orange
-           button.addTarget(self, action: action, for: .touchUpInside)
-           return button
-       }
-       
-       private func setupCompleteButton() {
-           let completeButton = UIBarButtonItem(title: "Complete", style: .done, target: self, action: #selector(completeReading))
-           completeButton.tintColor = .systemOrange // Changed to system orange
-           navigationItem.rightBarButtonItem = completeButton
-           completeButton.isEnabled = false
-       }
-       
-       private func showToast(message: String) {
-           let toast = UILabel()
-           toast.backgroundColor = .systemOrange // Changed to system orange
-           toast.textColor = .white // White text for contrast
-           toast.textAlignment = .center
-           toast.font = .systemFont(ofSize: 14)
-           toast.text = message
-           toast.alpha = 0
-           toast.layer.cornerRadius = 10
-           toast.clipsToBounds = true
-           toast.translatesAutoresizingMaskIntoConstraints = false
-    
-        
-        view.addSubview(toast)
-        
-        NSLayoutConstraint.activate([
-            toast.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            toast.bottomAnchor.constraint(equalTo: buttonStack.topAnchor, constant: -20),
-            toast.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -40),
-            toast.heightAnchor.constraint(equalToConstant: 35)
-        ])
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            toast.alpha = 1
-        }) { _ in
-            UIView.animate(withDuration: 0.3, delay: 1.5, options: .curveEaseOut, animations: {
-                toast.alpha = 0
-            }) { _ in
-                toast.removeFromSuperview()
-            }
-        }
-    }
+
 }
 
 // MARK: - UITextViewDelegate
