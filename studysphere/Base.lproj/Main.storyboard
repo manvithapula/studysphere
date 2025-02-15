@@ -25,11 +25,11 @@
                         <segue destination="8M2-RD-7UQ" kind="show" identifier="toSrListView" id="on4-Ki-28o"/>
                         <segue destination="yXa-Zf-mng" kind="show" identifier="toArListView" id="Jbn-O3-vLb"/>
                         <segue destination="ivI-JP-b7I" kind="show" identifier="toSuListView" id="czB-x8-mGf"/>
-                        <segue destination="Xu4-hE-HiR" kind="show" identifier="toSubjectList" id="JZj-Ft-ERv"/>
                         <segue destination="Xu4-hE-HiR" kind="show" id="qtl-9G-7g1"/>
                         <segue destination="KzB-74-32G" kind="show" identifier="toFLS" id="yUW-6S-VXD"/>
                         <segue destination="vhf-AP-aDg" kind="show" identifier="toQTS" id="651-AB-nO7"/>
                         <segue destination="K64-T5-C6F" kind="presentation" identifier="TodaysLearningSegue" id="lSl-Lg-anb"/>
+                        <segue destination="t49-nW-ykK" kind="show" identifier="toSubjectList" id="IXb-z0-nX3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="481-eY-8Zo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -484,11 +484,11 @@
             <objects>
                 <viewController title="Subject List" id="Xu4-hE-HiR" customClass="subjectViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LOT-0D-gS8">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="KP9-BL-Lr7">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="0mC-Q0-TIR"/>
                                 </constraints>
@@ -498,7 +498,7 @@
                                 </connections>
                             </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pX3-XT-QcR">
-                                <rect key="frame" x="0.0" y="95" width="393" height="747"/>
+                                <rect key="frame" x="0.0" y="198" width="393" height="654"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0vn-YT-Wmi">
                                     <size key="itemSize" width="377" height="109"/>
@@ -563,7 +563,7 @@
                                 </cells>
                             </collectionView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nP6-Em-uvj">
-                                <rect key="frame" x="9" y="48" width="375" height="32"/>
+                                <rect key="frame" x="9" y="151" width="375" height="32"/>
                                 <segments>
                                     <segment title="Flashcards"/>
                                     <segment title="Quizzes"/>
@@ -2982,10 +2982,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="bfc-Hh-3ad"/>
-        <segue reference="PO4-kN-YgS"/>
+        <segue reference="651-AB-nO7"/>
+        <segue reference="yUW-6S-VXD"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="BI1-l1-Jlu"/>
+        <segue reference="qtl-9G-7g1"/>
         <segue reference="paQ-p4-NU6"/>
     </inferredMetricsTieBreakers>
     <resources>

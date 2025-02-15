@@ -116,9 +116,9 @@ class homeScreenViewController: UIViewController {
     // Update prepare for segue to handle the new "See All" navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toSubjectList" {
-            let destination = segue.destination as! subjectViewController
+            let destination = segue.destination as? subjectViewController
             if let subject = sender as? Subject {
-                destination.subject = subject
+                destination?.subject = subject
             }
         } else if segue.identifier == "toSubjectList" {
             let destination = segue.destination as! subjectListTableViewController
