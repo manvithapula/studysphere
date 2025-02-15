@@ -53,7 +53,7 @@ class SummaryListViewController: UIViewController{
           
           // Configure search bar
           searchBar.searchBarStyle = .minimal
-          searchBar.placeholder = "Search summaries..."
+          searchBar.placeholder = "Search summaries"
           searchBar.delegate = self
           
           // Configure segment control
