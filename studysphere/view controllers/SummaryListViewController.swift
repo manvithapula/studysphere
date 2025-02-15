@@ -12,106 +12,101 @@ class SummaryListViewController: UIViewController{
  
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var summaryList: UICollectionView!
+    @IBOutlet weak var segmentControl: UISegmentedControl!
     private var gradientLayer = CAGradientLayer()
    
    
+    // MARK: - Properties
+      enum FilterState {
+          case ongoing, completed
+      }
+      
       var cards: [Topics] = []
       var filteredCards: [Topics] {
           return cards.filter { card in
-              searchBar.text?.isEmpty ?? true ||
-              card.title.lowercased().contains(searchBar.text!.lowercased())
+              let matchesSegment = filterState == .ongoing ? card.completed == nil : card.completed != nil
+              let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
+              return matchesSegment && matchesSearch
           }
       }
+      var filterState: FilterState = .ongoing
       
       // MARK: - Lifecycle
       override func viewDidLoad() {
           super.viewDidLoad()
           setupUI()
-          setupCollectionView()
-          setupSearchBar()
+          configureCollectionView()
+          setupActions()
           loadData()
       }
       
       override func viewWillAppear(_ animated: Bool) {
           super.viewWillAppear(animated)
-          setupGradient()
           loadData()
       }
       
       // MARK: - Setup Methods
       private func setupUI() {
+          // Configure view
           view.backgroundColor = .systemGray6
-          navigationController?.navigationBar.prefersLargeTitles = false
           title = "Summaries"
-      }
-      
-      private func setupGradient() {
-          let mainColor = AppTheme.primary
-          gradientLayer.colors = [
-              mainColor.withAlphaComponent(1.0).cgColor,
-              mainColor.withAlphaComponent(0.0).cgColor
-          ]
-          gradientLayer.locations = [0.0, 0.15]
-          gradientLayer.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 10)
-          view.layer.addSublayer(gradientLayer)
-      }
-      
-      private func setupSearchBar() {
-          searchBar.backgroundColor = .white
-          searchBar.layer.cornerRadius = 16
-          searchBar.clipsToBounds = true
-          searchBar.searchTextField.backgroundColor = .systemGray6
-          searchBar.delegate = self
+          
+          // Configure search bar
           searchBar.searchBarStyle = .minimal
           searchBar.placeholder = "Search summaries..."
-          searchBar.tintColor = AppTheme.primary
+          searchBar.delegate = self
           
-          // Add shadow to searchBar
-          searchBar.layer.shadowColor = UIColor.black.cgColor
-          searchBar.layer.shadowOpacity = 0.05
-          searchBar.layer.shadowRadius = 5
-          searchBar.layer.shadowOffset = CGSize(width: 0, height: 2)
+          // Configure segment control
+          segmentControl.backgroundColor = .white
+          segmentControl.selectedSegmentTintColor = .systemBlue
+          segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+          segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
       }
       
-      private func setupCollectionView() {
+      private func configureCollectionView() {
           summaryList.delegate = self
           summaryList.dataSource = self
           summaryList.backgroundColor = .clear
-          summaryList.contentInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-          summaryList.setCollectionViewLayout(generateLayout(), animated: true)
-          summaryList.showsVerticalScrollIndicator = false
+          summaryList.setCollectionViewLayout(generateLayout(), animated: false)
+          summaryList.register(SummaryCollectionViewCell.self, forCellWithReuseIdentifier: "summary")
       }
       
-    private func generateLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0), // Full width
-            heightDimension: .estimated(100) // Flexible height
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(100)
-        )
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 8 // Reduce spacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
-
-        return UICollectionViewCompositionalLayout(section: section)
-    }
-
-   // override func viewDidLayoutSubviews() {
-      //  super.viewDidLayoutSubviews()
-      //  gradientLayer.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 10) // Adjust for screen width
-   // }
-
+      private func setupActions() {
+          segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+      }
+      
       private func loadData() {
           Task {
               cards = try await topicsDb.findAll(where: ["type": TopicsType.summary.rawValue])
               summaryList.reloadData()
           }
+      }
+      
+      // MARK: - Layout
+      private func generateLayout() -> UICollectionViewLayout {
+          let itemSize = NSCollectionLayoutSize(
+              widthDimension: .fractionalWidth(1),
+              heightDimension: .estimated(120)
+          )
+          let item = NSCollectionLayoutItem(layoutSize: itemSize)
+          
+          let groupSize = NSCollectionLayoutSize(
+              widthDimension: .fractionalWidth(1),
+              heightDimension: .estimated(120)
+          )
+          let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+          
+          let section = NSCollectionLayoutSection(group: group)
+          section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0)
+          section.interGroupSpacing = 8
+          
+          return UICollectionViewCompositionalLayout(section: section)
+      }
+      
+      // MARK: - Actions
+      @objc private func segmentChanged() {
+          filterState = segmentControl.selectedSegmentIndex == 0 ? .ongoing : .completed
+          summaryList.reloadData()
       }
       
       // MARK: - Navigation
@@ -135,10 +130,14 @@ class SummaryListViewController: UIViewController{
       }
   }
 
-  // MARK: - UICollectionView DataSource & Delegate
+  // MARK: - UICollectionViewDelegate & DataSource
   extension SummaryListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
       func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
           return filteredCards.count
+      }
+      
+      func numberOfSections(in collectionView: UICollectionView) -> Int {
+          return 1
       }
       
       func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -146,19 +145,24 @@ class SummaryListViewController: UIViewController{
               return UICollectionViewCell()
           }
           
-          let card = filteredCards[indexPath.item]
-          cell.updateSubject(topic: card)
+          let topic = filteredCards[indexPath.item]
+          cell.updateSubject(topic: topic)
+          
           return cell
       }
       
       func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-          performSegue(withIdentifier: "toSummary", sender: indexPath.item)
+          performSegue(withIdentifier: "toSummary", sender: indexPath.row)
       }
   }
 
-  // MARK: - UISearchBar Delegate
+  // MARK: - UISearchBarDelegate
   extension SummaryListViewController: UISearchBarDelegate {
       func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
           summaryList.reloadData()
+      }
+      
+      func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+          searchBar.resignFirstResponder()
       }
   }
