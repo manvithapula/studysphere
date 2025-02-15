@@ -87,8 +87,7 @@ class homeScreenViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func profileButtonTapped() {
-        let profileVC = ProfileMainViewController()
-        navigationController?.pushViewController(profileVC, animated: true)
+        performSegue(withIdentifier: "toProfile", sender: self)
     }
 
     

@@ -85,7 +85,7 @@ class ProfileMainViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
         
         // Profile image setup
-        profileImageView.layer.cornerRadius = 50
+        profileImageView?.layer.cornerRadius = 50
         profileImageView.clipsToBounds = true
         profileImageView.contentMode = .scaleAspectFill
         
