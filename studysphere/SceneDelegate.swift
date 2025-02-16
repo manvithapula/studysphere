@@ -16,23 +16,53 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard (scene is UIWindowScene) else { return }
 
-//        window = UIWindow(windowScene: windowScene)
-//                
-//                // Check login status and set root view controller
-//                if true {
-//                    setHomeAsRoot()
-//                } else {
-//                    setLoginAsRoot()
-//                }
-//                
-//                window?.makeKeyAndVisible()
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+                
+                window = UIWindow(windowScene: windowScene)
+                let loadingVC = LoadingViewController()
+                window?.rootViewController = loadingVC
+                window?.makeKeyAndVisible()
+                
+                Task {
+                    await checkAndNavigate()
+                }
     }
         
-        func setLoginAsRoot() {
-            let loginVC = LoginViewController()
-            window?.rootViewController = loginVC
+    private func checkAndNavigate() async {
+            guard AuthManager.shared.isLoggedIn,
+                  let userEmail = AuthManager.shared.userEmail else {
+                navigateToLogin()
+                return
+            }
+            
+            do {
+                if let _ = try await userDB.findAll(where: ["email": userEmail]).first {
+                    navigateToMain()
+                } else {
+                    navigateToLogin()
+                }
+            } catch {
+                print("Error checking user: \(error)")
+                navigateToLogin()
+            }
+        }
+        
+        private func navigateToMain() {
+            DispatchQueue.main.async {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                    self.window?.rootViewController = tabBarVC
+                }
+            }
+        }
+        
+        private func navigateToLogin() {
+            DispatchQueue.main.async {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let loginVC = storyboard.instantiateInitialViewController()
+                self.window?.rootViewController = loginVC
+            }
         }
 
     func sceneDidDisconnect(_ scene: UIScene) {
