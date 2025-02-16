@@ -387,9 +387,8 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="63j-NY-P6l">
-                                <rect key="frame" x="9" y="159" width="368" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="63j-NY-P6l">
+                                <rect key="frame" x="8" y="159" width="377" height="32"/>
                                 <segments>
                                     <segment title="Ongoing"/>
                                     <segment title="Complete"/>
@@ -401,11 +400,14 @@
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="g8G-7j-hYW" secondAttribute="bottom" id="0Gu-a8-NyK"/>
                             <constraint firstItem="jFi-vT-Shr" firstAttribute="trailing" secondItem="7LO-3F-ioV" secondAttribute="trailing" id="4Pm-ao-5pb"/>
+                            <constraint firstItem="63j-NY-P6l" firstAttribute="leading" secondItem="7LO-3F-ioV" secondAttribute="leading" constant="8" id="690-kH-1hs"/>
                             <constraint firstItem="jFi-vT-Shr" firstAttribute="top" secondItem="7LO-3F-ioV" secondAttribute="top" id="7nk-Id-aDU"/>
                             <constraint firstItem="g8G-7j-hYW" firstAttribute="leading" secondItem="7LO-3F-ioV" secondAttribute="leading" id="Arr-EV-WWs"/>
                             <constraint firstItem="g8G-7j-hYW" firstAttribute="trailing" secondItem="7LO-3F-ioV" secondAttribute="trailing" id="KLH-f7-gbJ"/>
                             <constraint firstItem="jFi-vT-Shr" firstAttribute="leading" secondItem="7LO-3F-ioV" secondAttribute="leading" id="fdO-Wd-EjF"/>
                             <constraint firstItem="g8G-7j-hYW" firstAttribute="top" secondItem="jFi-vT-Shr" secondAttribute="bottom" constant="51" id="hzo-i5-vBO"/>
+                            <constraint firstItem="7LO-3F-ioV" firstAttribute="trailing" secondItem="63j-NY-P6l" secondAttribute="trailing" constant="8" id="iFN-zQ-yxB"/>
+                            <constraint firstItem="63j-NY-P6l" firstAttribute="top" secondItem="jFi-vT-Shr" secondAttribute="bottom" constant="12" id="kxl-WR-fMg"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Summariser" leftItemsSupplementBackButton="YES" id="llF-7p-cws"/>
@@ -1920,7 +1922,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
