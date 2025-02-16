@@ -66,11 +66,6 @@ class homeScreenViewController: UIViewController {
     }
 
     
-    @objc private func bellButtonTapped() {
-        // Handle bell button tap
-        print("Bell tapped")
-    }
-    
     @objc private func seeAllButtonTapped() {
         performSegue(withIdentifier: "TodaysLearningSegue", sender: nil)
     }
@@ -79,12 +74,7 @@ class homeScreenViewController: UIViewController {
         // Handle start button tap
         print("Start tapped")
     }
-    
-    @objc private func addButtonTapped() {
-        // Handle add button tap
-        print("Add tapped")
-    }
-    
+
     @IBAction func comeFromProfile(segue:UIStoryboardSegue) {
         setupUI()
     }
@@ -161,59 +151,48 @@ extension homeScreenViewController {
     }
     
     private func createProfileHeaderView() -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 16
+        let headerView = UIView()
         
         let profileButton = UIButton()
         profileButton.setImage(UIImage(systemName: "person.crop.circle.fill"), for: .normal)
-        profileButton.tintColor = AppTheme.primary
+      //  profileButton.tintColor = AppTheme.primary
         profileButton.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         profileButton.layer.cornerRadius = 25
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
         
+        let welcomeLabel = UILabel()
+        welcomeLabel.text = "Welcome back!"
+        welcomeLabel.font = .systemFont(ofSize: 22, weight: .bold)
+       // welcomeLabel.textColor = .s
+        
         let nameLabel = UILabel()
-        nameLabel.text = AuthManager.shared.firstName! + " " + AuthManager.shared.lastName!
+        nameLabel.text = AuthManager.shared.firstName!
         nameLabel.font = .systemFont(ofSize: 22, weight: .bold)
         
-        let welcomeLabel = UILabel()
-        welcomeLabel.text = "Welcome back,"
-        welcomeLabel.font = .systemFont(ofSize: 14)
-        welcomeLabel.textColor = .secondaryLabel
-        
-        let labelStack = UIStackView(arrangedSubviews: [welcomeLabel, nameLabel])
-        labelStack.axis = .vertical
-        labelStack.spacing = 4
-        
-        let bellButton = UIButton()
-        bellButton.setImage(UIImage(systemName: "bell.fill"), for: .normal)
-        bellButton.tintColor = AppTheme.primary
-        bellButton.addTarget(self, action: #selector(bellButtonTapped), for: .touchUpInside)
-        
-        [profileButton, labelStack, bellButton].forEach {
+        [welcomeLabel, nameLabel, profileButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
-            containerView.addSubview($0)
+            headerView.addSubview($0)
         }
         
         NSLayoutConstraint.activate([
-            containerView.heightAnchor.constraint(equalToConstant: 100),
+            welcomeLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            welcomeLabel.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -4),
             
-            profileButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            profileButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            nameLabel.bottomAnchor.constraint(equalTo: headerView.centerYAnchor, constant: 8),
+            
+            profileButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            profileButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             profileButton.widthAnchor.constraint(equalToConstant: 50),
             profileButton.heightAnchor.constraint(equalToConstant: 50),
+            profileButton.bottomAnchor.constraint(equalTo: headerView.topAnchor, constant: 34),
             
-            labelStack.leadingAnchor.constraint(equalTo: profileButton.trailingAnchor, constant: 16),
-            labelStack.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            
-            bellButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            bellButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            bellButton.widthAnchor.constraint(equalToConstant: 30),
-            bellButton.heightAnchor.constraint(equalToConstant: 30)
+            headerView.heightAnchor.constraint(equalToConstant: 70)
         ])
         
-        return containerView
+        return headerView
     }
+    
     private func createScheduleItemView(for item: ScheduleItem) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
