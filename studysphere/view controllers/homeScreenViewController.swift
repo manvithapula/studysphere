@@ -114,7 +114,7 @@ extension homeScreenViewController {
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        
+        contentView.subviews.forEach { $0.removeFromSuperview() }
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
