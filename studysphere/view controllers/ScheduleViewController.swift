@@ -141,7 +141,9 @@ class ScheduleViewController: UIViewController {
         let horizontalStack = UIStackView()
         horizontalStack.axis = .horizontal
         horizontalStack.distribution = .equalSpacing // Changed to equalSpacing for better distribution
-        horizontalStack.spacing = 16 // Increased spacing between date views
+        horizontalStack.alignment = .fill
+        horizontalStack.spacing = 13
+
         horizontalStack.translatesAutoresizingMaskIntoConstraints = false
         
         for i in 0..<numberOfDaysToShow {
@@ -158,16 +160,19 @@ class ScheduleViewController: UIViewController {
         
         // Add horizontal stack to date stack view
         dateStackView.addArrangedSubview(horizontalStack)
-        
-        // Improved constraints for better spacing
-        NSLayoutConstraint.activate([
-            horizontalStack.leadingAnchor.constraint(equalTo: dateStackView.leadingAnchor, constant: 24),
-            horizontalStack.trailingAnchor.constraint(equalTo: dateStackView.trailingAnchor, constant: -24),
-            horizontalStack.topAnchor.constraint(equalTo: dateStackView.topAnchor, constant: 20),
-            horizontalStack.bottomAnchor.constraint(equalTo: dateStackView.bottomAnchor, constant: -20)
-        ])
-        
         updateSelectedDateView(index: 0)
+        // Improved constraints for better spacing
+        guard let superview = dateStackView.superview else { return }
+            
+        NSLayoutConstraint.activate([
+                // DateStackView constraints to superview
+                dateStackView.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 8),
+                dateStackView.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -8),
+                dateStackView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 50),
+                dateStackView.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -20),
+                
+            ])
+        
     }
 
     private func createDateView(for date: Date) -> UIView {
