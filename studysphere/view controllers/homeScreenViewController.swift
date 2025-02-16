@@ -93,7 +93,7 @@ class homeScreenViewController: UIViewController {
     
     // Update prepare for segue to handle the new "See All" navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toSubjectList" {
+        if segue.identifier == "toSubjectDetails" {
             let destination = segue.destination as? subjectViewController
             if let subject = sender as? Subject {
                 destination?.subject = subject
@@ -357,7 +357,7 @@ extension homeScreenViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction { [weak self] _ in
-            self?.performSegue(withIdentifier: "toSubjectList", sender: subject)
+            self?.performSegue(withIdentifier: "toSubjectDetails", sender: subject)
         }, for: .touchUpInside)
         
         containerView.addSubview(iconContainer)

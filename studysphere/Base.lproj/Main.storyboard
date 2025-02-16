@@ -25,7 +25,7 @@
                         <segue destination="8M2-RD-7UQ" kind="show" identifier="toSrListView" id="on4-Ki-28o"/>
                         <segue destination="yXa-Zf-mng" kind="show" identifier="toArListView" id="Jbn-O3-vLb"/>
                         <segue destination="ivI-JP-b7I" kind="show" identifier="toSuListView" id="czB-x8-mGf"/>
-                        <segue destination="Xu4-hE-HiR" kind="show" id="qtl-9G-7g1"/>
+                        <segue destination="Xu4-hE-HiR" kind="show" identifier="toSubjectDetails" id="qtl-9G-7g1"/>
                         <segue destination="KzB-74-32G" kind="show" identifier="toFLS" id="yUW-6S-VXD"/>
                         <segue destination="vhf-AP-aDg" kind="show" identifier="toQTS" id="651-AB-nO7"/>
                         <segue destination="K64-T5-C6F" kind="presentation" identifier="TodaysLearningSegue" id="lSl-Lg-anb"/>
@@ -34,6 +34,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="481-eY-8Zo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="yJl-0X-gVB" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="12998" y="136"/>
         </scene>
@@ -2300,6 +2301,7 @@
                     <nil name="viewControllers"/>
                     <connections>
                         <segue destination="2ak-I4-miM" kind="relationship" relationship="rootViewController" id="x4p-yO-Ovc"/>
+                        <segue destination="yJl-0X-gVB" kind="unwind" identifier="comeHereProfile" unwindAction="comeFromProfileWithSegue:" id="ckC-Le-aVy"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QXO-4c-WSA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2933,10 +2935,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="llO-ze-ygf"/>
-        <segue reference="PO4-kN-YgS"/>
+        <segue reference="651-AB-nO7"/>
+        <segue reference="yUW-6S-VXD"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="BI1-l1-Jlu"/>
+        <segue reference="qtl-9G-7g1"/>
         <segue reference="paQ-p4-NU6"/>
     </inferredMetricsTieBreakers>
     <resources>
