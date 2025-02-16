@@ -55,6 +55,7 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         label.clipsToBounds = true
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Loading.."
         return label
     }()
     
