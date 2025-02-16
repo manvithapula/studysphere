@@ -42,6 +42,8 @@ class SummaryListViewController: UIViewController{
       
       override func viewWillAppear(_ animated: Bool) {
           super.viewWillAppear(animated)
+          tabBarController?.isTabBarHidden = true
+
           loadData()
       }
       
@@ -153,6 +155,11 @@ class SummaryListViewController: UIViewController{
       
       func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
           performSegue(withIdentifier: "toSummary", sender: indexPath.row)
+      }
+      
+      override func viewWillDisappear(_ animated: Bool) {
+          super.viewWillDisappear(animated)
+          tabBarController?.isTabBarHidden = false
       }
   }
 
