@@ -106,6 +106,9 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        segmentControl.selectedSegmentTintColor = AppTheme.primary
+        segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+        segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
         Task{
             cards = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
             SpacedRepetitionList.reloadData()
