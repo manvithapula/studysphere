@@ -46,6 +46,10 @@ class subjectListTableViewController: UITableViewController {
           // Register custom cell
           tableView.register(subjectListTableViewCell.self, forCellReuseIdentifier: "subjectCell")
       }
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+
+    }
     
     @objc func showAddSubjectModal() {
           let addSubjectVC = AddSubjectViewController()
