@@ -176,6 +176,7 @@ class ProfileDetailsViewController: UIViewController {
         if let lastname = lastNameTextField.text, !lastname.isEmpty {
             user.lastName = lastname
         }
+        AuthManager.shared.updateName(firstName: user.firstName, lastName: user.lastName)
         user.dob = Timestamp(date:datePicker.date)
         Task{
             try await userDB.update(&user)

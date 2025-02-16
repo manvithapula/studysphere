@@ -563,6 +563,10 @@ class AuthManager {
     func logOut() {
         UserDefaults.standard.removeObject(forKey: "userEmail")
     }
+    func updateName(firstName:String,lastName:String){
+        UserDefaults.standard.set(firstName, forKey: "firstName")
+        UserDefaults.standard.set(lastName, forKey: "lastName")
+    }
 }
 
 
