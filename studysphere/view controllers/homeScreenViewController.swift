@@ -13,36 +13,12 @@ class homeScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = false
-        setupUI()
         loadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Task {
-            subjects = try await subjectDb.findAll()
-            let schedules = try await schedulesDb.findAll()
-            let today = formatDateToString(date: Date())
-            
-            scheduleItems = schedules
-                .filter { formatDateToString(date: $0.date.dateValue()) == today }
-                .prefix(3)
-                .compactMap { schedule in
-                    if schedule.completed == nil {
-                        return ScheduleItem(
-                            iconName: schedule.topicType == TopicsType.flashcards ? "square.stack.3d.down.forward" : "clipboard",
-                            title: schedule.title,
-                            subtitle: "",
-                            progress: 0,
-                            topicType: schedule.topicType,
-                            topicId: schedule.topic
-                        )
-                    }
-                    return nil
-                }
-            
-            contentView.setNeedsLayout()
-        }
+        setupUI()
     }
     
     private func loadData() {
@@ -67,7 +43,7 @@ class homeScreenViewController: UIViewController {
                     }
                     return nil
                 }
-            
+            setupUI()
             contentView.setNeedsLayout()
         }
     }
@@ -107,6 +83,10 @@ class homeScreenViewController: UIViewController {
     @objc private func addButtonTapped() {
         // Handle add button tap
         print("Add tapped")
+    }
+    
+    @IBAction func comeFromProfile(segue:UIStoryboardSegue) {
+        setupUI()
     }
     
     // MARK: - Navigation
