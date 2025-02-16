@@ -63,14 +63,9 @@ class ScheduleViewController: UIViewController {
                 setupTableView()
                 setupDateViews()
                 setupNavigationBar()
-                setupGradient()
             }
         }
         
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            setupGradient()
-        }
         
         // MARK: - Setup
         private func setupGradient() {

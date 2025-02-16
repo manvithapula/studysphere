@@ -41,7 +41,6 @@ class homeScreenViewController: UIViewController {
                     return nil
                 }
             
-            setupGradient()
             contentView.setNeedsLayout()
         }
     }
