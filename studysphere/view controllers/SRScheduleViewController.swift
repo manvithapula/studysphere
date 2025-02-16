@@ -168,8 +168,8 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
     
     private let progressView: UIProgressView = {
         let progress = UIProgressView(progressViewStyle: .bar)
-        progress.trackTintColor = .main
-        progress.progressTintColor = .systemOrange
+        progress.trackTintColor = .lightGray
+        progress.progressTintColor = AppTheme.primary
         progress.layer.cornerRadius = 4
         progress.clipsToBounds = true
         progress.translatesAutoresizingMaskIntoConstraints = false
@@ -274,7 +274,16 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
                 subtitleLabel.text = "\(countDiff) sets remaining"
                 topic?.subtitle = "\(countDiff) sets remaining"
             }
-            
+            let allScores = try await scoreDb.findAll(where: ["topicId": topic!.id])
+            if allScores.count > 0 {
+                let totalScore = allScores.reduce(0) { $0 + $1.score}
+                let totalTotal = allScores.reduce(0) { $0 + $1.total }
+                let totalPercentage = Double(totalScore)/Double(totalTotal)*100
+                retentionView.setValue("\(Int(totalPercentage))%")
+            }
+            else {
+                retentionView.setValue("N/A")
+            }
             var topicsTemp = topic
             try await topicsDb.update(&topicsTemp!)
         }
@@ -288,8 +297,6 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
     
     private func updateStats() {
         // Calculate retention (implement your actual retention calculation)
-        let retention = "85%"
-        retentionView.setValue(retention)
         
         // Calculate next review
         if let nextSchedule = mySchedules.first(where: { $0.completed == nil }) {
@@ -345,8 +352,7 @@ extension SRScheduleViewController: UITableViewDelegate {
             day: indexPath.row + 1,
             date: schedule.date.dateValue(),
             isCompleted: schedule.completed != nil,
-            retention: schedule.completed != nil ? "85% retained" : nil
-        )
+            schedule: schedule.id        )
         cell.startButton.removeTarget(nil, action: nil, for: .touchUpInside)
         cell.startButton.addAction(UIAction { [weak self] _ in
             self?.performSegue(withIdentifier: "showScheduleDetail", sender: indexPath)

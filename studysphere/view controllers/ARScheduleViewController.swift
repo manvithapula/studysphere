@@ -226,7 +226,7 @@ extension ARScheduleViewController: UITableViewDelegate {
             day: indexPath.row + 1,
             date: schedule.date.dateValue(),
             isCompleted: schedule.completed != nil,
-            retention: schedule.completed != nil ? "89% retained" : nil
+            schedule: schedule.id
         )
         cell.startButton.removeTarget(nil, action: nil, for: .touchUpInside)
         cell.startButton.addAction(UIAction { [weak self] _ in
@@ -392,25 +392,30 @@ class ReviewCell: UITableViewCell {
         ])
     }
     
-   func configure(day: Int, date: Date, isCompleted: Bool, retention: String?) {
+   func configure(day: Int, date: Date, isCompleted: Bool, schedule: String) {
         titleLabel.text = "Day \(day)"
         dateLabel.text = formatDate(date)
-        
-        if isCompleted {
-            statusBar.backgroundColor = .systemGreen
-            statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
-            statusIcon.tintColor = .systemGreen
-            startButton.isHidden = true
-            retentionLabel.isHidden = false
-            retentionLabel.text = retention
-        } else {
-            let isToday = Calendar.current.isDateInToday(date)
-            statusBar.backgroundColor = isToday ? .systemBlue : .systemGray5
-            statusIcon.image = isToday ? UIImage(systemName: "arrow.right.circle.fill") : UIImage(systemName: "circle.dashed")
-            statusIcon.tintColor = isToday ? .systemBlue : .systemGray3
-            startButton.isHidden = !isToday
-            retentionLabel.isHidden = true
-        }
+       Task{
+           if isCompleted {
+               statusBar.backgroundColor = .systemGreen
+               statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
+               statusIcon.tintColor = .systemGreen
+               startButton.isHidden = true
+               retentionLabel.isHidden = false
+               let allscores = try await scoreDb.findAll(where: ["scheduleId":schedule])
+               if let score = allscores.first{
+                   let percentage = (Double(score.score)/Double(score.total)) * 100
+                   retentionLabel.text = "\(Int(percentage))%"
+               }
+           } else {
+               let isToday = Calendar.current.isDateInToday(date)
+               statusBar.backgroundColor = isToday ? .systemBlue : .systemGray5
+               statusIcon.image = isToday ? UIImage(systemName: "arrow.right.circle.fill") : UIImage(systemName: "circle.dashed")
+               statusIcon.tintColor = isToday ? .systemBlue : .systemGray3
+               startButton.isHidden = !isToday
+               retentionLabel.isHidden = true
+           }
+       }
     }
     
     private func formatDate(_ date: Date) -> String {

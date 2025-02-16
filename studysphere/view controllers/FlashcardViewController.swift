@@ -152,6 +152,8 @@ class FlashcardViewController: UIViewController {
         
         private func updateCompletion() {
             Task{
+                var score = Score(id: "", score: memorisedNumCount, total: flashcards.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
+                let _ = scoreDb.create(&score)
                 schedule?.completed = Timestamp()
                 var scheduleTemp = schedule
                 try await schedulesDb.update(&scheduleTemp!)

@@ -125,6 +125,15 @@ struct Subject:Codable,Identifiable{
     }
 
 }
+struct Score:Codable,Identifiable {
+    var id:String
+    var score:Int
+    var total:Int
+    var scheduleId:String
+    var topicId:String
+    var createdAt:Timestamp
+    var updatedAt:Timestamp
+}
 //list referencing
 struct Topics:Codable,Identifiable {
     var id:String
@@ -578,7 +587,7 @@ let subjectDb = FakeDb<Subject>(name: "subjecttemp")
 let topicsDb = FakeDb<Topics>(name: "topictemp")
 let schedulesDb = FakeDb<Schedule>(name: "schedulestemp")
 let questionsDb = FakeDb<Questions>(name: "questionstemp")
-
+let scoreDb = FakeDb<Score>(name: "scoretemp")
 //struct Card{
 //    var title:String
 //    var subtitle:String
