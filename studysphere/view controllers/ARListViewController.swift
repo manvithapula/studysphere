@@ -73,10 +73,11 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AR", for: indexPath)
             let question = filteredquestions[indexPath.item]
             
-            if let cell = cell as? ARCollectionViewCell {
+            if let cell = cell as? SummaryCollectionViewCell {
                 cell.titleLabel.text = question.title
-                cell.subtitleLabel.text = question.subtitle == "" ? "6 more to go" : question.subtitle
                 cell.updateSubject(topic: question)
+                cell.timeLabel.text = question.subtitle == "" ? "6 more to go" : question.subtitle
+
 
             }
             
@@ -88,7 +89,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.20))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.23))
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
@@ -102,13 +103,6 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let selectedCard = filteredquestions[selectedIndex] // Get the card using the tag
             destinationVC.topic = selectedCard // Pass the data to the destination VC
         }
-    }
-
-    @IBAction func tapped(_ sender: Any) {
-        performSegue(withIdentifier: "toARschedule", sender: sender)
-    }
-    @objc func detailButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "toARschedule", sender: sender.tag)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

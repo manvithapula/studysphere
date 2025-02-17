@@ -799,7 +799,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="nlz-gL-jkD" secondAttribute="trailing" constant="8" id="6SH-of-h0D"/>
@@ -861,7 +861,7 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Next" cornerStyle="capsule">
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <color key="baseBackgroundColor" systemColor="systemOrangeColor"/>
+                                            <color key="baseBackgroundColor" name="Shadow"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="nextButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="ocv-DC-oFx"/>
@@ -894,7 +894,7 @@
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="STb-fP-etu">
                                 <rect key="frame" x="16" y="205" width="361" height="4"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <color key="tintColor" name="Shadow"/>
                             </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gQp-8e-6Se"/>
@@ -2115,78 +2115,15 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AR" id="mH4-GP-FlP" customClass="ARCollectionViewCell" customModule="studysphere" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AR" id="mH4-GP-FlP" customClass="SummaryCollectionViewCell" customModule="studysphere" customModuleProvider="target">
                                         <rect key="frame" x="8" y="0.0" width="377" height="97"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Eig-YZ-OVA">
                                             <rect key="frame" x="0.0" y="0.0" width="377" height="97"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60R-Vg-EFH" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="377" height="100"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pnR-DK-SK6">
-                                                            <rect key="frame" x="16" y="16" width="353" height="24"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qUA-Yt-Udg">
-                                                            <rect key="frame" x="147" y="48" width="214" height="21.666666666666671"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="chevron.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="o82-RN-JC4">
-                                                            <rect key="frame" x="348" y="37" width="13" height="27"/>
-                                                            <color key="tintColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        </imageView>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dCX-oj-OBX">
-                                                            <rect key="frame" x="16" y="49" width="75" height="21"/>
-                                                            <color key="tintColor" systemColor="systemOrangeColor"/>
-                                                            <state key="normal" title="Button"/>
-                                                            <buttonConfiguration key="configuration" style="filled" title="Button">
-                                                                <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <color key="baseBackgroundColor" systemColor="systemOrangeColor"/>
-                                                            </buttonConfiguration>
-                                                        </button>
-                                                    </subviews>
-                                                    <color key="backgroundColor" name="Main"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="o82-RN-JC4" secondAttribute="bottom" constant="34.329999999999998" id="5CV-uC-njq"/>
-                                                        <constraint firstAttribute="trailing" secondItem="pnR-DK-SK6" secondAttribute="trailing" constant="8" id="8Zu-mJ-o6F"/>
-                                                        <constraint firstItem="qUA-Yt-Udg" firstAttribute="top" secondItem="pnR-DK-SK6" secondAttribute="bottom" constant="8" id="CYX-jo-WXX"/>
-                                                        <constraint firstItem="o82-RN-JC4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="dCX-oj-OBX" secondAttribute="trailing" symbolic="YES" id="Ikh-aQ-vbR"/>
-                                                        <constraint firstItem="pnR-DK-SK6" firstAttribute="leading" secondItem="60R-Vg-EFH" secondAttribute="leading" constant="16" id="OfP-Xi-Jie"/>
-                                                        <constraint firstAttribute="bottom" secondItem="o82-RN-JC4" secondAttribute="bottom" constant="34.329999999999998" id="PbL-1v-mUI"/>
-                                                        <constraint firstAttribute="trailing" secondItem="o82-RN-JC4" secondAttribute="trailing" constant="16" id="Sxk-yf-QRM"/>
-                                                        <constraint firstItem="dCX-oj-OBX" firstAttribute="leading" secondItem="60R-Vg-EFH" secondAttribute="leading" constant="16" id="WJe-ng-CJq"/>
-                                                        <constraint firstItem="qUA-Yt-Udg" firstAttribute="leading" secondItem="60R-Vg-EFH" secondAttribute="leading" constant="147" id="cXa-q9-ZhX"/>
-                                                        <constraint firstAttribute="trailing" secondItem="qUA-Yt-Udg" secondAttribute="trailing" constant="16" id="chl-Vc-1y4"/>
-                                                        <constraint firstAttribute="trailing" secondItem="o82-RN-JC4" secondAttribute="trailing" constant="16" id="hfa-f7-dZC"/>
-                                                        <constraint firstItem="o82-RN-JC4" firstAttribute="top" secondItem="60R-Vg-EFH" secondAttribute="top" constant="35" id="ik0-5j-3Mb"/>
-                                                        <constraint firstItem="o82-RN-JC4" firstAttribute="leading" secondItem="60R-Vg-EFH" secondAttribute="leading" constant="348" id="lcS-O4-P3E"/>
-                                                        <constraint firstItem="pnR-DK-SK6" firstAttribute="top" secondItem="60R-Vg-EFH" secondAttribute="top" constant="16" id="ml4-Iv-b8o"/>
-                                                        <constraint firstItem="o82-RN-JC4" firstAttribute="top" secondItem="60R-Vg-EFH" secondAttribute="top" constant="35" id="s6l-jl-PUX"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="60R-Vg-EFH" firstAttribute="top" secondItem="Eig-YZ-OVA" secondAttribute="top" id="CsC-3h-8Vk"/>
-                                                <constraint firstAttribute="bottom" secondItem="60R-Vg-EFH" secondAttribute="bottom" constant="-3" id="N25-5e-2NP"/>
-                                                <constraint firstItem="60R-Vg-EFH" firstAttribute="centerX" secondItem="Eig-YZ-OVA" secondAttribute="centerX" id="aSW-Pp-pce"/>
-                                                <constraint firstItem="60R-Vg-EFH" firstAttribute="leading" secondItem="Eig-YZ-OVA" secondAttribute="leading" id="vem-jp-aHs"/>
-                                            </constraints>
                                         </collectionViewCellContentView>
                                         <gestureRecognizers/>
                                         <size key="customSize" width="377" height="97"/>
-                                        <connections>
-                                            <outlet property="subjectButtonAR" destination="dCX-oj-OBX" id="YMY-Kf-JLo"/>
-                                            <outlet property="subtitleLabel" destination="qUA-Yt-Udg" id="hNT-Xx-ydF"/>
-                                            <outlet property="titleLabel" destination="pnR-DK-SK6" id="wA4-3J-Ybf"/>
-                                            <outlet property="viewSr" destination="60R-Vg-EFH" id="743-P1-PyU"/>
-                                            <outletCollection property="gestureRecognizers" destination="ewM-Qd-ACt" appends="YES" id="bmb-Xx-bxf"/>
-                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -2211,11 +2148,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sgj-88-yrj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="ewM-Qd-ACt">
-                    <connections>
-                        <action selector="tapped:" destination="yXa-Zf-mng" id="Xev-jD-TbB"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="6244" y="1389"/>
         </scene>
@@ -2882,7 +2814,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="llO-ze-ygf"/>
+        <segue reference="bfc-Hh-3ad"/>
         <segue reference="PO4-kN-YgS"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="qtl-9G-7g1"/>
@@ -2910,6 +2842,9 @@
         </namedColor>
         <namedColor name="Main Color">
             <color red="0.10196078431372549" green="0.10196078431372549" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Shadow">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainColor">
             <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
