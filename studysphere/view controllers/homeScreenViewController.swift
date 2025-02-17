@@ -33,7 +33,7 @@ class homeScreenViewController: UIViewController {
                 .compactMap { schedule in
                     if schedule.completed == nil {
                         return ScheduleItem(
-                            iconName: "pencil",
+                            iconName: schedule.topicType == TopicsType.flashcards ? "clock.fill" : schedule.topicType == TopicsType.quizzes ? "brain.head.profile" : "doc.text.fill",
                             title: schedule.title,
                             subtitle: "",
                             progress: 0,
