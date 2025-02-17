@@ -39,6 +39,9 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
+            subjectSegmentControl.selectedSegmentTintColor = AppTheme.primary
+            subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+            subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
             SubjectCollectionView.reloadData()
         }
         
