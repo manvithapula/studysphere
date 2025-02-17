@@ -28,17 +28,26 @@ class FlashcardViewController: UIViewController {
         private var cardInitialCenter: CGPoint = .zero
         private let dragThreshold: CGFloat = 100 // Distance to trigger card change
         private var isDragging = false
+    
+    private let tutorialKey = "hasSeenFlashcardTutorial"
+        private var tutorialView: UIView?
+        private var demoCard: UIView?
         
         override func viewDidLoad() {
             super.viewDidLoad()
+            
             Task{
                 self.flashcards = try await flashCardDb.findAll(where: ["topic":topic])
                 setupInitialCard()
                 setupPanGesture()
                 tabBarController?.isTabBarHidden = true
+                if !UserDefaults.standard.bool(forKey: tutorialKey) {
+                                showTutorial()
+                            }
             }
             // hide tabbar
         }
+   
 
         private func setupPanGesture() {
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
@@ -182,3 +191,185 @@ class FlashcardViewController: UIViewController {
             }
         }
     }
+//Tutorial
+extension FlashcardViewController{
+    private func showTutorial() {
+            // Create tutorial container
+            let tutorialView = UIView(frame: view.bounds)
+            tutorialView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+            view.addSubview(tutorialView)
+            self.tutorialView = tutorialView
+            
+            // Container for tutorial content
+            let contentContainer = UIView(frame: CGRect(x: 20, y: 0, width: view.bounds.width - 40, height: view.bounds.height-300))
+            contentContainer.backgroundColor = .white
+            contentContainer.layer.cornerRadius = 12
+            contentContainer.center = view.center
+            tutorialView.addSubview(contentContainer)
+            
+            // Title
+            let titleLabel = UILabel()
+            titleLabel.text = "How to Use Flashcards"
+            titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+            titleLabel.textAlignment = .center
+            titleLabel.frame = CGRect(x: 20, y: 20, width: contentContainer.bounds.width - 40, height: 30)
+            contentContainer.addSubview(titleLabel)
+            
+            // Demo card
+            let demoCard = RoundNShadow(frame: CGRect(x: 0, y: 70, width: 280, height: 180))
+            demoCard.center.x = contentContainer.bounds.width / 2
+            demoCard.backgroundColor = .systemGray6
+            demoCard.layer.cornerRadius = 12
+            demoCard.layer.borderWidth = 1
+            demoCard.layer.borderColor = UIColor.systemGray4.cgColor
+            contentContainer.addSubview(demoCard)
+            self.demoCard = demoCard
+            
+            // Sample text in demo card
+            let sampleText = UILabel()
+            sampleText.text = "Sample Card"
+            sampleText.textAlignment = .center
+            sampleText.frame = demoCard.bounds
+            demoCard.addSubview(sampleText)
+            
+            // Instructions container
+            let instructionsContainer = UIStackView()
+            instructionsContainer.axis = .vertical
+            instructionsContainer.spacing = 20
+            instructionsContainer.frame = CGRect(x: 20,
+                                              y: demoCard.frame.maxY + 30,
+                                              width: contentContainer.bounds.width - 40,
+                                              height: 150)
+            contentContainer.addSubview(instructionsContainer)
+            
+            // Left swipe instruction
+            let leftSwipeStack = createInstructionStack(
+                symbol: "arrow.right",
+                title: "Swipe Right",
+                description: "if you know the answer",
+                color: .systemGreen
+            )
+            instructionsContainer.addArrangedSubview(leftSwipeStack)
+            
+            // Right swipe instruction
+            let rightSwipeStack = createInstructionStack(
+                symbol: "arrow.left",
+                title: "Swipe Left",
+                description: "to practice more",
+                color: .systemRed
+            )
+            instructionsContainer.addArrangedSubview(rightSwipeStack)
+            
+            // Tap instruction
+            let tapStack = createInstructionStack(
+                symbol: "hand.tap",
+                title: "Tap Card",
+                description: "to see the answer",
+                color: .systemBlue
+            )
+            instructionsContainer.addArrangedSubview(tapStack)
+            
+            // Got it button
+            let gotItButton = UIButton(type: .system)
+            gotItButton.setTitle("Got it!", for: .normal)
+            gotItButton.backgroundColor = .systemBlue
+            gotItButton.setTitleColor(.white, for: .normal)
+            gotItButton.layer.cornerRadius = 8
+            gotItButton.frame = CGRect(x: 20,
+                                     y: contentContainer.bounds.height - 60,
+                                     width: contentContainer.bounds.width - 40,
+                                     height: 44)
+            gotItButton.addTarget(self, action: #selector(dismissTutorial), for: .touchUpInside)
+            contentContainer.addSubview(gotItButton)
+            
+            // Start animation sequence
+            animateTutorialSequence()
+        }
+        
+        private func createInstructionStack(symbol: String, title: String, description: String, color: UIColor) -> UIStackView {
+            let stack = UIStackView()
+            stack.axis = .horizontal
+            stack.spacing = 12
+            stack.alignment = .center
+            
+            // Symbol
+            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium)
+            let symbolImage = UIImageView(image: UIImage(systemName: symbol, withConfiguration: symbolConfig))
+            symbolImage.tintColor = color
+            symbolImage.contentMode = .scaleAspectFit
+            symbolImage.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            
+            // Text stack
+            let textStack = UIStackView()
+            textStack.axis = .vertical
+            textStack.spacing = 2
+            
+            let titleLabel = UILabel()
+            titleLabel.text = title
+            titleLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+            
+            let descLabel = UILabel()
+            descLabel.text = description
+            descLabel.font = .systemFont(ofSize: 14)
+            descLabel.textColor = .systemGray
+            
+            textStack.addArrangedSubview(titleLabel)
+            textStack.addArrangedSubview(descLabel)
+            
+            stack.addArrangedSubview(symbolImage)
+            stack.addArrangedSubview(textStack)
+            
+            return stack
+        }
+        
+        private func animateTutorialSequence() {
+            // Swipe left animation
+            UIView.animate(withDuration: 0.8, delay: 1.0, options: .curveEaseInOut) {
+                self.demoCard?.transform = CGAffineTransform(translationX: 100, y: 0)
+                    .rotated(by: CGFloat.pi / 30)
+                self.demoCard?.alpha = 0.8
+            } completion: { _ in
+                // Reset
+                UIView.animate(withDuration: 0.5) {
+                    self.demoCard?.transform = .identity
+                    self.demoCard?.alpha = 1
+                } completion: { _ in
+                    // Swipe right animation
+                    UIView.animate(withDuration: 0.8, delay: 0.5, options: .curveEaseInOut) {
+                        self.demoCard?.transform = CGAffineTransform(translationX: -100, y: 0)
+                            .rotated(by: -CGFloat.pi / 30)
+                        self.demoCard?.alpha = 0.8
+                    } completion: { _ in
+                        // Reset
+                        UIView.animate(withDuration: 0.5) {
+                            self.demoCard?.transform = .identity
+                            self.demoCard?.alpha = 1
+                        } completion: { _ in
+                            // Flip animation
+                            self.animateCardFlip()
+                        }
+                    }
+                }
+            }
+        }
+        
+        private func animateCardFlip() {
+            UIView.transition(with: self.demoCard!, duration: 0.6,
+                             options: .transitionFlipFromRight,
+                             animations: nil) { _ in
+                // Repeat sequence after delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.animateTutorialSequence()
+                }
+            }
+        }
+        
+        @objc private func dismissTutorial() {
+            UIView.animate(withDuration: 0.3) {
+                self.tutorialView?.alpha = 0
+            } completion: { _ in
+                self.tutorialView?.removeFromSuperview()
+                UserDefaults.standard.set(true, forKey: self.tutorialKey)
+            }
+        }
+}
