@@ -115,22 +115,6 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
                 cell.titleLabel.text = card.title
                 cell.subtitleLabel.text = card.subtitle
                 
-                // Configure cell UI
-              cell.backgroundColor = .secondarySystemBackground
-              cell.layer.cornerRadius = 12
-                
-                // Configure icon based on type
-                let iconName: String
-                switch card.type {
-                case .flashcards:
-                    iconName = "clock.arrow.circlepath"
-                case .quizzes:
-                    iconName = "brain"
-                case .summary:
-                    iconName = "doc.text"
-                }
-             //   cell.iconImageView.image = UIImage(systemName: iconName)
-            //  cell.iconImageView.tintColor = .systemBlue
                 
                 // Configure labels
                 cell.titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)

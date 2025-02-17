@@ -458,7 +458,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="377" height="109"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sNM-81-yxB" customClass="CardView" customModule="studysphere" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sNM-81-yxB" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="377" height="94"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tRi-RV-hmP">
@@ -1923,7 +1923,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2935,11 +2935,11 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="651-AB-nO7"/>
-        <segue reference="yUW-6S-VXD"/>
+        <segue reference="llO-ze-ygf"/>
+        <segue reference="vbk-8J-x7B"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="qtl-9G-7g1"/>
-        <segue reference="paQ-p4-NU6"/>
+        <segue reference="qdn-Bb-u7i"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Google" width="24" height="24"/>
