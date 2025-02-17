@@ -18,7 +18,7 @@ class homeScreenViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupUI()
+        loadData()
     }
     
     private func loadData() {
@@ -28,10 +28,9 @@ class homeScreenViewController: UIViewController {
             let today = formatDateToString(date: Date())
             
             scheduleItems = schedules
-                .filter { formatDateToString(date: $0.date.dateValue()) == today }
+                .filter { formatDateToString(date: $0.date.dateValue()) == today && $0.completed == nil }
                 .prefix(3)
                 .compactMap { schedule in
-                    if schedule.completed == nil {
                         return ScheduleItem(
                             iconName: schedule.topicType == TopicsType.flashcards ? "clock.fill" : schedule.topicType == TopicsType.quizzes ? "brain.head.profile" : "doc.text.fill",
                             title: schedule.title,
@@ -40,8 +39,6 @@ class homeScreenViewController: UIViewController {
                             topicType: schedule.topicType,
                             topicId: schedule.topic
                         )
-                    }
-                    return nil
                 }
             setupUI()
             contentView.setNeedsLayout()
