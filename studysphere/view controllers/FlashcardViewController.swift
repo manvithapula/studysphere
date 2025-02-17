@@ -93,7 +93,7 @@ class FlashcardViewController: UIViewController {
                         self.cardView.center = self.cardInitialCenter
                         self.cardView.transform = .identity
                         self.cardView.alpha = 1
-                        self.view.backgroundColor = .button
+                        self.view.backgroundColor = .white
                     }
                 }
             
@@ -135,7 +135,7 @@ class FlashcardViewController: UIViewController {
                     self.cardView.center = self.cardInitialCenter
                     self.cardView.transform = .identity
                     self.cardView.alpha = 1
-                    self.view.backgroundColor = .button
+                    self.view.backgroundColor = .white
                 } else {
                     // Last card - navigate to result screen
                     self.updateCompletion()
