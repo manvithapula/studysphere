@@ -70,10 +70,11 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "spacedrepetition", for: indexPath)
             let card = filteredCards[indexPath.item]
             
-            if let cell = cell as? spacedCollectionViewCell {
+            if let cell = cell as? SummaryCollectionViewCell {
                 cell.titleLabel.text = card.title
-                cell.subtitleLabel.text = card.subtitle
                 cell.updateSubject(topic: card)
+                cell.timeLabel.text = card.subtitle
+
 
             }
             
@@ -85,7 +86,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.20))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.22))
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
