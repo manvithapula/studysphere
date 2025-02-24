@@ -135,9 +135,12 @@ extension homeScreenViewController {
         contentView.addSubview(stackView)
         
         stackView.addArrangedSubview(createProfileHeaderView())
+        stackView.addArrangedSubview(createUploadPDFView()) // pdf
+        stackView.addArrangedSubview(HomeProgressWidget())
         stackView.addArrangedSubview(createTodayScheduleView())
-        stackView.addArrangedSubview(createStudyTechniquesView())
         stackView.addArrangedSubview(createSubjectsGridView())
+        stackView.addArrangedSubview(createStudyTechniquesView())
+       
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
@@ -145,6 +148,98 @@ extension homeScreenViewController {
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
+    }
+    // Add this method to your homeScreenViewController extension:
+
+    private func createUploadPDFView() -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 16
+        
+        // Banner container
+        let bannerView = UIView()
+        bannerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
+        bannerView.layer.cornerRadius = 12
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // PDF icon
+        let iconContainer = UIView()
+        iconContainer.backgroundColor = .white
+        iconContainer.layer.cornerRadius = 25
+        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        let pdfIcon = UIImageView()
+        pdfIcon.image = UIImage(systemName: "doc.fill")
+        pdfIcon.tintColor = AppTheme.primary
+        pdfIcon.contentMode = .scaleAspectFit
+        pdfIcon.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Text content
+        let titleLabel = UILabel()
+        titleLabel.text = "Upload Study Material"
+        titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "Create flashcards, quizzes and summaries from your PDFs"
+        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        subtitleLabel.textColor = .darkGray
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Upload button
+        let uploadButton = UIButton()
+        uploadButton.setTitle("Upload PDF", for: .normal)
+        uploadButton.setTitleColor(.white, for: .normal)
+        uploadButton.backgroundColor = AppTheme.primary
+        uploadButton.layer.cornerRadius = 16
+        uploadButton.translatesAutoresizingMaskIntoConstraints = false
+        uploadButton.addTarget(self, action: #selector(uploadPDFButtonTapped), for: .touchUpInside)
+        
+        // Add subviews
+        containerView.addSubview(bannerView)
+        bannerView.addSubview(iconContainer)
+        iconContainer.addSubview(pdfIcon)
+        bannerView.addSubview(titleLabel)
+        bannerView.addSubview(subtitleLabel)
+        bannerView.addSubview(uploadButton)
+        
+        NSLayoutConstraint.activate([
+            bannerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            bannerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            bannerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            bannerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            
+            iconContainer.leadingAnchor.constraint(equalTo: bannerView.leadingAnchor, constant: 16),
+            iconContainer.centerYAnchor.constraint(equalTo: bannerView.centerYAnchor),
+            iconContainer.widthAnchor.constraint(equalToConstant: 50),
+            iconContainer.heightAnchor.constraint(equalToConstant: 50),
+            
+            pdfIcon.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            pdfIcon.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            pdfIcon.widthAnchor.constraint(equalToConstant: 24),
+            pdfIcon.heightAnchor.constraint(equalToConstant: 24),
+            
+            titleLabel.topAnchor.constraint(equalTo: bannerView.topAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            subtitleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
+            
+            uploadButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 16),
+            uploadButton.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            uploadButton.widthAnchor.constraint(equalToConstant: 120),
+            uploadButton.heightAnchor.constraint(equalToConstant: 40),
+            uploadButton.bottomAnchor.constraint(equalTo: bannerView.bottomAnchor, constant: -20)
+        ])
+        
+        return containerView
+    }
+
+    @objc private func uploadPDFButtonTapped() {
+        performSegue(withIdentifier: "toCreate", sender: nil)
     }
     
     private func createProfileHeaderView() -> UIView {
@@ -190,6 +285,240 @@ extension homeScreenViewController {
         return headerView
     }
     
+
+    class HomeProgressWidget: UIView {
+        // UI Elements
+        private let containerView = UIView()
+        private let progressRing = UIView()
+        private let progressLayer = CAShapeLayer()
+        private let backgroundLayer = CAShapeLayer()
+        private let percentLabel = UILabel()
+        private let statsLabel = UILabel()
+        private let viewDetailsButton = UIButton()
+        
+        // View controller reference for navigation
+        weak var parentViewController: UIViewController?
+        
+        // MARK: - Initialization
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            setupView()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            setupView()
+        }
+        
+        // MARK: - UI Setup
+        
+        private func setupView() {
+            // Container styling
+            backgroundColor = .clear
+            
+            // Main container
+            containerView.backgroundColor = .white
+            containerView.layer.cornerRadius = 16
+            containerView.layer.shadowColor = UIColor.black.cgColor
+            containerView.layer.shadowOpacity = 0.1
+            containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
+            containerView.layer.shadowRadius = 8
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(containerView)
+            
+            // Title label
+            let titleLabel = UILabel()
+            titleLabel.text = "Study Progress"
+            titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
+            titleLabel.textColor = UIColor(red: 0.0, green: 0.2, blue: 0.7, alpha: 1.0) // Royal blue
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(titleLabel)
+            
+            // Progress ring setup
+            setupProgressRing()
+            
+            // Stats label
+            statsLabel.font = .systemFont(ofSize: 15)
+            statsLabel.textColor = .darkGray
+            statsLabel.numberOfLines = 2
+            statsLabel.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(statsLabel)
+            
+            // View details button
+            viewDetailsButton.setTitle("View Details", for: .normal)
+            viewDetailsButton.setTitleColor(.white, for: .normal)
+            viewDetailsButton.backgroundColor = UIColor(red: 0.0, green: 0.2, blue: 0.7, alpha: 1.0) // Royal blue
+            viewDetailsButton.layer.cornerRadius = 16
+            viewDetailsButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+            viewDetailsButton.addTarget(self, action: #selector(showProgressDetails), for: .touchUpInside)
+            viewDetailsButton.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(viewDetailsButton)
+            
+            // Layout constraints
+            NSLayoutConstraint.activate([
+                containerView.topAnchor.constraint(equalTo: topAnchor),
+                containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                
+                titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+                titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                
+                progressRing.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+                progressRing.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                progressRing.widthAnchor.constraint(equalToConstant: 80),
+                progressRing.heightAnchor.constraint(equalToConstant: 80),
+                
+                percentLabel.centerXAnchor.constraint(equalTo: progressRing.centerXAnchor),
+                percentLabel.centerYAnchor.constraint(equalTo: progressRing.centerYAnchor),
+                
+                statsLabel.leadingAnchor.constraint(equalTo: progressRing.trailingAnchor, constant: 16),
+                statsLabel.centerYAnchor.constraint(equalTo: progressRing.centerYAnchor),
+                statsLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                
+                viewDetailsButton.topAnchor.constraint(equalTo: progressRing.bottomAnchor, constant: 16),
+                viewDetailsButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                viewDetailsButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                viewDetailsButton.heightAnchor.constraint(equalToConstant: 40),
+                viewDetailsButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+            ])
+        }
+        
+        private func setupProgressRing() {
+            progressRing.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(progressRing)
+            
+            // Background circle
+            let circularPath = UIBezierPath(arcCenter: CGPoint(x: 40, y: 40),
+                                           radius: 32,
+                                           startAngle: -CGFloat.pi / 2,
+                                           endAngle: 2 * CGFloat.pi - CGFloat.pi / 2,
+                                           clockwise: true)
+            
+            backgroundLayer.path = circularPath.cgPath
+            backgroundLayer.fillColor = UIColor.clear.cgColor
+            backgroundLayer.strokeColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0).cgColor
+            backgroundLayer.lineWidth = 8
+            backgroundLayer.lineCap = .round
+            progressRing.layer.addSublayer(backgroundLayer)
+            
+            // Progress circle
+            progressLayer.path = circularPath.cgPath
+            progressLayer.fillColor = UIColor.clear.cgColor
+            progressLayer.strokeColor = UIColor(red: 0.0, green: 0.2, blue: 0.7, alpha: 1.0).cgColor // Royal blue
+            progressLayer.lineWidth = 8
+            progressLayer.lineCap = .round
+            progressLayer.strokeEnd = 0
+            progressRing.layer.addSublayer(progressLayer)
+            
+            // Percentage label
+            percentLabel.font = .systemFont(ofSize: 16, weight: .bold)
+            percentLabel.textAlignment = .center
+            percentLabel.text = "0%"
+            percentLabel.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(percentLabel)
+        }
+        
+        // MARK: - Data Update
+        
+        func updateProgress() {
+            Task {
+                // Use your existing backend functions
+                let timeInterval = Calendar.Component.weekOfYear
+                let flashcardsProgress = await createProgress(type: TopicsType.flashcards, timeInterval: timeInterval)
+                let questionsProgress = await createProgress(type: TopicsType.quizzes, timeInterval: timeInterval)
+                
+                // Calculate overall progress
+                let overallProgress = (flashcardsProgress.progress + questionsProgress.progress) / 2.0
+                
+                // Update UI on main thread
+                await MainActor.run {
+                    // Update progress ring
+                    self.progressLayer.strokeEnd = CGFloat(overallProgress)
+                    
+                    // Update percentage label
+                    let percentText = String(format: "%.0f%%", overallProgress * 100)
+                    self.percentLabel.text = percentText
+                    
+                    // Update stats text
+                    let statsText = "📚 \(flashcardsProgress.completed)/\(flashcardsProgress.total) cards\n📝 \(questionsProgress.completed)/\(questionsProgress.total) questions"
+                    self.statsLabel.text = statsText
+                }
+            }
+        }
+        
+        // MARK: - Actions
+        
+        @objc private func showProgressDetails() {
+            let progressVC = ProgressViewController()
+            parentViewController?.present(progressVC, animated: true)
+        }
+        
+        // MARK: - Backend Functions (reusing your existing code)
+        
+        private func createProgress(type: TopicsType, timeInterval: Calendar.Component) async -> ProgressType {
+            let lastWeekCount = try! await getLastWeekCount(type: type, timeInterval: timeInterval)
+            let lastWeekCompletedCount = try! await getLastWeekCompletedCount(type: type, timeInterval: timeInterval)
+            return ProgressType(completed: lastWeekCompletedCount, total: lastWeekCount)
+        }
+        
+        private func getLastWeekCount(type: TopicsType, timeInterval: Calendar.Component) async throws -> Int {
+            let today = Calendar.current.startOfDay(for: Date())
+            let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: today)!
+            
+            // Get schedules asynchronously
+            let schedules = try await schedulesDb.findAll(where: ["topicType": type.rawValue])
+            
+            // Filter schedules
+            let lastWeekSchedules = schedules.filter {
+                let scheduleDate = Calendar.current.startOfDay(for: $0.date.dateValue())
+                return scheduleDate >= lastWeek && scheduleDate <= today
+            }
+            
+            return lastWeekSchedules.count
+        }
+        
+        private func getLastWeekCompletedCount(type: TopicsType, timeInterval: Calendar.Component) async throws -> Int {
+            let today = Calendar.current.startOfDay(for: Date())
+            let lastWeek = Calendar.current.date(byAdding: timeInterval, value: -1, to: today)!
+            let schedules = try await schedulesDb.findAll(where: ["topicType": type.rawValue])
+            
+            let lastWeekSchedules = schedules.filter {
+                let scheduleDate = Calendar.current.startOfDay(for: $0.date.dateValue())
+                return scheduleDate >= lastWeek && scheduleDate <= today && $0.completed != nil
+            }
+            return lastWeekSchedules.count
+        }
+    }
+    private func createStatItem(label: String, value: String) -> UIView {
+        let containerView = UIView()
+        
+        let valueLabel = UILabel()
+        valueLabel.text = value
+        valueLabel.font = .systemFont(ofSize: 16, weight: .bold)
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = label
+        descriptionLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        descriptionLabel.textColor = .systemGray
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(valueLabel)
+        containerView.addSubview(descriptionLabel)
+        
+        NSLayoutConstraint.activate([
+            valueLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+            valueLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            
+            descriptionLabel.topAnchor.constraint(equalTo: valueLabel.bottomAnchor, constant: 2),
+            descriptionLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            descriptionLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        return containerView
+    }
     private func createScheduleItemView(for item: ScheduleItem) -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white

@@ -31,6 +31,7 @@
                         <segue destination="K64-T5-C6F" kind="presentation" identifier="TodaysLearningSegue" id="lSl-Lg-anb"/>
                         <segue destination="t49-nW-ykK" kind="show" identifier="toSubjectList" id="IXb-z0-nX3"/>
                         <segue destination="Upo-AS-Fqd" kind="presentation" identifier="toProfile" id="ZLD-qb-sIT"/>
+                        <segue destination="065-Ov-wae" kind="presentation" identifier="toCreate" id="CMx-qd-Db9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="481-eY-8Zo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -934,7 +935,7 @@
             <objects>
                 <viewController title="Create" id="065-Ov-wae" customClass="CreateViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cZo-Fm-QYW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="9Jr-Rc-N5P">
@@ -2746,7 +2747,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="Bsh-bj-UEQ" kind="relationship" relationship="viewControllers" id="2z2-Hv-pFm"/>
-                        <segue destination="065-Ov-wae" kind="relationship" relationship="viewControllers" id="mAT-Q8-APS"/>
                         <segue destination="BWw-ph-5oy" kind="relationship" relationship="viewControllers" id="TP1-XW-nbn"/>
                     </connections>
                 </tabBarController>
@@ -2814,8 +2814,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="bfc-Hh-3ad"/>
-        <segue reference="PO4-kN-YgS"/>
+        <segue reference="651-AB-nO7"/>
+        <segue reference="yUW-6S-VXD"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="qtl-9G-7g1"/>
         <segue reference="paQ-p4-NU6"/>
