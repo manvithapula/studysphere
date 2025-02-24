@@ -29,7 +29,7 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
     @IBInspectable var betweenDashesSpace: CGFloat = 15
     
     private var dashBorder: CAShapeLayer?
-    private weak var parentViewController: UIViewController?
+//    private weak var parentViewController: UIViewController?
     weak var delegate: PDFProcessingDelegate?
     var document:URL? = nil
 
@@ -205,11 +205,11 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
             break
         }
     }
-    
-    func setup(in viewController: UIViewController) {
-        self.parentViewController = viewController
-    }
-    
+//    
+//    func setup(in viewController: UIViewController) {
+//        self.parentViewController = viewController
+//    }
+//    
     override func layoutSubviews() {
         super.layoutSubviews()
         

@@ -119,11 +119,11 @@ class QuestionViewController: UIViewController {
         // answer check
         if selectedAnswer == currentQuestion.correctanswer {
             sender.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.3)
-            self.view.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.7)
+            //self.view.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.7)
             score += 1
         } else {
             sender.backgroundColor = UIColor.systemRed.withAlphaComponent(0.3)
-            self.view.backgroundColor = UIColor.systemRed.withAlphaComponent(0.7)
+            //self.view.backgroundColor = UIColor.systemRed.withAlphaComponent(0.7)
             // Show correct answer
             let correctButton: UIButton?
             switch currentQuestion.correctanswer {
@@ -143,7 +143,7 @@ class QuestionViewController: UIViewController {
         currentQuestionIndex += 1
         updateProgress()
         loadQuestion()
-        self.view.backgroundColor = UIColor.main
+        self.view.backgroundColor = UIColor.white
     }
     
     private func showFinalScore() {

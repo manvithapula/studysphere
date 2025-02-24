@@ -2,776 +2,529 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 import Foundation
-
 import FirebaseCore
 import GoogleGenerativeAI
 
-
-struct Technique{
-  var name: String
+// MARK: - Custom Views
+class StyledTextField: UITextField {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupStyle()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupStyle()
+    }
+    
+    func setupStyle() {
+        backgroundColor = .systemBackground
+        layer.cornerRadius = 12
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.systemGray5.cgColor
+        leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: frame.height))
+        leftViewMode = .always
+        font = .systemFont(ofSize: 16)
+        heightAnchor.constraint(equalToConstant: 50).isActive = true
+        tintColor = .systemBlue
+    }
 }
 
-class CreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIDocumentPickerDelegate {
-    let picker = UIPickerView()
-    var thisSaturday: Date!
+class DropdownField: StyledTextField {
+    private let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.down"))
     
+    override func setupStyle() {
+        super.setupStyle()
+        
+        chevronImageView.tintColor = .systemGray2
+        chevronImageView.contentMode = .center
+        chevronImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 40)
+        
+        rightView = chevronImageView
+        rightViewMode = .always
+        
+        // Make the field non-editable
+        isUserInteractionEnabled = true
+        isEnabled = true
+    }
+}
 
+class TechniqueButton: UIButton {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupStyle()
+    }
     
-    @IBOutlet weak var Topic: UITextField!
-    @IBOutlet weak var Date: UITextField!
-    @IBOutlet weak var NextButton: UIButton!
-    @IBOutlet weak var fileUploadView: DashedRectangleUpload!
-    @IBOutlet weak var subject: UITextField!
-    @IBOutlet weak var selectTechnique: UITextField!
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupStyle()
+    }
     
-    private var selectedSubject: Subject?
-    var datePicker = UIDatePicker()
+    private func setupStyle() {
+        backgroundColor = .systemBlue.withAlphaComponent(0.1)
+        layer.cornerRadius = 20
+        titleLabel?.font = .systemFont(ofSize: 16)
+        setTitleColor(.systemBlue, for: .normal)
+        contentEdgeInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
+    }
     
-    // Dropdown TableView for subjects
-    var dropdownTableView: UITableView!
-    var subjects: [Subject] = []
-    private var techniqueDropdownTableView: UITableView!
-    private let techniques = [Technique(name: "Space Repetition"), Technique(name: "Active Recall"), Technique(name: "Summarizer")]
-    private var selectedTechnique: Technique?
-    
-    var generativeModel: GenerativeModel?
-    var apiKey: String? // Replace with your actual API key
+    override var isSelected: Bool {
+        didSet {
+            backgroundColor = isSelected ? .systemBlue.withAlphaComponent(0.2) : .systemBlue.withAlphaComponent(0.1)
+        }
+    }
+}
 
-
+class CreateViewController: UIViewController {
+    // MARK: - Properties
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    
+    private let unitNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Unit Name"
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        return label
+    }()
+    
+    private let unitNameField = StyledTextField()
+    
+    private let subjectLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Subject"
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        return label
+    }()
+    
+    private let subjectField = DropdownField()
+    
+    private let techniqueLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Learning Technique"
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        return label
+    }()
+    
+    private let techniqueStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 10
+        stack.distribution = .fillProportionally
+        return stack
+    }()
+    
+    private lazy var spacedRepetitionButton: TechniqueButton = {
+        let button = TechniqueButton()
+        let imageConfig = UIImage.SymbolConfiguration(scale: .medium)
+        let clockImage = UIImage(systemName: "clock", withConfiguration: imageConfig)
+        button.setImage(clockImage, for: .normal)
+        button.setTitle(" Spaced Repetition", for: .normal)
+        button.addTarget(self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var activeRecallButton: TechniqueButton = {
+        let button = TechniqueButton()
+        let imageConfig = UIImage.SymbolConfiguration(scale: .medium)
+        let brainImage = UIImage(systemName: "brain", withConfiguration: imageConfig)
+        button.setImage(brainImage, for: .normal)
+        button.setTitle(" Active Recall", for: .normal)
+        button.addTarget(self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var summariserButton: TechniqueButton = {
+        let button = TechniqueButton()
+        let imageConfig = UIImage.SymbolConfiguration(scale: .medium)
+        let textImage = UIImage(systemName: "text.alignleft", withConfiguration: imageConfig)
+        button.setImage(textImage, for: .normal)
+        button.setTitle(" Summariser", for: .normal)
+        button.addTarget(self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    private let uploadLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Upload Document"
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        return label
+    }()
+    
+    private let fileUploadView = DashedRectangle()
+    
+    private let createButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Create", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
+        button.backgroundColor = .systemGray4
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 25
+        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        return button
+    }()
+    
+    private var dropdownTableView: UITableView?
+    private var subjects: [Subject] = []
+    private var selectedTechnique: String?
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        setupActions()
         
-        //intial setup
-        apiKey = "AIzaSyAPoKc-EWHZYQp-7bXbmUxyKTdZOCLgFco"
-
-        Topic.returnKeyType = .done
-        Topic.autocorrectionType = .no
-        Date.returnKeyType = .done
-        Date.keyboardType = .numbersAndPunctuation
-        fileUploadView.setup(in: self)
-        fileUploadView.isUserInteractionEnabled = true
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectPDF))
-//        fileUploadView.addGestureRecognizer(tapGesture)
-        setupDatePicker()
-        setupDropdownTableView() // Initialize the dropdown table view
-        subject.addTarget(self, action: #selector(showDropdown), for: .allTouchEvents) // Show dropdown when editing starts
-        Task{
+        Task {
             subjects = try await subjectDb.findAll()
         }
-        setupTechniqueDropdown()
-        selectTechnique.addTarget(self, action: #selector(showTechniqueDropdown), for: .allTouchEvents)
     }
-    private func setupTechniqueDropdown() {
-        techniqueDropdownTableView = UITableView(frame: CGRect.zero)
-        techniqueDropdownTableView.delegate = self
-        techniqueDropdownTableView.dataSource = self
-        techniqueDropdownTableView.isHidden = true
-        techniqueDropdownTableView.layer.borderWidth = 1
-        techniqueDropdownTableView.layer.borderColor = UIColor.lightGray.cgColor
-        techniqueDropdownTableView.layer.cornerRadius = 5
-        techniqueDropdownTableView.backgroundColor = .white
-        techniqueDropdownTableView.separatorStyle = .singleLine
-        techniqueDropdownTableView.tag = 2 // To distinguish from subject dropdown
-        self.view.addSubview(techniqueDropdownTableView)
-    }
-
-    @objc private func showTechniqueDropdown() {
-        // Hide subject dropdown if it's visible
-        dropdownTableView.isHidden = true
+    
+    // MARK: - UI Setup
+    private func setupUI() {
+        view.backgroundColor = .systemBackground
         
-        let dropdownHeight: CGFloat = CGFloat(techniques.count) * 44
-        techniqueDropdownTableView.frame = CGRect(
-            x: selectTechnique.frame.minX,
-            y: selectTechnique.frame.maxY + 5,
-            width: selectTechnique.frame.width,
-            height: dropdownHeight
-        )
-        techniqueDropdownTableView.isHidden = false
-        techniqueDropdownTableView.reloadData()
-    }
-
-    private func hideTechniqueDropdown() {
-        techniqueDropdownTableView.isHidden = true
-    }
-
-    @IBAction func Topic(_ sender: Any) {}
-    @IBAction func Date(_ sender: Any) {}
-    @IBAction func TapButton(_ sender: Any) {}
-
-    @objc private func datePickerDone() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd MMM yyyy"
-        Date.text = dateFormatter.string(from: datePicker.date)
-        Date.resignFirstResponder()
-    }
-    
-    private func setupDatePicker() {
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 300))
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDone))
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbar.items = [flexSpace, doneButton]
-
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.frame = CGRect(x: 0, y: toolbar.frame.height, width: view.frame.width, height: 216)
-
-        containerView.addSubview(toolbar)
-        containerView.addSubview(datePicker)
-        Date.inputView = containerView
-    }
-    
-    private func setupDropdownTableView() {
-        dropdownTableView = UITableView(frame: CGRect.zero)
-        dropdownTableView.delegate = self
-        dropdownTableView.dataSource = self
-        dropdownTableView.isHidden = true
-        dropdownTableView.layer.borderWidth = 1
-        dropdownTableView.layer.borderColor = UIColor.lightGray.cgColor
-        dropdownTableView.layer.cornerRadius = 5
-        dropdownTableView.backgroundColor = .white
-        dropdownTableView.separatorStyle = .singleLine
-        self.view.addSubview(dropdownTableView)
-    }
-    
-    @objc private func showDropdown() {
-        let dropdownHeight: CGFloat = min(200, CGFloat(subjects.count + 1) * 44) // Add height for "Add Subject" button
-        dropdownTableView.frame = CGRect(
-            x: subject.frame.minX,
-            y: subject.frame.maxY + 5,
-            width: subject.frame.width,
-            height: dropdownHeight
-        )
-        dropdownTableView.isHidden = false
-        dropdownTableView.reloadData()
-    }
-    
-    @objc private func hideDropdown() {
-        dropdownTableView.isHidden = true
-    }
-    
-    private func loadSubjects() {
-        if let savedData = UserDefaults.standard.data(forKey: "subjects"),
-           let decodedSubjects = try? JSONDecoder().decode([Subject].self, from: savedData) {
-            subjects = decodedSubjects
-        }
-    }
-    
-    private func saveSubjects() {
-        if let encoded = try? JSONEncoder().encode(subjects) {
-            UserDefaults.standard.set(encoded, forKey: "subjects")
-        }
-    }
-    
-    //DataSource and tableDelegate
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView.tag == 2 {
-            return techniques.count
-        }
-        return subjects.count + 1 // Original subject dropdown logic
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if tableView.tag == 2 {
-            // Technique dropdown
-            let cell = UITableViewCell(style: .default, reuseIdentifier: "techniqueCell")
-            cell.textLabel?.text = techniques[indexPath.row].name
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            cell.textLabel?.textColor = .black
-            return cell
-        } else {
-            // Original subject dropdown logic
-            if indexPath.row < subjects.count {
-                let cell = UITableViewCell(style: .default, reuseIdentifier: "subjectCell")
-                cell.textLabel?.text = subjects[indexPath.row].name
-                cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-                cell.textLabel?.textColor = .black
-                return cell
-            } else {
-                let cell = UITableViewCell(style: .default, reuseIdentifier: "addSubjectCell")
-                cell.textLabel?.text = "➕ Add Subject"
-                cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-                cell.textLabel?.textColor = UIColor.systemBlue
-                cell.backgroundColor = UIColor.systemGray6
-                return cell
-            }
-        }
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView.tag == 2 {
-            // Technique selection
-            selectedTechnique = techniques[indexPath.row]
-            selectTechnique.text = selectedTechnique?.name
-            hideTechniqueDropdown()
-        } else {
-            // Original subject selection logic
-            if indexPath.row < subjects.count {
-                subject.text = subjects[indexPath.row].name
-                selectedSubject = subjects[indexPath.row]
-                hideDropdown()
-            } else {
-                let addSubjectVC = AddSubjectViewController()
-                addSubjectVC.modalPresentationStyle = .pageSheet
-                if let sheet = addSubjectVC.sheetPresentationController {
-                    sheet.detents = [.medium()]
-                    sheet.prefersGrabberVisible = true
-                }
-                
-                addSubjectVC.onSubjectAdded = { [weak self] newSubjectName in
-                    var newSubject = Subject(id:"",name: newSubjectName, createdAt: Timestamp(), updatedAt: Timestamp())
-                    newSubject = subjectDb.create(&newSubject)
-                    self?.subjects.append(newSubject)
-                    self?.selectedSubject = newSubject
-                    self?.dropdownTableView.reloadData()
-                }
-                
-                present(addSubjectVC, animated: true, completion: nil)
-            }
-        }
-    }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        hideDropdown()
-        hideTechniqueDropdown()
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "selectTechnique" {
-            if let destinationVC = segue.destination as? SelectTechniqueViewController {
-                destinationVC.date = datePicker.date
-                destinationVC.topic = Topic.text
-                destinationVC.subject = selectedSubject
-                destinationVC.document = fileUploadView.document
-//                destinationVC.technique = selectedTechnique
-            }
-        }
-    }
-    func shouldCreate() -> Bool {
-            
-            // Check if topic is entered
-            guard let topic = Topic.text, !topic.isEmpty else {
-                showAlert(title: "Missing Topic", message: "Please enter a topic before continuing.")
-                return false
-            }
-            
-            // Check if date is valid (e.g., not in the past)
-            guard let date = Date.text, !date.isEmpty else {
-                showAlert(title: "Missing Date", message: "Please enter a date before continuing.")
-                return false
-            }
-            // Check if subject is selected
-            guard selectedSubject != nil else {
-                showAlert(title: "Missing Subject", message: "Please select a subject before continuing.")
-                return false
-            }
-            guard selectedTechnique != nil else {
-                showAlert(title: "Missing Technique", message: "Please select a learning technique before continuing.")
-                return false
-            }
-            //check if document is selected
-            guard fileUploadView.document != nil else {
-                showAlert(title: "Missing Document", message: "Please select a document before continuing.")
-                return false
-            }
-            // check if technique is selected
-            guard selectedTechnique != nil else {
-                showAlert(title: "Missing Technique", message: "Please select a learning technique before continuing.")
-                return false
-            }
-            
-            return true
+        // Setup scroll view and content
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
-    }
-    
-
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
-    @IBAction func createButtonTapped(_ sender: UIButton) {
-        if(!shouldCreate()){ return}
-        switch(selectedTechnique?.name){
-            case techniques[0].name:
-                createSR(sender)
-                break
-            case techniques[1].name:
-                createAR(sender)
-                break
-            case techniques[2].name:
-                createSummarizer(sender)
-                break
-            default:
-                break
-        }
-    }
-    
-    
-    
-    
-    
-    func createSR(_ sender: Any) {
-        if let apiKey = apiKey {
-            let config = GenerationConfig(
-                temperature: 1,
-                topP: 0.95,
-                topK: 64,
-                maxOutputTokens: 8192,
-                responseMIMEType: "application/json",
-                responseSchema: Schema(type: .object,properties:[
-                    "response":Schema(type: .object,properties: [
-                        "data":Schema(type: .array,items:Schema(type: .object,properties: [
-                            "question":Schema(type: .string),
-                            "answer":Schema(type: .string)
-                        ]))
-                    ])
-                ])
-                
-                
-            )
-            generativeModel = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey,generationConfig: config)
-        } else {
-            print("API Key not found!")
-        }
-        var newTopic = Topics(id: "", title: Topic.text!, subject: selectedSubject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
-        newTopic = topicsDb.create(&newTopic)
-        showLoading(text:"Generating flashcards...")
-        Task{
-            let cards = await createFlashCards(topic: newTopic.id)
-            if(cards.isEmpty){
-                hideLoading()
-                showError(message: "Faled to generate flashcards")
-                topicsDb.delete(id: newTopic.id)
-                return
-            }
-            
-            let mySchedules = spacedRepetitionSchedule(startDate: Foundation.Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.flashcards)
-            for var schedule in mySchedules{
-                let _ = schedulesDb.create(&schedule)
-            }
-            hideLoading()
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            
-            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
-                       let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                        homeVC.performSegue(withIdentifier: "toSrListView", sender: nil)
-                    } else {
-                        print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
-                    }
-                }
-            } else {
-                print("Error: Could not instantiate TabBarController.")
-            }
-            
+        [scrollView, contentView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-    }
-    func createAR(_ sender: Any) {
-        if let apiKey = apiKey {
-            let config = GenerationConfig(
-                temperature: 1,
-                topP: 0.95,
-                topK: 64,
-                maxOutputTokens: 8192,
-                responseMIMEType: "application/json",
-                responseSchema: Schema(type: .object,properties:[
-                    "response":Schema(type: .object,properties: [
-                        "data":Schema(type: .array,items:Schema(type: .object,properties: [
-                            "question":Schema(type: .string),
-                            "option1":Schema(type: .string),
-                            "option2":Schema(type: .string),
-                            "option3":Schema(type: .string),
-                            "option4":Schema(type: .string),
-                            "correctOption":Schema(type: .string)
-                        ]))
-                    ])
-                ])
-                
-                
-            )
-            generativeModel = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey,generationConfig: config)
-        } else {
-            print("API Key not found!")
+        // Add all components
+        [unitNameLabel, unitNameField, subjectLabel, subjectField,
+         techniqueLabel, techniqueStackView, uploadLabel,
+         fileUploadView, createButton].forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
         }
-        var newTopic = Topics(id: "", title: Topic.text!, subject: selectedSubject!.id, type: .quizzes,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
-        newTopic = topicsDb.create(&newTopic)
-        showLoading(text:"Generating Quiz...")
-        Task{
-            let ques = await createQuestions(topic: newTopic.id)
-            if(ques.isEmpty){
-                hideLoading()
-                showError(message: "Failed to generate Quiz")
-                topicsDb.delete(id: newTopic.id)
-                return
-            }
-            let mySchedules = spacedRepetitionSchedule(startDate: Foundation.Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.quizzes)
-            for var schedule in mySchedules{
-                let _ = schedulesDb.create(&schedule)
-            }
-            hideLoading()
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
-                       let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                        homeVC.performSegue(withIdentifier: "toArListView", sender: nil)
-                    } else {
-                        print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
-                    }
-                }
-            } else {
-                print("Error: Could not instantiate TabBarController.")
-            }
-        }
+        
+        // Setup technique buttons
+        techniqueStackView.addArrangedSubview(spacedRepetitionButton)
+        techniqueStackView.addArrangedSubview(activeRecallButton)
+        techniqueStackView.addArrangedSubview(summariserButton)
+        
+        // Setup text fields
+        unitNameField.placeholder = "Enter unit name"
+        subjectField.placeholder = "Select Subject"
+        
+        // Layout constraints
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            // Unit Name
+            unitNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            unitNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            unitNameField.topAnchor.constraint(equalTo: unitNameLabel.bottomAnchor, constant: 8),
+            unitNameField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            unitNameField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            // Subject
+            subjectLabel.topAnchor.constraint(equalTo: unitNameField.bottomAnchor, constant: 20),
+            subjectLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            subjectField.topAnchor.constraint(equalTo: subjectLabel.bottomAnchor, constant: 8),
+            subjectField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            subjectField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            // Technique
+            techniqueLabel.topAnchor.constraint(equalTo: subjectField.bottomAnchor, constant: 20),
+            techniqueLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            techniqueStackView.topAnchor.constraint(equalTo: techniqueLabel.bottomAnchor, constant: 8),
+            techniqueStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            techniqueStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            // Upload
+            uploadLabel.topAnchor.constraint(equalTo: techniqueStackView.bottomAnchor, constant: 20),
+            uploadLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            fileUploadView.topAnchor.constraint(equalTo: uploadLabel.bottomAnchor, constant: 8),
+            fileUploadView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            fileUploadView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            fileUploadView.heightAnchor.constraint(equalToConstant: 150),
+            
+            // Create Button
+            createButton.topAnchor.constraint(equalTo: fileUploadView.bottomAnchor, constant: 30),
+            createButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            createButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+        ])
+        
+        // Setup file upload view
+        fileUploadView.setup(in: self)
     }
     
-    func createSummarizer(_ sender: Any) {
-        if let apiKey = apiKey {
-            let config = GenerationConfig(
-                temperature: 1,
-                topP: 0.95,
-                topK: 64,
-                maxOutputTokens: 8192,
-                responseMIMEType: "application/json",
-                responseSchema: Schema(type: .object,properties:[
-                    "response":Schema(type: .object,properties: [
-                        "data":Schema(type: .object,properties: [
-                            "summary":Schema(type: .string)
-                        ])
-                    ])
-                ])
-                
-                
-            )
-            generativeModel = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey,generationConfig: config)
-        } else {
-            print("API Key not found!")
-        }
-        var newTopic = Topics(id: "", title: Topic.text!, subject: selectedSubject!.id, type: .summary,subtitle: "",createdAt: Timestamp(),updatedAt: Timestamp())
-        newTopic = topicsDb.create(&newTopic)
-        showLoading(text:"Generating summary...")
-        Task{
-            let summary = await createSummary(topic: newTopic.id)
-            hideLoading()
-            if(summary == nil){
-                showError(message: "Failed to create summary")
-                topicsDb.delete(id:newTopic.id)
-                return
-            }
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    if let navigationVC = tabBarVC.viewControllers?.first(where: { $0 is UINavigationController }) as? UINavigationController,
-                       let homeVC = navigationVC.viewControllers.first(where: { $0 is homeScreenViewController }) as? homeScreenViewController {
-                        homeVC.performSegue(withIdentifier: "toSuListView", sender: nil)
-                    } else {
-                        print("Error: HomeViewController is not properly embedded in UINavigationController under TabBarController.")
-                    }
-                }
-            } else {
-                print("Error: Could not instantiate TabBarController.")
-            }
-        }
-      
-        }
+    private func setupActions() {
+        subjectField.addTarget(self, action: #selector(showSubjectDropdown), for: .touchDown)
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+    }
     
+    // MARK: - Actions
+    @objc private func showSubjectDropdown() {
+        dropdownTableView?.removeFromSuperview()
+        
+        let tableView = UITableView()
+        tableView.backgroundColor = .systemBackground
+        tableView.layer.cornerRadius = 12
+        tableView.layer.borderWidth = 1
+        tableView.layer.borderColor = UIColor.systemGray5.cgColor
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: subjectField.bottomAnchor, constant: 5),
+            tableView.leadingAnchor.constraint(equalTo: subjectField.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: subjectField.trailingAnchor),
+            tableView.heightAnchor.constraint(lessThanOrEqualToConstant: 200)
+        ])
+        
+        dropdownTableView = tableView
+        tableView.reloadData()
+    }
     
-    private func getFileUri() async -> String? {
-        guard let pdfData = try? Data(contentsOf: fileUploadView.document!) else {
-                    print("Error reading PDF data")
-                    return nil
-                }
-        print(pdfData)
-        let baseURL = "https://generativelanguage.googleapis.com"
-        let fileSize = pdfData.count
-        do {
-            // Create upload URL request
-            var urlComponents = URLComponents(string: "\(baseURL)/upload/v1beta/files")!
-            urlComponents.queryItems = [URLQueryItem(name: "key", value: apiKey)]
-            
-            var request = URLRequest(url: urlComponents.url!)
-            request.httpMethod = "POST"
-            request.setValue("resumable", forHTTPHeaderField: "X-Goog-Upload-Protocol")
-            request.setValue("start", forHTTPHeaderField: "X-Goog-Upload-Command")
-            request.setValue("\(fileSize)", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Length")
-            request.setValue("application/pdf", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Type")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            let metadata = ["file": ["display_name": "PDF_Document"]]
-            request.httpBody = try JSONSerialization.data(withJSONObject: metadata)
-            
-            // Get upload URL
-            let (_, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse,
-                  let uploadURL = httpResponse.value(forHTTPHeaderField: "X-Goog-Upload-URL") else {
-                throw NSError(domain: "PDFUploader", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to get upload URL"])
-            }
-            
-            // Upload the PDF
-            var uploadRequest = URLRequest(url: URL(string: uploadURL)!)
-            uploadRequest.httpMethod = "POST"
-            uploadRequest.setValue("\(fileSize)", forHTTPHeaderField: "Content-Length")
-            uploadRequest.setValue("0", forHTTPHeaderField: "X-Goog-Upload-Offset")
-            uploadRequest.setValue("upload, finalize", forHTTPHeaderField: "X-Goog-Upload-Command")
-            uploadRequest.httpBody = pdfData
-            
-            let (fileInfoData, _) = try await URLSession.shared.data(for: uploadRequest)
-            let fileInfo = try JSONSerialization.jsonObject(with: fileInfoData) as! [String: Any]
-            return (fileInfo["file"] as? [String: Any])?["uri"] as? String
-        }
-        catch{
-            return nil
-        }
+    @objc private func techniqueTapped(_ sender: TechniqueButton) {
+        // Toggle selection
+        spacedRepetitionButton.isSelected = sender == spacedRepetitionButton
+        activeRecallButton.isSelected = sender == activeRecallButton
+        summariserButton.isSelected = sender == summariserButton
+        selectedTechnique = sender.titleLabel?.text?.trimmingCharacters(in: .whitespaces)
+        
+        // Enable create button if all fields are filled
+        updateCreateButtonState()
     }
-    private func createSummary(topic:String)async -> Summary?{
-        
-        
-  
-        do{
-            guard let fileURI = await getFileUri() else {
-                throw NSError(domain: "PDFUploader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to get file URI"])
-            }
-            let prompt = """
-            Create Summary for this PDF document.
-            Focus on key concepts and important details from the content.
-            so that i can give a quick look before the exam
-            """
-            
-            let content = ModelContent(role: "user", parts: [
-                        ModelContent.Part.text(prompt),
-                        ModelContent.Part.fileData(mimetype: "application/pdf", uri: fileURI)
-                    ])
-                    
-                    // Generate content using the model
-            let respons = try await generativeModel?.generateContent([content])
-            print(respons as Any)
-                // Parse the response and create flashcards
-            if let jsonData = respons?.text?.data(using: .utf8),
-               let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-               let responseData = json["response"] as? [String: Any],
-               let data = responseData["data"] as? [String: Any],
-               let summaryText = data["summary"] as? String {
-                
-                var summary = Summary(
-                    id: "",
-                    topic: topic,
-                    data: summaryText,
-                    createdAt: Timestamp(),
-                    updatedAt: Timestamp()
-                )
-                summary = summaryDb.create(&summary)
-                return summary
-            }
-                
-            return nil
-        }
-        catch{
-            print(error)
-            return nil
-        }
-        
+    
+    @objc private func createButtonTapped() {
+        // Implement creation logic
     }
-    private func createFlashCards(topic:String) async -> [Flashcard]{
-                guard let pdfData = try? Data(contentsOf: fileUploadView.document!) else {
-                            print("Error reading PDF data")
-                            return []
-                        }
-                let baseURL = "https://generativelanguage.googleapis.com"
-                let fileSize = pdfData.count
-                        // Send the request to the model
-//                let response = try await model.generateContent(prompt, parts: [part])
-//                print(response)
-                do {
-                        // Create upload URL request
-                        var urlComponents = URLComponents(string: "\(baseURL)/upload/v1beta/files")!
-                        urlComponents.queryItems = [URLQueryItem(name: "key", value: apiKey)]
-                        
-                        var request = URLRequest(url: urlComponents.url!)
-                        request.httpMethod = "POST"
-                        request.setValue("resumable", forHTTPHeaderField: "X-Goog-Upload-Protocol")
-                        request.setValue("start", forHTTPHeaderField: "X-Goog-Upload-Command")
-                        request.setValue("\(fileSize)", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Length")
-                        request.setValue("application/pdf", forHTTPHeaderField: "X-Goog-Upload-Header-Content-Type")
-                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                        
-                        let metadata = ["file": ["display_name": "PDF_Document"]]
-                        request.httpBody = try JSONSerialization.data(withJSONObject: metadata)
-                        
-                        // Get upload URL
-                        let (_, response) = try await URLSession.shared.data(for: request)
-                        guard let httpResponse = response as? HTTPURLResponse,
-                              let uploadURL = httpResponse.value(forHTTPHeaderField: "X-Goog-Upload-URL") else {
-                            throw NSError(domain: "PDFUploader", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to get upload URL"])
-                        }
-                        
-                        // Upload the PDF
-                        var uploadRequest = URLRequest(url: URL(string: uploadURL)!)
-                        uploadRequest.httpMethod = "POST"
-                        uploadRequest.setValue("\(fileSize)", forHTTPHeaderField: "Content-Length")
-                        uploadRequest.setValue("0", forHTTPHeaderField: "X-Goog-Upload-Offset")
-                        uploadRequest.setValue("upload, finalize", forHTTPHeaderField: "X-Goog-Upload-Command")
-                        uploadRequest.httpBody = pdfData
-                        
-                        let (fileInfoData, _) = try await URLSession.shared.data(for: uploadRequest)
-                        let fileInfo = try JSONSerialization.jsonObject(with: fileInfoData) as! [String: Any]
-                        guard let fileURI = (fileInfo["file"] as? [String: Any])?["uri"] as? String else {
-                            throw NSError(domain: "PDFUploader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to get file URI"])
-                        }
-                        
-                        // Create prompt for flashcard generation
-                        let prompt = """
-                        Create flashcards from this PDF document.
-                        Focus on key concepts and important details from the content.
-                        Please provide at least 7 question-answer pairs.
-                        """
-                        
-                    let content = ModelContent(role: "user", parts: [
-                                ModelContent.Part.text(prompt),
-                                ModelContent.Part.fileData(mimetype: "application/pdf", uri: fileURI)
-                            ])
-                            
-                            // Generate content using the model
-                    let respons = try await generativeModel?.generateContent([content])
-                    print(respons as Any)
-                        // Parse the response and create flashcards
-                    if let jsonData = respons?.text?.data(using: .utf8),
-                           let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-                           let responseData = json["response"] as? [String: Any],
-                           let cards = responseData["data"] as? [[String: String]] {
-                            
-                            var flashcards: [Flashcard] = []
-                            for cardData in cards {
-                                if let question = cardData["question"],
-                                   let answer = cardData["answer"] {
-                                    var flashcard = Flashcard(
-                                        id: "",
-                                        question: question,
-                                        answer: answer,
-                                        topic: topic,
-                                        createdAt: Timestamp(),
-                                        updatedAt: Timestamp()
-                                    )
-                                    let _ = flashCardDb.create(&flashcard)
-                                    flashcards.append(flashcard)
-                                }
-                            }
-                            return flashcards
-                        }
-                        
-                        return []
-                        
-                    } catch {
-                        print("Error processing PDF: \(error)")
-                        return []
-                    }
-            }
-    private func createQuestions(topic: String) async -> [Questions] {
+    
+    private func updateCreateButtonState() {
+        let isValid = !(unitNameField.text?.isEmpty ?? true) &&
+                     !(subjectField.text?.isEmpty ?? true) &&
+                     selectedTechnique != nil
         
-  
-        do{
-            guard let fileURI = await getFileUri() else {
-                print("Failed to upload")
-                throw NSError(domain: "PDFUploader", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to get file URI"])
-            }
-            let prompt = """
-            Create Questions from this PDF document.
-            Focus on key concepts and important details from the content.
-            make sure the answers are small as possible and fit in one line.
-            one of the option should be the correct answer and randomize this option
-            Please provide at least 5 questions
-            """
-            
-            let content = ModelContent(role: "user", parts: [
-                        ModelContent.Part.text(prompt),
-                        ModelContent.Part.fileData(mimetype: "application/pdf", uri: fileURI)
-                    ])
-                    
-                    // Generate content using the model
-            let respons = try await generativeModel?.generateContent([content])
-            print(respons as Any)
-                // Parse the response and create flashcards
-            if let jsonData = respons?.text?.data(using: .utf8),
-                   let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-                   let responseData = json["response"] as? [String: Any],
-                   let cards = responseData["data"] as? [[String: String]] {
-                    
-                var questions: [Questions] = []
-                    var i = 1
-                    for cardData in cards {
-                        print(cardData)
-                        if let question = cardData["question"],
-                           let answer = cardData["correctOption"],
-                           let a = cardData["option1"],
-                           let b = cardData["option2"],
-                           let c = cardData["option3"],
-                           let d = cardData["option4"]{
-                            var question1 = Questions(
-                                id:"",
-                                questionLabel: "\(i)",
-                                question: question,
-                                correctanswer: answer,
-                                option1: a,
-                                option2: b,
-                                option3: c,
-                                option4: d,
-                                topic: topic
-                            )
-                            let _ = questionsDb.create(&question1)
-                            questions.append(question1)
-                            i += 1
-                        }
-                    }
-                return questions
-                }
-                
-                return []
-        }
-        catch{
-            return []
-        }
-        
+        createButton.backgroundColor = isValid ? .systemBlue : .systemGray4
+        createButton.isEnabled = isValid
     }
-    private func showLoading(text:String) {
-            let loadingView = LoadingView()
-            loadingView.tag = 999 // Tag for easy removal
-            loadingView.text = text
-            view.addSubview(loadingView)
-            loadingView.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                loadingView.topAnchor.constraint(equalTo: view.topAnchor),
-                loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
-            
-            loadingView.show()
-        }
-        
-        private func hideLoading() {
-            if let loadingView = view.viewWithTag(999) {
-                loadingView.removeFromSuperview()
-            }
-        }
-    private func showError(message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+    
+    private func hideDropdown() {
+        dropdownTableView?.removeFromSuperview()
+        dropdownTableView = nil
     }
 }
 
+// MARK: - UITableViewDelegate & DataSource
+extension CreateViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return subjects.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "SubjectCell")
+        cell.textLabel?.text = subjects[indexPath.row].name
+        cell.textLabel?.font = .systemFont(ofSize: 16)
+        cell.backgroundColor = .clear
+        
+        // Remove the selection style
+        cell.selectionStyle = .none
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        subjectField.text = subjects[indexPath.row].name
+        hideDropdown()
+        updateCreateButtonState()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 44
+        }
+    }
+
+    // MARK: - UITextFieldDelegate
+    extension CreateViewController: UITextFieldDelegate {
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            // Only allow editing for unitNameField
+            return textField == unitNameField
+        }
+        
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            updateCreateButtonState()
+        }
+        
+        func textFieldDidBeginEditing(_ textField: UITextField) {
+            if textField == subjectField {
+                textField.resignFirstResponder()
+                showSubjectDropdown()
+            }
+        }
+    }
+
+    // MARK: - Touch Handling
+    extension CreateViewController {
+        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            super.touchesBegan(touches, with: event)
+            
+            // Hide dropdown when tapping outside
+            if let touch = touches.first {
+                let location = touch.location(in: view)
+                if let dropdownTableView = dropdownTableView,
+                   !dropdownTableView.frame.contains(location) && !subjectField.frame.contains(location) {
+                    hideDropdown()
+                }
+            }
+            
+            view.endEditing(true)
+        }
+    }
+
+    // MARK: - UIDocumentPickerDelegate
+    extension CreateViewController: UIDocumentPickerDelegate {
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            guard let selectedFileURL = urls.first else { return }
+            
+            // Handle the selected file
+            let fileName = selectedFileURL.lastPathComponent
+            // Update UI or store file reference as needed
+            
+            updateCreateButtonState()
+        }
+        
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            // Handle cancelled picker if needed
+        }
+    }
+
+    // MARK: - File Upload View
+    class DashedRectangle: UIView {
+        private let iconImageView: UIImageView = {
+            let imageView = UIImageView()
+            let config = UIImage.SymbolConfiguration(pointSize: 30)
+            imageView.image = UIImage(systemName: "doc.badge.plus", withConfiguration: config)
+            imageView.tintColor = .systemBlue
+            imageView.contentMode = .scaleAspectFit
+            return imageView
+        }()
+        
+        private let titleLabel: UILabel = {
+            let label = UILabel()
+            label.text = "Drop your files here"
+            label.font = .systemFont(ofSize: 16, weight: .medium)
+            label.textColor = .systemBlue
+            return label
+        }()
+        
+        private let subtitleLabel: UILabel = {
+            let label = UILabel()
+            label.text = "or click to browse"
+            label.font = .systemFont(ofSize: 14)
+            label.textColor = .systemGray
+            return label
+        }()
+        
+        private let supportLabel: UILabel = {
+            let label = UILabel()
+            label.text = "Supports PDF files"
+            label.font = .systemFont(ofSize: 12)
+            label.textColor = .systemGray
+            return label
+        }()
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            setupView()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            setupView()
+        }
+        
+        private func setupView() {
+            backgroundColor = .systemBackground
+            layer.cornerRadius = 12
+            
+            // Add dashed border
+            let borderLayer = CAShapeLayer()
+            borderLayer.strokeColor = UIColor.systemGray4.cgColor
+            borderLayer.lineDashPattern = [6, 6]
+            borderLayer.frame = bounds
+            borderLayer.fillColor = nil
+            borderLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: 12).cgPath
+            layer.addSublayer(borderLayer)
+            
+            // Add subviews
+            [iconImageView, titleLabel, subtitleLabel, supportLabel].forEach {
+                addSubview($0)
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            }
+            
+            NSLayoutConstraint.activate([
+                iconImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+                iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -20),
+                
+                titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),
+                titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+                
+                subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+                subtitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+                
+                supportLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 4),
+                supportLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+            ])
+            
+            // Update border layer when frame changes
+            addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
+        }
+        
+        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+            if keyPath == "bounds" {
+                // Update border layer path when bounds change
+                if let borderLayer = layer.sublayers?.first as? CAShapeLayer {
+                    borderLayer.frame = bounds
+                    borderLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: 12).cgPath
+                }
+            }
+        }
+        
+        func setup(in viewController: UIViewController) {
+            // Add tap gesture
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+            addGestureRecognizer(tapGesture)
+            isUserInteractionEnabled = true
+        }
+        
+        @objc private func handleTap() {
+            let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.pdf], asCopy: true)
+            documentPicker.delegate = self.superview?.parentViewController as? UIDocumentPickerDelegate
+            documentPicker.allowsMultipleSelection = false
+            self.superview?.parentViewController?.present(documentPicker, animated: true)
+        }
+        
+        deinit {
+            removeObserver(self, forKeyPath: "bounds")
+        }
+    }
+
+    // MARK: - Helper Extension
+    extension UIView {
+        var parentViewController: UIViewController? {
+            var parentResponder: UIResponder? = self
+            while parentResponder != nil {
+                parentResponder = parentResponder?.next
+                if let viewController = parentResponder as? UIViewController {
+                    return viewController
+                }
+            }
+            return nil
+        }
+    }
