@@ -553,27 +553,60 @@ extension homeScreenViewController {
             }
         }, for: .touchUpInside)
         
+        let subjectTag: UILabel = {
+            let label = UILabel()
+            label.font = .systemFont(ofSize: 12)
+            label.textColor = .black
+            label.backgroundColor = .systemBlue.withAlphaComponent(0.1)
+            label.layer.cornerRadius = 10
+            label.clipsToBounds = true
+            label.textAlignment = .center
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "Loading.."
+            return label
+        }()
         containerView.addSubview(iconView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(startButton)
-        
+        containerView.addSubview(subjectTag)
+        let topConstraint:CGFloat = 16
         NSLayoutConstraint.activate([
-            containerView.heightAnchor.constraint(equalToConstant: 80),
             
             iconView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            iconView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            iconView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topConstraint),
             iconView.widthAnchor.constraint(equalToConstant: 24),
             iconView.heightAnchor.constraint(equalToConstant: 24),
             
             titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 12),
-            titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topConstraint),
             
             startButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
             startButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             startButton.widthAnchor.constraint(equalToConstant: 80),
-            startButton.heightAnchor.constraint(equalToConstant: 32)
+            startButton.heightAnchor.constraint(equalToConstant: 32),
+            
+            subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            subjectTag.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            subjectTag.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
+            subjectTag.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+            
+            containerView.bottomAnchor.constraint(equalTo: subjectTag.bottomAnchor, constant: 16)
         ])
+        subjectTag.layoutIfNeeded()
+        subjectTag.layer.cornerRadius = 8
+        subjectTag.setPadding(horizontal: 12, vertical: 4)
         
+        Task {
+            let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
+            if let topic = alltopics.first{
+                let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
+                if let subject = allSubjects.first {
+                    await MainActor.run {
+                        subjectTag.text = subject.name
+                    }
+                }
+            }
+        }
         return containerView
     }
 
