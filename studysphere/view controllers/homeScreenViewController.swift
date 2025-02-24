@@ -80,7 +80,7 @@ class homeScreenViewController: UIViewController {
     
     // Update prepare for segue to handle the new "See All" navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toSubjectDetails" {
+       /* if segue.identifier == "toSubjectDetails" {
             let destination = segue.destination as? subjectViewController
             if let subject = sender as? Subject {
                 destination?.subject = subject
@@ -88,7 +88,7 @@ class homeScreenViewController: UIViewController {
         } else if segue.identifier == "toSubjectList" {
             let destination = segue.destination as! subjectListTableViewController
             destination.subjects = self.subjects
-        }
+        }*/
         
         if segue.identifier == "toFLS" || segue.identifier == "toQTS" {
             if let destinationVC = segue.destination as? SRScheduleViewController {
@@ -297,7 +297,7 @@ extension homeScreenViewController {
         private let viewDetailsButton = UIButton()
         
         // View controller reference for navigation
-        weak var parentViewController: UIViewController?
+       // weak var parentViewController: UIViewController?
         
         // MARK: - Initialization
         
@@ -616,17 +616,17 @@ extension homeScreenViewController {
         containerView.layer.cornerRadius = 16
         
         let titleLabel = UILabel()
-        titleLabel.text = "My Subjects"
+        titleLabel.text = "Recent Subjects"
         titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        let seeAllButton = UIButton()
+      /*  let seeAllButton = UIButton()
         seeAllButton.setTitle("See All", for: .normal)
         seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
         seeAllButton.addTarget(self, action: #selector(seeAllSubjectsButtonTapped), for: .touchUpInside)
-        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
+        seeAllButton.translatesAutoresizingMaskIntoConstraints = false */
         
-        let headerStack = UIStackView(arrangedSubviews: [titleLabel, seeAllButton])
+        let headerStack = UIStackView(arrangedSubviews: [titleLabel])
         headerStack.axis = .horizontal
         headerStack.distribution = .equalSpacing
         headerStack.translatesAutoresizingMaskIntoConstraints = false
@@ -660,15 +660,15 @@ extension homeScreenViewController {
         return containerView
     }
     
-    @objc private func seeAllSubjectsButtonTapped() {
+  /*  @objc private func seeAllSubjectsButtonTapped() {
         performSegue(withIdentifier: "toSubjectList", sender: nil)
-    }
+    }*/
 
  
 
     private func createSubjectCard(subject: Subject, index: Int) -> UIView {
         let containerView = UIView()
-        containerView.backgroundColor = .white
+        containerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         containerView.layer.cornerRadius = 12
         containerView.layer.shadowColor = UIColor.black.cgColor
         containerView.layer.shadowOpacity = 0.05
@@ -677,13 +677,13 @@ extension homeScreenViewController {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
         let iconContainer = UIView()
-        iconContainer.backgroundColor = AppTheme.getSubjectColor(index).withAlphaComponent(0.1)
+        iconContainer.backgroundColor = .white
         iconContainer.layer.cornerRadius = 20
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let iconView = UIImageView()
         iconView.image = UIImage(systemName: "book.fill")
-        iconView.tintColor = AppTheme.getSubjectColor(index)
+        iconView.tintColor = AppTheme.primary
         iconView.contentMode = .scaleAspectFit
         iconView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -774,7 +774,7 @@ extension homeScreenViewController {
     
     private func createStudyTechniquesView() -> UIView {
         let containerView = UIView()
-        containerView.backgroundColor = .white
+        containerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         containerView.layer.cornerRadius = 16
         
         let titleLabel = UILabel()
