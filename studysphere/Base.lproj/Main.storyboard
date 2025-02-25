@@ -89,6 +89,7 @@
                             <outlet property="delegate" destination="t49-nW-ykK" id="ohj-fx-PWu"/>
                         </connections>
                     </tableView>
+                    <tabBarItem key="tabBarItem" title="Subjects" selectedImage="books.vertical.fill" catalog="system" id="CXV-uH-8XA"/>
                     <navigationItem key="navigationItem" id="OAH-yn-YG3">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="g3p-pZ-XMZ">
                             <color key="tintColor" systemColor="systemOrangeColor"/>
@@ -101,7 +102,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TXM-Cc-caX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="13268" y="904"/>
+            <point key="canvasLocation" x="14315" y="136"/>
         </scene>
         <!--Summariser -->
         <scene sceneID="ngZ-Uk-O9Q">
@@ -1915,7 +1916,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2739,6 +2740,7 @@
                     <connections>
                         <segue destination="Bsh-bj-UEQ" kind="relationship" relationship="viewControllers" id="2z2-Hv-pFm"/>
                         <segue destination="BWw-ph-5oy" kind="relationship" relationship="viewControllers" id="TP1-XW-nbn"/>
+                        <segue destination="t49-nW-ykK" kind="relationship" relationship="viewControllers" id="xgt-yp-AJz"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ole-Ga-Ckv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2749,7 +2751,7 @@
         <scene sceneID="HWj-6g-Y6F">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Bsh-bj-UEQ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" image="house" catalog="system" selectedImage="house" id="CGw-Wf-fkk">
+                    <tabBarItem key="tabBarItem" title="Home" image="house" catalog="system" selectedImage="house.fill" id="CGw-Wf-fkk">
                         <color key="badgeColor" systemColor="systemOrangeColor"/>
                     </tabBarItem>
                     <toolbarItems/>
@@ -2808,8 +2810,9 @@
         <segue reference="651-AB-nO7"/>
         <segue reference="yUW-6S-VXD"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="qtl-9G-7g1"/>
+        <segue reference="BI1-l1-Jlu"/>
         <segue reference="paQ-p4-NU6"/>
+        <segue reference="IXb-z0-nX3"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Google" width="24" height="24"/>
@@ -2817,11 +2820,13 @@
         <image name="arrow.turn.up.left" catalog="system" width="128" height="99"/>
         <image name="arrow.turn.up.right" catalog="system" width="128" height="99"/>
         <image name="bell.badge" catalog="system" width="117" height="128"/>
+        <image name="books.vertical.fill" catalog="system" width="128" height="110"/>
         <image name="chart.xyaxis.line" catalog="system" width="128" height="102"/>
         <image name="checkmark.circle" catalog="system" width="128" height="123"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
         <image name="clipboard" catalog="system" width="98" height="128"/>
         <image name="house" catalog="system" width="128" height="104"/>
+        <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="plus.circle" catalog="system" width="128" height="123"/>
         <image name="profile-avatar" width="272" height="272"/>
         <image name="square.and.pencil.circle@4x" width="121" height="120"/>
