@@ -297,7 +297,7 @@ extension homeScreenViewController {
         private let viewDetailsButton = UIButton()
         
         // View controller reference for navigation
-        weak var parentViewController: UIViewController?
+//        weak var parentViewController: UIViewController?
         
         // MARK: - Initialization
         

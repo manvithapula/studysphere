@@ -5,6 +5,41 @@ import Foundation
 import FirebaseCore
 import GoogleGenerativeAI
 
+// MARK: - Subject Model
+//struct Subject: Codable, Identifiable {
+//    var id: String
+//    let name: String
+//    
+//    init(id: String = UUID().uuidString, name: String) {
+//        self.id = id
+//        self.name = name
+//    }
+//}
+
+// MARK: - Subject Database Implementation
+class SubjectDatabase {
+    private let db: FakeDb<Subject>
+    
+    init(db: FakeDb<Subject>) {
+        self.db = db
+    }
+    
+    func findAll() async throws -> [Subject] {
+        return try await db.findAll()
+    }
+    
+    func save(_ subject: Subject) async throws {
+        try await db.findAll()
+    }
+    
+    func create(subject: Subject) -> Subject {
+        return subject
+    }
+}
+
+// Create singleton instance
+//let subjectDb = SubjectDatabase(db: FakeDb<Subject>(name: "subjecttemp"))
+
 // MARK: - Custom Views
 class StyledTextField: UITextField {
     override init(frame: CGRect) {
@@ -98,6 +133,15 @@ class CreateViewController: UIViewController {
     
     private let subjectField = DropdownField()
     
+    // Add button for adding new subject
+    private lazy var addSubjectButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "plus.circle"), for: .normal)
+        button.tintColor = .systemBlue
+        button.addTarget(self, action: #selector(addSubjectTapped), for: .touchUpInside)
+        return button
+    }()
+    
     private let techniqueLabel: UILabel = {
         let label = UILabel()
         label.text = "Learning Technique"
@@ -105,17 +149,19 @@ class CreateViewController: UIViewController {
         return label
     }()
     
-    private let techniqueStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 10
-        stack.distribution = .fillProportionally
-        return stack
+    // Replace horizontal scroll with vertical stack
+    private let techniquesStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        stackView.alignment = .leading
+        stackView.distribution = .fillEqually
+        return stackView
     }()
     
     private lazy var spacedRepetitionButton: TechniqueButton = {
         let button = TechniqueButton()
-        let imageConfig = UIImage.SymbolConfiguration(scale: .medium)
+        let imageConfig = UIImage.SymbolConfiguration(scale: .small)
         let clockImage = UIImage(systemName: "clock", withConfiguration: imageConfig)
         button.setImage(clockImage, for: .normal)
         button.setTitle(" Spaced Repetition", for: .normal)
@@ -125,7 +171,7 @@ class CreateViewController: UIViewController {
     
     private lazy var activeRecallButton: TechniqueButton = {
         let button = TechniqueButton()
-        let imageConfig = UIImage.SymbolConfiguration(scale: .medium)
+        let imageConfig = UIImage.SymbolConfiguration(scale: .small)
         let brainImage = UIImage(systemName: "brain", withConfiguration: imageConfig)
         button.setImage(brainImage, for: .normal)
         button.setTitle(" Active Recall", for: .normal)
@@ -135,7 +181,7 @@ class CreateViewController: UIViewController {
     
     private lazy var summariserButton: TechniqueButton = {
         let button = TechniqueButton()
-        let imageConfig = UIImage.SymbolConfiguration(scale: .medium)
+        let imageConfig = UIImage.SymbolConfiguration(scale: .small)
         let textImage = UIImage(systemName: "text.alignleft", withConfiguration: imageConfig)
         button.setImage(textImage, for: .normal)
         button.setTitle(" Summariser", for: .normal)
@@ -167,6 +213,9 @@ class CreateViewController: UIViewController {
     private var subjects: [Subject] = []
     private var selectedTechnique: String?
     
+    // Add alert controller for new subject
+    private var newSubjectAlertController: UIAlertController?
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -176,6 +225,11 @@ class CreateViewController: UIViewController {
         Task {
             subjects = try await subjectDb.findAll()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadSubjects()
     }
     
     // MARK: - UI Setup
@@ -191,17 +245,18 @@ class CreateViewController: UIViewController {
         }
         
         // Add all components
-        [unitNameLabel, unitNameField, subjectLabel, subjectField,
-         techniqueLabel, techniqueStackView, uploadLabel,
+        [unitNameLabel, unitNameField, subjectLabel, subjectField, addSubjectButton,
+         techniqueLabel, techniquesStackView, uploadLabel,
          fileUploadView, createButton].forEach {
             contentView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        // Setup technique buttons
-        techniqueStackView.addArrangedSubview(spacedRepetitionButton)
-        techniqueStackView.addArrangedSubview(activeRecallButton)
-        techniqueStackView.addArrangedSubview(summariserButton)
+        // Add technique buttons to stack view
+        [spacedRepetitionButton, activeRecallButton, summariserButton].forEach {
+            techniquesStackView.addArrangedSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         // Setup text fields
         unitNameField.placeholder = "Enter unit name"
@@ -232,22 +287,35 @@ class CreateViewController: UIViewController {
             subjectLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             subjectField.topAnchor.constraint(equalTo: subjectLabel.bottomAnchor, constant: 8),
             subjectField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            subjectField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            subjectField.trailingAnchor.constraint(equalTo: addSubjectButton.leadingAnchor, constant: -10),
+            
+            // Add Subject Button
+            addSubjectButton.centerYAnchor.constraint(equalTo: subjectField.centerYAnchor),
+            addSubjectButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            addSubjectButton.widthAnchor.constraint(equalToConstant: 44),
+            addSubjectButton.heightAnchor.constraint(equalToConstant: 44),
             
             // Technique
             techniqueLabel.topAnchor.constraint(equalTo: subjectField.bottomAnchor, constant: 20),
             techniqueLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            techniqueStackView.topAnchor.constraint(equalTo: techniqueLabel.bottomAnchor, constant: 8),
-            techniqueStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            techniqueStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            // Technique stack view
+            techniquesStackView.topAnchor.constraint(equalTo: techniqueLabel.bottomAnchor, constant: 8),
+            techniquesStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            techniquesStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            // Make technique buttons full width
+            spacedRepetitionButton.widthAnchor.constraint(equalTo: techniquesStackView.widthAnchor),
+            activeRecallButton.widthAnchor.constraint(equalTo: techniquesStackView.widthAnchor),
+            summariserButton.widthAnchor.constraint(equalTo: techniquesStackView.widthAnchor),
             
             // Upload
-            uploadLabel.topAnchor.constraint(equalTo: techniqueStackView.bottomAnchor, constant: 20),
+            uploadLabel.topAnchor.constraint(equalTo: techniquesStackView.bottomAnchor, constant: 20),
             uploadLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             fileUploadView.topAnchor.constraint(equalTo: uploadLabel.bottomAnchor, constant: 8),
             fileUploadView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             fileUploadView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            fileUploadView.heightAnchor.constraint(equalToConstant: 150),
+            fileUploadView.heightAnchor.constraint(equalToConstant: 200),
             
             // Create Button
             createButton.topAnchor.constraint(equalTo: fileUploadView.bottomAnchor, constant: 30),
@@ -265,6 +333,22 @@ class CreateViewController: UIViewController {
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
     }
     
+    // MARK: - Subject Methods
+    func loadSubjects() {
+        Task {
+            do {
+                subjects = try await subjectDb.findAll()
+                if let tableView = dropdownTableView {
+                    DispatchQueue.main.async {
+                        tableView.reloadData()
+                    }
+                }
+            } catch {
+                print("Error loading subjects: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     // MARK: - Actions
     @objc private func showSubjectDropdown() {
         dropdownTableView?.removeFromSuperview()
@@ -276,6 +360,7 @@ class CreateViewController: UIViewController {
         tableView.layer.borderColor = UIColor.systemGray5.cgColor
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SubjectCell")
         
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -288,18 +373,99 @@ class CreateViewController: UIViewController {
         ])
         
         dropdownTableView = tableView
-        tableView.reloadData()
+        
+        // Load subjects if needed
+        if subjects.isEmpty {
+            loadSubjects()
+        } else {
+            tableView.reloadData()
+        }
     }
     
     @objc private func techniqueTapped(_ sender: TechniqueButton) {
-        // Toggle selection
-        spacedRepetitionButton.isSelected = sender == spacedRepetitionButton
-        activeRecallButton.isSelected = sender == activeRecallButton
-        summariserButton.isSelected = sender == summariserButton
+        // Clear all selections
+        for view in techniquesStackView.arrangedSubviews {
+            if let button = view as? TechniqueButton {
+                button.isSelected = false
+            }
+        }
+        
+        // Select the tapped button
+        sender.isSelected = true
         selectedTechnique = sender.titleLabel?.text?.trimmingCharacters(in: .whitespaces)
         
         // Enable create button if all fields are filled
         updateCreateButtonState()
+    }
+    
+    @objc private func addSubjectTapped() {
+        // Create alert controller
+        let alertController = UIAlertController(
+            title: "Add New Subject",
+            message: "Enter the name of the new subject",
+            preferredStyle: .alert
+        )
+        
+        // Add text field
+        alertController.addTextField { textField in
+            textField.placeholder = "Subject Name"
+        }
+        
+        // Add actions
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
+            guard let self = self,
+                  let textField = alertController.textFields?.first,
+                  let subjectName = textField.text,
+                  !subjectName.isEmpty else {
+                return
+            }
+            
+            // Create and save new subject
+            self.saveNewSubject(name: subjectName)
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        // Present alert
+        present(alertController, animated: true)
+    }
+    
+    private func saveNewSubject(name: String) {
+        // Create new subject object
+        //let newSubject = subjectDb.create(subject: Subject(name: name))
+        
+        // Save to database
+        Task {
+            do {
+                //try await subjectDb.save(newSubject)
+                // Reload subjects
+                subjects = try await subjectDb.findAll()
+                
+                // Select the new subject
+                subjectField.text = name
+                updateCreateButtonState()
+                
+                // Show success message
+                let successAlert = UIAlertController(
+                    title: "Success",
+                    message: "Subject '\(name)' has been added",
+                    preferredStyle: .alert
+                )
+                successAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                present(successAlert, animated: true)
+            } catch {
+                // Show error message
+                let errorAlert = UIAlertController(
+                    title: "Error",
+                    message: "Failed to save subject: \(error.localizedDescription)",
+                    preferredStyle: .alert
+                )
+                errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                present(errorAlert, animated: true)
+            }
+        }
     }
     
     @objc private func createButtonTapped() {
@@ -328,7 +494,7 @@ extension CreateViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "SubjectCell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SubjectCell", for: indexPath)
         cell.textLabel?.text = subjects[indexPath.row].name
         cell.textLabel?.font = .systemFont(ofSize: 16)
         cell.backgroundColor = .clear
@@ -346,185 +512,185 @@ extension CreateViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 44
+        return 44
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension CreateViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // Only allow editing for unitNameField
+        return textField == unitNameField
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        updateCreateButtonState()
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == subjectField {
+            textField.resignFirstResponder()
+            showSubjectDropdown()
         }
     }
+}
 
-    // MARK: - UITextFieldDelegate
-    extension CreateViewController: UITextFieldDelegate {
-        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            // Only allow editing for unitNameField
-            return textField == unitNameField
-        }
+// MARK: - Touch Handling
+extension CreateViewController {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
         
-        func textFieldDidEndEditing(_ textField: UITextField) {
-            updateCreateButtonState()
-        }
-        
-        func textFieldDidBeginEditing(_ textField: UITextField) {
-            if textField == subjectField {
-                textField.resignFirstResponder()
-                showSubjectDropdown()
-            }
-        }
-    }
-
-    // MARK: - Touch Handling
-    extension CreateViewController {
-        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-            super.touchesBegan(touches, with: event)
-            
-            // Hide dropdown when tapping outside
-            if let touch = touches.first {
-                let location = touch.location(in: view)
-                if let dropdownTableView = dropdownTableView,
-                   !dropdownTableView.frame.contains(location) && !subjectField.frame.contains(location) {
-                    hideDropdown()
-                }
-            }
-            
-            view.endEditing(true)
-        }
-    }
-
-    // MARK: - UIDocumentPickerDelegate
-    extension CreateViewController: UIDocumentPickerDelegate {
-        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard let selectedFileURL = urls.first else { return }
-            
-            // Handle the selected file
-            let fileName = selectedFileURL.lastPathComponent
-            // Update UI or store file reference as needed
-            
-            updateCreateButtonState()
-        }
-        
-        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-            // Handle cancelled picker if needed
-        }
-    }
-
-    // MARK: - File Upload View
-    class DashedRectangle: UIView {
-        private let iconImageView: UIImageView = {
-            let imageView = UIImageView()
-            let config = UIImage.SymbolConfiguration(pointSize: 30)
-            imageView.image = UIImage(systemName: "doc.badge.plus", withConfiguration: config)
-            imageView.tintColor = .systemBlue
-            imageView.contentMode = .scaleAspectFit
-            return imageView
-        }()
-        
-        private let titleLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Drop your files here"
-            label.font = .systemFont(ofSize: 16, weight: .medium)
-            label.textColor = .systemBlue
-            return label
-        }()
-        
-        private let subtitleLabel: UILabel = {
-            let label = UILabel()
-            label.text = "or click to browse"
-            label.font = .systemFont(ofSize: 14)
-            label.textColor = .systemGray
-            return label
-        }()
-        
-        private let supportLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Supports PDF files"
-            label.font = .systemFont(ofSize: 12)
-            label.textColor = .systemGray
-            return label
-        }()
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            setupView()
-        }
-        
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            setupView()
-        }
-        
-        private func setupView() {
-            backgroundColor = .systemBackground
-            layer.cornerRadius = 12
-            
-            // Add dashed border
-            let borderLayer = CAShapeLayer()
-            borderLayer.strokeColor = UIColor.systemGray4.cgColor
-            borderLayer.lineDashPattern = [6, 6]
-            borderLayer.frame = bounds
-            borderLayer.fillColor = nil
-            borderLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: 12).cgPath
-            layer.addSublayer(borderLayer)
-            
-            // Add subviews
-            [iconImageView, titleLabel, subtitleLabel, supportLabel].forEach {
-                addSubview($0)
-                $0.translatesAutoresizingMaskIntoConstraints = false
-            }
-            
-            NSLayoutConstraint.activate([
-                iconImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-                iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -20),
-                
-                titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),
-                titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                
-                subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-                subtitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                
-                supportLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 4),
-                supportLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
-            ])
-            
-            // Update border layer when frame changes
-            addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
-        }
-        
-        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-            if keyPath == "bounds" {
-                // Update border layer path when bounds change
-                if let borderLayer = layer.sublayers?.first as? CAShapeLayer {
-                    borderLayer.frame = bounds
-                    borderLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: 12).cgPath
-                }
+        // Hide dropdown when tapping outside
+        if let touch = touches.first {
+            let location = touch.location(in: view)
+            if let dropdownTableView = dropdownTableView,
+               !dropdownTableView.frame.contains(location) && !subjectField.frame.contains(location) {
+                hideDropdown()
             }
         }
         
-        func setup(in viewController: UIViewController) {
-            // Add tap gesture
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-            addGestureRecognizer(tapGesture)
-            isUserInteractionEnabled = true
-        }
-        
-        @objc private func handleTap() {
-            let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.pdf], asCopy: true)
-            documentPicker.delegate = self.superview?.parentViewController as? UIDocumentPickerDelegate
-            documentPicker.allowsMultipleSelection = false
-            self.superview?.parentViewController?.present(documentPicker, animated: true)
-        }
-        
-        deinit {
-            removeObserver(self, forKeyPath: "bounds")
-        }
+        view.endEditing(true)
     }
+}
 
-    // MARK: - Helper Extension
-    extension UIView {
-        var parentViewController: UIViewController? {
-            var parentResponder: UIResponder? = self
-            while parentResponder != nil {
-                parentResponder = parentResponder?.next
-                if let viewController = parentResponder as? UIViewController {
-                    return viewController
-                }
+// MARK: - UIDocumentPickerDelegate
+extension CreateViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let selectedFileURL = urls.first else { return }
+        
+        // Handle the selected file
+        let fileName = selectedFileURL.lastPathComponent
+        // Update UI or store file reference as needed
+        
+        updateCreateButtonState()
+    }
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        // Handle cancelled picker if needed
+    }
+}
+
+// MARK: - File Upload View
+class DashedRectangle: UIView {
+    private let iconImageView: UIImageView = {
+        let imageView = UIImageView()
+        let config = UIImage.SymbolConfiguration(pointSize: 30)
+        imageView.image = UIImage(systemName: "doc.badge.plus", withConfiguration: config)
+        imageView.tintColor = .systemBlue
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Drop your files here"
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .systemBlue
+        return label
+    }()
+    
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "or click to browse"
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .systemGray
+        return label
+    }()
+    
+    private let supportLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Supports PDF files"
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = .systemGray
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    private func setupView() {
+        backgroundColor = .systemBackground
+        layer.cornerRadius = 12
+        
+        // Add dashed border
+        let borderLayer = CAShapeLayer()
+        borderLayer.strokeColor = UIColor.systemGray4.cgColor
+        borderLayer.lineDashPattern = [6, 6]
+        borderLayer.frame = bounds
+        borderLayer.fillColor = nil
+        borderLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: 12).cgPath
+        layer.addSublayer(borderLayer)
+        
+        // Add subviews
+        [iconImageView, titleLabel, subtitleLabel, supportLabel].forEach {
+            addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        NSLayoutConstraint.activate([
+            iconImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -20),
+            
+            titleLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 8),
+            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
+            supportLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 4),
+            supportLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+        ])
+        
+        // Update border layer when frame changes
+        addObserver(self, forKeyPath: "bounds", options: .new, context: nil)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "bounds" {
+            // Update border layer path when bounds change
+            if let borderLayer = layer.sublayers?.first as? CAShapeLayer {
+                borderLayer.frame = bounds
+                borderLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: 12).cgPath
             }
-            return nil
         }
     }
+    
+    func setup(in viewController: UIViewController) {
+        // Add tap gesture
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        addGestureRecognizer(tapGesture)
+        isUserInteractionEnabled = true
+    }
+    
+    @objc private func handleTap() {
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.pdf], asCopy: true)
+        documentPicker.delegate = self.superview?.parentViewController as? UIDocumentPickerDelegate
+        documentPicker.allowsMultipleSelection = false
+        self.superview?.parentViewController?.present(documentPicker, animated: true)
+    }
+    
+    deinit {
+        removeObserver(self, forKeyPath: "bounds")
+    }
+}
+
+// MARK: - Helper Extension
+extension UIView {
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder?.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
+    }
+}

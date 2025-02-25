@@ -14,10 +14,10 @@ import FirebaseFirestore
 
 
 struct AppTheme {
-    static let primary = UIColor(red: 37/255, green: 99/255, blue: 235/255, alpha: 1.0)
-    static let secondary = UIColor(red: 99/255, green: 102/255, blue: 241/255, alpha: 1.0)
-    static let background = UIColor.white
-    static let cardBackground = UIColor(red: 249/255, green: 250/255, blue: 251/255, alpha: 1.0)
+    static let primary = UIColor(red: 37/255, green: 99/255, blue: 235/255, alpha: 1.0) //blue
+    static let secondary = UIColor(red: 99/255, green: 102/255, blue: 241/255, alpha: 1.0) // light blue
+    static let background = UIColor.white // white
+    static let cardBackground = UIColor(red: 249/255, green: 250/255, blue: 251/255, alpha: 1.0) // 
     
     static func getSubjectColor(_ index: Int) -> UIColor {
         return index % 2 == 0 ? primary : secondary
