@@ -80,7 +80,7 @@ class homeScreenViewController: UIViewController {
     
     // Update prepare for segue to handle the new "See All" navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-       /* if segue.identifier == "toSubjectDetails" {
+        if segue.identifier == "toSubjectDetails" {
             let destination = segue.destination as? subjectViewController
             if let subject = sender as? Subject {
                 destination?.subject = subject
@@ -88,7 +88,7 @@ class homeScreenViewController: UIViewController {
         } else if segue.identifier == "toSubjectList" {
             let destination = segue.destination as! subjectListTableViewController
             destination.subjects = self.subjects
-        }*/
+        }
         
         if segue.identifier == "toFLS" || segue.identifier == "toQTS" {
             if let destinationVC = segue.destination as? SRScheduleViewController {
