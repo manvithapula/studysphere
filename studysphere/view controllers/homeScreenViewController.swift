@@ -251,7 +251,28 @@ extension homeScreenViewController {
         profileButton.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         profileButton.layer.cornerRadius = 25
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
-        
+        func loadImageFromUserDefaults() {
+            if let imageData = UserDefaults.standard.data(forKey: "profileImage"),
+               let image = UIImage(data: imageData) {
+                let roundedImage = makeRoundedImage(image)
+                profileButton.setImage(roundedImage, for: .normal)
+            }
+        }
+         func makeRoundedImage(_ image: UIImage) -> UIImage? {
+                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+                imageView.contentMode = .scaleAspectFill
+                imageView.layer.cornerRadius = 25  // Half of width/height for perfect circle
+                imageView.layer.masksToBounds = true
+                imageView.image = image
+                
+                // Convert imageView to image
+                UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 0.0)
+                imageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+                let roundedImage = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                
+                return roundedImage
+            }
         let welcomeLabel = UILabel()
         welcomeLabel.text = "Welcome back!"
         welcomeLabel.font = .systemFont(ofSize: 22, weight: .bold)
@@ -281,7 +302,7 @@ extension homeScreenViewController {
             
             headerView.heightAnchor.constraint(equalToConstant: 70)
         ])
-        
+        loadImageFromUserDefaults()
         return headerView
     }
     

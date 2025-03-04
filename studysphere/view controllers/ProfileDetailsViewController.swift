@@ -43,6 +43,7 @@ class ProfileDetailsViewController: UIViewController {
         profileImageView.contentMode = .scaleAspectFit
         profileImageView.layer.cornerRadius = 50
         profileImageView.clipsToBounds = true
+       
         
         // Add tap gesture to profile image
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped))
@@ -59,6 +60,8 @@ class ProfileDetailsViewController: UIViewController {
         [lastNameTextField, dateTextField,firstNameTextField].forEach { textField in
             textField.textColor = .gray
         }
+        
+        loadImageFromUserDefaults()
     }
     
     private func setupLabels() {
@@ -212,16 +215,42 @@ class ProfileDetailsViewController: UIViewController {
 //UIImagePickerControllerDelegate
 extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let editedImage = info[.editedImage] as? UIImage {
-            profileImageView.image = editedImage
-        } else if let originalImage = info[.originalImage] as? UIImage {
-            profileImageView.image = originalImage
-        }
-        
+        var selectedImage: UIImage?
+                
+                if let editedImage = info[.editedImage] as? UIImage {
+                    selectedImage = editedImage
+                } else if let originalImage = info[.originalImage] as? UIImage {
+                    selectedImage = originalImage
+                }
+                
+                if let image = selectedImage {
+                    // Display the image
+                    profileImageView.image = image
+                    
+                    // Save the image to UserDefaults
+                    saveImageToUserDefaults(image)
+                }
+                
+                
+
         dismiss(animated: true)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true)
     }
+    private func saveImageToUserDefaults(_ image: UIImage) {
+            // Convert image to data
+            if let imageData = image.jpegData(compressionQuality: 0.8) {
+                UserDefaults.standard.set(imageData, forKey: "profileImage")
+            }
+        }
+        
+        // Load image from UserDefaults
+        private func loadImageFromUserDefaults() {
+            if let imageData = UserDefaults.standard.data(forKey: "profileImage"),
+               let image = UIImage(data: imageData) {
+                profileImageView.image = image
+            }
+        }
 }

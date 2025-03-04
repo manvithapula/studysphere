@@ -130,6 +130,7 @@ class ProfileMainViewController: UIViewController {
                 setupUI()
                 setupTableView()
             }
+        loadImageFromUserDefaults()
         }
 }
 
@@ -224,4 +225,11 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             try await userDB.update(&user)
         }
         }
+    
+    private func loadImageFromUserDefaults() {
+        if let imageData = UserDefaults.standard.data(forKey: "profileImage"),
+           let image = UIImage(data: imageData) {
+            profileImageView.image = image
+        }
+    }
 }
