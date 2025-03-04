@@ -89,7 +89,7 @@
                             <outlet property="delegate" destination="t49-nW-ykK" id="ohj-fx-PWu"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Subjects" image="books.vertical.fill" selectedImage="books.vertical.fill" catalog="system" id="CXV-uH-8XA"/>
+                    <tabBarItem key="tabBarItem" title="Subjects" image="books.vertical.fill" catalog="system" selectedImage="books.vertical.fill" id="CXV-uH-8XA"/>
                     <navigationItem key="navigationItem" id="OAH-yn-YG3">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="g3p-pZ-XMZ">
                             <color key="tintColor" systemColor="systemOrangeColor"/>
@@ -430,11 +430,11 @@
             <objects>
                 <viewController title="Subject List" id="Xu4-hE-HiR" customClass="subjectViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LOT-0D-gS8">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="KP9-BL-Lr7">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="0mC-Q0-TIR"/>
                                 </constraints>
@@ -444,7 +444,7 @@
                                 </connections>
                             </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pX3-XT-QcR">
-                                <rect key="frame" x="0.0" y="95" width="393" height="747"/>
+                                <rect key="frame" x="0.0" y="198" width="393" height="654"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0vn-YT-Wmi">
                                     <size key="itemSize" width="377" height="109"/>
@@ -504,7 +504,7 @@
                                 </cells>
                             </collectionView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nP6-Em-uvj">
-                                <rect key="frame" x="9" y="48" width="375" height="32"/>
+                                <rect key="frame" x="9" y="151" width="375" height="32"/>
                                 <segments>
                                     <segment title="Flashcards"/>
                                     <segment title="Quizzes"/>
@@ -1916,7 +1916,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2740,7 +2740,7 @@
                     <connections>
                         <segue destination="Bsh-bj-UEQ" kind="relationship" relationship="viewControllers" id="2z2-Hv-pFm"/>
                         <segue destination="BWw-ph-5oy" kind="relationship" relationship="viewControllers" id="TP1-XW-nbn"/>
-                        <segue destination="t49-nW-ykK" kind="relationship" relationship="viewControllers" id="xgt-yp-AJz"/>
+                        <segue destination="jXg-3E-J5P" kind="relationship" relationship="viewControllers" id="pUD-5q-Cx8"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ole-Ga-Ckv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2766,7 +2766,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rcQ-em-yBR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="12802" y="-702"/>
+            <point key="canvasLocation" x="12960" y="-686"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5ev-bD-Cn3">
@@ -2805,6 +2805,27 @@
             </objects>
             <point key="canvasLocation" x="4470.9923664122134" y="1388.7323943661972"/>
         </scene>
+        <!--Subjects-->
+        <scene sceneID="uAH-AR-uJd">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jXg-3E-J5P" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Subjects" image="books.vertical.fill" catalog="system" selectedImage="books.vertical.fill" id="lBh-B8-xeD">
+                        <color key="badgeColor" systemColor="systemOrangeColor"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fOR-Ne-dof">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="t49-nW-ykK" kind="relationship" relationship="rootViewController" id="lIa-z5-mrC"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nr1-rh-4oo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="14314" y="-619"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="651-AB-nO7"/>
@@ -2812,7 +2833,7 @@
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
         <segue reference="paQ-p4-NU6"/>
-        <segue reference="xgt-yp-AJz"/>
+        <segue reference="lIa-z5-mrC"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Google" width="24" height="24"/>
@@ -2820,7 +2841,6 @@
         <image name="arrow.turn.up.left" catalog="system" width="128" height="99"/>
         <image name="arrow.turn.up.right" catalog="system" width="128" height="99"/>
         <image name="bell.badge" catalog="system" width="117" height="128"/>
-        <image name="books.vertical.fill" width="128" height="128"/>
         <image name="books.vertical.fill" catalog="system" width="128" height="110"/>
         <image name="chart.xyaxis.line" catalog="system" width="128" height="102"/>
         <image name="checkmark.circle" catalog="system" width="128" height="123"/>

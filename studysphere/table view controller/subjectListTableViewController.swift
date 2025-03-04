@@ -27,8 +27,6 @@ class subjectListTableViewController: UITableViewController {
       private func setupUI() {
           // Configure navigation bar
           title = "My Subjects"
-          navigationController?.navigationBar.prefersLargeTitles = true
-          
           let addButton = UIBarButtonItem(
               image: UIImage(systemName: "plus.circle.fill"),
               style: .plain,
