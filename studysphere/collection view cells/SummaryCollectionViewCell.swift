@@ -50,7 +50,7 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12)
         label.textColor = .black
-        label.backgroundColor = .systemBlue.withAlphaComponent(0.1)
+        label.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         label.layer.cornerRadius = 10
         label.clipsToBounds = true
         label.textAlignment = .center
