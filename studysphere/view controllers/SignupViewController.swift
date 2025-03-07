@@ -80,13 +80,13 @@ class SignupViewController: UIViewController {
                 view.backgroundColor = .systemGray6
                 
                 // Setup scroll view hierarchy
-                view.addSubview(scrollView)
-                scrollView.addSubview(contentView)
-                contentView.addSubview(stackView)
-                
-                // Add logo and title to stack view
-                stackView.addArrangedSubview(logoImageView)
-                stackView.addArrangedSubview(titleLabel)
+//                view.addSubview(scrollView)
+//                scrollView.addSubview(contentView)
+//                contentView.addSubview(stackView)
+//                
+//                // Add logo and title to stack view
+//                stackView.addArrangedSubview(logoImageView)
+//                stackView.addArrangedSubview(titleLabel)
                 
                 // Configure and add text fields to stack view
                 [firstNameTextField, lastNameTextField, emailTextField,
@@ -97,16 +97,18 @@ class SignupViewController: UIViewController {
                     textField?.leftViewMode = .always
                     textField?.font = .systemFont(ofSize: 16)
                     // Add text fields to stack view
-                    if let field = textField {
-                        stackView.addArrangedSubview(field)
-                    }
+//                    if let field = textField {
+//                        stackView.addArrangedSubview(field)
+//                    }
                 }
-                
+//                contentView.addSubview(signUpButton)
                 // Configure sign up button
+                signUpButton.isUserInteractionEnabled = true
                 signUpButton.backgroundColor = AppTheme.primary
                 signUpButton.setTitleColor(.white, for: .normal)
                 signUpButton.layer.cornerRadius = 12
                 signUpButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+
             
             // Hide unused buttons
             googleSignInButton.isHidden = true
@@ -132,23 +134,23 @@ class SignupViewController: UIViewController {
         private func setupConstraints() {
             NSLayoutConstraint.activate([
                 // Scroll view
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                
-                // Content view
-                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-                contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-                
-                // Stack view
-                stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-                stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+//                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+//                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+//                
+//                // Content view
+//                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+//                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+//                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+//                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+//                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+//                contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+//                
+//                // Stack view
+//                stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+//                stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+//                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
                 
                 // Text field heights
                 firstNameTextField.heightAnchor.constraint(equalToConstant: 50),
@@ -161,12 +163,6 @@ class SignupViewController: UIViewController {
                 signUpButton.heightAnchor.constraint(equalToConstant: 50),
                 
                 // Full width constraints
-                firstNameTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-                lastNameTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-                emailTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-                passwordTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-                dateOfBirthTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-                signUpButton.widthAnchor.constraint(equalTo: stackView.widthAnchor)
             ])
         }
         
@@ -184,6 +180,43 @@ class SignupViewController: UIViewController {
             dateOfBirthTextField.resignFirstResponder()
         }
     @IBAction func signUpButtonTapped(_ sender: UIButton) {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let firstName = firstNameTextField.text, !firstName.isEmpty,
+              let lastName = lastNameTextField.text, !lastName.isEmpty,
+              let dateOfBirth = dateOfBirthTextField.text, !dateOfBirth.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty else {
+            showAlert(message: "Please fill out all fields.")
+            return
+        }
+        
+        var newUser = UserDetailsType(id: "",
+                                    firstName: firstName,
+                                    lastName: lastName,
+                                    dob: Timestamp(date: datePicker.date),
+                                    pushNotificationEnabled: false,
+                                    faceIdEnabled: false,
+                                    email: email,
+                                    password: password,
+                                    createdAt: Timestamp(),
+                                    updatedAt: Timestamp())
+        
+        if let existingUser = userDB.findFirst(where: ["email": email]) {
+            showAlert(message: "User with email \(email) already exists.")
+            return
+        }
+        
+        let db = FirestoreManager.shared.db
+        let createdUser = userDB.create(&newUser)
+        
+        do {
+            try db.collection("usertemp").document(createdUser.id).setData(createdUser.asDictionary())
+            dismiss(animated: true)
+        } catch {
+            showAlert(message: "Error creating user: \(error.localizedDescription)")
+        }
+    }
+    @objc private func signUp(){
+        print("tapped")
         guard let email = emailTextField.text, !email.isEmpty,
               let firstName = firstNameTextField.text, !firstName.isEmpty,
               let lastName = lastNameTextField.text, !lastName.isEmpty,
