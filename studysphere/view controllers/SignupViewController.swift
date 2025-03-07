@@ -123,7 +123,7 @@ class SignupViewController: UIViewController {
             let toolbar = UIToolbar()
             toolbar.sizeToFit()
             let doneButton = UIBarButtonItem(title: "Done", style: .done,
-                                           target: self, action: #selector(doneButtonTapped))
+                                             target: self, action: #selector(doneButtonTapped))
             toolbar.setItems([UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
                              doneButton], animated: true)
             dateOfBirthTextField.inputAccessoryView = toolbar
@@ -178,6 +178,9 @@ class SignupViewController: UIViewController {
         }
         
         @objc private func doneButtonTapped() {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            dateOfBirthTextField.text = formatter.string(from: datePicker.date)
             dateOfBirthTextField.resignFirstResponder()
         }
     @IBAction func signUpButtonTapped(_ sender: UIButton) {
