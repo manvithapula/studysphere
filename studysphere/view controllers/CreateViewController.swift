@@ -76,16 +76,16 @@ class TechniqueButton: UIButton {
     }
     
     private func setupStyle() {
-        backgroundColor = .systemBlue.withAlphaComponent(0.1)
+        backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         layer.cornerRadius = 20
         titleLabel?.font = .systemFont(ofSize: 16)
-        setTitleColor(.systemBlue, for: .normal)
+        setTitleColor(AppTheme.primary, for: .normal)
         contentEdgeInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
     }
     
     override var isSelected: Bool {
         didSet {
-            backgroundColor = isSelected ? .systemBlue.withAlphaComponent(0.2) : .systemBlue.withAlphaComponent(0.1)
+            backgroundColor = isSelected ? AppTheme.primary.withAlphaComponent(0.2) : AppTheme.primary.withAlphaComponent(0.1)
         }
     }
 }
@@ -117,7 +117,7 @@ class CreateViewController: UIViewController {
     private lazy var addSubjectButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "plus.circle"), for: .normal)
-        button.tintColor = .systemBlue
+        button.tintColor = AppTheme.primary
         button.addTarget(self, action: #selector(addSubjectTapped), for: .touchUpInside)
         return button
     }()
@@ -146,6 +146,7 @@ class CreateViewController: UIViewController {
         button.setImage(clockImage, for: .normal)
         button.setTitle(techniques[0].name, for: .normal)
         button.addTarget(self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
+        button.tintColor = AppTheme.primary
         return button
     }()
     
@@ -156,6 +157,7 @@ class CreateViewController: UIViewController {
         button.setImage(brainImage, for: .normal)
         button.setTitle(techniques[1].name, for: .normal)
         button.addTarget(self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
+        button.tintColor = AppTheme.primary
         return button
     }()
     
@@ -166,6 +168,7 @@ class CreateViewController: UIViewController {
         button.setImage(textImage, for: .normal)
         button.setTitle(techniques[2].name, for: .normal)
         button.addTarget(self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
+        button.tintColor = AppTheme.primary
         return button
     }()
     
@@ -473,7 +476,7 @@ class CreateViewController: UIViewController {
         let isValid = !(Topic.text?.isEmpty ?? true) && selectedSubject != nil &&
         selectedTechnique != nil && document != nil
         
-        createButton.backgroundColor = isValid ? .systemBlue : .systemGray4
+        createButton.backgroundColor = isValid ? AppTheme.primary : .systemGray4
         createButton.isEnabled = isValid
     }
     
@@ -1031,7 +1034,7 @@ class DashedRectangle: UIView {
         let imageView = UIImageView()
         let config = UIImage.SymbolConfiguration(pointSize: 30)
         imageView.image = UIImage(systemName: "doc.badge.plus", withConfiguration: config)
-        imageView.tintColor = .systemBlue
+        imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -1040,7 +1043,7 @@ class DashedRectangle: UIView {
         let label = UILabel()
         label.text = "Drop your files here"
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .systemBlue
+        label.textColor = AppTheme.primary
         return label
     }()
     
