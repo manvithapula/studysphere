@@ -41,6 +41,9 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             ARList.setCollectionViewLayout(generateLayout(), animated: true)
            
             segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+            segmentControl.selectedSegmentTintColor = AppTheme.primary
+            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
           
             searchBar.delegate = self
             Task{

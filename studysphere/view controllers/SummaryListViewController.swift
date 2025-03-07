@@ -60,7 +60,7 @@ class SummaryListViewController: UIViewController{
           
           // Configure segment control
           segmentControl.backgroundColor = .white
-          segmentControl.selectedSegmentTintColor = .systemBlue
+          segmentControl.selectedSegmentTintColor = AppTheme.primary
           segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
           segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
       }
