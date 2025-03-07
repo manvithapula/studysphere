@@ -51,16 +51,13 @@ class DropdownField: StyledTextField {
     override func setupStyle() {
         super.setupStyle()
         
-        chevronImageView.tintColor = .systemGray2
-        chevronImageView.contentMode = .center
-        chevronImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 40)
+//        chevronImageView.tintColor = .systemGray2
+//        chevronImageView.contentMode = .center
+//        chevronImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 40)
+//        
+//        rightView = chevronImageView
+//        rightViewMode = .always
         
-        rightView = chevronImageView
-        rightViewMode = .always
-        
-        // Make the field non-editable
-        isUserInteractionEnabled = true
-        isEnabled = true
     }
 }
 
@@ -112,6 +109,7 @@ class CreateViewController: UIViewController {
     }()
     
     private let subjectField = DropdownField()
+    
     
     // Add button for adding new subject
     private lazy var addSubjectButton: UIButton = {
@@ -193,8 +191,15 @@ class CreateViewController: UIViewController {
     }()
     
     private var dropdownTableView: UITableView?
+    private let tableRowHeight = CGFloat(44)
     private var subjects: [Subject] = []
     private var selectedTechnique: String?
+    var filteredSubjects: [Subject] {
+        return subjects.filter { card in
+            let matchesSearch = subjectField.text?.isEmpty ?? true || card.name.lowercased().contains(subjectField.text!.lowercased())
+                return matchesSearch
+            }
+        }
     
     // Add alert controller for new subject
     private var newSubjectAlertController: UIAlertController?
@@ -232,7 +237,7 @@ class CreateViewController: UIViewController {
         }
         
         // Add all components
-        [unitNameLabel, Topic, subjectLabel, subjectField, addSubjectButton,
+        [unitNameLabel, Topic, subjectLabel, subjectField,
          techniqueLabel, techniquesStackView, uploadLabel,
          fileUploadView, createButton].forEach {
             contentView.addSubview($0)
@@ -274,13 +279,13 @@ class CreateViewController: UIViewController {
             subjectLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             subjectField.topAnchor.constraint(equalTo: subjectLabel.bottomAnchor, constant: 8),
             subjectField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            subjectField.trailingAnchor.constraint(equalTo: addSubjectButton.leadingAnchor, constant: -10),
+            subjectField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            // Add Subject Button
-            addSubjectButton.centerYAnchor.constraint(equalTo: subjectField.centerYAnchor),
-            addSubjectButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            addSubjectButton.widthAnchor.constraint(equalToConstant: 44),
-            addSubjectButton.heightAnchor.constraint(equalToConstant: 44),
+//            // Add Subject Button
+//            addSubjectButton.centerYAnchor.constraint(equalTo: subjectField.centerYAnchor),
+//            addSubjectButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+//            addSubjectButton.widthAnchor.constraint(equalToConstant: 44),
+//            addSubjectButton.heightAnchor.constraint(equalToConstant: 44),
             
             // Technique
             techniqueLabel.topAnchor.constraint(equalTo: subjectField.bottomAnchor, constant: 20),
@@ -316,8 +321,13 @@ class CreateViewController: UIViewController {
     }
     
     private func setupActions() {
-        subjectField.addTarget(self, action: #selector(showSubjectDropdown), for: .touchDown)
+        subjectField.addTarget(self, action: #selector(showSubjectDropdown), for: .allEditingEvents)
+        subjectField.addTarget(self, action: #selector(hideDrpdown), for: .editingDidEnd)
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        
+    }
+    @objc private func hideDrpdown(){
+        hideDropdown()
     }
     
     // MARK: - Subject Methods
@@ -356,7 +366,7 @@ class CreateViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: subjectField.bottomAnchor, constant: 5),
             tableView.leadingAnchor.constraint(equalTo: subjectField.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: subjectField.trailingAnchor),
-            tableView.heightAnchor.constraint(lessThanOrEqualToConstant: 200)
+            tableView.heightAnchor.constraint(lessThanOrEqualToConstant: CGFloat(filteredSubjects.count) * tableRowHeight)
         ])
         
         dropdownTableView = tableView
@@ -455,25 +465,46 @@ class CreateViewController: UIViewController {
         }
     }
     
+    fileprivate func createNewSubject() {
+        var newSubject = Subject(id:"",name: subjectField.text!,createdAt:Timestamp(),updatedAt: Timestamp())
+        newSubject = subjectDb.create(&newSubject)
+        self.selectedSubject = newSubject
+    }
+    
     @objc private func createButtonTapped() {
-        print("tapped")
-        switch(selectedTechnique){
-                    case techniques[0].name:
-                        createSR(self)
-                        break
-                    case techniques[1].name:
-                        createAR(self)
-                        break
-                    case techniques[2].name:
-                        createSummarizer(self)
-                        break
-                    default:
-                        break
+        Task{
+            if let selectedSubject = selectedSubject{
+                if(selectedSubject.name != subjectField.text){
+                    createNewSubject()
                 }
+            }
+            else{
+                let allSubjects = try await subjectDb.findAll(where: ["name":subjectField.text!])
+                if let existingSubject = allSubjects.first{
+                    selectedSubject = existingSubject
+                }
+                else{
+                    createNewSubject()
+                }
+            }
+            switch(selectedTechnique){
+            case techniques[0].name:
+                createSR(self)
+                break
+            case techniques[1].name:
+                createAR(self)
+                break
+            case techniques[2].name:
+                createSummarizer(self)
+                break
+            default:
+                break
+            }
+        }
     }
     
     private func updateCreateButtonState() {
-        let isValid = !(Topic.text?.isEmpty ?? true) && selectedSubject != nil &&
+        let isValid = !(Topic.text?.isEmpty ?? true) && !(subjectField.text?.isEmpty ?? true) &&
         selectedTechnique != nil && document != nil
         
         createButton.backgroundColor = isValid ? AppTheme.primary : .systemGray4
@@ -489,12 +520,12 @@ class CreateViewController: UIViewController {
 // MARK: - UITableViewDelegate & DataSource
 extension CreateViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return subjects.count
+        return filteredSubjects.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SubjectCell", for: indexPath)
-        cell.textLabel?.text = subjects[indexPath.row].name
+        cell.textLabel?.text = filteredSubjects[indexPath.row].name
         cell.textLabel?.font = .systemFont(ofSize: 16)
         cell.backgroundColor = .clear
         
@@ -505,14 +536,14 @@ extension CreateViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        subjectField.text = subjects[indexPath.row].name
-        selectedSubject = subjects[indexPath.row]
+        subjectField.text = filteredSubjects[indexPath.row].name
+        selectedSubject = filteredSubjects[indexPath.row]
         hideDropdown()
         updateCreateButtonState()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        return tableRowHeight
     }
 }
 
