@@ -116,8 +116,8 @@ class subjectListTableViewCell: UITableViewCell {
             dateLabel.text = "Created \(dateFormatter.string(from: date))"
             
             // Set the icon container background color based on the index
-            iconContainer.backgroundColor = AppTheme.getSubjectColor(index).withAlphaComponent(0.1)
-            iconImageView.tintColor = AppTheme.getSubjectColor(index)
+            iconContainer.backgroundColor = .white
+            iconImageView.tintColor = AppTheme.primary
         }
         
         override func setHighlighted(_ highlighted: Bool, animated: Bool) {
