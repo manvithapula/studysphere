@@ -19,9 +19,6 @@ struct AppTheme {
     static let background = UIColor.white // white
     static let cardBackground = UIColor(red: 249/255, green: 250/255, blue: 251/255, alpha: 1.0) // 
     
-    static func getSubjectColor(_ index: Int) -> UIColor {
-        return index % 2 == 0 ? primary : secondary
-    }
 }
 
 struct StudyModule {
