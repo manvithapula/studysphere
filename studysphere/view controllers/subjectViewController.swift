@@ -117,8 +117,6 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         
         let card = filteredCards[indexPath.row]
-        
-        // Pass indexPath.row to configure to set the gradient background dynamically
         cell.configure(title: card.title, subtitle: card.subtitle, index: indexPath.row)
         
        

@@ -141,17 +141,27 @@ class SummaryListViewController: UIViewController{
       func numberOfSections(in collectionView: UICollectionView) -> Int {
           return 1
       }
-      
       func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
           guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "summary", for: indexPath) as? SummaryCollectionViewCell else {
               return UICollectionViewCell()
           }
           
           let topic = filteredCards[indexPath.item]
+          
+          // Configure cell with placeholder values for item count and time
+          cell.configure(
+            title: topic.title, itemCount: 0,
+              time: "--",           // Default value, replace if needed
+              subject: "Loading...", // Temporary text until `updateSubject` fetches the real subject
+              index: indexPath.item
+          )
+          
+          // Update the subject asynchronously
           cell.updateSubject(topic: topic)
           
           return cell
       }
+
       
       func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
           performSegue(withIdentifier: "toSummary", sender: indexPath.row)

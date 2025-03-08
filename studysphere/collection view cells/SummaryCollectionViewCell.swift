@@ -1,22 +1,10 @@
-//
-//  SummaryCollectionViewCell.swift
-//  studysphere
-//
-//  Created by admin64 on 07/11/24.
-//
-
 import UIKit
 
-
 class SummaryCollectionViewCell: UICollectionViewCell {
-    let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
+    let containerView: GradientView = {
+        let view = GradientView()
         view.layer.cornerRadius = 16
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.1
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
+        view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -28,23 +16,15 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    let itemCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+        
     let timeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .gray
-        label.textAlignment = .right
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+            let label = UILabel()
+            label.font = .systemFont(ofSize: 14)
+            label.textColor = .gray
+            label.textAlignment = .right
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
     
     let subjectTag: UILabel = {
         let label = UILabel()
@@ -72,46 +52,50 @@ class SummaryCollectionViewCell: UICollectionViewCell {
     private func setupViews() {
         contentView.addSubview(containerView)
         containerView.addSubview(titleLabel)
-        containerView.addSubview(itemCountLabel)
-        containerView.addSubview(timeLabel)
         containerView.addSubview(subjectTag)
-        
+
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            
+
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
             
-            itemCountLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            itemCountLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            
-            timeLabel.centerYAnchor.constraint(equalTo: itemCountLabel.centerYAnchor),
-            timeLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            
-            subjectTag.topAnchor.constraint(equalTo: itemCountLabel.bottomAnchor, constant: 8),
+            subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             subjectTag.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             subjectTag.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
             subjectTag.widthAnchor.constraint(greaterThanOrEqualToConstant: 60)
         ])
-        
+
         subjectTag.layoutIfNeeded()
         subjectTag.layer.cornerRadius = 8
         subjectTag.setPadding(horizontal: 12, vertical: 4)
+
+        // Apply gradient background and shadow to containerView
+        CardBackgroundHelper.applyGradient(to: containerView, index: 0) // Adjust index dynamically if needed
+        CardBackgroundHelper.applyShadow(to: containerView)
     }
+    
+    func configure(title: String, itemCount: Int, time: String, subject: String, index: Int) {
+        titleLabel.text = title
+        timeLabel.text = time
+        subjectTag.text = subject
+
+        // Apply gradient background based on index
+        if let gradientView = containerView as? GradientView {
+            CardBackgroundHelper.applyGradient(to: gradientView, index: index)
+        }
+        
+        // Apply shadow
+        CardBackgroundHelper.applyShadow(to: containerView)
+    }
+
     
     func updateSubject(topic: Topics) {
         titleLabel.text = topic.title
-        
-        if let completedDate = topic.completed {
-            let timeAgo = completedDate.dateValue().timeAgoDisplay()
-            timeLabel.text = timeAgo
-        } else {
-            timeLabel.text = "in 0 sec"
-        }
         
         // Fetch subject name asynchronously
         Task {
@@ -123,7 +107,6 @@ class SummaryCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    
 }
 
 // Helper extension for padding
@@ -148,22 +131,31 @@ extension UILabel {
     }
 }
 
-// Helper extension for time ago display
-extension Date {
-    func timeAgoDisplay() -> String {
-        let calendar = Calendar.current
-        let now = Date()
-        let components = calendar.dateComponents([.day, .hour, .minute, .second], from: self, to: now)
+
+class CardBackgroundHelper {
+    static func applyGradient(to view: GradientView, index: Int) {
+        let colorSchemes: [(start: UIColor, end: UIColor)] = [
+            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05)),
+            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05))
+        ]
         
-        if let day = components.day, day > 0 {
-            return "\(day) day\(day == 1 ? "" : "s") ago"
-        } else if let hour = components.hour, hour > 0 {
-            return "\(hour) hour\(hour == 1 ? "" : "s") ago"
-        } else if let minute = components.minute, minute > 0 {
-            return "\(minute) minute\(minute == 1 ? "" : "s") ago"
-        } else if let second = components.second {
-            return "\(second) second\(second == 1 ? "" : "s") ago"
-        }
-        return "just now"
+        let colorIndex = index % colorSchemes.count
+        let colors = colorSchemes[colorIndex]
+        
+        view.setGradient(
+            startColor: colors.start,
+            endColor: colors.end,
+            startPoint: CGPoint(x: 0.0, y: 0.0),
+            endPoint: CGPoint(x: 1.0, y: 1.0)
+        )
+    }
+    
+    static func applyShadow(to view: UIView) {
+        view.layer.cornerRadius = 16
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
     }
 }
+
