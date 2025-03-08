@@ -111,25 +111,28 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         func numberOfSections(in collectionView: UICollectionView) -> Int {
             return 1
         }
-        
-        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SubjectCell", for: indexPath) as? SubjectCellCollectionViewCell else {
-                fatalError("Could not dequeue SubjectCellCollectionViewCell")
-            }
-            
-            let card = filteredCards[indexPath.row]
-            cell.configure(title: card.title, subtitle: card.subtitle, subjectName: "Loading...")
-            
-            
-            // Set button action
-            cell.buttonTapped = { [weak self] in
-                self?.handleContinueButtonTap(indexPath: indexPath)
-            }
-            
-            print("Rendering cell for: \(card.title)")
-            
-            return cell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SubjectCell", for: indexPath) as? SubjectCellCollectionViewCell else {
+            fatalError("Could not dequeue SubjectCellCollectionViewCell")
         }
+        
+        let card = filteredCards[indexPath.row]
+        
+        // Pass indexPath.row to configure to set the gradient background dynamically
+        cell.configure(title: card.title, subtitle: card.subtitle, index: indexPath.row)
+        
+       
+        
+        // Set button action
+        cell.buttonTapped = { [weak self] in
+            self?.handleContinueButtonTap(indexPath: indexPath)
+        }
+        
+        return cell
+    }
+
+            
+           
         
         // MARK: - Collection View Delegate
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
