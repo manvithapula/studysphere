@@ -453,53 +453,14 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="subject" id="oJR-RP-ecF" customClass="ARCollectionViewCell" customModule="studysphere" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="subject" id="oJR-RP-ecF" customClass="subjectCellCollectionViewCell" customModule="studysphere" customModuleProvider="target">
                                         <rect key="frame" x="8" y="0.0" width="377" height="109"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5Mx-8P-f3V">
                                             <rect key="frame" x="0.0" y="0.0" width="377" height="109"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sNM-81-yxB" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="377" height="94"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tRi-RV-hmP">
-                                                            <rect key="frame" x="16" y="16" width="353" height="24"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PB4-1U-uED">
-                                                            <rect key="frame" x="16" y="55.999999999999993" width="345" height="21.666666666666664"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstItem="tRi-RV-hmP" firstAttribute="top" secondItem="sNM-81-yxB" secondAttribute="top" constant="16" id="5yy-1v-y1b"/>
-                                                        <constraint firstAttribute="trailing" secondItem="PB4-1U-uED" secondAttribute="trailing" constant="16" id="Bk6-vj-gqF"/>
-                                                        <constraint firstAttribute="trailing" secondItem="tRi-RV-hmP" secondAttribute="trailing" constant="8" id="bDI-R4-NhD"/>
-                                                        <constraint firstItem="PB4-1U-uED" firstAttribute="leading" secondItem="sNM-81-yxB" secondAttribute="leading" constant="15.999999999999996" id="sdc-3M-erV"/>
-                                                        <constraint firstItem="tRi-RV-hmP" firstAttribute="leading" secondItem="sNM-81-yxB" secondAttribute="leading" constant="16" id="udN-eI-q3n"/>
-                                                        <constraint firstItem="PB4-1U-uED" firstAttribute="top" secondItem="tRi-RV-hmP" secondAttribute="bottom" constant="16" id="y6V-Q5-iSH"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="sNM-81-yxB" firstAttribute="leading" secondItem="5Mx-8P-f3V" secondAttribute="leading" id="35i-st-yQ7"/>
-                                                <constraint firstItem="sNM-81-yxB" firstAttribute="top" secondItem="5Mx-8P-f3V" secondAttribute="top" id="3gD-zq-cyb"/>
-                                                <constraint firstItem="sNM-81-yxB" firstAttribute="centerX" secondItem="5Mx-8P-f3V" secondAttribute="centerX" id="Xjw-PW-5Z1"/>
-                                                <constraint firstAttribute="bottom" secondItem="sNM-81-yxB" secondAttribute="bottom" id="x37-N6-SUy"/>
-                                            </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="377" height="109"/>
-                                        <connections>
-                                            <outlet property="subtitleLabel" destination="PB4-1U-uED" id="3HB-Rs-gvs"/>
-                                            <outlet property="titleLabel" destination="tRi-RV-hmP" id="Lgr-qp-xCs"/>
-                                            <outlet property="viewSr" destination="sNM-81-yxB" id="a9V-hb-mOz"/>
-                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -542,7 +503,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14068" y="904"/>
+            <point key="canvasLocation" x="14314" y="849"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="bis-Ya-wBD">
@@ -1837,7 +1798,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="6.9999999999999964" width="82" height="51.666666666666657"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2749,11 +2710,11 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="651-AB-nO7"/>
-        <segue reference="yUW-6S-VXD"/>
+        <segue reference="llO-ze-ygf"/>
+        <segue reference="vbk-8J-x7B"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="qtl-9G-7g1"/>
-        <segue reference="paQ-p4-NU6"/>
+        <segue reference="BI1-l1-Jlu"/>
+        <segue reference="qdn-Bb-u7i"/>
         <segue reference="IXb-z0-nX3"/>
     </inferredMetricsTieBreakers>
     <resources>

@@ -25,16 +25,14 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var SubjectCollectionView: UICollectionView!
     
-        
+      
+ 
         // MARK: - Lifecycle
         override func viewDidLoad() {
             super.viewDidLoad()
             setupUI()
+            setupCollectionView()
             updateCards()
-            SubjectCollectionView.dataSource = self
-            SubjectCollectionView.delegate = self
-            searchBar.delegate = self
-            SubjectCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
         }
         
         override func viewWillAppear(_ animated: Bool) {
@@ -47,7 +45,6 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         // MARK: - UI Setup
         private func setupUI() {
-        
             // Configure search bar
             searchBar.placeholder = "Search topics"
             searchBar.searchBarStyle = .minimal
@@ -59,19 +56,23 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
             subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBlue], for: .selected)
             subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.secondaryLabel], for: .normal)
             
-            // Configure collection view
-            SubjectCollectionView.backgroundColor = .systemBackground
-            SubjectCollectionView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
-            
-            // Configure view
+            // Configure view background
             view.backgroundColor = .systemBackground
         }
         
+        private func setupCollectionView() {
+            SubjectCollectionView.dataSource = self
+            SubjectCollectionView.delegate = self
+            searchBar.delegate = self
+            SubjectCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
+            
+            // Register SubjectCellCollectionViewCell
+            SubjectCollectionView.register(SubjectCellCollectionViewCell.self, forCellWithReuseIdentifier: "SubjectCell")
+        }
         
         // MARK: - Actions
         @IBAction func segmentControlValueChanged(_ sender: UISegmentedControl) {
             updateCards()
-            SubjectCollectionView.reloadData()
         }
         
         // MARK: - Data
@@ -87,6 +88,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
                 default:
                     break
                 }
+                print("Cards loaded: \(cards.count)")
                 SubjectCollectionView.reloadData()
             }
         }
@@ -111,26 +113,30 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subject", for: indexPath)
-            let card = filteredCards[indexPath.row]
-            
-            if let cell = cell as? ARCollectionViewCell {
-                cell.titleLabel.text = card.title
-                cell.subtitleLabel.text = card.subtitle
-                
-                
-                // Configure labels
-                cell.titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
-                cell.titleLabel.textColor = .label
-                cell.subtitleLabel.font = .systemFont(ofSize: 14)
-                cell.subtitleLabel.textColor = .secondaryLabel
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SubjectCell", for: indexPath) as? SubjectCellCollectionViewCell else {
+                fatalError("Could not dequeue SubjectCellCollectionViewCell")
             }
+            
+            let card = filteredCards[indexPath.row]
+            cell.configure(title: card.title, subtitle: card.subtitle, subjectName: "Loading...")
+            
+            
+            // Set button action
+            cell.buttonTapped = { [weak self] in
+                self?.handleContinueButtonTap(indexPath: indexPath)
+            }
+            
+            print("Rendering cell for: \(card.title)")
             
             return cell
         }
         
         // MARK: - Collection View Delegate
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            handleContinueButtonTap(indexPath: indexPath)
+        }
+        
+        private func handleContinueButtonTap(indexPath: IndexPath) {
             switch subjectSegmentControl.selectedSegmentIndex {
             case 0:
                 performSegue(withIdentifier: "toSRSchedule", sender: indexPath.row)
@@ -147,13 +153,13 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         private func generateLayout() -> UICollectionViewLayout {
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .estimated(88)
+                heightDimension: .estimated(120)
             )
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
             let groupSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .estimated(88)
+                heightDimension: .estimated(120)
             )
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
@@ -187,3 +193,4 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
     }
+

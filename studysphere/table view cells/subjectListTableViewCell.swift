@@ -140,7 +140,7 @@ class subjectListTableViewCell: UITableViewCell {
         
         // Generate random topic count for demo
         let topicsCount = Int.random(in: 1...20)
-        topicsCountLabel.text = "\(topicsCount) topics"
+        topicsCountLabel.text = "\(topicsCount) modules"
         
         // Set up the icon based on subject
         setupIcon(for: subject.name, at: index)
