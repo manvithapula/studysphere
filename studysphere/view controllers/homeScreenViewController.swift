@@ -139,6 +139,7 @@ extension homeScreenViewController {
         stackView.addArrangedSubview(createTodayScheduleView())
         stackView.addArrangedSubview(createSubjectsGridView())
         stackView.addArrangedSubview(createStudyTechniquesView())
+
        
         
         NSLayoutConstraint.activate([

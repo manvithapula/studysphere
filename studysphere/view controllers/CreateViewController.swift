@@ -536,8 +536,9 @@ extension CreateViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        subjectField.text = filteredSubjects[indexPath.row].name
-        selectedSubject = filteredSubjects[indexPath.row]
+        let sub = filteredSubjects[indexPath.row]
+        subjectField.text = sub.name
+        selectedSubject = sub
         hideDropdown()
         updateCreateButtonState()
     }
