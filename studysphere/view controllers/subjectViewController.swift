@@ -25,7 +25,15 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var SubjectCollectionView: UICollectionView!
     
-      
+    private let emptyStateLabel: UILabel = {
+            let label = UILabel()
+            label.text = "Click the add symbol to create a new subject."
+            label.textAlignment = .center
+            label.textColor = .systemGray
+            label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+            label.isHidden = true
+            return label
+        }()
  
         // MARK: - Lifecycle
         override func viewDidLoad() {
@@ -74,7 +82,19 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         @IBAction func segmentControlValueChanged(_ sender: UISegmentedControl) {
             updateCards()
         }
-        
+    private func setupEmptyStateView() {
+          view.addSubview(emptyStateLabel)
+          emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
+          NSLayoutConstraint.activate([
+              emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+              emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+          ])
+      }
+      
+      private func updateEmptyState() {
+          emptyStateLabel.isHidden = !filteredCards.isEmpty
+          SubjectCollectionView.isHidden = filteredCards.isEmpty
+      }
         // MARK: - Data
         private func updateCards() {
             Task {
@@ -105,7 +125,9 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         // MARK: - Collection View Data Source
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            updateEmptyState()
             return filteredCards.count
+            
         }
         
         func numberOfSections(in collectionView: UICollectionView) -> Int {
