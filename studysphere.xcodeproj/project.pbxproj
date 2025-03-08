@@ -12,7 +12,6 @@
 		42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA42D553FB2007C170D /* FirebaseCore */; };
 		42566DA72D553FB2007C170D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA62D553FB2007C170D /* FirebaseFirestore */; };
 		42B828E52D55400E009BE803 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 42B828E42D55400E009BE803 /* GoogleGenerativeAI */; };
-		42CE99B52D7C44950040A1DA /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 42CE99B42D7C44950040A1DA /* DGCharts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,19 +31,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		42CE99B92D7C45350040A1DA /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		350226142CCF5C50006F019D /* studysphere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = studysphere.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3502262A2CCF5C51006F019D /* studysphereTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studysphereTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,7 +38,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		35D038452D7C2A9E006BDE5A /* Exceptions for "studysphere" folder in "studysphere" target */ = {
+		D79030C12D65FE9C00E7F9F6 /* Exceptions for "studysphere" folder in "studysphere" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -65,7 +51,7 @@
 		350226162CCF5C50006F019D /* studysphere */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				35D038452D7C2A9E006BDE5A /* Exceptions for "studysphere" folder in "studysphere" target */,
+				D79030C12D65FE9C00E7F9F6 /* Exceptions for "studysphere" folder in "studysphere" target */,
 			);
 			path = studysphere;
 			sourceTree = "<group>";
@@ -91,7 +77,6 @@
 				424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */,
 				42566DA72D553FB2007C170D /* FirebaseFirestore in Frameworks */,
 				42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */,
-				42CE99B52D7C44950040A1DA /* DGCharts in Frameworks */,
 				42566DA32D553FB2007C170D /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,7 +136,6 @@
 				350226102CCF5C50006F019D /* Sources */,
 				350226112CCF5C50006F019D /* Frameworks */,
 				350226122CCF5C50006F019D /* Resources */,
-				42CE99B92D7C45350040A1DA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -167,7 +151,6 @@
 				42566DA42D553FB2007C170D /* FirebaseCore */,
 				42566DA62D553FB2007C170D /* FirebaseFirestore */,
 				42B828E42D55400E009BE803 /* GoogleGenerativeAI */,
-				42CE99B42D7C44950040A1DA /* DGCharts */,
 			);
 			productName = studysphere;
 			productReference = 350226142CCF5C50006F019D /* studysphere.app */;
@@ -255,7 +238,6 @@
 				424AE6FC2CE5BA3300E7376F /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				42566DA12D553FB2007C170D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				42B828E32D55400E009BE803 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
-				42CE99B32D7C44950040A1DA /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 350226152CCF5C50006F019D /* Products */;
@@ -639,14 +621,6 @@
 				minimumVersion = 0.5.6;
 			};
 		};
-		42CE99B32D7C44950040A1DA /* XCRemoteSwiftPackageReference "Charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielgindi/Charts";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -674,11 +648,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 42B828E32D55400E009BE803 /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
 			productName = GoogleGenerativeAI;
-		};
-		42CE99B42D7C44950040A1DA /* DGCharts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 42CE99B32D7C44950040A1DA /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = DGCharts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
