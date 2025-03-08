@@ -1,16 +1,39 @@
-//
-//  addSubjectViewController.swift
-//  studysphere
-//
-//  Created by admin64 on 14/11/24.
-//
-
 import UIKit
 
 class AddSubjectViewController: UIViewController {
 
-    // Closure to send the new subject back to the table view controller
     var onSubjectAdded: ((String) -> Void)?
+
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Add New Subject"
+        label.font = .systemFont(ofSize: 22, weight: .bold)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private let subjectNameTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.placeholder = "Enter subject name"
+        textField.font = .systemFont(ofSize: 16)
+        textField.layer.cornerRadius = 8
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.layer.borderWidth = 1
+        textField.setPadding(left: 10, right: 10)
+        return textField
+    }()
+    
+    private let saveButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Save", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = AppTheme.primary
+        button.layer.cornerRadius = 8
+        button.addTarget(self, action: #selector(saveSubject), for: .touchUpInside)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,47 +42,43 @@ class AddSubjectViewController: UIViewController {
     }
 
     private func setupUI() {
-        // Set up a text field and a save button (example setup)
-        let textField = UITextField(frame: CGRect(x: 20, y: 100, width: view.frame.width - 40, height: 40))
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Enter subject name"
-        view.addSubview(textField)
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, subjectNameTextField, saveButton])
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(stackView)
 
-        let saveButton = UIButton(type: .system)
-        saveButton.setTitle("Save", for: .normal)
-        saveButton.frame = CGRect(x: 20, y: 160, width: view.frame.width - 40, height: 40)
-        saveButton.addTarget(self, action: #selector(saveSubject), for: .touchUpInside)
-        view.addSubview(saveButton)
-
-        // Store the text field in a property for later use
-        self.subjectNameTextField = textField
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            subjectNameTextField.heightAnchor.constraint(equalToConstant: 44),
+            saveButton.heightAnchor.constraint(equalToConstant: 44)
+        ])
     }
 
-    // A property to store the subject name text field
-    private var subjectNameTextField: UITextField?
-
-    // Function to handle saving the subject
-    @objc func saveSubject() {
-        guard let subjectName = subjectNameTextField?.text,
-              !subjectName.isEmpty else {
-            return // Exit if there's no valid subject name
+    @objc private func saveSubject() {
+        guard let subjectName = subjectNameTextField.text, !subjectName.isEmpty else {
+            return
         }
-        
-        // Call the closure to pass the new subject back
         onSubjectAdded?(subjectName)
-        
-        // Dismiss the modal
         dismiss(animated: true, completion: nil)
     }
 }
 
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+// UITextField Padding Extension
+extension UITextField {
+    func setPadding(left: CGFloat, right: CGFloat) {
+        let leftView = UIView(frame: CGRect(x: 0, y: 0, width: left, height: frame.height))
+        self.leftView = leftView
+        self.leftViewMode = .always
+        
+        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: right, height: frame.height))
+        self.rightView = rightView
+        self.rightViewMode = .always
     }
-    */
+}
+
