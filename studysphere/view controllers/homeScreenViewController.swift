@@ -362,7 +362,7 @@ extension homeScreenViewController {
             let label = UILabel()
             label.font = .systemFont(ofSize: 12)
             label.textColor = .black
-            label.backgroundColor = .systemBlue.withAlphaComponent(0.1)
+            label.backgroundColor = AppTheme.secondary.withAlphaComponent(0.1)
             label.layer.cornerRadius = 10
             label.clipsToBounds = true
             label.textAlignment = .center
@@ -641,8 +641,8 @@ extension homeScreenViewController {
         scheduleStack.translatesAutoresizingMaskIntoConstraints = false
         
         // Add schedule items
-        for item in scheduleItems {
-            let scheduleItemView = createScheduleItemCard(for: item)
+        for (index, item) in scheduleItems.prefix(3).enumerated() {
+            let scheduleItemView = createScheduleItemCard(for: item, index: index)
             scheduleStack.addArrangedSubview(scheduleItemView)
         }
         
@@ -663,26 +663,31 @@ extension homeScreenViewController {
         return containerView
     }
 
-    private func createScheduleItemCard(for item: ScheduleItem) -> UIView {
-        // Card container
+    private func createScheduleItemCard(for item: ScheduleItem, index: Int) -> UIView {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Determine color based on item type
-        let isPrimary = item.topicType == TopicsType.flashcards
+        // Determine colors based on index
+        let isPrimary = index % 2 == 0
         let mainColor = isPrimary ? AppTheme.primary : AppTheme.secondary
         
-        // Set gradient background
-        containerView.backgroundColor = mainColor.withAlphaComponent(0.15)
-        containerView.layer.cornerRadius = 12
+        // Card background with gradient
+        let cardBackground = GradientView()
+        cardBackground.layer.cornerRadius = 12
+        cardBackground.clipsToBounds = true
+        cardBackground.setGradient(
+            startColor: mainColor.withAlphaComponent(0.15),
+            endColor: mainColor.withAlphaComponent(0.05),
+            startPoint: CGPoint(x: 0.0, y: 0.0),
+            endPoint: CGPoint(x: 1.0, y: 1.0)
+        )
+        cardBackground.translatesAutoresizingMaskIntoConstraints = false
         
         // Icon container with gradient
         let iconContainer = GradientView()
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         iconContainer.layer.cornerRadius = 24
         iconContainer.clipsToBounds = true
-        
-        // Set up gradient for icon container
         iconContainer.setGradient(
             startColor: mainColor,
             endColor: mainColor.adjustBrightness(by: 0.2),
@@ -690,42 +695,28 @@ extension homeScreenViewController {
             endPoint: CGPoint(x: 1.0, y: 1.0)
         )
         
-        // Icon image view
         let iconView = UIImageView()
         iconView.contentMode = .scaleAspectFit
         iconView.tintColor = .white
         iconView.image = UIImage(systemName: item.iconName)
         iconView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Title and progress stack
-        let infoStack = UIStackView()
-        infoStack.axis = .vertical
-        infoStack.spacing = 8
-        infoStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Title label
         let titleLabel = UILabel()
         titleLabel.text = item.title
         titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
         titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        // Subject tag
         let subjectTag = UILabel()
         subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
         subjectTag.text = "Loading..."
-        subjectTag.textColor = mainColor
+        subjectTag.textColor = mainColor.withAlphaComponent(0.8)
         subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
         subjectTag.layer.cornerRadius = 8
         subjectTag.clipsToBounds = true
-        subjectTag.textAlignment = .center
         subjectTag.translatesAutoresizingMaskIntoConstraints = false
         subjectTag.setPadding(horizontal: 12, vertical: 4)
         
-        infoStack.addArrangedSubview(titleLabel)
-        infoStack.addArrangedSubview(subjectTag)
-        
-        // Start button
         let startButton = UIButton()
         startButton.setTitle("Start", for: .normal)
         startButton.setTitleColor(.white, for: .normal)
@@ -733,7 +724,15 @@ extension homeScreenViewController {
         startButton.layer.cornerRadius = 16
         startButton.translatesAutoresizingMaskIntoConstraints = false
         
-        // Add tap animation
+        // Add start action
+        startButton.addAction(UIAction { [weak self] _ in
+            Task {
+                let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
+                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+            }
+        }, for: .touchUpInside)
+        
+        // Add tap animation for button
         startButton.addAction(UIAction { _ in
             UIView.animate(withDuration: 0.2) {
                 startButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
@@ -745,52 +744,43 @@ extension homeScreenViewController {
             }
         }, for: .touchDown)
         
-        // Add start action
-        startButton.addAction(UIAction { [weak self] _ in
-            Task {
-                let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
-                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
-            }
-        }, for: .touchUpInside)
-        
         // Add all subviews
-        containerView.addSubview(iconContainer)
+        containerView.addSubview(cardBackground)
+        cardBackground.addSubview(iconContainer)
         iconContainer.addSubview(iconView)
-        containerView.addSubview(infoStack)
-        containerView.addSubview(startButton)
+        cardBackground.addSubview(titleLabel)
+        cardBackground.addSubview(subjectTag)
+        cardBackground.addSubview(startButton)
         
         NSLayoutConstraint.activate([
-            // Container view constraints
-            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
+            cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
-            // Icon container constraints
-            iconContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            iconContainer.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            iconContainer.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            iconContainer.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
             iconContainer.widthAnchor.constraint(equalToConstant: 48),
             iconContainer.heightAnchor.constraint(equalToConstant: 48),
             
-            // Icon image view constraints
             iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
             iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
             iconView.widthAnchor.constraint(equalToConstant: 24),
             iconView.heightAnchor.constraint(equalToConstant: 24),
             
-            // Info stack constraints
-            infoStack.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            infoStack.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            infoStack.trailingAnchor.constraint(lessThanOrEqualTo: startButton.leadingAnchor, constant: -8),
+            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             
-            // Start button constraints
-            startButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            startButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            
+            startButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            startButton.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
             startButton.widthAnchor.constraint(equalToConstant: 80),
-            startButton.heightAnchor.constraint(equalToConstant: 32)
+            startButton.heightAnchor.constraint(equalToConstant: 32),
+            
+            containerView.heightAnchor.constraint(equalToConstant: 80)
         ])
-        
-        // Add card tap animation
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardTapped(_:)))
-        containerView.addGestureRecognizer(tapGesture)
-        containerView.isUserInteractionEnabled = true
         
         // Fetch and update subject name
         Task {
@@ -807,8 +797,6 @@ extension homeScreenViewController {
         
         return containerView
     }
-
-    // Add this helper method for card tap animation
     @objc private func cardTapped(_ gesture: UITapGestureRecognizer) {
         if let containerView = gesture.view {
             UIView.animate(withDuration: 0.2) {
