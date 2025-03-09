@@ -128,7 +128,7 @@ extension homeScreenViewController {
         
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 20
+        stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
         
@@ -138,7 +138,7 @@ extension homeScreenViewController {
         stackView.addArrangedSubview(createSubjectsGridView())
         stackView.addArrangedSubview(createStudyTechniquesView())
         
-        
+      
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
@@ -147,99 +147,7 @@ extension homeScreenViewController {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
-    
-    
-    private func createUploadPDFView() -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 16
-        
-        // Banner container
-        let bannerView = UIView()
-        bannerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
-        bannerView.layer.cornerRadius = 12
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // PDF icon
-        let iconContainer = UIView()
-        iconContainer.backgroundColor = .white
-        iconContainer.layer.cornerRadius = 25
-        iconContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        let pdfIcon = UIImageView()
-        pdfIcon.image = UIImage(systemName: "doc.fill")
-        pdfIcon.tintColor = AppTheme.primary
-        pdfIcon.contentMode = .scaleAspectFit
-        pdfIcon.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Text content
-        let titleLabel = UILabel()
-        titleLabel.text = "Upload Study Material"
-        titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let subtitleLabel = UILabel()
-        subtitleLabel.text = "Create flashcards, quizzes and summaries from your PDFs"
-        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        subtitleLabel.textColor = .darkGray
-        subtitleLabel.numberOfLines = 0
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Upload button
-        let uploadButton = UIButton()
-        uploadButton.setTitle("Upload PDF", for: .normal)
-        uploadButton.setTitleColor(.white, for: .normal)
-        uploadButton.backgroundColor = AppTheme.primary
-        uploadButton.layer.cornerRadius = 16
-        uploadButton.translatesAutoresizingMaskIntoConstraints = false
-        uploadButton.addTarget(self, action: #selector(uploadPDFButtonTapped), for: .touchUpInside)
-        
-        // Add subviews
-        containerView.addSubview(bannerView)
-        bannerView.addSubview(iconContainer)
-        iconContainer.addSubview(pdfIcon)
-        bannerView.addSubview(titleLabel)
-        bannerView.addSubview(subtitleLabel)
-        bannerView.addSubview(uploadButton)
-        
-        NSLayoutConstraint.activate([
-            bannerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            bannerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            bannerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            bannerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
-            
-            iconContainer.leadingAnchor.constraint(equalTo: bannerView.leadingAnchor, constant: 16),
-            iconContainer.centerYAnchor.constraint(equalTo: bannerView.centerYAnchor),
-            iconContainer.widthAnchor.constraint(equalToConstant: 50),
-            iconContainer.heightAnchor.constraint(equalToConstant: 50),
-            
-            pdfIcon.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
-            pdfIcon.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
-            pdfIcon.widthAnchor.constraint(equalToConstant: 24),
-            pdfIcon.heightAnchor.constraint(equalToConstant: 24),
-            
-            titleLabel.topAnchor.constraint(equalTo: bannerView.topAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
-            
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            subtitleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            subtitleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
-            
-            uploadButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 16),
-            uploadButton.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            uploadButton.widthAnchor.constraint(equalToConstant: 120),
-            uploadButton.heightAnchor.constraint(equalToConstant: 40),
-            uploadButton.bottomAnchor.constraint(equalTo: bannerView.bottomAnchor, constant: -20)
-        ])
-        
-        return containerView
-    }
-    
-    @objc private func uploadPDFButtonTapped() {
-        performSegue(withIdentifier: "toCreate", sender: nil)
-    }
-    
+    //HEADER
     private func createProfileHeaderView() -> UIView {
         let headerView = UIView()
         
@@ -291,17 +199,130 @@ extension homeScreenViewController {
             nameLabel.bottomAnchor.constraint(equalTo: headerView.centerYAnchor, constant: 8),
             
             profileButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            profileButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            profileButton.widthAnchor.constraint(equalToConstant: 50),
-            profileButton.heightAnchor.constraint(equalToConstant: 50),
-            profileButton.bottomAnchor.constraint(equalTo: headerView.topAnchor, constant: 34),
-            
-            headerView.heightAnchor.constraint(equalToConstant: 70)
+            // Align with the top label (welcomeLabel)
+            profileButton.topAnchor.constraint(equalTo: welcomeLabel.topAnchor),
+            profileButton.widthAnchor.constraint(equalToConstant: 45),
+            profileButton.heightAnchor.constraint(equalToConstant: 45),
+            headerView.heightAnchor.constraint(equalToConstant: 60)
         ])
         loadImageFromUserDefaults()
         return headerView
     }
     
+    
+    private func createUploadPDFView() -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 16
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.08
+        containerView.layer.shadowRadius = 8
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
+       
+        let bannerView = GradientView()
+        bannerView.layer.cornerRadius = 12
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create gradient with primary and hint of secondary
+        bannerView.setGradient(
+            startColor: AppTheme.primary.withAlphaComponent(0.1),
+            endColor: AppTheme.secondary.withAlphaComponent(0.05),
+            startPoint: CGPoint(x: 0.0, y: 0.0),
+            endPoint: CGPoint(x: 1.0, y: 1.0)
+        )
+        
+        // Icon container with gradient
+        let iconContainer = GradientView()
+        iconContainer.layer.cornerRadius = 25
+        iconContainer.clipsToBounds = true
+        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        iconContainer.backgroundColor = AppTheme.secondary
+      
+        
+        let pdfIcon = UIImageView()
+        pdfIcon.image = UIImage(systemName: "doc.fill")
+        pdfIcon.tintColor = .white // Changed to white for better contrast
+        pdfIcon.contentMode = .scaleAspectFit
+        pdfIcon.translatesAutoresizingMaskIntoConstraints = false
+      
+        let titleLabel = UILabel()
+        titleLabel.text = "Upload Study Material"
+        titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "Create flashcards, quizzes and summaries from your PDFs"
+        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        subtitleLabel.textColor = .darkGray
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+       
+        let uploadButton = UIButton()
+        uploadButton.setTitle("Upload PDF", for: .normal)
+        uploadButton.setTitleColor(.white, for: .normal)
+        uploadButton.backgroundColor = AppTheme.primary
+        
+        uploadButton.layer.cornerRadius = 16
+        uploadButton.clipsToBounds = true
+        uploadButton.translatesAutoresizingMaskIntoConstraints = false
+        uploadButton.addTarget(self, action: #selector(uploadPDFButtonTapped), for: .touchUpInside)
+        
+        // Add animation effects
+        uploadButton.addAction(UIAction { _ in
+            UIView.animate(withDuration: 0.2) {
+                uploadButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                UIView.animate(withDuration: 0.2) {
+                    uploadButton.transform = .identity
+                }
+            }
+        }, for: .touchDown)
+      
+        containerView.addSubview(bannerView)
+        bannerView.addSubview(iconContainer)
+        iconContainer.addSubview(pdfIcon)
+        bannerView.addSubview(titleLabel)
+        bannerView.addSubview(subtitleLabel)
+        bannerView.addSubview(uploadButton)
+        
+        NSLayoutConstraint.activate([
+            bannerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            bannerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            bannerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            bannerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            
+            iconContainer.leadingAnchor.constraint(equalTo: bannerView.leadingAnchor, constant: 16),
+            iconContainer.centerYAnchor.constraint(equalTo: bannerView.centerYAnchor),
+            iconContainer.widthAnchor.constraint(equalToConstant: 50),
+            iconContainer.heightAnchor.constraint(equalToConstant: 50),
+            
+            pdfIcon.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            pdfIcon.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            pdfIcon.widthAnchor.constraint(equalToConstant: 24),
+            pdfIcon.heightAnchor.constraint(equalToConstant: 24),
+            
+            titleLabel.topAnchor.constraint(equalTo: bannerView.topAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            subtitleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
+            
+            uploadButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 16),
+            uploadButton.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            uploadButton.widthAnchor.constraint(equalToConstant: 120),
+            uploadButton.heightAnchor.constraint(equalToConstant: 40),
+            uploadButton.bottomAnchor.constraint(equalTo: bannerView.bottomAnchor, constant: -20)
+        ])
+        
+        return containerView
+    }
+
+    @objc private func uploadPDFButtonTapped() {
+        performSegue(withIdentifier: "toCreate", sender: nil)
+    }
     
     private func createScheduleItemView(for item: ScheduleItem) -> UIView {
         let containerView = UIView()
@@ -422,7 +443,7 @@ extension homeScreenViewController {
         // Only show first 3 subjects
         let displayedSubjects = subjects.prefix(3)
         for (index, subject) in displayedSubjects.enumerated() {
-            let subjectCard = createModernSubjectCard(subject: subject, index: index)
+            let subjectCard = createSubjectCard(subject: subject, index: index)
             subjectsStack.addArrangedSubview(subjectCard)
         }
         
@@ -443,7 +464,7 @@ extension homeScreenViewController {
         return containerView
     }
     
-    private func createModernSubjectCard(subject: Subject, index: Int) -> UIView {
+    private func createSubjectCard(subject: Subject, index: Int) -> UIView {
         // Card container
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -569,31 +590,60 @@ extension homeScreenViewController {
         return containerView
     }
     
-    
     private func createTodayScheduleView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 16
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.08
+        containerView.layer.shadowRadius = 8
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        
+        // Add current date and time
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        let currentDate = Date()
+        let dateString = dateFormatter.string(from: currentDate)
+        
+        let titleStack = UIStackView()
+        titleStack.axis = .vertical
+        titleStack.spacing = 4
         
         let titleLabel = UILabel()
         titleLabel.text = "Today's Schedule"
         titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.textColor = .black
+        
+        let dateLabel = UILabel()
+        dateLabel.text = dateString
+        dateLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        dateLabel.textColor = .gray
+        
+        titleStack.addArrangedSubview(titleLabel)
+        titleStack.addArrangedSubview(dateLabel)
+        titleStack.translatesAutoresizingMaskIntoConstraints = false
         
         let seeAllButton = UIButton()
         seeAllButton.setTitle("See All", for: .normal)
         seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
+        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
         seeAllButton.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
         
-        let headerStack = UIStackView(arrangedSubviews: [titleLabel, seeAllButton])
+        let headerStack = UIStackView(arrangedSubviews: [titleStack, seeAllButton])
         headerStack.axis = .horizontal
         headerStack.distribution = .equalSpacing
+        headerStack.alignment = .top
+        headerStack.translatesAutoresizingMaskIntoConstraints = false
         
         let scheduleStack = UIStackView()
         scheduleStack.axis = .vertical
         scheduleStack.spacing = 12
+        scheduleStack.translatesAutoresizingMaskIntoConstraints = false
         
+        // Add schedule items
         for item in scheduleItems {
-            scheduleStack.addArrangedSubview(createScheduleItemView(for: item))
+            let scheduleItemView = createScheduleItemCard(for: item)
+            scheduleStack.addArrangedSubview(scheduleItemView)
         }
         
         let mainStack = UIStackView(arrangedSubviews: [headerStack, scheduleStack])
@@ -612,7 +662,165 @@ extension homeScreenViewController {
         
         return containerView
     }
-    
+
+    private func createScheduleItemCard(for item: ScheduleItem) -> UIView {
+        // Card container
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Determine color based on item type
+        let isPrimary = item.topicType == TopicsType.flashcards
+        let mainColor = isPrimary ? AppTheme.primary : AppTheme.secondary
+        
+        // Set gradient background
+        containerView.backgroundColor = mainColor.withAlphaComponent(0.15)
+        containerView.layer.cornerRadius = 12
+        
+        // Icon container with gradient
+        let iconContainer = GradientView()
+        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        iconContainer.layer.cornerRadius = 24
+        iconContainer.clipsToBounds = true
+        
+        // Set up gradient for icon container
+        iconContainer.setGradient(
+            startColor: mainColor,
+            endColor: mainColor.adjustBrightness(by: 0.2),
+            startPoint: CGPoint(x: 0.0, y: 0.0),
+            endPoint: CGPoint(x: 1.0, y: 1.0)
+        )
+        
+        // Icon image view
+        let iconView = UIImageView()
+        iconView.contentMode = .scaleAspectFit
+        iconView.tintColor = .white
+        iconView.image = UIImage(systemName: item.iconName)
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Title and progress stack
+        let infoStack = UIStackView()
+        infoStack.axis = .vertical
+        infoStack.spacing = 8
+        infoStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Title label
+        let titleLabel = UILabel()
+        titleLabel.text = item.title
+        titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
+        titleLabel.textColor = .darkText
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Subject tag
+        let subjectTag = UILabel()
+        subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
+        subjectTag.text = "Loading..."
+        subjectTag.textColor = mainColor
+        subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
+        subjectTag.layer.cornerRadius = 8
+        subjectTag.clipsToBounds = true
+        subjectTag.textAlignment = .center
+        subjectTag.translatesAutoresizingMaskIntoConstraints = false
+        subjectTag.setPadding(horizontal: 12, vertical: 4)
+        
+        infoStack.addArrangedSubview(titleLabel)
+        infoStack.addArrangedSubview(subjectTag)
+        
+        // Start button
+        let startButton = UIButton()
+        startButton.setTitle("Start", for: .normal)
+        startButton.setTitleColor(.white, for: .normal)
+        startButton.backgroundColor = mainColor
+        startButton.layer.cornerRadius = 16
+        startButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add tap animation
+        startButton.addAction(UIAction { _ in
+            UIView.animate(withDuration: 0.2) {
+                startButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                UIView.animate(withDuration: 0.2) {
+                    startButton.transform = .identity
+                }
+            }
+        }, for: .touchDown)
+        
+        // Add start action
+        startButton.addAction(UIAction { [weak self] _ in
+            Task {
+                let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
+                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+            }
+        }, for: .touchUpInside)
+        
+        // Add all subviews
+        containerView.addSubview(iconContainer)
+        iconContainer.addSubview(iconView)
+        containerView.addSubview(infoStack)
+        containerView.addSubview(startButton)
+        
+        NSLayoutConstraint.activate([
+            // Container view constraints
+            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            
+            // Icon container constraints
+            iconContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            iconContainer.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            iconContainer.widthAnchor.constraint(equalToConstant: 48),
+            iconContainer.heightAnchor.constraint(equalToConstant: 48),
+            
+            // Icon image view constraints
+            iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 24),
+            iconView.heightAnchor.constraint(equalToConstant: 24),
+            
+            // Info stack constraints
+            infoStack.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            infoStack.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            infoStack.trailingAnchor.constraint(lessThanOrEqualTo: startButton.leadingAnchor, constant: -8),
+            
+            // Start button constraints
+            startButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            startButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            startButton.widthAnchor.constraint(equalToConstant: 80),
+            startButton.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        
+        // Add card tap animation
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cardTapped(_:)))
+        containerView.addGestureRecognizer(tapGesture)
+        containerView.isUserInteractionEnabled = true
+        
+        // Fetch and update subject name
+        Task {
+            let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
+            if let topic = alltopics.first {
+                let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
+                if let subject = allSubjects.first {
+                    await MainActor.run {
+                        subjectTag.text = subject.name
+                    }
+                }
+            }
+        }
+        
+        return containerView
+    }
+
+    // Add this helper method for card tap animation
+    @objc private func cardTapped(_ gesture: UITapGestureRecognizer) {
+        if let containerView = gesture.view {
+            UIView.animate(withDuration: 0.2) {
+                containerView.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                UIView.animate(withDuration: 0.2) {
+                    containerView.transform = .identity
+                }
+            }
+        }
+    }
     
     private func createStudyTechniquesView() -> UIView {
         let containerView = UIView()
@@ -743,3 +951,4 @@ extension homeScreenViewController {
         return containerView
     }
 }
+
