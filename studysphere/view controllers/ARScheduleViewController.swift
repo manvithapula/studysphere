@@ -58,17 +58,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
         return table
     }()
     
-    //Not needed
-//    private let backButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        //button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-////        button.setTitle(" Topics", for: .normal)
-//        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-//        button.tintColor = .systemBlue
-//        button.contentHorizontalAlignment = .left
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        return button
-//    }()
+    // Back button removed
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -88,8 +78,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
-        // Add subviews
-        //view.addSubview(backButton)
+        // Add subviews (backButton removed)
         view.addSubview(titleLabel)
         view.addSubview(subtitleLabel)
         view.addSubview(progressView)
@@ -98,15 +87,9 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
        // statsContainer.addArrangedSubview(nextReviewView)
         view.addSubview(tableView)
         
-        // Layout constraints
+        // Layout constraints (backButton constraints removed)
         NSLayoutConstraint.activate([
-            
-            //Not needed
-//            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-//            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-//            backButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16), // Updated to attach to safeAreaLayoutGuide instead of backButton
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
@@ -129,9 +112,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        // Configure back button action
-        //Configration for back button
-        //  backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
     }
     
     private func setupTableView() {
@@ -200,9 +181,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     // MARK: - Actions
-//    @objc private func backButtonTapped() {
-//        navigationController?.popViewController(animated: true)
-//    }
+    // backButtonTapped method removed
     
     private func startQuiz(at index: IndexPath) {
         performSegue(withIdentifier: "toQuestionVC", sender: mySchedules[index.row])
