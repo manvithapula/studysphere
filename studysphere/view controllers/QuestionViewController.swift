@@ -6,9 +6,9 @@ class QuestionViewController: UIViewController {
     // MARK: - Properties
     private var currentQuestionIndex = 0
     private var score = 0
-    private var topic: Topics?
-    private var questions: [Questions] = []
-    private var schedule: Schedule?
+     var topic: Topics?
+     var questions: [Questions] = []
+     var schedule: Schedule?
     private var selectedButton: UIButton?
     
     // MARK: - UI Components
@@ -444,13 +444,9 @@ class QuestionViewController: UIViewController {
             if var scheduleTemp = schedule {
                 try await schedulesDb.update(&scheduleTemp)
             }
-
-            // Navigate to results screen
-            let resultVC = ARTestResultViewController()
-            resultVC.correct = score
-            resultVC.incorrect = questions.count - score
-            navigationController?.pushViewController(resultVC, animated: true)
+            
         }
+        performSegue(withIdentifier: "toARAnimation", sender: self)
     }
 
     // MARK: - Actions
@@ -459,6 +455,10 @@ class QuestionViewController: UIViewController {
     }
 
     @objc private func optionButtonTapped(_ sender: UIButton) {
+        if currentQuestionIndex >= questions.count {
+            showFinalScore()
+            return
+        }
         // Store selected button
         selectedButton = sender
         
@@ -625,6 +625,13 @@ class QuestionViewController: UIViewController {
     // MARK: - Cleanup
     deinit {
         nextButton.removeObserver(self, forKeyPath: "frame")
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? ARTestResultViewController {
+            destination.correct = score
+            destination.incorrect = questions.count - score
+        }
     }
 }
 

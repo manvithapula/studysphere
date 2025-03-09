@@ -727,139 +727,10 @@
                     <view key="view" contentMode="scaleToFill" id="JT0-Ul-Sex">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dvz-Fg-9aE" customClass="RoundNShadow" customModule="studysphere" customModuleProvider="target">
-                                <rect key="frame" x="16" y="236" width="361" height="53"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question 5/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nlz-gL-jkD">
-                                        <rect key="frame" x="8" y="8" width="345" height="37"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="nlz-gL-jkD" secondAttribute="trailing" constant="8" id="6SH-of-h0D"/>
-                                    <constraint firstAttribute="bottom" secondItem="nlz-gL-jkD" secondAttribute="bottom" constant="8" id="V7o-CP-5jd"/>
-                                    <constraint firstItem="nlz-gL-jkD" firstAttribute="top" secondItem="Dvz-Fg-9aE" secondAttribute="top" constant="8" id="lBX-6g-bN6"/>
-                                    <constraint firstItem="nlz-gL-jkD" firstAttribute="leading" secondItem="Dvz-Fg-9aE" secondAttribute="leading" constant="8" id="pIo-dd-EQI"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VRC-Pv-3Jp" customClass="CardView" customModule="studysphere" customModuleProvider="target">
-                                <rect key="frame" x="16" y="293" width="361" height="317.66666666666674"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Under which calendar year is New Years Day Jan.1" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUj-24-PiK">
-                                        <rect key="frame" x="15" y="8" width="331" height="48"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOy-pg-6Rg">
-                                        <rect key="frame" x="15" y="71" width="331" height="34.333333333333343"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Julian Calendar"/>
-                                        <connections>
-                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="Dxd-je-Npc"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zlu-J9-JyJ">
-                                        <rect key="frame" x="15" y="120.3333333333333" width="331" height="34.333333333333329"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Gregorian Calendar"/>
-                                        <connections>
-                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="eu0-0d-SSh"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ddj-Ev-hd8">
-                                        <rect key="frame" x="15" y="169.66666666666669" width="331" height="34.333333333333343"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Jewish Calendar"/>
-                                        <connections>
-                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="bRx-GC-TCJ"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rek-RD-Fiy">
-                                        <rect key="frame" x="15" y="219" width="331" height="34.333333333333343"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Chinese Calendar"/>
-                                        <connections>
-                                            <action selector="optionButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="Qny-aC-EHo"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9CU-OI-LUa">
-                                        <rect key="frame" x="103" y="268.33333333333337" width="155" height="34.333333333333314"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="34.329999999999998" id="xmn-vb-H66"/>
-                                        </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Next" cornerStyle="capsule">
-                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <color key="baseBackgroundColor" name="Shadow"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="nextButtonTapped:" destination="Kdx-Zo-MPf" eventType="touchUpInside" id="ocv-DC-oFx"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Zlu-J9-JyJ" secondAttribute="trailing" constant="15" id="2HO-HE-G8w"/>
-                                    <constraint firstItem="ddj-Ev-hd8" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="2kt-nc-UJc"/>
-                                    <constraint firstAttribute="trailing" secondItem="nUj-24-PiK" secondAttribute="trailing" constant="15" id="98I-C3-lZq"/>
-                                    <constraint firstAttribute="trailing" secondItem="9CU-OI-LUa" secondAttribute="trailing" constant="103" id="AGd-7O-D9H"/>
-                                    <constraint firstItem="Zlu-J9-JyJ" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="BNu-Hq-RmM"/>
-                                    <constraint firstItem="Rek-RD-Fiy" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="KgZ-yc-iHk"/>
-                                    <constraint firstItem="xOy-pg-6Rg" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="Pw7-ib-blQ"/>
-                                    <constraint firstItem="nUj-24-PiK" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="15" id="QNl-Mz-PPg"/>
-                                    <constraint firstItem="9CU-OI-LUa" firstAttribute="leading" secondItem="VRC-Pv-3Jp" secondAttribute="leading" constant="103" id="RdE-SO-sp8"/>
-                                    <constraint firstItem="ddj-Ev-hd8" firstAttribute="top" secondItem="Zlu-J9-JyJ" secondAttribute="bottom" constant="15" id="a5q-6E-HxW"/>
-                                    <constraint firstItem="9CU-OI-LUa" firstAttribute="top" secondItem="Rek-RD-Fiy" secondAttribute="bottom" constant="15" id="aN2-fY-moI"/>
-                                    <constraint firstAttribute="trailing" secondItem="ddj-Ev-hd8" secondAttribute="trailing" constant="15" id="aPV-Bv-XuN"/>
-                                    <constraint firstItem="xOy-pg-6Rg" firstAttribute="top" secondItem="nUj-24-PiK" secondAttribute="bottom" constant="15" id="fnd-z7-FOY"/>
-                                    <constraint firstAttribute="bottom" secondItem="9CU-OI-LUa" secondAttribute="bottom" constant="15" id="lOV-ec-FAk"/>
-                                    <constraint firstAttribute="trailing" secondItem="Rek-RD-Fiy" secondAttribute="trailing" constant="15" id="ofz-aZ-9c6"/>
-                                    <constraint firstItem="Rek-RD-Fiy" firstAttribute="top" secondItem="ddj-Ev-hd8" secondAttribute="bottom" constant="15" id="pJU-wY-TXk"/>
-                                    <constraint firstItem="Zlu-J9-JyJ" firstAttribute="top" secondItem="xOy-pg-6Rg" secondAttribute="bottom" constant="15" id="tQW-rX-BaB"/>
-                                    <constraint firstAttribute="trailing" secondItem="xOy-pg-6Rg" secondAttribute="trailing" constant="15" id="toT-gC-neL"/>
-                                    <constraint firstItem="nUj-24-PiK" firstAttribute="top" secondItem="VRC-Pv-3Jp" secondAttribute="top" constant="8" id="ybD-Bn-ebm"/>
-                                </constraints>
-                            </view>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="STb-fP-etu">
-                                <rect key="frame" x="16" y="205" width="361" height="4"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" name="Shadow"/>
-                            </progressView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="gQp-8e-6Se"/>
-                        <constraints>
-                            <constraint firstItem="STb-fP-etu" firstAttribute="leading" secondItem="gQp-8e-6Se" secondAttribute="leading" constant="16" id="3xp-WK-z00"/>
-                            <constraint firstItem="VRC-Pv-3Jp" firstAttribute="top" secondItem="Dvz-Fg-9aE" secondAttribute="bottom" constant="4" id="Dn9-bU-yIm"/>
-                            <constraint firstItem="Dvz-Fg-9aE" firstAttribute="top" secondItem="STb-fP-etu" secondAttribute="bottom" constant="27" id="Dxb-GG-uPK"/>
-                            <constraint firstItem="VRC-Pv-3Jp" firstAttribute="top" secondItem="STb-fP-etu" secondAttribute="bottom" constant="84" id="Hxt-VZ-1rZ"/>
-                            <constraint firstItem="STb-fP-etu" firstAttribute="top" secondItem="gQp-8e-6Se" secondAttribute="top" constant="102" id="P7D-uN-CMD"/>
-                            <constraint firstItem="Dvz-Fg-9aE" firstAttribute="leading" secondItem="gQp-8e-6Se" secondAttribute="leading" constant="16" id="Xun-DE-eIY"/>
-                            <constraint firstItem="gQp-8e-6Se" firstAttribute="trailing" secondItem="Dvz-Fg-9aE" secondAttribute="trailing" constant="16" id="bEY-qK-XFx"/>
-                            <constraint firstItem="gQp-8e-6Se" firstAttribute="trailing" secondItem="STb-fP-etu" secondAttribute="trailing" constant="16" id="j6S-oI-HNt"/>
-                            <constraint firstItem="gQp-8e-6Se" firstAttribute="trailing" secondItem="VRC-Pv-3Jp" secondAttribute="trailing" constant="16" id="uRa-7b-WB3"/>
-                            <constraint firstItem="VRC-Pv-3Jp" firstAttribute="leading" secondItem="gQp-8e-6Se" secondAttribute="leading" constant="16" id="z6d-u1-3S6"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="RSk-3p-aCT"/>
                     <connections>
-                        <outlet property="ARProgressBar" destination="STb-fP-etu" id="nUp-xC-J9F"/>
-                        <outlet property="Askedquestion" destination="nUj-24-PiK" id="iRO-KJ-JRU"/>
-                        <outlet property="Next" destination="9CU-OI-LUa" id="UFn-Ra-Ivw"/>
-                        <outlet property="Option1" destination="xOy-pg-6Rg" id="eJr-Ce-3PV"/>
-                        <outlet property="Option2" destination="Zlu-J9-JyJ" id="GS1-9Q-xLn"/>
-                        <outlet property="Option3" destination="ddj-Ev-hd8" id="ouY-Vo-88O"/>
-                        <outlet property="Option4" destination="Rek-RD-Fiy" id="0n9-6W-LCc"/>
-                        <outlet property="questionLabel" destination="nlz-gL-jkD" id="u5m-Ng-rxU"/>
                         <segue destination="pVk-Kh-hbX" kind="show" identifier="toARAnimation" id="tTN-Z8-Uup"/>
                     </connections>
                 </viewController>
@@ -1039,7 +910,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xxw-CT-vjW" userLabel="tick">
-                                <rect key="frame" x="117" y="243" width="158" height="165"/>
+                                <rect key="frame" x="120" y="206" width="153" height="165"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
@@ -1834,6 +1705,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTO-GL-a8o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="Bjd-NO-bcd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="6244" y="2181"/>
         </scene>
@@ -2548,12 +2420,12 @@
                     <navigationItem key="navigationItem" id="qkY-mS-wLV"/>
                     <connections>
                         <outlet property="nextBtn" destination="IEF-zh-6ez" id="op0-Mh-UPl"/>
+                        <outlet property="scoreLabel" destination="xM4-Ns-zKx" id="yrw-9M-AGf"/>
                         <outlet property="youGot" destination="jOB-bN-nNq" id="gEC-RV-9AA"/>
-                        <segue destination="IYq-eS-AfP" kind="unwind" identifier="toQuestionBack" unwindAction="comeHereWithSegue:" id="aJE-9a-quM"/>
+                        <segue destination="Bjd-NO-bcd" kind="unwind" identifier="toQuestionBack" unwindAction="comeHereNowWithSegue:" id="Egr-Ja-e1r"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CSP-le-3V4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="IYq-eS-AfP" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="6716.7938931297704" y="4422.5352112676055"/>
         </scene>
@@ -2659,7 +2531,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="llO-ze-ygf"/>
+        <segue reference="bfc-Hh-3ad"/>
         <segue reference="vbk-8J-x7B"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
@@ -2688,9 +2560,6 @@
         </namedColor>
         <namedColor name="Main Color">
             <color red="0.10196078431372549" green="0.10196078431372549" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Shadow">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainColor">
             <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>

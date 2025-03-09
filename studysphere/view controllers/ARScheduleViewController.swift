@@ -191,9 +191,24 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     private func startQuiz(at index: IndexPath) {
-        let quizVC = QuestionViewController()
-        quizVC.configure(with: topic!, schedule: mySchedules[index.row])
-        navigationController?.pushViewController(quizVC, animated: true)
+        performSegue(withIdentifier: "toQuestionVC", sender: mySchedules[index.row])
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toQuestionVC" {
+            if let destinationVC = segue.destination as? QuestionViewController {
+                destinationVC.topic = topic
+                if let schedule = sender as? Schedule {
+                    destinationVC.schedule = schedule
+                    return
+                }
+                destinationVC.schedule = mySchedules[completedSchedules.count]
+            }
+        }
+        
+    }
+    @IBAction func comeHereNow(segue: UIStoryboardSegue) {
+        setup()
+        tableView.reloadData()
     }
     
     // MARK: - UITableViewDataSource
