@@ -23,9 +23,7 @@ class QuestionViewController: UIViewController {
     private let nextButton = UIButton(type: .system)
     
     // MARK: - Colors
-    private let backgroundColor = UIColor(red: 0.96, green: 0.98, blue: 1.0, alpha: 1.0)
-    private let primaryColor = UIColor(red: 0.0, green: 0.47, blue: 0.9, alpha: 1.0) // Vibrant blue
-    private let secondaryColor = UIColor(red: 0.1, green: 0.6, blue: 1.0, alpha: 1.0) // Light blue
+    private let backgroundColor = AppTheme.secondary
     private let correctColor = UIColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 0.15) // Softer correct green
     private let incorrectColor = UIColor(red: 0.95, green: 0.3, blue: 0.25, alpha: 0.15) // Softer incorrect red
     private let cardColor = UIColor.white
@@ -81,14 +79,8 @@ class QuestionViewController: UIViewController {
         backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: configuration), for: .normal)
         backButton.setTitle("  Back", for: .normal)
         backButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        backButton.tintColor = primaryColor
+        backButton.tintColor = AppTheme.primary
         backButton.contentHorizontalAlignment = .left
-        backButton.backgroundColor = UIColor.white
-        backButton.layer.cornerRadius = 12
-        backButton.layer.shadowColor = shadowColor
-        backButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-        backButton.layer.shadowOpacity = 0.3
-        backButton.layer.shadowRadius = 4
         backButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.addTarget(self, action: #selector(buttonTouchDown(_:)), for: .touchDown)
@@ -97,8 +89,8 @@ class QuestionViewController: UIViewController {
     }
     
     private func setupProgressBar() {
-        progressBar.progressTintColor = primaryColor
-        progressBar.trackTintColor = UIColor.systemGray5
+        progressBar.progressTintColor = AppTheme.secondary
+        progressBar.trackTintColor = AppTheme.primary.withAlphaComponent(0.2)
         progressBar.progress = 0.0
         progressBar.layer.cornerRadius = 6
         progressBar.clipsToBounds = true
@@ -126,13 +118,13 @@ class QuestionViewController: UIViewController {
         
         // Question number label with accent bar
         let questionNumberContainer = UIView()
-        questionNumberContainer.backgroundColor = primaryColor.withAlphaComponent(0.1)
+        questionNumberContainer.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         questionNumberContainer.layer.cornerRadius = 12
         questionCardView.addSubview(questionNumberContainer)
         
         questionNumberLabel.textAlignment = .left
         questionNumberLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-        questionNumberLabel.textColor = primaryColor
+        questionNumberLabel.textColor = AppTheme.primary
         questionNumberLabel.text = "Question 1/10"
         questionNumberContainer.addSubview(questionNumberLabel)
         
@@ -199,7 +191,7 @@ class QuestionViewController: UIViewController {
             
             // Show option letter (A, B, C, D)
             let optionLetterView = UIView()
-            optionLetterView.backgroundColor = primaryColor.withAlphaComponent(0.1)
+            optionLetterView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
             optionLetterView.layer.cornerRadius = 14
             optionLetterView.translatesAutoresizingMaskIntoConstraints = false
             button.addSubview(optionLetterView)
@@ -207,7 +199,7 @@ class QuestionViewController: UIViewController {
             let optionLetter = UILabel()
             optionLetter.text = String(Character(UnicodeScalar(65 + index)!)) // A, B, C, D
             optionLetter.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-            optionLetter.textColor = primaryColor
+            optionLetter.textColor = AppTheme.primary
             optionLetter.textAlignment = .center
             optionLetter.translatesAutoresizingMaskIntoConstraints = false
             optionLetterView.addSubview(optionLetter)
@@ -241,7 +233,7 @@ class QuestionViewController: UIViewController {
         
         // Create gradient layer for button
         let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [primaryColor.cgColor, secondaryColor.cgColor]
+        gradientLayer.colors =  [AppTheme.secondary.cgColor, AppTheme.primary.cgColor]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
         gradientLayer.cornerRadius = 20
@@ -255,7 +247,7 @@ class QuestionViewController: UIViewController {
         // Add shadow view behind button
         let shadowView = UIView()
         shadowView.backgroundColor = .clear
-        shadowView.layer.shadowColor = primaryColor.cgColor
+        shadowView.layer.shadowColor = AppTheme.primary.cgColor
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 4)
         shadowView.layer.shadowOpacity = 0.3
         shadowView.layer.shadowRadius = 8
@@ -404,16 +396,16 @@ class QuestionViewController: UIViewController {
         // Reset option letter view
         for subview in button.subviews {
             if let optionView = subview as? UIView,
-               (optionView.backgroundColor == primaryColor.withAlphaComponent(0.1) ||
+               (optionView.backgroundColor == AppTheme.primary.withAlphaComponent(0.1) ||
                 optionView.backgroundColor == UIColor.systemGreen.withAlphaComponent(0.2) ||
                 optionView.backgroundColor == UIColor.systemRed.withAlphaComponent(0.2)) {
                 
-                optionView.backgroundColor = primaryColor.withAlphaComponent(0.1)
+                optionView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
                 
                 // Reset the label inside option view
                 for labelView in optionView.subviews {
                     if let label = labelView as? UILabel {
-                        label.textColor = primaryColor
+                        label.textColor = AppTheme.primary
                     }
                 }
             }
@@ -489,7 +481,7 @@ class QuestionViewController: UIViewController {
                 sender.layer.borderWidth = 2
                 
                 // Update option letter view
-                if let optionView = sender.subviews.first(where: { $0.backgroundColor == self.primaryColor.withAlphaComponent(0.1) }) {
+                if let optionView = sender.subviews.first(where: { $0.backgroundColor == AppTheme.primary.withAlphaComponent(0.1) }) {
                     optionView.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.2)
                     if let label = optionView.subviews.first as? UILabel {
                         label.textColor = UIColor.systemGreen
@@ -518,7 +510,7 @@ class QuestionViewController: UIViewController {
                 sender.layer.borderWidth = 2
                 
                 // Update option letter view
-                if let optionView = sender.subviews.first(where: { $0.backgroundColor == self.primaryColor.withAlphaComponent(0.1) }) {
+                if let optionView = sender.subviews.first(where: { $0.backgroundColor == AppTheme.primary.withAlphaComponent(0.1) }) {
                     optionView.backgroundColor = UIColor.systemRed.withAlphaComponent(0.2)
                     if let label = optionView.subviews.first as? UILabel {
                         label.textColor = UIColor.systemRed
@@ -556,7 +548,7 @@ class QuestionViewController: UIViewController {
                         button.layer.borderWidth = 2
                         
                         // Update option letter view
-                        if let optionView = button.subviews.first(where: { $0.backgroundColor == self.primaryColor.withAlphaComponent(0.1) }) {
+                        if let optionView = button.subviews.first(where: { $0.backgroundColor == AppTheme.primary.withAlphaComponent(0.1) }) {
                             optionView.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.2)
                             if let label = optionView.subviews.first as? UILabel {
                                 label.textColor = UIColor.systemGreen
