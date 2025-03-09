@@ -139,8 +139,11 @@ class subjectListTableViewCell: UITableViewCell {
         titleLabel.text = subject.name
         
         // Generate random topic count for demo
-        let topicsCount = Int.random(in: 1...20)
-        topicsCountLabel.text = "\(topicsCount) modules"
+        Task{
+            let allTopics = try await topicsDb.findAll(where: ["subject":subject.id])
+            let topicsCount = allTopics.count
+            topicsCountLabel.text = "\(topicsCount) modules"
+        }
         
         // Set up the icon based on subject
         setupIcon(for: subject.name, at: index)
