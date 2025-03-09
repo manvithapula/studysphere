@@ -17,8 +17,12 @@ class QuestionResultViewController: UIViewController {
     @IBOutlet weak var percentageL: UILabel!
     @IBOutlet weak var youGot: UILabel!
     @IBOutlet weak var thatsBetter: UILabel!
+    @IBOutlet weak var nextBtn: UIButton!
+    @IBOutlet weak var scoreLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
+        nextBtn.backgroundColor = AppTheme.primary
+        nextBtn.layer.cornerRadius = 25
 
         // Do any additional setup after loading the view.
         // make left navigation button
@@ -26,8 +30,8 @@ class QuestionResultViewController: UIViewController {
         navigationItem.leftBarButtonItem = leftButton
         
         let total = memorised + needPractice
-        youGot.text = "You got \(memorised)/\(total) questions Correct"
-        thatsBetter.text = "That's better than \(Int(memorised/(total)*100))% of means"
+        scoreLabel.text = "\(memorised)"
+        
     }
     @objc func backButtonTapped() {
         performSegue(withIdentifier: "toQuestionBack", sender: nil)

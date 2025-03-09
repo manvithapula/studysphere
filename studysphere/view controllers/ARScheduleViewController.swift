@@ -1,7 +1,8 @@
 import UIKit
 import FirebaseCore
+import FirebaseFirestore
 
-class ARScheduleViewController: UIViewController, UITableViewDataSource {
+class ARScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     // MARK: - Properties
     private var mySchedules: [Schedule] = []
     var topic: Topics?
@@ -28,7 +29,10 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
     
     private let progressView: UIProgressView = {
         let progress = UIProgressView(progressViewStyle: .bar)
+
         progress.trackTintColor = AppTheme.primary
+
+    
         progress.progressTintColor = .systemOrange
         progress.layer.cornerRadius = 4
         progress.clipsToBounds = true
@@ -56,6 +60,16 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
         return table
     }()
     
+    private let backButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.setTitle(" Topics", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.tintColor = .systemBlue
+        button.contentHorizontalAlignment = .left
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -68,37 +82,15 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.isTabBarHidden = false
+        setup() // Refresh data when view appears
     }
-    private static func makeStatsStack(icon: String, title: String) -> UIStackView {
-           let stack = UIStackView()
-           stack.axis = .vertical
-           stack.alignment = .center
-           stack.spacing = 8
-           
-           let imageView = UIImageView(image: UIImage(systemName: icon))
-           imageView.tintColor = .systemOrange
-           imageView.contentMode = .scaleAspectFit
-           imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
-           imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
-           
-           let label = UILabel()
-           label.text = title
-           label.font = .systemFont(ofSize: 16)
-           label.textColor = .secondaryLabel
-           label.textAlignment = .center
-           
-           stack.addArrangedSubview(imageView)
-           stack.addArrangedSubview(label)
-           
-           stack.translatesAutoresizingMaskIntoConstraints = false
-           return stack
-       }
+    
     // MARK: - Setup
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
-        
         // Add subviews
+        view.addSubview(backButton)
         view.addSubview(titleLabel)
         view.addSubview(subtitleLabel)
         view.addSubview(progressView)
@@ -109,7 +101,11 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
         
         // Layout constraints
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            backButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            titleLabel.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
@@ -131,6 +127,9 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        // Configure back button action
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
     private func setupTableView() {
@@ -141,34 +140,45 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
     
     private func setup() {
         Task {
-            mySchedules = try await schedulesDb.findAll(where: ["topic": topic!.id])
-            let sortedSchedules = mySchedules.sorted { $0.date.dateValue() < $1.date.dateValue() }
-            mySchedules = sortedSchedules
-            
-            // Update UI
-            titleLabel.text = topic?.title ?? "Sample Topic"
-            updateProgress()
-            updateStats()
-            tableView.reloadData()
-            
-            // Update topic status
-            let countDiff = mySchedules.count - completedSchedules.count
-            if countDiff == 0 {
-                subtitleLabel.text = "All schedules completed"
-                topic?.subtitle = "All schedules completed"
-                topic?.completed = Timestamp()
-            } else {
-                subtitleLabel.text = "\(countDiff) more to go"
-                topic?.subtitle = "\(countDiff) more to go"
+            if let topicId = topic?.id {
+                mySchedules = try await schedulesDb.findAll(where: ["topic": topicId])
+                let sortedSchedules = mySchedules.sorted { $0.date.dateValue() < $1.date.dateValue() }
+                mySchedules = sortedSchedules
+                
+                // Update UI
+                titleLabel.text = topic?.title ?? "Topic"
+                updateProgress()
+                updateStats()
+                tableView.reloadData()
+                
+                // Update topic status
+                let countDiff = mySchedules.count - completedSchedules.count
+                if countDiff == 0 {
+                    subtitleLabel.text = "All schedules completed"
+                    topic?.subtitle = "All schedules completed"
+                    topic?.completed = Timestamp()
+                } else {
+                    subtitleLabel.text = "\(countDiff) more to go"
+                    topic?.subtitle = "\(countDiff) more to go"
+                }
+                let allScores = try await scoreDb.findAll(where: ["topicId": topic!.id])
+                if allScores.count > 0 {
+                    let totalScore = allScores.reduce(0) { $0 + $1.score}
+                    let totalTotal = allScores.reduce(0) { $0 + $1.total }
+                    let totalPercentage = Double(totalScore)/Double(totalTotal)*100
+                    retentionView.setValue("\(Int(totalPercentage))%")
+                }
+                else {
+                    retentionView.setValue("0")
+                }
+                var topicsTemp = topic
+                try await topicsDb.update(&topicsTemp!)
             }
-            
-            var topicsTemp = topic
-            try await topicsDb.update(&topicsTemp!)
         }
     }
     
     private func updateProgress() {
-        let progress = Float(completedSchedules.count) / Float(mySchedules.count)
+        let progress = mySchedules.isEmpty ? 0 : Float(completedSchedules.count) / Float(mySchedules.count)
         progressView.setProgress(progress, animated: true)
         subtitleLabel.text = "\(completedSchedules.count)/\(mySchedules.count) completed"
     }
@@ -182,43 +192,43 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource {
         if let nextSchedule = mySchedules.first(where: { $0.completed == nil }) {
             let timeUntil = calculateTimeUntil(nextSchedule.date.dateValue())
             nextReviewView.setValue(timeUntil)
+        } else {
+            nextReviewView.setValue("N/A")
         }
     }
     
-    // MARK: - Navigation
+    // MARK: - Actions
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func startQuiz(at index: IndexPath) {
+        performSegue(withIdentifier: "toQuestionVC", sender: mySchedules[index.row])
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toQuestionVCBtn" {
+        if segue.identifier == "toQuestionVC" {
             if let destinationVC = segue.destination as? QuestionViewController {
                 destinationVC.topic = topic
-                if completedSchedules.count == mySchedules.count {
-                    destinationVC.schedule = mySchedules.last!
+                if let schedule = sender as? Schedule {
+                    destinationVC.schedule = schedule
                     return
                 }
                 destinationVC.schedule = mySchedules[completedSchedules.count]
             }
         }
         
-        if segue.identifier == "toQuestionVC",
-           let destinationVC = segue.destination as? QuestionViewController,
-           let index = sender as? IndexPath {
-            destinationVC.topic = topic
-            destinationVC.schedule = mySchedules[index.row]
-        }
     }
-    
-    @IBAction func comeHere(segue: UIStoryboardSegue) {
+    @IBAction func comeHereNow(segue: UIStoryboardSegue) {
         setup()
         tableView.reloadData()
     }
-}
-
-// MARK: - UITableViewDelegate & DataSource
-extension ARScheduleViewController: UITableViewDelegate {
-    @objc func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    // MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return mySchedules.count
     }
     
-    @objc(tableView:cellForRowAtIndexPath:) func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewCell
         let schedule = mySchedules[indexPath.row]
         
@@ -228,14 +238,16 @@ extension ARScheduleViewController: UITableViewDelegate {
             isCompleted: schedule.completed != nil,
             schedule: schedule.id
         )
+        
         cell.startButton.removeTarget(nil, action: nil, for: .touchUpInside)
         cell.startButton.addAction(UIAction { [weak self] _ in
-            self?.performSegue(withIdentifier: "toQuestionVC", sender: indexPath)
-            }, for: .touchUpInside)
+            self?.startQuiz(at: indexPath)
+        }, for: .touchUpInside)
         
         return cell
     }
     
+    // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 76
     }
@@ -290,6 +302,11 @@ class ReviewCell: UITableViewCell {
     private let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBackground
+        view.layer.cornerRadius = 8
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowOffset = CGSize(width: 0, height: 1)
+        view.layer.shadowRadius = 2
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -297,6 +314,7 @@ class ReviewCell: UITableViewCell {
     private let statusBar: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray5
+        view.layer.cornerRadius = 2
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -331,7 +349,7 @@ class ReviewCell: UITableViewCell {
         return label
     }()
     
-     let startButton: UIButton = {
+    let startButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Start Review", for: .normal)
         button.backgroundColor = .systemBlue
@@ -340,7 +358,6 @@ class ReviewCell: UITableViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -352,6 +369,9 @@ class ReviewCell: UITableViewCell {
     }
     
     private func setupUI() {
+        selectionStyle = .none
+        backgroundColor = .clear
+        
         contentView.addSubview(containerView)
         containerView.addSubview(statusBar)
         containerView.addSubview(statusIcon)
@@ -392,30 +412,33 @@ class ReviewCell: UITableViewCell {
         ])
     }
     
-   func configure(day: Int, date: Date, isCompleted: Bool, schedule: String) {
+    func configure(day: Int, date: Date, isCompleted: Bool, schedule: String) {
         titleLabel.text = "Day \(day)"
         dateLabel.text = formatDate(date)
-       Task{
-           if isCompleted {
-               statusBar.backgroundColor = .systemGreen
-               statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
-               statusIcon.tintColor = .systemGreen
-               startButton.isHidden = true
-               retentionLabel.isHidden = false
-               let allscores = try await scoreDb.findAll(where: ["scheduleId":schedule])
-               if let score = allscores.first{
-                   let percentage = (Double(score.score)/Double(score.total)) * 100
-                   retentionLabel.text = "\(Int(percentage))%"
-               }
-           } else {
-               let isToday = Calendar.current.isDateInToday(date)
-               statusBar.backgroundColor = isToday ? .systemBlue : .systemGray5
-               statusIcon.image = isToday ? UIImage(systemName: "arrow.right.circle.fill") : UIImage(systemName: "circle.dashed")
-               statusIcon.tintColor = isToday ? .systemBlue : .systemGray3
-               startButton.isHidden = !isToday
-               retentionLabel.isHidden = true
-           }
-       }
+        
+        Task {
+            if isCompleted {
+                statusBar.backgroundColor = .systemGreen
+                statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
+                statusIcon.tintColor = .systemGreen
+                startButton.isHidden = true
+                retentionLabel.isHidden = false
+                
+                // Get scores from database
+                let allscores = try await scoreDb.findAll(where: ["scheduleId": schedule])
+                if let score = allscores.first {
+                    let percentage = (Double(score.score) / Double(score.total)) * 100
+                    retentionLabel.text = "\(Int(percentage))%"
+                }
+            } else {
+                let isToday = Calendar.current.isDateInToday(date)
+                statusBar.backgroundColor = isToday ? .systemBlue : .systemGray5
+                statusIcon.image = isToday ? UIImage(systemName: "arrow.right.circle.fill") : UIImage(systemName: "circle.dashed")
+                statusIcon.tintColor = isToday ? .systemBlue : .systemGray3
+                startButton.isHidden = !isToday
+                retentionLabel.isHidden = true
+            }
+        }
     }
     
     private func formatDate(_ date: Date) -> String {
@@ -441,5 +464,3 @@ private func calculateTimeUntil(_ date: Date) -> String {
     
     return "N/A"
 }
-
-

@@ -282,7 +282,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
                 retentionView.setValue("\(Int(totalPercentage))%")
             }
             else {
-                retentionView.setValue("N/A")
+                retentionView.setValue("0")
             }
             var topicsTemp = topic
             try await topicsDb.update(&topicsTemp!)

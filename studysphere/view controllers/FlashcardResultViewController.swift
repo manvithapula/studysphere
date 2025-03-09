@@ -15,9 +15,11 @@ class FlashcardResultViewController: UIViewController {
     @IBOutlet weak var needPracticeL: UILabel!
     @IBOutlet weak var percentageL: UILabel!
     @IBOutlet weak var youGot: UILabel!
-    @IBOutlet weak var thatsBetter: UILabel!
+    @IBOutlet weak var nextBtn: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
+        nextBtn.backgroundColor = AppTheme.primary
+        nextBtn.layer.cornerRadius = 25
 
         // Do any additional setup after loading the view.
         // make left navigation button
@@ -25,7 +27,6 @@ class FlashcardResultViewController: UIViewController {
         navigationItem.leftBarButtonItem = leftButton
         let total = memorised + needPractice
         youGot.text = "\(Int(memorised))"
-        thatsBetter.text = "\(Int(memorised/(total)*100))%"
        
     }
     @objc func backButtonTapped() {
