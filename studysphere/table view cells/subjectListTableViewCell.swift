@@ -137,18 +137,14 @@ class subjectListTableViewCell: UITableViewCell {
     
     func configure(with subject: Subject, index: Int) {
         titleLabel.text = subject.name
-        
-        // Generate random topic count for demo
         Task{
             let allTopics = try await topicsDb.findAll(where: ["subject":subject.id])
             let topicsCount = allTopics.count
             topicsCountLabel.text = "\(topicsCount) modules"
         }
         
-        // Set up the icon based on subject
+       
         setupIcon(for: subject.name, at: index)
-        
-        // Set up colors based on index
         setupColors(for: index)
     }
     
@@ -325,7 +321,6 @@ class subjectListTableViewCell: UITableViewCell {
             "drawing": .art,
             "painting": .art,
             "sculpture": .art,
-            "design": .art,
             "graphic design": .art,
             "photography": .art,
             
