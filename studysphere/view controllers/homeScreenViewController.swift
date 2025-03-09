@@ -137,8 +137,8 @@ extension homeScreenViewController {
         stackView.addArrangedSubview(createTodayScheduleView())
         stackView.addArrangedSubview(createSubjectsGridView())
         stackView.addArrangedSubview(createStudyTechniquesView())
-
-       
+        
+        
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
@@ -148,7 +148,7 @@ extension homeScreenViewController {
         ])
     }
     
-
+    
     private func createUploadPDFView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
@@ -235,7 +235,7 @@ extension homeScreenViewController {
         
         return containerView
     }
-
+    
     @objc private func uploadPDFButtonTapped() {
         performSegue(withIdentifier: "toCreate", sender: nil)
     }
@@ -245,7 +245,7 @@ extension homeScreenViewController {
         
         let profileButton = UIButton()
         profileButton.setImage(UIImage(systemName: "person.crop.circle.fill"), for: .normal)
-     
+        
         profileButton.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         profileButton.layer.cornerRadius = 25
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
@@ -256,23 +256,23 @@ extension homeScreenViewController {
                 profileButton.setImage(roundedImage, for: .normal)
             }
         }
-         func makeRoundedImage(_ image: UIImage) -> UIImage? {
-                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-                imageView.contentMode = .scaleAspectFill
-                imageView.layer.cornerRadius = 25  // Half of width/height for perfect circle
-                imageView.layer.masksToBounds = true
-                imageView.image = image
-                UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 0.0)
-                imageView.layer.render(in: UIGraphicsGetCurrentContext()!)
-                let roundedImage = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                
-                return roundedImage
-            }
+        func makeRoundedImage(_ image: UIImage) -> UIImage? {
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+            imageView.contentMode = .scaleAspectFill
+            imageView.layer.cornerRadius = 25  // Half of width/height for perfect circle
+            imageView.layer.masksToBounds = true
+            imageView.image = image
+            UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 0.0)
+            imageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+            let roundedImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            return roundedImage
+        }
         let welcomeLabel = UILabel()
         welcomeLabel.text = "Welcome back!"
         welcomeLabel.font = .systemFont(ofSize: 22, weight: .bold)
-      
+        
         
         let nameLabel = UILabel()
         nameLabel.text = AuthManager.shared.firstName!
@@ -301,7 +301,7 @@ extension homeScreenViewController {
         loadImageFromUserDefaults()
         return headerView
     }
-        
+    
     
     private func createScheduleItemView(for item: ScheduleItem) -> UIView {
         let containerView = UIView()
@@ -393,7 +393,7 @@ extension homeScreenViewController {
         }
         return containerView
     }
-
+    
     private func createSubjectsGridView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
@@ -442,7 +442,7 @@ extension homeScreenViewController {
         
         return containerView
     }
-
+    
     private func createModernSubjectCard(subject: Subject, index: Int) -> UIView {
         // Card container
         let containerView = UIView()
@@ -502,14 +502,14 @@ extension homeScreenViewController {
         
         // Set up gradients
         cardBackground.setGradient(startColor: colors.start,
-                                  endColor: colors.end,
-                                  startPoint: CGPoint(x: 0.0, y: 0.0),
-                                  endPoint: CGPoint(x: 1.0, y: 1.0))
+                                   endColor: colors.end,
+                                   startPoint: CGPoint(x: 0.0, y: 0.0),
+                                   endPoint: CGPoint(x: 1.0, y: 1.0))
         
         iconContainer.setGradient(startColor: iconColors.start,
-                                 endColor: iconColors.end,
-                                 startPoint: CGPoint(x: 0.0, y: 0.0),
-                                 endPoint: CGPoint(x: 1.0, y: 1.0))
+                                  endColor: iconColors.end,
+                                  startPoint: CGPoint(x: 0.0, y: 0.0),
+                                  endPoint: CGPoint(x: 1.0, y: 1.0))
         
         // Set topics count label color
         topicsCountLabel.textColor = iconColors.start.withAlphaComponent(0.8)
@@ -568,7 +568,7 @@ extension homeScreenViewController {
         
         return containerView
     }
-
+    
     
     private func createTodayScheduleView() -> UIView {
         let containerView = UIView()
@@ -616,12 +616,17 @@ extension homeScreenViewController {
     
     private func createStudyTechniquesView() -> UIView {
         let containerView = UIView()
-        containerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
+        containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 16
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.08
+        containerView.layer.shadowRadius = 8
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         
         let titleLabel = UILabel()
         titleLabel.text = "Study Techniques"
         titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let techniquesStack = UIStackView()
@@ -636,8 +641,9 @@ extension homeScreenViewController {
             ("Summariser", "doc.text.fill", TopicsType.summary, "toSuListView")
         ]
         
-        for (title, icon, type, segue) in techniques {
-            let techniqueView = createTechniqueCard(title: title, icon: icon, type: type, segueIdentifier: segue)
+        // Create cards with alternating colors matching the subject cards
+        for (index, (title, icon, type, segue)) in techniques.enumerated() {
+            let techniqueView = createTechniqueCard(title: title, icon: icon, type: type, segueIdentifier: segue, index: index)
             techniquesStack.addArrangedSubview(techniqueView)
         }
         
@@ -659,9 +665,15 @@ extension homeScreenViewController {
         return containerView
     }
     
-    private func createTechniqueCard(title: String, icon: String, type: TopicsType, segueIdentifier: String) -> UIView {
+    private func createTechniqueCard(title: String, icon: String, type: TopicsType, segueIdentifier: String, index: Int) -> UIView {
         let containerView = UIView()
-        containerView.backgroundColor = .white
+        
+        // Alternate between primary and secondary themes
+        let isPrimary = index % 2 == 0
+        let mainColor = isPrimary ? AppTheme.primary : AppTheme.secondary
+        
+        // Set card background color - light version of theme color
+        containerView.backgroundColor = mainColor.withAlphaComponent(0.15)
         containerView.layer.cornerRadius = 12
         containerView.layer.shadowColor = UIColor.black.cgColor
         containerView.layer.shadowOpacity = 0.05
@@ -669,17 +681,18 @@ extension homeScreenViewController {
         containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
         
         let iconContainer = UIView()
-        iconContainer.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
+        iconContainer.backgroundColor = mainColor
         iconContainer.layer.cornerRadius = 20
         
         let iconView = UIImageView()
         iconView.image = UIImage(systemName: icon)
-        iconView.tintColor = AppTheme.primary
+        iconView.tintColor = .white
         iconView.contentMode = .scaleAspectFit
         
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        titleLabel.textColor = .darkText
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 2
         
@@ -713,6 +726,19 @@ extension homeScreenViewController {
             button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             button.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
+        
+        // Add interaction effect similar to subject cells
+        button.addAction(UIAction { _ in
+            UIView.animate(withDuration: 0.2) {
+                containerView.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                UIView.animate(withDuration: 0.2) {
+                    containerView.transform = .identity
+                }
+            }
+        }, for: .touchDown)
         
         return containerView
     }
