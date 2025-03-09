@@ -77,8 +77,6 @@ class homeScreenViewController: UIViewController {
     }
     
     // MARK: - Navigation
-    
-    // Update prepare for segue to handle the new "See All" navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toSubjectDetails" {
             let destination = segue.destination as? subjectViewController
@@ -149,7 +147,7 @@ extension homeScreenViewController {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
-    // Add this method to your homeScreenViewController extension:
+    
 
     private func createUploadPDFView() -> UIView {
         let containerView = UIView()
@@ -247,7 +245,7 @@ extension homeScreenViewController {
         
         let profileButton = UIButton()
         profileButton.setImage(UIImage(systemName: "person.crop.circle.fill"), for: .normal)
-      //  profileButton.tintColor = AppTheme.primary
+     
         profileButton.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         profileButton.layer.cornerRadius = 25
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
@@ -264,8 +262,6 @@ extension homeScreenViewController {
                 imageView.layer.cornerRadius = 25  // Half of width/height for perfect circle
                 imageView.layer.masksToBounds = true
                 imageView.image = image
-                
-                // Convert imageView to image
                 UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 0.0)
                 imageView.layer.render(in: UIGraphicsGetCurrentContext()!)
                 let roundedImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -276,7 +272,7 @@ extension homeScreenViewController {
         let welcomeLabel = UILabel()
         welcomeLabel.text = "Welcome back!"
         welcomeLabel.font = .systemFont(ofSize: 22, weight: .bold)
-       // welcomeLabel.textColor = .s
+      
         
         let nameLabel = UILabel()
         nameLabel.text = AuthManager.shared.firstName!
@@ -402,17 +398,16 @@ extension homeScreenViewController {
         let containerView = UIView()
         containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 16
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.08
+        containerView.layer.shadowRadius = 8
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         
         let titleLabel = UILabel()
         titleLabel.text = "Recent Subjects"
         titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-      /*  let seeAllButton = UIButton()
-        seeAllButton.setTitle("See All", for: .normal)
-        seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
-        seeAllButton.addTarget(self, action: #selector(seeAllSubjectsButtonTapped), for: .touchUpInside)
-        seeAllButton.translatesAutoresizingMaskIntoConstraints = false */
         
         let headerStack = UIStackView(arrangedSubviews: [titleLabel])
         headerStack.axis = .horizontal
@@ -427,7 +422,7 @@ extension homeScreenViewController {
         // Only show first 3 subjects
         let displayedSubjects = subjects.prefix(3)
         for (index, subject) in displayedSubjects.enumerated() {
-            let subjectCard = createSubjectCard(subject: subject, index: index)
+            let subjectCard = createModernSubjectCard(subject: subject, index: index)
             subjectsStack.addArrangedSubview(subjectCard)
         }
         
@@ -447,66 +442,124 @@ extension homeScreenViewController {
         
         return containerView
     }
-    
-  /*  @objc private func seeAllSubjectsButtonTapped() {
-        performSegue(withIdentifier: "toSubjectList", sender: nil)
-    }*/
 
- 
-
-    private func createSubjectCard(subject: Subject, index: Int) -> UIView {
+    private func createModernSubjectCard(subject: Subject, index: Int) -> UIView {
+        // Card container
         let containerView = UIView()
-        containerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
-        containerView.layer.cornerRadius = 12
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOpacity = 0.05
-        containerView.layer.shadowRadius = 5
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
-        let iconContainer = UIView()
-        iconContainer.backgroundColor = .white
-        iconContainer.layer.cornerRadius = 20
+        // Card background with gradient
+        let cardBackground = GradientView()
+        cardBackground.layer.cornerRadius = 12
+        cardBackground.clipsToBounds = true
+        cardBackground.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Icon container with gradient
+        let iconContainer = GradientView()
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        iconContainer.layer.cornerRadius = 24
+        iconContainer.clipsToBounds = true
         
-        let iconView = UIImageView()
-        iconView.image = UIImage(systemName: "book.fill")
-        iconView.tintColor = AppTheme.primary
-        iconView.contentMode = .scaleAspectFit
-        iconView.translatesAutoresizingMaskIntoConstraints = false
+        // Get appropriate icon using SubjectIconService
+        let iconService = subjectListTableViewCell.SubjectIconService()
+        let iconResult = iconService.getIconAndCategory(for: subject.name)
         
+        // Icon image view
+        let iconImageView = UIImageView()
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.tintColor = .white
+        iconImageView.image = UIImage(systemName: iconResult.iconName)
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Subject title label
         let titleLabel = UILabel()
         titleLabel.text = subject.name
-        titleLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
+        titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        // Topics count label (use random topics count just like in the cell)
+        let topicsCountLabel = UILabel()
+        let topicsCount = Int.random(in: 12...20)
+        topicsCountLabel.text = "\(topicsCount) topics"
+        topicsCountLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        topicsCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Setup colors based on index
+        let colorSchemes: [(start: UIColor, end: UIColor, pattern: UIColor)] = [
+            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05), AppTheme.primary.withAlphaComponent(0.1)),
+            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05), AppTheme.secondary.withAlphaComponent(0.1))
+        ]
+        
+        let iconColorSchemes: [(start: UIColor, end: UIColor)] = [
+            (AppTheme.primary, AppTheme.primary.adjustBrightness(by: 0.2)),
+            (AppTheme.secondary, AppTheme.secondary.adjustBrightness(by: 0.2))
+        ]
+        
+        let colorIndex = index % colorSchemes.count
+        let colors = colorSchemes[colorIndex]
+        let iconColors = iconColorSchemes[colorIndex]
+        
+        // Set up gradients
+        cardBackground.setGradient(startColor: colors.start,
+                                  endColor: colors.end,
+                                  startPoint: CGPoint(x: 0.0, y: 0.0),
+                                  endPoint: CGPoint(x: 1.0, y: 1.0))
+        
+        iconContainer.setGradient(startColor: iconColors.start,
+                                 endColor: iconColors.end,
+                                 startPoint: CGPoint(x: 0.0, y: 0.0),
+                                 endPoint: CGPoint(x: 1.0, y: 1.0))
+        
+        // Set topics count label color
+        topicsCountLabel.textColor = iconColors.start.withAlphaComponent(0.8)
+        
+        // Create tap button for the whole card
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction { [weak self] _ in
             self?.performSegue(withIdentifier: "toSubjectDetails", sender: subject)
         }, for: .touchUpInside)
         
-        containerView.addSubview(iconContainer)
-        iconContainer.addSubview(iconView)
-        containerView.addSubview(titleLabel)
+        // Add all subviews
+        containerView.addSubview(cardBackground)
         containerView.addSubview(button)
+        cardBackground.addSubview(iconContainer)
+        iconContainer.addSubview(iconImageView)
+        cardBackground.addSubview(titleLabel)
+        cardBackground.addSubview(topicsCountLabel)
         
         NSLayoutConstraint.activate([
+            // Container view constraints
             containerView.heightAnchor.constraint(equalToConstant: 80),
             
-            iconContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            iconContainer.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            iconContainer.widthAnchor.constraint(equalToConstant: 40),
-            iconContainer.heightAnchor.constraint(equalToConstant: 40),
+            // Card background constraints
+            cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
+            cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
-            iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
-            iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
-            iconView.widthAnchor.constraint(equalToConstant: 20),
-            iconView.heightAnchor.constraint(equalToConstant: 20),
+            // Icon container constraints
+            iconContainer.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            iconContainer.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
+            iconContainer.widthAnchor.constraint(equalToConstant: 48),
+            iconContainer.heightAnchor.constraint(equalToConstant: 48),
             
-            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 12),
-            titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            // Icon image view constraints
+            iconImageView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            iconImageView.widthAnchor.constraint(equalToConstant: 24),
+            iconImageView.heightAnchor.constraint(equalToConstant: 24),
             
+            // Title label constraints
+            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
+            
+            // Topics count label constraints
+            topicsCountLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            topicsCountLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            
+            // Button constraints (cover the whole card)
             button.topAnchor.constraint(equalTo: containerView.topAnchor),
             button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
@@ -515,6 +568,7 @@ extension homeScreenViewController {
         
         return containerView
     }
+
     
     private func createTodayScheduleView() -> UIView {
         let containerView = UIView()
