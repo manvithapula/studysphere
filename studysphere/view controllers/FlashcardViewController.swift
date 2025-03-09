@@ -82,11 +82,6 @@ class FlashcardViewController: UIViewController {
                 let absoluteTranslation = abs(translation.x)
                 cardView.alpha = 1 - (absoluteTranslation / (view.bounds.width / 2))
                 
-                if translation.x > 0 {
-                    view.backgroundColor = .systemGreen.withAlphaComponent(0.7)
-                } else {
-                    view.backgroundColor = .systemRed.withAlphaComponent(0.7)
-                }
             
             case .ended:
                 isDragging = false
@@ -102,7 +97,6 @@ class FlashcardViewController: UIViewController {
                         self.cardView.center = self.cardInitialCenter
                         self.cardView.transform = .identity
                         self.cardView.alpha = 1
-                        self.view.backgroundColor = .white
                     }
                 }
             
@@ -144,7 +138,6 @@ class FlashcardViewController: UIViewController {
                     self.cardView.center = self.cardInitialCenter
                     self.cardView.transform = .identity
                     self.cardView.alpha = 1
-                    self.view.backgroundColor = .white
                 } else {
                     // Last card - navigate to result screen
                     self.updateCompletion()
