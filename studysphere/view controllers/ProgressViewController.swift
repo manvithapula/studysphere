@@ -116,7 +116,7 @@ class ProgressViewController: UIViewController {
     private func createChartContainer(
         title: String, chartView: UIView, container: UIView
     ) {
-        container.backgroundColor = .systemBackground
+        container.backgroundColor = AppTheme.secondary.withAlphaComponent(0.1)
         container.layer.cornerRadius = 10
         container.layer.shadowColor = UIColor.black.cgColor
         container.layer.shadowOffset = CGSize(width: 0, height: 2)
