@@ -158,7 +158,16 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
                     subtitleLabel.text = "\(countDiff) more to go"
                     topic?.subtitle = "\(countDiff) more to go"
                 }
-                
+                let allScores = try await scoreDb.findAll(where: ["topicId": topic!.id])
+                if allScores.count > 0 {
+                    let totalScore = allScores.reduce(0) { $0 + $1.score}
+                    let totalTotal = allScores.reduce(0) { $0 + $1.total }
+                    let totalPercentage = Double(totalScore)/Double(totalTotal)*100
+                    retentionView.setValue("\(Int(totalPercentage))%")
+                }
+                else {
+                    retentionView.setValue("0")
+                }
                 var topicsTemp = topic
                 try await topicsDb.update(&topicsTemp!)
             }

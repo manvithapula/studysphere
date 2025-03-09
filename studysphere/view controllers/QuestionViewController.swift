@@ -444,6 +444,8 @@ class QuestionViewController: UIViewController {
             if var scheduleTemp = schedule {
                 try await schedulesDb.update(&scheduleTemp)
             }
+            var score = Score(id: "", score: score, total: questions.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
+            let _ = scoreDb.create(&score)
             
         }
         performSegue(withIdentifier: "toARAnimation", sender: self)
