@@ -452,7 +452,6 @@ class FakeDb<T: Codable & Identifiable> {
         return items.first { item in
             guard let itemDict = try? item.asDictionary() else { return false }
             
-            // Check if all conditions match
             return conditions.allSatisfy { key, value in
                 if let itemValue = itemDict[key] {
                     return String(describing: itemValue) == String(describing: value)

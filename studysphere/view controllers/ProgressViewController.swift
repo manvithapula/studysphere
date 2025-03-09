@@ -27,6 +27,9 @@ class ProgressViewController: UIViewController {
     @IBOutlet weak var questionChartView: UIView!
     private let streakLineChartView = LineChartView()
     private let questionLineChartView = LineChartView()
+    
+    private let scoreBarChartView = BarChartView() 
+    @IBOutlet weak var scoreChartContainer: UIView!
 
     fileprivate func updateUI() {
         Task {
@@ -37,10 +40,14 @@ class ProgressViewController: UIViewController {
             createChartContainer(
                 title: "Active Recall", chartView: questionLineChartView,
                 container: questionChartView)
+            createChartContainer(
+                            title: "Performance Scores", chartView: scoreBarChartView,
+                            container: scoreChartContainer)
             await configureStreakLineChart(
                 lineChart: streakLineChartView, topic: TopicsType.flashcards)
             await configureStreakLineChart(
                 lineChart: questionLineChartView, topic: TopicsType.quizzes)
+            await configureScoreBarChart(barChart: scoreBarChartView)
 
         }
     }
@@ -267,5 +274,157 @@ class ProgressViewController: UIViewController {
             print("Error fetching streak chart data: \(error)")
         }
     }
+    private func getRecentScores() async throws -> [Score] {
+            let today = Calendar.current.startOfDay(for: Date())
+            let oneMonthAgo = Calendar.current.date(
+                byAdding: .month, value: -1, to: today)!
+                
+            // Get scores from database (assuming you have a scoresDb similar to schedulesDb)
+        let scores = try await scoreDb.findAll()
+            
+            let recentScores = scores.filter {
+                let scoreDate = Calendar.current.startOfDay(
+                    for: $0.createdAt.dateValue())
+                return scoreDate >= oneMonthAgo && scoreDate <= today
+            }
+            
+            return recentScores
+        }
+        
+        // Method to calculate average scores by topic
+        private func getAverageScoresByTopic() async throws -> [(topicId: String, averageScore: Double, totalAttempts: Int)] {
+            let scores = try await getRecentScores()
+            
+            // Group scores by topic ID
+            var scoresByTopic: [String: [Score]] = [:]
+            for score in scores {
+                if scoresByTopic[score.topicId] == nil {
+                    scoresByTopic[score.topicId] = []
+                }
+                scoresByTopic[score.topicId]?.append(score)
+            }
+            
+            // Calculate average score for each topic
+            var results: [(topicId: String, averageScore: Double, totalAttempts: Int)] = []
+            for (topicId, topicScores) in scoresByTopic {
+                let totalScore = topicScores.reduce(0) { $0 + $1.score }
+                let totalPossible = topicScores.reduce(0) { $0 + $1.total }
+                let averagePercentage = totalPossible > 0 ? Double(totalScore) / Double(totalPossible) * 100.0 : 0
+                results.append((topicId: topicId, averageScore: averagePercentage, totalAttempts: topicScores.count))
+            }
+            
+            // Sort by average score (highest first)
+            return results.sorted { $0.averageScore > $1.averageScore }
+        }
+        
+        // Configure bar chart to display scores
+        private func configureScoreBarChart(barChart: BarChartView) async {
+            do {
+                let scoreData = try await getAverageScoresByTopic()
+                
+                // Limit to top 5 topics if there are more
+                let topScores = Array(scoreData.prefix(5))
+                
+                // Create entries for the bar chart
+                var entries: [BarChartDataEntry] = []
+                var topicLabels: [String] = []
+                
+                for (index, scoreInfo) in topScores.enumerated() {
+                    let entry = BarChartDataEntry(x: Double(index), y: scoreInfo.averageScore)
+                    entries.append(entry)
+                    
+                    // Get topic name (you might need to fetch this from a topics database)
+                    // For now, just use the topic ID
+                    if let topic = topicsDb.findFirst(where: ["id":scoreInfo.topicId]){
+                        topicLabels.append(topic.title)
+                    }
+                    else{
+                        topicLabels.append(scoreInfo.topicId)
+                    }
+                    
+                    // You could fetch full topic names like this:
+                    // let topic = try await topicsDb.find(id: scoreInfo.topicId)
+                    // topicLabels.append(topic.name)
+                }
+                
+                let dataSet = BarChartDataSet(entries: entries, label: "Average Score (%)")
+                
+                // Style the bars
+                dataSet.colors = [AppTheme.primary]
+                dataSet.valueTextColor = .label
+                dataSet.valueFont = .systemFont(ofSize: 10)
+                
+                // Format value labels as percentages
+                let valueFormatter = NumberFormatter()
+                valueFormatter.numberStyle = .decimal
+                valueFormatter.maximumFractionDigits = 1
+                dataSet.valueFormatter = DefaultValueFormatter(formatter: valueFormatter)
+                
+                let data = BarChartData(dataSet: dataSet)
+                data.barWidth = 0.6
+                barChart.data = data
+                
+                // Configure axes
+                barChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: topicLabels)
+                barChart.xAxis.labelPosition = .bottom
+                barChart.xAxis.granularity = 1
+//                barChart.xAxis.labelRotationAngle = -45 // Rotate labels if topic names are long
+                
+                barChart.leftAxis.axisMinimum = 0
+                barChart.leftAxis.axisMaximum = 100 // 100% maximum
+                barChart.leftAxis.granularity = 20
+                
+                barChart.rightAxis.enabled = false
+                barChart.legend.enabled = false
+                
+                
+                barChart.animate(yAxisDuration: 1.0)
+                
+            } catch {
+                print("Error fetching and displaying score data: \(error)")
+            }
+        }
 
+}
+
+
+class BarChartMarkerView: MarkerView {
+    private let color: UIColor
+    private let font: UIFont
+    private let textColor: UIColor
+    
+    init(color: UIColor, font: UIFont, textColor: UIColor) {
+        self.color = color
+        self.font = font
+        self.textColor = textColor
+        super.init(frame: CGRect(x: 0, y: 0, width: 60, height: 30))
+        self.offset = CGPoint(x: 0, y: -10)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func refreshContent(entry: ChartDataEntry, highlight: Highlight) {
+        let attempt = "Attempts: \(Int(entry.data as? Int ?? 0))"
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        let attributedString = NSMutableAttributedString(string: attempt)
+        attributedString.setAttributes([.font: font, .foregroundColor: textColor, .paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: attempt.count))
+        
+        (self.subviews[0] as? UILabel)?.attributedText = attributedString
+    }
+    
+     func draw(_ rect: CGRect, context: CGContext) {
+        // Draw rounded rect background
+        let roundedRect = CGRect(x: 0, y: 0, width: rect.size.width, height: rect.size.height)
+        
+        context.setFillColor(color.cgColor)
+        context.beginPath()
+        context.addPath(UIBezierPath(roundedRect: roundedRect, cornerRadius: 5).cgPath)
+        context.closePath()
+        context.fillPath()
+    }
 }
