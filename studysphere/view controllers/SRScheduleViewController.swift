@@ -168,8 +168,8 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
     
     private let progressView: UIProgressView = {
         let progress = UIProgressView(progressViewStyle: .bar)
-        progress.trackTintColor = .lightGray
-        progress.progressTintColor = AppTheme.primary
+        progress.trackTintColor = AppTheme.primary.withAlphaComponent(0.2)
+        progress.progressTintColor = AppTheme.secondary
         progress.layer.cornerRadius = 4
         progress.clipsToBounds = true
         progress.translatesAutoresizingMaskIntoConstraints = false
@@ -186,7 +186,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
     }()
     
     private let retentionView = StatView(title: "Average Retention")
-    private let nextReviewView = StatView(title: "Next Review")
+  //  private let nextReviewView = StatView(title: "Next Review")
     
     private let tableView: UITableView = {
         let table = UITableView()
@@ -218,7 +218,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
         view.addSubview(progressView)
         view.addSubview(statsContainer)
         statsContainer.addArrangedSubview(retentionView)
-        statsContainer.addArrangedSubview(nextReviewView)
+      //  statsContainer.addArrangedSubview(nextReviewView)
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -261,7 +261,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
             // Update UI
             titleLabel.text = topic?.title ?? "Flashcard Set"
             updateProgress()
-            updateStats()
+           // updateStats()
             tableView.reloadData()
             
             // Update topic status
@@ -295,7 +295,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
         subtitleLabel.text = "\(completedSchedules.count)/\(mySchedules.count) reviewed"
     }
     
-    private func updateStats() {
+  /*  private func updateStats() {
         // Calculate retention (implement your actual retention calculation)
         
         // Calculate next review
@@ -303,7 +303,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
             let timeUntil = calculateTimeUntil(nextSchedule.date.dateValue())
             nextReviewView.setValue(timeUntil)
         }
-    }
+    }*/
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

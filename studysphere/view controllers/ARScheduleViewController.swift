@@ -30,10 +30,8 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
     private let progressView: UIProgressView = {
         let progress = UIProgressView(progressViewStyle: .bar)
 
-        progress.trackTintColor = AppTheme.primary
-
-    
-        progress.progressTintColor = .systemOrange
+        progress.trackTintColor = AppTheme.primary.withAlphaComponent(0.2)
+        progress.progressTintColor = AppTheme.secondary
         progress.layer.cornerRadius = 4
         progress.clipsToBounds = true
         progress.translatesAutoresizingMaskIntoConstraints = false
@@ -97,7 +95,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
         view.addSubview(progressView)
         view.addSubview(statsContainer)
         statsContainer.addArrangedSubview(retentionView)
-        statsContainer.addArrangedSubview(nextReviewView)
+       // statsContainer.addArrangedSubview(nextReviewView)
         view.addSubview(tableView)
         
         // Layout constraints
@@ -152,7 +150,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
                 // Update UI
                 titleLabel.text = topic?.title ?? "Topic"
                 updateProgress()
-                updateStats()
+               // updateStats()
                 tableView.reloadData()
                 
                 // Update topic status
@@ -189,7 +187,7 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
     
     private func updateStats() {
         // Calculate retention (this is a placeholder - implement your actual retention calculation)
-        let retention = "88%"
+        let retention = "0%"
         retentionView.setValue(retention)
         
         // Calculate next review
