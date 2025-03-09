@@ -499,12 +499,18 @@ extension homeScreenViewController {
         titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        // Topics count label (use random topics count just like in the cell)
+        
         let topicsCountLabel = UILabel()
-        let topicsCount = Int.random(in: 12...20)
-        topicsCountLabel.text = "\(topicsCount) topics"
         topicsCountLabel.font = .systemFont(ofSize: 13, weight: .medium)
         topicsCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        Task {
+            let allTopics = try await topicsDb.findAll(where: ["subject":subject.id])
+            let topicsCount = allTopics.count
+
+            await MainActor.run {
+                topicsCountLabel.text = "\(topicsCount) modules"
+            }
+        }
         
         // Setup colors based on index
         let colorSchemes: [(start: UIColor, end: UIColor, pattern: UIColor)] = [

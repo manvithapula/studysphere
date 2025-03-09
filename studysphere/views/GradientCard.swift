@@ -1,3 +1,11 @@
+//
+//  GradientCard.swift
+//  studysphere
+//
+//  Created by admin64 on 10/03/25.
+//
+
+
 import UIKit
 
 class GradientCard: UIView {

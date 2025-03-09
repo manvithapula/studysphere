@@ -115,7 +115,7 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         let colors = colorSchemes[colorIndex]
         let iconColors = iconColorSchemes[colorIndex]
 
-        // Apply gradient to containerView
+     
         containerView.setGradient(
             startColor: colors.start,
             endColor: colors.end,
