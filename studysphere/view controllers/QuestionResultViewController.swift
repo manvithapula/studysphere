@@ -21,8 +21,13 @@ class QuestionResultViewController: UIViewController {
     @IBOutlet weak var scoreLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        nextBtn.backgroundColor = AppTheme.primary
+        view.backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
+
+        nextBtn.backgroundColor = AppTheme.secondary
         nextBtn.layer.cornerRadius = 25
+
+       nextBtn.backgroundColor = AppTheme.secondary
+       nextBtn.layer.cornerRadius = 25
 
         // Do any additional setup after loading the view.
         // make left navigation button

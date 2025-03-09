@@ -18,7 +18,13 @@ class FlashcardResultViewController: UIViewController {
     @IBOutlet weak var nextBtn: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        nextBtn.backgroundColor = AppTheme.primary
+        // Set background color with alpha
+         view.backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
+
+         nextBtn.backgroundColor = AppTheme.secondary
+         nextBtn.layer.cornerRadius = 25
+
+        nextBtn.backgroundColor = AppTheme.secondary
         nextBtn.layer.cornerRadius = 25
 
         // Do any additional setup after loading the view.
