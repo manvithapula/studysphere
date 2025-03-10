@@ -218,7 +218,7 @@ class CreateViewController: UIViewController {
         apiKey = Secrets.geminiAPIKey
         setupUI()
         setupActions()
-        setupTapGesture()
+//        setupTapGesture()
     }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))

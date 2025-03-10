@@ -18,7 +18,7 @@ class subjectListTableViewController: UITableViewController {
           super.viewDidLoad()
           setupUI()
           loadSubjects()
-          setupTapGesture()
+//          setupTapGesture()
           Task {
               subjects = try await subjectDb.findAll()
               tableView.reloadData()

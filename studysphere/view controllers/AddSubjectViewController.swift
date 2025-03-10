@@ -39,7 +39,7 @@ class AddSubjectViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
-        setupTapGesture()
+//        setupTapGesture()
     }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))

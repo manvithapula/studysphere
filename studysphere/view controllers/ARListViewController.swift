@@ -36,7 +36,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            setupTapGesture()
+//            setupTapGesture()
             ARList.dataSource = self
             ARList.delegate = self
             ARList.setCollectionViewLayout(generateLayout(), animated: true)

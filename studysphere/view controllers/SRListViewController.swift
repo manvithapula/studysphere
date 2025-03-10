@@ -35,7 +35,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            setupTapGesture()
+//            setupTapGesture()
             SpacedRepetitionList.dataSource = self
             SpacedRepetitionList.delegate = self
             SpacedRepetitionList.setCollectionViewLayout(generateLayout(), animated: true)
