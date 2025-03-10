@@ -88,6 +88,14 @@ var studyTechniques: [StudyTechnique] = [
     StudyTechnique(name: "Review", completedSessions: 5, totalSessions: 10)
 ]
 
+struct StudyDocument {
+    let id: String
+    let title: String
+    let dateAdded: Date
+    let fileURL: URL
+    
+}
+
 struct DashboardData {
     let userProfile: UserProfile
     let streak: [StreakDay]
@@ -95,15 +103,6 @@ struct DashboardData {
     let subjects: [Subject]
     let studyTechniques: [StudyTechnique]
 }
-/*let streakValues = [
-    false,
-    false,
-    true,
-    true,
-    true,
-    true,
-    true
-]*/
 
 //subject
 struct Subject:Codable,Identifiable{
