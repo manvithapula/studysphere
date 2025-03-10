@@ -98,6 +98,13 @@ class homeScreenViewController: UIViewController {
                     destinationVC.topic = topic
                 }
             }
+            else if let destinationVC = segue.destination as? UINavigationController{
+                if let destination = destinationVC.topViewController as? SRScheduleViewController{
+                    if let topic = sender as? Topics {
+                        destination.topic = topic
+                    }
+                }
+            }
         }
     }
 }

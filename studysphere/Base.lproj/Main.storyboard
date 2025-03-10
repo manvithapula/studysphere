@@ -26,12 +26,12 @@
                         <segue destination="yXa-Zf-mng" kind="show" identifier="toArListView" id="Jbn-O3-vLb"/>
                         <segue destination="ivI-JP-b7I" kind="show" identifier="toSuListView" id="czB-x8-mGf"/>
                         <segue destination="Xu4-hE-HiR" kind="show" identifier="toSubjectDetails" id="qtl-9G-7g1"/>
-                        <segue destination="KzB-74-32G" kind="show" identifier="toFLS" id="yUW-6S-VXD"/>
                         <segue destination="vhf-AP-aDg" kind="show" identifier="toQTS" id="651-AB-nO7"/>
                         <segue destination="K64-T5-C6F" kind="presentation" identifier="TodaysLearningSegue" id="lSl-Lg-anb"/>
                         <segue destination="t49-nW-ykK" kind="show" identifier="toSubjectList" id="IXb-z0-nX3"/>
                         <segue destination="Upo-AS-Fqd" kind="presentation" identifier="toProfile" id="ZLD-qb-sIT"/>
                         <segue destination="065-Ov-wae" kind="presentation" identifier="toCreate" id="CMx-qd-Db9"/>
+                        <segue destination="KzB-74-32G" kind="show" identifier="toFLS" id="LYh-Wz-AME"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="481-eY-8Zo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1613,7 +1613,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2132,8 +2132,8 @@
                                     <action selector="goBack:" destination="r3D-Bs-KK1" eventType="touchUpInside" id="Eo1-jv-CfD"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xM4-Ns-zKx">
-                                <rect key="frame" x="180" y="514" width="32" height="56"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xM4-Ns-zKx">
+                                <rect key="frame" x="166" y="515" width="61" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="40"/>
                                 <color key="textColor" systemColor="systemGreenColor"/>
@@ -2258,9 +2258,9 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="651-AB-nO7"/>
-        <segue reference="vbk-8J-x7B"/>
+        <segue reference="LYh-Wz-AME"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="BI1-l1-Jlu"/>
+        <segue reference="qtl-9G-7g1"/>
         <segue reference="paQ-p4-NU6"/>
         <segue reference="IXb-z0-nX3"/>
     </inferredMetricsTieBreakers>

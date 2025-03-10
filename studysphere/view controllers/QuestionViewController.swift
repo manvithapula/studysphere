@@ -12,7 +12,6 @@ class QuestionViewController: UIViewController {
     private var selectedButton: UIButton?
     
     // MARK: - UI Components
-    private let backButton = UIButton(type: .system)
     private let progressBar = UIProgressView(progressViewStyle: .default)
     private let progressLabel = UILabel()
     private let questionCardView = UIView()
@@ -48,7 +47,6 @@ class QuestionViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.isTabBarHidden = true
-        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     // MARK: - Background Setup
@@ -66,7 +64,6 @@ class QuestionViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        setupBackButton()
         setupProgressBar()
         setupQuestionCard()
         setupOptionStack()
@@ -74,19 +71,6 @@ class QuestionViewController: UIViewController {
         applyConstraints()
     }
     
-    private func setupBackButton() {
-        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
-        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: configuration), for: .normal)
-        backButton.setTitle("  Back", for: .normal)
-        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        backButton.tintColor = AppTheme.primary
-        backButton.contentHorizontalAlignment = .left
-        backButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        backButton.addTarget(self, action: #selector(buttonTouchDown(_:)), for: .touchDown)
-        backButton.addTarget(self, action: #selector(buttonTouchUp(_:)), for: [.touchUpInside, .touchUpOutside, .touchCancel])
-        view.addSubview(backButton)
-    }
     
     private func setupProgressBar() {
         progressBar.progressTintColor = AppTheme.secondary
@@ -281,7 +265,7 @@ class QuestionViewController: UIViewController {
     
     private func applyConstraints() {
         // Make all views use auto layout
-        for view in [backButton, progressBar, progressLabel, questionCardView, questionTextLabel, optionStackView, nextButton] {
+        for view in [progressBar, progressLabel, questionCardView, questionTextLabel, optionStackView, nextButton] {
             view.translatesAutoresizingMaskIntoConstraints = false
         }
         
@@ -290,13 +274,9 @@ class QuestionViewController: UIViewController {
         let margins = view.layoutMarginsGuide
         
         NSLayoutConstraint.activate([
-            // Back button
-            backButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16),
-            backButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 4),
-            backButton.heightAnchor.constraint(equalToConstant: 40),
             
             // Progress bar
-            progressBar.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 20),
+            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
             progressBar.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 8),
             progressBar.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -8),
             progressBar.heightAnchor.constraint(equalToConstant: 8),
