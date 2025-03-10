@@ -18,11 +18,20 @@ class subjectListTableViewController: UITableViewController {
           super.viewDidLoad()
           setupUI()
           loadSubjects()
+          setupTapGesture()
           Task {
               subjects = try await subjectDb.findAll()
               tableView.reloadData()
           }
       }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
       
       private func setupUI() {
           // Configure navigation bar

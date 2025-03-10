@@ -36,6 +36,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         override func viewDidLoad() {
             super.viewDidLoad()
+            setupTapGesture()
             ARList.dataSource = self
             ARList.delegate = self
             ARList.setCollectionViewLayout(generateLayout(), animated: true)
@@ -53,6 +54,14 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             }
 
         }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
        
         @objc func segmentChanged() {
             filterState = segmentControl.selectedSegmentIndex == 0 ? .ongoing : .completed

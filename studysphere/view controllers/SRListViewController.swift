@@ -35,6 +35,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         override func viewDidLoad() {
             super.viewDidLoad()
+            setupTapGesture()
             SpacedRepetitionList.dataSource = self
             SpacedRepetitionList.delegate = self
             SpacedRepetitionList.setCollectionViewLayout(generateLayout(), animated: true)
@@ -47,6 +48,14 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
                 SpacedRepetitionList.reloadData()
             }
         }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
        
         @objc func segmentChanged() {
             filterState = segmentControl.selectedSegmentIndex == 0 ? .ongoing : .completed

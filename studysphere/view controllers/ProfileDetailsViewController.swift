@@ -32,6 +32,15 @@ class ProfileDetailsViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupDatePicker()
+        setupTapGesture()
+    }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     private func setupUI() {

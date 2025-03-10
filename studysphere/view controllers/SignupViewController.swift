@@ -72,7 +72,16 @@ class SignupViewController: UIViewController {
             setupUI()
             setupConstraints()
             setupDatePicker()
+            setupTapGesture()
         }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
         
         // MARK: - UI Setup
             

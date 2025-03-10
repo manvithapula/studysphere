@@ -38,7 +38,16 @@ class SummaryListViewController: UIViewController{
           configureCollectionView()
           setupActions()
           loadData()
+          setupTapGesture()
       }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
       
       override func viewWillAppear(_ animated: Bool) {
           super.viewWillAppear(animated)
