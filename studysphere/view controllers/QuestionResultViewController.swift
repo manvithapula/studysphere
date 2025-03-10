@@ -176,7 +176,7 @@ class QuestionResultViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             let iconConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
-            learnedIcon.image = UIImage(systemName: "brain", withConfiguration: iconConfig)
+            learnedIcon.image = UIImage(systemName: "correctmark", withConfiguration: iconConfig)
             reviewIcon.image = UIImage(systemName: "repeat", withConfiguration: iconConfig)
         }
         
@@ -185,13 +185,13 @@ class QuestionResultViewController: UIViewController {
         
         // Learned label (replacing "memorised")
         learnedLabel.translatesAutoresizingMaskIntoConstraints = false
-        learnedLabel.text = "Cards mastered: 0"
+        learnedLabel.text = "Answered correctly: 0"
         learnedLabel.textColor = .black // Changed to black for visibility
         learnedLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         
         // Review label (replacing "need practice")
         reviewLabel.translatesAutoresizingMaskIntoConstraints = false
-        reviewLabel.text = "Cards to review: 0"
+        reviewLabel.text = "Needs more practice: 0"
         reviewLabel.textColor = .black // Changed to black for visibility
         reviewLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         
