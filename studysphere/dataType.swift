@@ -485,6 +485,9 @@ class FakeDb<T: Codable & Identifiable> {
         collection.document(id).delete()
         saveData()
     }
+    public func clearCache(){
+        items = []
+    }
     
     @available(iOS 15.0, *)
     private func loadData() async -> [T] {

@@ -203,6 +203,14 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
         private func performLogout() {
             // Clear user data
             AuthManager.shared.logOut()
+            userDB.clearCache()
+            subjectDb.clearCache()
+            scoreDb.clearCache()
+            topicsDb.clearCache()
+            schedulesDb.clearCache()
+            flashCardDb.clearCache()
+            summaryDb.clearCache()
+            questionsDb.clearCache()
 
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let navVC = storyboard.instantiateViewController(withIdentifier: "loginNav") as? UINavigationController {
