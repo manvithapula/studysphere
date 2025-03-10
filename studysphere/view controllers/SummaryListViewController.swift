@@ -38,7 +38,7 @@ class SummaryListViewController: UIViewController{
           configureCollectionView()
           setupActions()
           loadData()
-          setupTapGesture()
+//          setupTapGesture()
       }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
