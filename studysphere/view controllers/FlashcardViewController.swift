@@ -29,7 +29,7 @@ class FlashcardViewController: UIViewController {
         private let dragThreshold: CGFloat = 100 // Distance to trigger card change
         private var isDragging = false
     
-    private let tutorialKey = "hasSeenFlashcardTutorial"
+    private let tutorialKey = "hasSeenFlashcardTutorial100"
         private var tutorialView: UIView?
         private var demoCard: UIView?
         
