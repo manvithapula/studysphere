@@ -3,8 +3,8 @@ import FirebaseFirestore
 
 class DocumentsViewController: UIViewController {
     // MARK: - Properties
-    private var documents: [StudyDocument] = [] // Original list
-    private var filteredDocuments: [StudyDocument] = [] // For search
+    private var documents: [FileMetadata] = [] // Original list
+    private var filteredDocuments: [FileMetadata] = [] // For search
     private var subjects: [Subject] = [] // Subject list
     private var selectedSubject: Subject? // Track selected subject
     
@@ -118,7 +118,7 @@ class DocumentsViewController: UIViewController {
     }
     
     // MARK: - Actions
-    private func showStudyTechniquesModal(for document: StudyDocument) {
+    private func showStudyTechniquesModal(for document: FileMetadata) {
         let studyTechniquesVC = StudyTechniquesViewController(document: document)
         studyTechniquesVC.modalPresentationStyle = .pageSheet
         
@@ -140,7 +140,7 @@ extension DocumentsViewController: UISearchBarDelegate {
     private func filterDocuments(searchText: String) {
         if searchText.isEmpty {
             if let selectedSubject = selectedSubject {
-                filterDocumentsBySubject(selectedSubject.name)
+                filterDocumentsBySubject(selectedSubject.id)
             } else {
                 filteredDocuments = documents
             }
@@ -157,7 +157,8 @@ extension DocumentsViewController: UISearchBarDelegate {
     }
     
     private func filterDocumentsBySubject(_ subject: String) {
-        filteredDocuments = documents.filter { $0.title.contains(subject) }
+        print(documents,subject)
+        filteredDocuments = documents.filter { $0.subjectId == subject }
         documentsCollectionView.reloadData()
     }
 }
@@ -207,7 +208,7 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
                 filteredDocuments = documents
             } else {
                 selectedSubject = subjects[indexPath.item]
-                filterDocumentsBySubject(subjects[indexPath.item].name)
+                filterDocumentsBySubject(subjects[indexPath.item].id)
             }
             subjectsCollectionView.reloadData()
         } else {
@@ -220,22 +221,18 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
 // MARK: - Load Data
 extension DocumentsViewController {
     func loadTestDocuments() {
-        let testDocuments = [
-            StudyDocument(id: "1", title: "Swift Basics", dateAdded: Date(), fileURL: URL(string: "file:///swift.pdf")!),
-            StudyDocument(id: "2", title: "Math Formulas", dateAdded: Date(), fileURL: URL(string: "file:///math.pdf")!),
-            StudyDocument(id: "3", title: "Biology Notes", dateAdded: Date(), fileURL: URL(string: "file:///bio.pdf")!)
-        ]
-        documents = testDocuments
-        filteredDocuments = testDocuments
-        documentsCollectionView.reloadData()
+        Task{
+            let testDocuments = try await metadataDb.findAll()
+            documents = testDocuments
+            filteredDocuments = testDocuments
+            documentsCollectionView.reloadData()
+        }
     }
     
     func loadSubjects() {
-        subjects = [
-            Subject(id: "1", name: "Swift", createdAt: Timestamp(date: Date()), updatedAt: Timestamp(date: Date())),
-            Subject(id: "2", name: "Math", createdAt: Timestamp(date: Date()), updatedAt: Timestamp(date: Date())),
-            Subject(id: "3", name: "Biology", createdAt: Timestamp(date: Date()), updatedAt: Timestamp(date: Date()))
-        ]
-        subjectsCollectionView.reloadData()
+        Task{
+            subjects = try await subjectDb.findAll()
+            subjectsCollectionView.reloadData()
+        }
     }
 }

@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3563131E2D7F51B700DDF6CB /* DocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3563131D2D7F51B700DDF6CB /* DocumentsViewController.swift */; };
-		356313222D7F52EA00DDF6CB /* DocumentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356313212D7F52EA00DDF6CB /* DocumentCell.swift */; };
 		356313AF2D7F53BC00DDF6CB /* StudyTechniquesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356313AE2D7F53BC00DDF6CB /* StudyTechniquesViewController.swift */; };
 		3563143C2D7F62EE00DDF6CB /* SubjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3563143B2D7F62EE00DDF6CB /* SubjectCell.swift */; };
 		424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 424AE6FE2CE5BA4500E7376F /* Lottie */; };
@@ -16,6 +14,7 @@
 		42566DA32D553FB2007C170D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA22D553FB2007C170D /* FirebaseAuth */; };
 		42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA42D553FB2007C170D /* FirebaseCore */; };
 		42566DA72D553FB2007C170D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA62D553FB2007C170D /* FirebaseFirestore */; };
+		429760232D7FE9FC00A6F8ED /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 429760222D7FE9FC00A6F8ED /* FirebaseStorage */; };
 		42B828E52D55400E009BE803 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 42B828E42D55400E009BE803 /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
@@ -40,8 +39,6 @@
 		350226142CCF5C50006F019D /* studysphere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = studysphere.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3502262A2CCF5C51006F019D /* studysphereTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studysphereTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		350226342CCF5C51006F019D /* studysphereUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studysphereUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3563131D2D7F51B700DDF6CB /* DocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentsViewController.swift; sourceTree = "<group>"; };
-		356313212D7F52EA00DDF6CB /* DocumentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCell.swift; sourceTree = "<group>"; };
 		356313AE2D7F53BC00DDF6CB /* StudyTechniquesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTechniquesViewController.swift; sourceTree = "<group>"; };
 		3563143B2D7F62EE00DDF6CB /* SubjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,6 +83,7 @@
 				424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */,
 				42566DA72D553FB2007C170D /* FirebaseFirestore in Frameworks */,
 				42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */,
+				429760232D7FE9FC00A6F8ED /* FirebaseStorage in Frameworks */,
 				4250441F2D7C83FB00B55EB9 /* DGCharts in Frameworks */,
 				42566DA32D553FB2007C170D /* FirebaseAuth in Frameworks */,
 			);
@@ -118,8 +116,6 @@
 				350226372CCF5C51006F019D /* studysphereUITests */,
 				424AE6FD2CE5BA4500E7376F /* Frameworks */,
 				350226152CCF5C50006F019D /* Products */,
-				3563131D2D7F51B700DDF6CB /* DocumentsViewController.swift */,
-				356313212D7F52EA00DDF6CB /* DocumentCell.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -166,6 +162,7 @@
 				42566DA62D553FB2007C170D /* FirebaseFirestore */,
 				42B828E42D55400E009BE803 /* GoogleGenerativeAI */,
 				4250441E2D7C83FB00B55EB9 /* DGCharts */,
+				429760222D7FE9FC00A6F8ED /* FirebaseStorage */,
 			);
 			productName = studysphere;
 			productReference = 350226142CCF5C50006F019D /* studysphere.app */;
@@ -296,8 +293,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3563131E2D7F51B700DDF6CB /* DocumentsViewController.swift in Sources */,
-				356313222D7F52EA00DDF6CB /* DocumentCell.swift in Sources */,
 				356313AF2D7F53BC00DDF6CB /* StudyTechniquesViewController.swift in Sources */,
 				3563143C2D7F62EE00DDF6CB /* SubjectCell.swift in Sources */,
 			);
@@ -676,6 +671,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 42566DA12D553FB2007C170D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		429760222D7FE9FC00A6F8ED /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 42566DA12D553FB2007C170D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 		42B828E42D55400E009BE803 /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;

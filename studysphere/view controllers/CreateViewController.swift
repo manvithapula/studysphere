@@ -210,6 +210,7 @@ class CreateViewController: UIViewController {
     private var document:URL?
     //  add a boolean to track when the document is already uploaded
     private var isDocUploaded: Bool = false
+    private var documentObject:FileMetadata?
 
 
     // MARK: - Lifecycle
@@ -623,6 +624,27 @@ extension CreateViewController: UIDocumentPickerDelegate {
         fileUploadView.layer.borderWidth = 0.5
         fileUploadView.titleLabel.text = "Uploaded!";
         fileUploadView.subtitleLabel.text = document?.lastPathComponent;
+        Task {
+            do {
+                guard let fileURL = document else {
+                    print("File not found")
+                    return
+                }
+                
+                let downloadURL = try await FirebaseStorageManager.shared.uploadFile(
+                    from: fileURL,
+                    to: "documents/\(UUID().uuidString).pdf"
+                )
+                    documentObject = FileMetadata(id: "", title: fileURL.lastPathComponent, documentUrl: downloadURL.absoluteString, subjectId: selectedSubject!.id, createdAt: Timestamp(), updatedAt: Timestamp())
+                var temp = documentObject!
+                let _ = metadataDb.create(&temp)
+                documentObject = temp
+                
+                print("File uploaded successfully: \(downloadURL)")
+            } catch {
+                print("Error uploading file: \(error.localizedDescription)")
+            }
+        }
     }
     func createSR(_ sender: Any) {
             if let apiKey = apiKey {

@@ -10,6 +10,8 @@ import Firebase
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseStorage
+
 
 
 
@@ -19,6 +21,14 @@ struct AppTheme {
     static let background = UIColor.white // white
     static let cardBackground = UIColor(red: 249/255, green: 250/255, blue: 251/255, alpha: 1.0) // 
     
+}
+struct FileMetadata: Codable,Identifiable{
+    var id: String
+    var title:String
+    var documentUrl: String
+    var subjectId: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
 }
 
 struct StudyModule {
@@ -576,6 +586,131 @@ class AuthManager {
     }
 }
 
+class FirebaseStorageManager {
+    // Singleton instance
+    static let shared = FirebaseStorageManager()
+    
+    // Reference to Firebase Storage
+    private let storage = Storage.storage()
+    private var storageRef: StorageReference
+    
+    // Private initializer for singleton
+    private init() {
+        storageRef = storage.reference()
+    }
+    
+    /// Uploads data to Firebase Storage
+    /// - Parameters:
+    ///   - data: The data to upload
+    ///   - path: The path where the file should be stored (e.g., "images/photo.jpg")
+    ///   - metadata: Optional metadata for the file
+    /// - Returns: Download URL as a string
+    func uploadData(_ data: Data, to path: String, metadata: StorageMetadata? = nil) async throws -> URL {
+        let fileRef = storageRef.child(path)
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            let uploadTask = fileRef.putData(data, metadata: metadata) { metadata, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                
+                fileRef.downloadURL { url, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    
+                    guard let downloadURL = url else {
+                        continuation.resume(throwing: NSError(domain: "FirebaseStorageManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get download URL"]))
+                        return
+                    }
+                    
+                    continuation.resume(returning: downloadURL)
+                }
+            }
+            
+            // Add progress observer
+            uploadTask.observe(.progress) { snapshot in
+                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
+                print("Upload is \(percentComplete)% complete")
+            }
+        }
+    }
+    
+    /// Uploads an image to Firebase Storage
+    /// - Parameters:
+    ///   - image: The UIImage to upload
+    ///   - path: The path where the image should be stored
+    ///   - compressionQuality: JPEG compression quality (0.0 to 1.0)
+    /// - Returns: Download URL as a string
+    func uploadImage(_ image: UIImage, to path: String, compressionQuality: CGFloat = 0.8) async throws -> URL {
+        guard let imageData = image.jpegData(compressionQuality: compressionQuality) else {
+            throw NSError(domain: "FirebaseStorageManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to data"])
+        }
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        
+        return try await uploadData(imageData, to: path, metadata: metadata)
+    }
+    
+    /// Uploads a file from a local URL to Firebase Storage
+    /// - Parameters:
+    ///   - fileURL: The local URL of the file
+    ///   - path: The path where the file should be stored
+    /// - Returns: Download URL as a string
+    func uploadFile(from fileURL: URL, to path: String) async throws -> URL {
+        let fileRef = storageRef.child(path)
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            let uploadTask = fileRef.putFile(from: fileURL) { metadata, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                
+                fileRef.downloadURL { url, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    
+                    guard let downloadURL = url else {
+                        continuation.resume(throwing: NSError(domain: "FirebaseStorageManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get download URL"]))
+                        return
+                    }
+                    
+                    continuation.resume(returning: downloadURL)
+                }
+            }
+            
+            // Add progress observer
+            uploadTask.observe(.progress) { snapshot in
+                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
+                print("Upload is \(percentComplete)% complete")
+            }
+        }
+    }
+    
+    /// Deletes a file from Firebase Storage
+    /// - Parameter path: The path of the file to delete
+    func deleteFile(at path: String) async throws {
+        let fileRef = storageRef.child(path)
+        
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            fileRef.delete { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+}
+
+
 
 
 let userDB = FakeDb<UserDetailsType>(name: "usertemp")
@@ -586,6 +721,7 @@ let topicsDb = FakeDb<Topics>(name: "topictemp")
 let schedulesDb = FakeDb<Schedule>(name: "schedulestemp")
 let questionsDb = FakeDb<Questions>(name: "questionstemp")
 let scoreDb = FakeDb<Score>(name: "scoretemp")
+let metadataDb = FakeDb<FileMetadata>(name:"metadatatemp")
 //struct Card{
 //    var title:String
 //    var subtitle:String

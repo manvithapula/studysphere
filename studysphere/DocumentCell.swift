@@ -130,16 +130,16 @@ class DocumentCell: UICollectionViewCell {
     }
     
     // MARK: - Configuration
-    func configure(with document: StudyDocument, index: Int) {
+    func configure(with document: FileMetadata, index: Int) {
         titleLabel.text = document.title
         
         // Format date
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateLabel.text = dateFormatter.string(from: document.dateAdded)
+        dateLabel.text = dateFormatter.string(from: document.createdAt.dateValue())
         
         // Set document type icon and file type label based on extension
-        let fileExtension = document.fileURL.pathExtension.lowercased()
+        let fileExtension = "pdf"
         setupDocumentType(fileExtension: fileExtension)
         setupColors(for: index)
     }

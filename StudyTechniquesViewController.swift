@@ -3,7 +3,7 @@ import UIKit
 class StudyTechniquesViewController: UIViewController {
     
     // MARK: - Properties
-    private let document: StudyDocument
+    private let document: FileMetadata
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -23,7 +23,7 @@ class StudyTechniquesViewController: UIViewController {
     }()
     
     // MARK: - Initialization
-    init(document: StudyDocument) {
+    init(document: FileMetadata) {
         self.document = document
         super.init(nibName: nil, bundle: nil)
     }
