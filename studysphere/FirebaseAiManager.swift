@@ -13,7 +13,7 @@ class FirebaseAiManager {
     static let shared = FirebaseAiManager()
     let modelName = "gemini-2.0-flash"
 
-    private func getFileUri(document: URL, selectedSubject: Subject) async
+    private func getFileUri(document: URL, selectedSubject: String) async
         -> String?
     {
         guard let pdfData = try? Data(contentsOf: document) else {
@@ -31,7 +31,7 @@ class FirebaseAiManager {
             let documentObject = FileMetadata(
                 id: "", title: document.lastPathComponent,
                 documentUrl: downloadURL.absoluteString,
-                subjectId: selectedSubject.id, createdAt: Timestamp(),
+                subjectId: selectedSubject, createdAt: Timestamp(),
                 updatedAt: Timestamp())
             var temp = documentObject
             let _ = metadataDb.create(&temp)
@@ -69,7 +69,7 @@ class FirebaseAiManager {
         )
         return generativeModel
     }
-    func createSummary(topic: String, document: URL, selectedSubject: Subject)
+    func createSummary(topic: String, document: Any, selectedSubject: String)
         async -> Summary?
     {
 
@@ -87,16 +87,20 @@ class FirebaseAiManager {
                     )
                 ]
             )
+            var fileURI:String?
             let generativeModel = getModel(jsonSchema: jsonSchema)
-            guard
-                let fileURI = await getFileUri(
-                    document: document, selectedSubject: selectedSubject)
-            else {
-                throw NSError(
-                    domain: "PDFUploader", code: 2,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Failed to get file URI"
-                    ])
+            if let document = document as? URL{
+                    fileURI = await getFileUri(
+                        document: document, selectedSubject: selectedSubject)
+            }
+            else if let document = document as? String{
+                fileURI = document
+            }
+            else{
+                return nil
+            }
+            if(fileURI == nil){
+                return nil
             }
             let prompt = """
                 Create Summary for this PDF document.
@@ -108,7 +112,7 @@ class FirebaseAiManager {
                 role: "user",
                 parts: [
                     TextPart(prompt),
-                    FileDataPart(uri: fileURI, mimeType: "application/pdf"),
+                    FileDataPart(uri: fileURI!, mimeType: "application/pdf"),
                 ])
 
             let respons = await getResponse(
@@ -140,7 +144,7 @@ class FirebaseAiManager {
         }
     }
     func createFlashcards(
-        topic: String, document: URL, selectedSubject: Subject
+        topic: String, document: Any, selectedSubject: String
     ) async -> [Flashcard] {
         let jsonSchema = Schema.object(
             properties: [
@@ -160,15 +164,19 @@ class FirebaseAiManager {
         )
         do {
             let generativeModel = getModel(jsonSchema: jsonSchema)
-            guard
-                let fileURI = await getFileUri(
-                    document: document, selectedSubject: selectedSubject)
-            else {
-                throw NSError(
-                    domain: "PDFUploader", code: 2,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Failed to get file URI"
-                    ])
+            var fileURI:String?
+            if let document = document as? URL{
+                    fileURI = await getFileUri(
+                        document: document, selectedSubject: selectedSubject)
+            }
+            else if let document = document as? String{
+                fileURI = document
+            }
+            else{
+                return []
+            }
+            if(fileURI == nil){
+                return []
             }
             let prompt = """
                 Create flashcards from this PDF document.
@@ -181,7 +189,7 @@ class FirebaseAiManager {
                 parts: [
                     TextPart(prompt),
                     FileDataPart(
-                        uri: fileURI,
+                        uri: fileURI!,
                         mimeType:
                             "application/pdf"),
                 ])
@@ -223,7 +231,7 @@ class FirebaseAiManager {
         }
     }
     func createQuiz(
-        topic: String, document: URL, selectedSubject: Subject
+        topic: String, document: Any, selectedSubject: String
     ) async -> [Questions] {
         let jsonSchema = Schema.object(
             properties: [
@@ -246,17 +254,20 @@ class FirebaseAiManager {
             ]
         )
         do {
+            var fileURI:String?
             let generativeModel = getModel(jsonSchema: jsonSchema)
-            guard
-                let fileURI = await getFileUri(
-                    document: document, selectedSubject: selectedSubject)
-            else {
-                print("Failed to upload")
-                throw NSError(
-                    domain: "PDFUploader", code: 2,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Failed to get file URI"
-                    ])
+            if let document = document as? URL{
+                    fileURI = await getFileUri(
+                        document: document, selectedSubject: selectedSubject)
+            }
+            else if let document = document as? String{
+                fileURI = document
+            }
+            else{
+                return []
+            }
+            if(fileURI == nil){
+                return []
             }
             let prompt = """
                 Create Questions from this PDF document.
@@ -270,7 +281,7 @@ class FirebaseAiManager {
                 role: "user",
                 parts: [
                     TextPart(prompt),
-                    FileDataPart(uri: fileURI, mimeType: "application/pdf"),
+                    FileDataPart(uri: fileURI!, mimeType: "application/pdf"),
                 ])
 
             // Generate content using the model

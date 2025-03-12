@@ -713,7 +713,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
         Task {
             let cards = await FirebaseAiManager.shared.createFlashcards(
                 topic: newTopic.id, document: document!,
-                selectedSubject: selectedSubject!)
+                selectedSubject: selectedSubject!.id)
             if cards.isEmpty {
                 hideLoading()
                 showError(message: "Faled to generate flashcards")
@@ -742,7 +742,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
         Task {
             let ques = await FirebaseAiManager.shared.createQuiz(
                 topic: newTopic.id, document: document!,
-                selectedSubject: selectedSubject!)
+                selectedSubject: selectedSubject!.id)
             if ques.isEmpty {
                 hideLoading()
                 showError(message: "Failed to generate Quiz")
@@ -770,7 +770,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
         Task {
             let summary = await FirebaseAiManager.shared.createSummary(
                 topic: newTopic.id, document: document!,
-                selectedSubject: selectedSubject!)
+                selectedSubject: selectedSubject!.id)
             hideLoading()
             if summary == nil {
                 showError(message: "Failed to create summary")
