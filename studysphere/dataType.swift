@@ -5,26 +5,27 @@
 //  Created by dark on 29/10/24.
 //
 
-import Foundation
 import Firebase
-import FirebaseCore
 import FirebaseAuth
+import FirebaseCore
 import FirebaseFirestore
 import FirebaseStorage
-
-
-
+import FirebaseVertexAI
+import Foundation
 
 struct AppTheme {
-    static let primary = UIColor(red: 37/255, green: 99/255, blue: 235/255, alpha: 1.0) //blue
-    static let secondary = UIColor(red: 99/255, green: 102/255, blue: 241/255, alpha: 1.0) // light blue
-    static let background = UIColor.white // white
-    static let cardBackground = UIColor(red: 249/255, green: 250/255, blue: 251/255, alpha: 1.0) // 
-    
+    static let primary = UIColor(
+        red: 37 / 255, green: 99 / 255, blue: 235 / 255, alpha: 1.0)  //blue
+    static let secondary = UIColor(
+        red: 99 / 255, green: 102 / 255, blue: 241 / 255, alpha: 1.0)  // light blue
+    static let background = UIColor.white  // white
+    static let cardBackground = UIColor(
+        red: 249 / 255, green: 250 / 255, blue: 251 / 255, alpha: 1.0)  //
+
 }
-struct FileMetadata: Codable,Identifiable{
+struct FileMetadata: Codable, Identifiable {
     var id: String
-    var title:String
+    var title: String
     var documentUrl: String
     var subjectId: String
     var createdAt: Timestamp
@@ -78,12 +79,9 @@ struct ScheduleItem {
     let title: String
     let subtitle: String
     let progress: Float
-    let topicType:TopicsType
-    let topicId:String
+    let topicType: TopicsType
+    let topicId: String
 }
-
-
-  
 
 // study technique
 struct StudyTechnique {
@@ -94,8 +92,9 @@ struct StudyTechnique {
 
 var studyTechniques: [StudyTechnique] = [
     StudyTechnique(name: "Flashcards", completedSessions: 5, totalSessions: 10),
-    StudyTechnique(name: "Active Recall", completedSessions: 3, totalSessions: 10),
-    StudyTechnique(name: "Review", completedSessions: 5, totalSessions: 10)
+    StudyTechnique(
+        name: "Active Recall", completedSessions: 3, totalSessions: 10),
+    StudyTechnique(name: "Review", completedSessions: 5, totalSessions: 10),
 ]
 
 struct StudyDocument {
@@ -103,7 +102,7 @@ struct StudyDocument {
     let title: String
     let dateAdded: Date
     let fileURL: URL
-    
+
 }
 
 struct DashboardData {
@@ -115,42 +114,42 @@ struct DashboardData {
 }
 
 //subject
-struct Subject:Codable,Identifiable{
-    var id:String
-    let name:String
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
-    
+struct Subject: Codable, Identifiable {
+    var id: String
+    let name: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
+
     func toDictionary() -> [String: Any] {
         return [
             "id": id,
             "name": name,
             "createdAt": createdAt,
-            "updatedAt": updatedAt
+            "updatedAt": updatedAt,
         ]
     }
 
 }
-struct Score:Codable,Identifiable {
-    var id:String
-    var score:Int
-    var total:Int
-    var scheduleId:String
-    var topicId:String
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
+struct Score: Codable, Identifiable {
+    var id: String
+    var score: Int
+    var total: Int
+    var scheduleId: String
+    var topicId: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
 }
 //list referencing
-struct Topics:Codable,Identifiable {
-    var id:String
-    var title:String
-    var subject:String
-    var type:TopicsType
-    var completed:Timestamp?
-    var subtitle:String
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
-    
+struct Topics: Codable, Identifiable {
+    var id: String
+    var title: String
+    var subject: String
+    var type: TopicsType
+    var completed: Timestamp?
+    var subtitle: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
+
     func toDictionary() -> [String: Any] {
         return [
             "id": id,
@@ -160,38 +159,37 @@ struct Topics:Codable,Identifiable {
             "completed": completed!,
             "subtitle": subtitle,
             "createdAt": createdAt,
-            "updatedAt": updatedAt
+            "updatedAt": updatedAt,
         ]
     }
-    
-    
+
 }
 enum TopicsType: String, Codable {
     case flashcards = "flashcards"
     case quizzes = "quizzes"
     case summary = "summary"
 }
-struct ProgressType{
-    var completed:Int
-    var total:Int
-    var progress:Double{
-        Double(completed)/Double(total)
+struct ProgressType {
+    var completed: Int
+    var total: Int
+    var progress: Double {
+        Double(completed) / Double(total)
     }
 }
 
 //profile
-struct UserDetailsType:Codable,Identifiable{
-    var id:String
-    var firstName:String
-    var lastName:String
-    var dob:Timestamp
-    var pushNotificationEnabled:Bool
-    var faceIdEnabled:Bool
-    var email:String
-    var password:String
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
-    
+struct UserDetailsType: Codable, Identifiable {
+    var id: String
+    var firstName: String
+    var lastName: String
+    var dob: Timestamp
+    var pushNotificationEnabled: Bool
+    var faceIdEnabled: Bool
+    var email: String
+    var password: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
+
     func toDictionary() -> [String: Any] {
         return [
             "id": id,
@@ -202,12 +200,16 @@ struct UserDetailsType:Codable,Identifiable{
             "faceIdEnabled": faceIdEnabled,
             "email": email,
             "password": password,
-            "createdAt":createdAt,
-            "updatedAt":updatedAt
-            ]
+            "createdAt": createdAt,
+            "updatedAt": updatedAt,
+        ]
     }
- 
-    init(id:String,firstName:String,lastName:String,dob:Timestamp,pushNotificationEnabled:Bool,faceIdEnabled:Bool,email:String,password:String,createdAt:Timestamp,updatedAt:Timestamp){
+
+    init(
+        id: String, firstName: String, lastName: String, dob: Timestamp,
+        pushNotificationEnabled: Bool, faceIdEnabled: Bool, email: String,
+        password: String, createdAt: Timestamp, updatedAt: Timestamp
+    ) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
@@ -220,18 +222,20 @@ struct UserDetailsType:Codable,Identifiable{
         self.updatedAt = updatedAt
     }
 }
-var user = UserDetailsType(id: "1", firstName: "Anwin", lastName: "Sharon", dob: Timestamp(), pushNotificationEnabled: false, faceIdEnabled: true,email: "test@test.com",password: "password",createdAt:Timestamp(),updatedAt:Timestamp())
-
+var user = UserDetailsType(
+    id: "1", firstName: "Anwin", lastName: "Sharon", dob: Timestamp(),
+    pushNotificationEnabled: false, faceIdEnabled: true, email: "test@test.com",
+    password: "password", createdAt: Timestamp(), updatedAt: Timestamp())
 
 //flashcard view controller
-struct Flashcard:Codable,Identifiable {
-    var id:String
+struct Flashcard: Codable, Identifiable {
+    var id: String
     var question: String
     var answer: String
-    var topic:String
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
-    
+    var topic: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
+
     func toDictionary() -> [String: Any] {
         return [
             "id": id,
@@ -244,20 +248,20 @@ struct Flashcard:Codable,Identifiable {
     }
 }
 
-// ar view controller 
+// ar view controller
 struct Questions: Codable, Identifiable {
     var id: String
     var questionLabel: String
     var question: String
     var correctanswer: String
-    var option1 : String
-    var option2 : String
-    var option3 : String
-    var option4 : String
-    var topic : String
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
-    
+    var option1: String
+    var option2: String
+    var option3: String
+    var option4: String
+    var topic: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
+
     func toDictionary() -> [String: Any] {
         return [
             "id": id,
@@ -268,13 +272,17 @@ struct Questions: Codable, Identifiable {
             "option2": option2,
             "option3": option3,
             "option4": option4,
-            "topic":topic,
+            "topic": topic,
             "createdAt": createdAt,
-            "updatedAt": updatedAt
-            ]
+            "updatedAt": updatedAt,
+        ]
     }
-    
-    init(id:String,questionLabel:String,question:String,correctanswer:String,option1:String,option2:String,option3:String,option4:String,topic:String){
+
+    init(
+        id: String, questionLabel: String, question: String,
+        correctanswer: String, option1: String, option2: String,
+        option3: String, option4: String, topic: String
+    ) {
         self.id = id
         self.questionLabel = questionLabel
         self.question = question
@@ -290,63 +298,69 @@ struct Questions: Codable, Identifiable {
 }
 
 //summariser view controller
-struct Summary:Codable,Identifiable{
-    var id:String
-    var topic:String
-    var data:String
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
-    
-    func toDictionary() -> [String: Any]{
+struct Summary: Codable, Identifiable {
+    var id: String
+    var topic: String
+    var data: String
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
+
+    func toDictionary() -> [String: Any] {
         return [
-            "id":id,
-            "topic":topic,
+            "id": id,
+            "topic": topic,
             "data": data,
-            "createdAt":createdAt,
-            "updatedAt":updatedAt
+            "createdAt": createdAt,
+            "updatedAt": updatedAt,
         ]
     }
 }
 
 // active recall and spaced repetition schedule view controller
-struct Schedule:Codable,Identifiable{
-    var id:String
-    var title:String
-    var date:Timestamp
-    var time:String
-    var completed:Timestamp?
-    var topic:String
-    var topicType:TopicsType
-    var createdAt:Timestamp
-    var updatedAt:Timestamp
-    
-    func toDictionary() -> [String:Any]{
+struct Schedule: Codable, Identifiable {
+    var id: String
+    var title: String
+    var date: Timestamp
+    var time: String
+    var completed: Timestamp?
+    var topic: String
+    var topicType: TopicsType
+    var createdAt: Timestamp
+    var updatedAt: Timestamp
+
+    func toDictionary() -> [String: Any] {
         return [
-            "id":id,
-            "title":title,
-            "date":date,
-            "time":time,
-            "completed":completed!,
-            "topic":topic,
-            "topicType":topicType,
-            "createdAt":createdAt,
-            "updatedAt":updatedAt
+            "id": id,
+            "title": title,
+            "date": date,
+            "time": time,
+            "completed": completed!,
+            "topic": topic,
+            "topicType": topicType,
+            "createdAt": createdAt,
+            "updatedAt": updatedAt,
         ]
     }
 }
 
-
-
-
-var ARQuestions : [Questions] = [
-    Questions(id: "", questionLabel: "1", question: "Who will win election in india ?", correctanswer: "Narendra Modi", option1: "Narendra Modi", option2: "Rahul Gandhi", option3: "Kejrival ", option4: "Umman Chandi", topic: ""),
-    Questions(id: "", questionLabel: "2", question: "Where was the first General Indian Post", correctanswer: "Mumbai", option1: "Kolkata", option2: "Mumbai", option3: "Delhi", option4: "Chennai", topic: "")
+var ARQuestions: [Questions] = [
+    Questions(
+        id: "", questionLabel: "1",
+        question: "Who will win election in india ?",
+        correctanswer: "Narendra Modi", option1: "Narendra Modi",
+        option2: "Rahul Gandhi", option3: "Kejrival ", option4: "Umman Chandi",
+        topic: ""),
+    Questions(
+        id: "", questionLabel: "2",
+        question: "Where was the first General Indian Post",
+        correctanswer: "Mumbai", option1: "Kolkata", option2: "Mumbai",
+        option3: "Delhi", option4: "Chennai", topic: ""),
 ]
 
 let unformattedDate = "14 Jan 2001"
 
-func formatDateFromString(date:String) -> Date?{
-    var dateFormatter:DateFormatter{
+func formatDateFromString(date: String) -> Date? {
+    var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMM yyyy"
         return formatter
@@ -354,60 +368,68 @@ func formatDateFromString(date:String) -> Date?{
     return dateFormatter.date(from: date)
 }
 
-func formatDateToString(date:Date) -> String{
-    let formatter:DateFormatter = {
+func formatDateToString(date: Date) -> String {
+    let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMM yyyy"
         return formatter
     }()
     return formatter.string(from: date)
 }
-var date:Date?{
+var date: Date? {
     formatDateFromString(date: unformattedDate)
 }
 
-var schedules:[Schedule] = spacedRepetitionSchedule(startDate: formatDateFromString(date: "23 Sep 2024")!, title: "Swift fundamentals ",topic: "Swift",topicsType: TopicsType.flashcards)
+var schedules: [Schedule] = spacedRepetitionSchedule(
+    startDate: formatDateFromString(date: "23 Sep 2024")!,
+    title: "Swift fundamentals ", topic: "Swift",
+    topicsType: TopicsType.flashcards)
 
-import Foundation
-
-func spacedRepetitionSchedule(startDate: Date,title:String,topic:String,topicsType:TopicsType) -> [Schedule] {
+func spacedRepetitionSchedule(
+    startDate: Date, title: String, topic: String, topicsType: TopicsType
+) -> [Schedule] {
     let intervals = [0, 1, 3, 7, 14, 30]
     let calendar = Calendar.current
     let schedule = intervals.map { interval in
-        let date = calendar.date(byAdding: .day, value: interval, to: startDate)!
-        return Schedule(id:"",title: title, date: Timestamp(date:date), time: "10:00 AM", completed:nil, topic: topic,topicType: topicsType,createdAt: Timestamp(),updatedAt: Timestamp())
+        let date = calendar.date(
+            byAdding: .day, value: interval, to: startDate)!
+        return Schedule(
+            id: "", title: title, date: Timestamp(date: date), time: "10:00 AM",
+            completed: nil, topic: topic, topicType: topicsType,
+            createdAt: Timestamp(), updatedAt: Timestamp())
     }
-    
+
     return schedule
 }
 
-
-
-
-let flashcardsProgress:ProgressType=ProgressType(completed: 250, total: 500)
-let questions:ProgressType=ProgressType(completed: 250, total: 300)
-let hours:ProgressType=ProgressType(completed: 20, total: 24*7)
-let flashcardsMonthly:ProgressType=ProgressType(completed: 550, total: 700)
-let questionsMonthly:ProgressType=ProgressType(completed: 333, total: 645)
-let hoursMonthly:ProgressType=ProgressType(completed: 24, total: 6*7)
+let flashcardsProgress: ProgressType = ProgressType(completed: 250, total: 500)
+let questions: ProgressType = ProgressType(completed: 250, total: 300)
+let hours: ProgressType = ProgressType(completed: 20, total: 24 * 7)
+let flashcardsMonthly: ProgressType = ProgressType(completed: 550, total: 700)
+let questionsMonthly: ProgressType = ProgressType(completed: 333, total: 645)
+let hoursMonthly: ProgressType = ProgressType(completed: 24, total: 6 * 7)
 let weeklyTime = 1000 * 60 * 46
 let weeklyStreak = 7
 let monthlyTime = 1000 * 60 * 60 * 10
 let monthlyStreak = 17
 
-
 class FakeDb<T: Codable & Identifiable> {
     private var name: String
     private let db: Firestore
     private var collection: CollectionReference {
-        if(name == "usertemp"){
+        if name == "usertemp" {
             return db.collection("usertemp")
         }
-        return db.collection("userdata").document(String(AuthManager.shared.id!)).collection(name)
+        return db.collection("userdata").document(
+            String(AuthManager.shared.id!)
+        ).collection(name)
     }
     private var ArchiveURL: URL {
-        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let archiveURL = documentDirectory.appendingPathComponent("\(self.name).plist")
+        let documentDirectory = FileManager.default.urls(
+            for: .documentDirectory, in: .userDomainMask
+        ).first!
+        let archiveURL = documentDirectory.appendingPathComponent(
+            "\(self.name).plist")
         return archiveURL
     }
     private var items: [T]
@@ -416,60 +438,62 @@ class FakeDb<T: Codable & Identifiable> {
         self.name = name
         self.db = FirestoreManager.shared.db
         self.items = []
-        Task{
+        Task {
             _ = await self.loadData()
         }
     }
-    
-    public func create(_ item: inout T) -> T{
+
+    public func create(_ item: inout T) -> T {
         item.id = UUID().uuidString
         item.createdAt = Timestamp()
         items.append(item)
-        try! collection.document(item.id).setData(item.asDictionary());
+        try! collection.document(item.id).setData(item.asDictionary())
         saveData()
         return item
     }
-    
 
-    public func findAll(where conditions: [String: Any]? = nil) async throws -> [T] {
+    public func findAll(where conditions: [String: Any]? = nil) async throws
+        -> [T]
+    {
         // Initialize Firestore collection reference
-        
+
         // If no conditions are provided, fetch all documents
         let items = await self.loadData()
         guard let conditions = conditions else {
-                    return items
+            return items
+        }
+
+        // Filter items based on conditions
+        return items.filter { item in
+            guard let itemDict = try? item.asDictionary() else { return false }
+
+            return conditions.allSatisfy { key, value in
+                if let itemValue = itemDict[key] {
+                    return String(describing: itemValue)
+                        == String(describing: value)
                 }
-                
-                // Filter items based on conditions
-                return items.filter { item in
-                    guard let itemDict = try? item.asDictionary() else { return false }
-                    
-                    return conditions.allSatisfy { key, value in
-                        if let itemValue = itemDict[key] {
-                            return String(describing: itemValue) == String(describing: value)
-                        }
-                        return false
-                    }
-                }
+                return false
+            }
+        }
     }
 
-    
     public func findFirst(where conditions: [String: Any]? = nil) -> T? {
         guard let conditions = conditions else {
             return items.first
         }
         return items.first { item in
             guard let itemDict = try? item.asDictionary() else { return false }
-            
+
             return conditions.allSatisfy { key, value in
                 if let itemValue = itemDict[key] {
-                    return String(describing: itemValue) == String(describing: value)
+                    return String(describing: itemValue)
+                        == String(describing: value)
                 }
                 return false
             }
         }
     }
-    
+
     public func update(_ item: inout T) async throws {
         item.updatedAt = Timestamp()
         if let index = items.firstIndex(where: { $0.id == item.id }) {
@@ -488,16 +512,15 @@ class FakeDb<T: Codable & Identifiable> {
 
     }
 
-    
     public func delete(id: String) {
         items.removeAll { $0.id == id }
         collection.document(id).delete()
         saveData()
     }
-    public func clearCache(){
+    public func clearCache() {
         items = []
     }
-    
+
     @available(iOS 15.0, *)
     private func loadData() async -> [T] {
         if loaded {
@@ -513,13 +536,16 @@ class FakeDb<T: Codable & Identifiable> {
             for document in documents {
                 let data = document.data()
                 do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+                    let jsonData = try JSONSerialization.data(
+                        withJSONObject: data, options: [])
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
                     let item = try decoder.decode(T.self, from: jsonData)
                     fetchedItems.append(item)
                 } catch {
-                    print("Error decoding document: \(document.documentID), error: \(error)")
+                    print(
+                        "Error decoding document: \(document.documentID), error: \(error)"
+                    )
                 }
             }
             self.items = fetchedItems
@@ -530,7 +556,7 @@ class FakeDb<T: Codable & Identifiable> {
             return []
         }
     }
-    
+
     private func saveData() {
         let plistEncoder = PropertyListEncoder()
         let data = try? plistEncoder.encode(self.items)
@@ -541,8 +567,15 @@ class FakeDb<T: Codable & Identifiable> {
 extension Encodable {
     func asDictionary() throws -> [String: Any] {
         let data = try JSONEncoder().encode(self)
-        guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
-            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Dictionary conversion failed"])
+        guard
+            let dictionary = try JSONSerialization.jsonObject(
+                with: data, options: .allowFragments) as? [String: Any]
+        else {
+            throw NSError(
+                domain: "", code: 0,
+                userInfo: [
+                    NSLocalizedDescriptionKey: "Dictionary conversion failed"
+                ])
         }
         return dictionary
     }
@@ -550,13 +583,13 @@ extension Encodable {
 
 class AuthManager {
     static let shared = AuthManager()
-    
+
     private init() {}
-    
+
     var isLoggedIn: Bool {
         return UserDefaults.standard.string(forKey: "userEmail") != nil
     }
-    
+
     var userEmail: String? {
         return UserDefaults.standard.string(forKey: "userEmail")
     }
@@ -569,18 +602,18 @@ class AuthManager {
     var id: String? {
         return UserDefaults.standard.string(forKey: "id")
     }
-    
-    func logIn(email: String,firstName:String,lastName:String,id:String) {
+
+    func logIn(email: String, firstName: String, lastName: String, id: String) {
         UserDefaults.standard.set(email, forKey: "userEmail")
         UserDefaults.standard.set(firstName, forKey: "firstName")
         UserDefaults.standard.set(lastName, forKey: "lastName")
         UserDefaults.standard.set(id, forKey: "id")
     }
-    
+
     func logOut() {
         UserDefaults.standard.removeObject(forKey: "userEmail")
     }
-    func updateName(firstName:String,lastName:String){
+    func updateName(firstName: String, lastName: String) {
         UserDefaults.standard.set(firstName, forKey: "firstName")
         UserDefaults.standard.set(lastName, forKey: "lastName")
     }
@@ -589,72 +622,92 @@ class AuthManager {
 class FirebaseStorageManager {
     // Singleton instance
     static let shared = FirebaseStorageManager()
-    
+
     // Reference to Firebase Storage
     private let storage = Storage.storage()
     private var storageRef: StorageReference
-    
+
     // Private initializer for singleton
     private init() {
         storageRef = storage.reference()
     }
-    
+
     /// Uploads data to Firebase Storage
     /// - Parameters:
     ///   - data: The data to upload
     ///   - path: The path where the file should be stored (e.g., "images/photo.jpg")
     ///   - metadata: Optional metadata for the file
     /// - Returns: Download URL as a string
-    func uploadData(_ data: Data, to path: String, metadata: StorageMetadata? = nil) async throws -> URL {
+    func uploadData(
+        _ data: Data, to path: String, metadata: StorageMetadata? = nil
+    ) async throws -> URL {
         let fileRef = storageRef.child(path)
-        
+
         return try await withCheckedThrowingContinuation { continuation in
-            let uploadTask = fileRef.putData(data, metadata: metadata) { metadata, error in
+            let uploadTask = fileRef.putData(data, metadata: metadata) {
+                metadata, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
                 }
-                
+
                 fileRef.downloadURL { url, error in
                     if let error = error {
                         continuation.resume(throwing: error)
                         return
                     }
-                    
+
                     guard let downloadURL = url else {
-                        continuation.resume(throwing: NSError(domain: "FirebaseStorageManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get download URL"]))
+                        continuation.resume(
+                            throwing: NSError(
+                                domain: "FirebaseStorageManager", code: -1,
+                                userInfo: [
+                                    NSLocalizedDescriptionKey:
+                                        "Failed to get download URL"
+                                ]))
                         return
                     }
-                    
+
                     continuation.resume(returning: downloadURL)
                 }
             }
-            
+
             // Add progress observer
             uploadTask.observe(.progress) { snapshot in
-                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
+                let percentComplete =
+                    100.0 * Double(snapshot.progress!.completedUnitCount)
+                    / Double(snapshot.progress!.totalUnitCount)
                 print("Upload is \(percentComplete)% complete")
             }
         }
     }
-    
+
     /// Uploads an image to Firebase Storage
     /// - Parameters:
     ///   - image: The UIImage to upload
     ///   - path: The path where the image should be stored
     ///   - compressionQuality: JPEG compression quality (0.0 to 1.0)
     /// - Returns: Download URL as a string
-    func uploadImage(_ image: UIImage, to path: String, compressionQuality: CGFloat = 0.8) async throws -> URL {
-        guard let imageData = image.jpegData(compressionQuality: compressionQuality) else {
-            throw NSError(domain: "FirebaseStorageManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to data"])
+    func uploadImage(
+        _ image: UIImage, to path: String, compressionQuality: CGFloat = 0.8
+    ) async throws -> URL {
+        guard
+            let imageData = image.jpegData(
+                compressionQuality: compressionQuality)
+        else {
+            throw NSError(
+                domain: "FirebaseStorageManager", code: -2,
+                userInfo: [
+                    NSLocalizedDescriptionKey: "Failed to convert image to data"
+                ])
         }
-        
+
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
-        
+
         return try await uploadData(imageData, to: path, metadata: metadata)
     }
-    
+
     /// Uploads a file from a local URL to Firebase Storage
     /// - Parameters:
     ///   - fileURL: The local URL of the file
@@ -662,43 +715,52 @@ class FirebaseStorageManager {
     /// - Returns: Download URL as a string
     func uploadFile(from fileURL: URL, to path: String) async throws -> URL {
         let fileRef = storageRef.child(path)
-        
+
         return try await withCheckedThrowingContinuation { continuation in
             let uploadTask = fileRef.putFile(from: fileURL) { metadata, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
                 }
-                
+
                 fileRef.downloadURL { url, error in
                     if let error = error {
                         continuation.resume(throwing: error)
                         return
                     }
-                    
+
                     guard let downloadURL = url else {
-                        continuation.resume(throwing: NSError(domain: "FirebaseStorageManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get download URL"]))
+                        continuation.resume(
+                            throwing: NSError(
+                                domain: "FirebaseStorageManager", code: -1,
+                                userInfo: [
+                                    NSLocalizedDescriptionKey:
+                                        "Failed to get download URL"
+                                ]))
                         return
                     }
-                    
+
                     continuation.resume(returning: downloadURL)
                 }
             }
-            
+
             // Add progress observer
             uploadTask.observe(.progress) { snapshot in
-                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
+                let percentComplete =
+                    100.0 * Double(snapshot.progress!.completedUnitCount)
+                    / Double(snapshot.progress!.totalUnitCount)
                 print("Upload is \(percentComplete)% complete")
             }
         }
     }
-    
+
     /// Deletes a file from Firebase Storage
     /// - Parameter path: The path of the file to delete
     func deleteFile(at path: String) async throws {
         let fileRef = storageRef.child(path)
-        
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+
+        try await withCheckedThrowingContinuation {
+            (continuation: CheckedContinuation<Void, Error>) in
             fileRef.delete { error in
                 if let error = error {
                     continuation.resume(throwing: error)
@@ -710,9 +772,6 @@ class FirebaseStorageManager {
     }
 }
 
-
-
-
 let userDB = FakeDb<UserDetailsType>(name: "usertemp")
 let flashCardDb = FakeDb<Flashcard>(name: "flashcardtemp")
 let summaryDb = FakeDb<Summary>(name: "summarytemp")
@@ -721,7 +780,7 @@ let topicsDb = FakeDb<Topics>(name: "topictemp")
 let schedulesDb = FakeDb<Schedule>(name: "schedulestemp")
 let questionsDb = FakeDb<Questions>(name: "questionstemp")
 let scoreDb = FakeDb<Score>(name: "scoretemp")
-let metadataDb = FakeDb<FileMetadata>(name:"metadatatemp")
+let metadataDb = FakeDb<FileMetadata>(name: "metadatatemp")
 //struct Card{
 //    var title:String
 //    var subtitle:String

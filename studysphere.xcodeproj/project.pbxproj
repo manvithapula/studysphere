@@ -15,6 +15,7 @@
 		42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA42D553FB2007C170D /* FirebaseCore */; };
 		42566DA72D553FB2007C170D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA62D553FB2007C170D /* FirebaseFirestore */; };
 		429760232D7FE9FC00A6F8ED /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 429760222D7FE9FC00A6F8ED /* FirebaseStorage */; };
+		429F0CF72D809F55003D8F3C /* FirebaseVertexAI in Frameworks */ = {isa = PBXBuildFile; productRef = 429F0CF62D809F55003D8F3C /* FirebaseVertexAI */; };
 		42B828E52D55400E009BE803 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 42B828E42D55400E009BE803 /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42B828E52D55400E009BE803 /* GoogleGenerativeAI in Frameworks */,
+				429F0CF72D809F55003D8F3C /* FirebaseVertexAI in Frameworks */,
 				424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */,
 				42566DA72D553FB2007C170D /* FirebaseFirestore in Frameworks */,
 				42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */,
@@ -163,6 +165,7 @@
 				42B828E42D55400E009BE803 /* GoogleGenerativeAI */,
 				4250441E2D7C83FB00B55EB9 /* DGCharts */,
 				429760222D7FE9FC00A6F8ED /* FirebaseStorage */,
+				429F0CF62D809F55003D8F3C /* FirebaseVertexAI */,
 			);
 			productName = studysphere;
 			productReference = 350226142CCF5C50006F019D /* studysphere.app */;
@@ -676,6 +679,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 42566DA12D553FB2007C170D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		429F0CF62D809F55003D8F3C /* FirebaseVertexAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 42566DA12D553FB2007C170D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseVertexAI;
 		};
 		42B828E42D55400E009BE803 /* GoogleGenerativeAI */ = {
 			isa = XCSwiftPackageProductDependency;
