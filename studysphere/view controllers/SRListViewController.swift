@@ -11,43 +11,48 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var SpacedRepetitionList: UICollectionView!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     
-    
+   
+
         enum FilterState {
             case ongoing, completed
         }
         
+        var cards: [Topics] = []
         
-    var cards: [Topics] = []
-        
-       
-    var filteredCards: [Topics] {
+        var filteredCards: [Topics] {
             return cards.filter { card in
-               
                 let matchesSegment = filterState == .ongoing ? (card.completed == nil) : card.completed != nil
                 let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
                 return matchesSegment && matchesSearch
             }
         }
+        
         var filterState: FilterState = .ongoing
-        
-        // Search bar for filtering
-        
         
         override func viewDidLoad() {
             super.viewDidLoad()
-//            setupTapGesture()
+            setupUI()
+            fetchTopics()
+        }
+        
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            fetchTopics()
+        }
+        
+        private func setupUI() {
             SpacedRepetitionList.dataSource = self
             SpacedRepetitionList.delegate = self
             SpacedRepetitionList.setCollectionViewLayout(generateLayout(), animated: true)
-           
+            
             segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
-          
+            segmentControl.selectedSegmentTintColor = AppTheme.primary
+            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+            
             searchBar.delegate = self
-            Task{
-                cards = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
-                SpacedRepetitionList.reloadData()
-            }
         }
+        
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -56,7 +61,20 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
-       
+        private func fetchTopics() {
+            Task {
+                do {
+                    let topics = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
+                    DispatchQueue.main.async {
+                        self.cards = topics
+                        self.SpacedRepetitionList.reloadData()
+                    }
+                } catch {
+                    print("Error fetching topics: \(error)")
+                }
+            }
+        }
+        
         @objc func segmentChanged() {
             filterState = segmentControl.selectedSegmentIndex == 0 ? .ongoing : .completed
             SpacedRepetitionList.reloadData()
@@ -66,7 +84,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             SpacedRepetitionList.reloadData()
         }
         
-      
+        // MARK: - UICollectionView DataSource
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             return filteredCards.count
         }
@@ -79,64 +97,47 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "spacedrepetition", for: indexPath)
             let card = filteredCards[indexPath.item]
             
-            if let cell = cell as? SummaryCollectionViewCell {
-                cell.titleLabel.text = card.title
-                cell.updateSubject(topic: card)
-                cell.timeLabel.text = card.subtitle
-
-
+            if let cell = cell as? spacedCollectionViewCell {
+                cell.configure(topic: card, index: indexPath.item)
             }
+
             
             return cell
         }
         
-    // MARK: - Layout
-    private func generateLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(120)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        // MARK: - UICollectionView Layout
+        private func generateLayout() -> UICollectionViewLayout {
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(120)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(120)
+            )
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 12
+            
+            return UICollectionViewCompositionalLayout(section: section)
+        }
         
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(120)
-        )
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+        // MARK: - Segue Handling
+        func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            performSegue(withIdentifier: "toSRSchedule", sender: indexPath.row)
+        }
         
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0)
-        section.interGroupSpacing = 8
-        
-        return UICollectionViewCompositionalLayout(section: section)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toSRSchedule",
-           let destinationVC = segue.destination as? SRScheduleViewController,
-           let selectedIndex = sender as? Int { // Extract the tag passed as sender
-            let selectedCard = filteredCards[selectedIndex] // Get the card using the tag
-            destinationVC.topic = selectedCard // Pass the data to the destination VC
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "toSRSchedule",
+               let destinationVC = segue.destination as? SRScheduleViewController,
+               let selectedIndex = sender as? Int {
+                let selectedCard = filteredCards[selectedIndex]
+                destinationVC.topic = selectedCard
+            }
         }
     }
 
-    @objc func detailButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "toSRSchedule", sender: sender.tag) // Pass the tag as the sender
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        segmentControl.selectedSegmentTintColor = AppTheme.primary
-        segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
-        segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-        Task{
-            cards = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
-            SpacedRepetitionList.reloadData()
-        }
-    }
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "toSRSchedule", sender: indexPath.row)
-    }
-
-}
-
-   

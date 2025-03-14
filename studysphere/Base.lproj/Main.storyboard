@@ -1680,7 +1680,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="spacedrepetition" id="Gbx-v3-eEi" customClass="SummaryCollectionViewCell" customModule="studysphere" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="spacedrepetition" id="Gbx-v3-eEi" customClass="spacedCollectionViewCell" customModule="studysphere" customModuleProvider="target">
                                         <rect key="frame" x="8" y="0.0" width="377" height="99"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="gD7-3q-JG4">
@@ -2100,7 +2100,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="llO-ze-ygf"/>
-        <segue reference="vbk-8J-x7B"/>
+        <segue reference="PO4-kN-YgS"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
         <segue reference="qdn-Bb-u7i"/>
