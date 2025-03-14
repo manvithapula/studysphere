@@ -129,13 +129,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="9Dw-uZ-2n5"/>
-                        <color key="backgroundColor" name="Main Color"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <navigationItem key="navigationItem" id="5FU-6D-iWe"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="408-hT-Bp9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14073" y="1618"/>
+            <point key="canvasLocation" x="14033" y="1618"/>
         </scene>
         <!--Flashcard Result View Controller-->
         <scene sceneID="kjQ-JB-qVh">
@@ -454,7 +454,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14073" y="849"/>
+            <point key="canvasLocation" x="14033" y="862"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="bis-Ya-wBD">
@@ -1780,7 +1780,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AR" id="mH4-GP-FlP" customClass="SummaryCollectionViewCell" customModule="studysphere" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AR" id="mH4-GP-FlP" customClass="ARCollectionViewCell" customModule="studysphere" customModuleProvider="target">
                                         <rect key="frame" x="8" y="0.0" width="377" height="97"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Eig-YZ-OVA">
@@ -2103,7 +2103,7 @@
         <segue reference="vbk-8J-x7B"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
-        <segue reference="paQ-p4-NU6"/>
+        <segue reference="qdn-Bb-u7i"/>
         <segue reference="n0a-Ov-fy4"/>
     </inferredMetricsTieBreakers>
     <resources>
