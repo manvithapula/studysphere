@@ -617,6 +617,7 @@ class AuthManager {
         UserDefaults.standard.set(firstName, forKey: "firstName")
         UserDefaults.standard.set(lastName, forKey: "lastName")
     }
+    
 }
 
 class FirebaseStorageManager {

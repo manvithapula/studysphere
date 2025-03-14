@@ -41,7 +41,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D79030C12D65FE9C00E7F9F6 /* Exceptions for "studysphere" folder in "studysphere" target */ = {
+		D76FF35E2D843D7400FE3FAE /* Exceptions for "studysphere" folder in "studysphere" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -54,7 +54,7 @@
 		350226162CCF5C50006F019D /* studysphere */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D79030C12D65FE9C00E7F9F6 /* Exceptions for "studysphere" folder in "studysphere" target */,
+				D76FF35E2D843D7400FE3FAE /* Exceptions for "studysphere" folder in "studysphere" target */,
 			);
 			path = studysphere;
 			sourceTree = "<group>";

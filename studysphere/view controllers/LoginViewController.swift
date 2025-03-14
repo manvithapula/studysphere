@@ -132,7 +132,7 @@ class LoginViewController: UIViewController {
         forgotPasswordButton.setTitleColor(AppTheme.primary, for: .normal)
         forgotPasswordButton.titleLabel?.font = .systemFont(ofSize: 14)
         forgotPasswordButton.setTitle("Forgot Password?", for: .normal)
-        forgotPasswordButton.addTarget(self, action: #selector(forgotPasswordButtonTapped), for: .touchUpInside)
+        forgotPasswordButton.addTarget(self, action: #selector(forgotPasswordTapped), for: .touchUpInside)
         
         // Create Google Sign-In Button
         googleSignInButton = UIButton(type: .system)
@@ -291,8 +291,10 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func forgotPasswordButtonTapped(_ sender: UIButton) {
-        print("Forgot password tapped")
+    @objc func forgotPasswordTapped() {
+        let forgotPasswordVC = ForgotPasswordViewController()
+        forgotPasswordVC.modalPresentationStyle = .fullScreen
+        present(forgotPasswordVC, animated: true)
     }
     
     @IBAction func signUpButtonTapped(_ sender: UIButton) {

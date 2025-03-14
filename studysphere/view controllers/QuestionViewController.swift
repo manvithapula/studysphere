@@ -140,8 +140,8 @@ class QuestionViewController: UIViewController {
     private func setupOptionStack() {
         optionStackView.axis = .vertical
         optionStackView.spacing = 12
-        // Change distribution from fillEqually to fill so buttons can have different heights
         optionStackView.distribution = .fill
+        optionStackView.alignment = .fill
         view.addSubview(optionStackView)
         
         for (index, button) in optionButtons.enumerated() {
@@ -158,7 +158,24 @@ class QuestionViewController: UIViewController {
             
             button.contentHorizontalAlignment = .left
             // Adjust insets to provide more space for text
-            button.contentEdgeInsets = UIEdgeInsets(top: 16, left: 20, bottom: 16, right: 40)
+            button.contentEdgeInsets = UIEdgeInsets(top: 16, left: 24, bottom: 16, right: 24)
+            
+            // Configure button text layout
+            button.titleLabel?.numberOfLines = 0
+            button.titleLabel?.lineBreakMode = .byWordWrapping
+            button.titleLabel?.textAlignment = .left
+            
+            // It will check if the text has enough space to be displayed
+            if let titleLabel = button.titleLabel {
+                titleLabel.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    titleLabel.leadingAnchor.constraint(equalTo: button.leadingAnchor, constant: 24),
+                    titleLabel.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -24),
+                    titleLabel.topAnchor.constraint(equalTo: button.topAnchor, constant: 16),
+                    titleLabel.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -16)
+                ])
+            }
+            
             button.layer.cornerRadius = 16
             button.backgroundColor = .white
             
@@ -205,6 +222,10 @@ class QuestionViewController: UIViewController {
             button.addTarget(self, action: #selector(optionButtonTapped(_:)), for: .touchUpInside)
             button.addTarget(self, action: #selector(buttonTouchDown(_:)), for: .touchDown)
             button.addTarget(self, action: #selector(buttonTouchUp(_:)), for: [.touchUpOutside, .touchCancel])
+            
+            // Ensure content hugging and compression resistance priorities are set correctly
+            button.setContentHuggingPriority(.defaultHigh, for: .vertical)
+            button.setContentCompressionResistancePriority(.required, for: .vertical)
             
             optionStackView.addArrangedSubview(button)
         }
@@ -306,10 +327,18 @@ class QuestionViewController: UIViewController {
             nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             nextButton.widthAnchor.constraint(equalToConstant: 200),
             nextButton.heightAnchor.constraint(equalToConstant: 56),
-            nextButton.bottomAnchor.constraint(lessThanOrEqualTo: safeArea.bottomAnchor, constant: -20)
+            nextButton.bottomAnchor.constraint(lessThanOrEqualTo: safeArea.bottomAnchor, constant: -20),
+            
+            // Ensure the option stack has some maximum height if needed
+            optionStackView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.5),
+            
+            // Ensure proper spacing between elements
+            optionStackView.topAnchor.constraint(equalTo: questionCardView.bottomAnchor, constant: 20),
+            nextButton.topAnchor.constraint(equalTo: optionStackView.bottomAnchor, constant: 24)
         ])
         
-        // Set minimum height for option buttons instead of fixed height
+        // Remove any fixed height constraints for option buttons
+        // Instead, set only minimum height
         for button in optionButtons {
             button.heightAnchor.constraint(greaterThanOrEqualToConstant: 64).isActive = true
         }

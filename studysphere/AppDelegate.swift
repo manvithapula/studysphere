@@ -35,6 +35,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     await checkAndNavigate()
                 }
                 
+                if let bundleIdentifier = Bundle.main.bundleIdentifier {
+                    print("Bundle identifier: \(bundleIdentifier)")
+                }
+                if let filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") {
+                    print("Firebase config file exists at: \(filePath)")
+                }
+                
                 return true
     }
 
