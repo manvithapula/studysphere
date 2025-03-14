@@ -181,6 +181,7 @@ class FlashcardViewController: UIViewController {
                 self.answerLabel.text = self.isShowingAnswer ?
                 self.flashcards[self.currentCardIndex].answer :
                 self.flashcards[self.currentCardIndex].question
+                self.cardView.backgroundColor = self.isShowingAnswer ? AppTheme.primary : .white
             }
         }
     }
