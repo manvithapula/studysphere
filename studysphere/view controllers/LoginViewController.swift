@@ -18,8 +18,6 @@ class LoginViewController: UIViewController {
     var appleSignInButton: UIButton!
     var signUpButton: UIButton!
     
-    private let brandColor = UIColor(red: 37/255, green: 99/255, blue: 235/255, alpha: 1.0)
-    
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -105,6 +103,7 @@ class LoginViewController: UIViewController {
         emailTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         emailTextField.leftViewMode = .always
         emailTextField.font = .systemFont(ofSize: 16)
+        emailTextField.autocapitalizationType = .none
         
         // Create Password TextField
         passwordTextField = UITextField()
@@ -120,7 +119,7 @@ class LoginViewController: UIViewController {
         // Create Login Button
         loginButton = UIButton(type: .system)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
-        loginButton.backgroundColor = brandColor
+        loginButton.backgroundColor = AppTheme.primary
         loginButton.setTitleColor(.white, for: .normal)
         loginButton.layer.cornerRadius = 12
         loginButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
@@ -130,7 +129,7 @@ class LoginViewController: UIViewController {
         // Create Forgot Password Button
         forgotPasswordButton = UIButton(type: .system)
         forgotPasswordButton.translatesAutoresizingMaskIntoConstraints = false
-        forgotPasswordButton.setTitleColor(brandColor, for: .normal)
+        forgotPasswordButton.setTitleColor(AppTheme.primary, for: .normal)
         forgotPasswordButton.titleLabel?.font = .systemFont(ofSize: 14)
         forgotPasswordButton.setTitle("Forgot Password?", for: .normal)
         forgotPasswordButton.addTarget(self, action: #selector(forgotPasswordButtonTapped), for: .touchUpInside)
@@ -165,7 +164,7 @@ class LoginViewController: UIViewController {
         ])
         attributedString.append(NSAttributedString(string: "Sign Up", attributes: [
             .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
-            .foregroundColor: brandColor
+            .foregroundColor: AppTheme.primary
         ]))
         signUpButton.setAttributedTitle(attributedString, for: .normal)
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
@@ -181,8 +180,6 @@ class LoginViewController: UIViewController {
         
         // Setup stack views
         contentView.addSubview(stackView)
-        
-        // Add arranged subviews in proper order
         stackView.addArrangedSubview(logoImageView)
         stackView.addArrangedSubview(appTitleLabel)
         stackView.addArrangedSubview(subtitleLabel)

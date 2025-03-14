@@ -37,7 +37,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="481-eY-8Zo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="yJl-0X-gVB" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="12998" y="136"/>
+            <point key="canvasLocation" x="13042" y="136"/>
         </scene>
         <!--Subjects-->
         <scene sceneID="l41-vd-9Uv">
@@ -102,7 +102,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TXM-Cc-caX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14315" y="136"/>
+            <point key="canvasLocation" x="14073" y="136"/>
         </scene>
         <!--Documents -->
         <scene sceneID="9XF-0P-rCc">
@@ -135,7 +135,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="408-hT-Bp9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14314" y="1619"/>
+            <point key="canvasLocation" x="14073" y="1618"/>
         </scene>
         <!--Flashcard Result View Controller-->
         <scene sceneID="kjQ-JB-qVh">
@@ -374,7 +374,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QEZ-QD-Kq4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="13505" y="1618"/>
+            <point key="canvasLocation" x="13042" y="1618"/>
         </scene>
         <!--Subject List-->
         <scene sceneID="iOy-po-6S0">
@@ -454,7 +454,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14314" y="849"/>
+            <point key="canvasLocation" x="14073" y="849"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="bis-Ya-wBD">
@@ -464,32 +464,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="254" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="09y-Wr-QL5">
-                                <rect key="frame" x="39" y="200" width="315" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eOx-d2-DBf">
-                                <rect key="frame" x="41" y="247" width="315" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="B1k-yB-0TW">
-                                <rect key="frame" x="41" y="297" width="315" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name " textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RXx-Rf-Ddo">
-                                <rect key="frame" x="41" y="347" width="315" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Date of Birth" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hcn-gY-nNk">
-                                <rect key="frame" x="41" y="397" width="315" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StudySphere" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wyM-OX-vYK">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StudySphere" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wyM-OX-vYK">
                                 <rect key="frame" x="122" y="155" width="149" height="27"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="3xn-lv-utJ"/>
@@ -499,21 +474,46 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vhl-k7-Zgy">
-                                <rect key="frame" x="41" y="601" width="313" height="34.333333333333371"/>
+                                <rect key="frame" x="41" y="661" width="311" height="34.333333333333371"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Continue with Google">
                                     <color key="baseBackgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Yt-BB-8Qc">
-                                <rect key="frame" x="41" y="551" width="313" height="35"/>
+                                <rect key="frame" x="41" y="611" width="311" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="apple.logo" catalog="system" title="  Continue with Apple">
                                     <color key="baseBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="254" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="09y-Wr-QL5">
+                                <rect key="frame" x="39" y="260" width="315" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eOx-d2-DBf">
+                                <rect key="frame" x="39" y="307" width="315" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="B1k-yB-0TW">
+                                <rect key="frame" x="39" y="357" width="315" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name " textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RXx-Rf-Ddo">
+                                <rect key="frame" x="39" y="407" width="315" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Date of Birth" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hcn-gY-nNk">
+                                <rect key="frame" x="39" y="457" width="315" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="253" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LOf-2k-7Ky">
-                                <rect key="frame" x="41" y="462" width="313" height="35"/>
+                                <rect key="frame" x="39" y="522" width="313" height="35"/>
                                 <color key="tintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Sign Up" cornerStyle="large">
@@ -532,16 +532,16 @@
                             <constraint firstItem="4Yt-BB-8Qc" firstAttribute="top" secondItem="LOf-2k-7Ky" secondAttribute="bottom" constant="54" id="4W4-dB-1UC"/>
                             <constraint firstItem="wyM-OX-vYK" firstAttribute="top" secondItem="9se-jz-4aJ" secondAttribute="top" constant="155" id="5Dh-QA-4Yg"/>
                             <constraint firstItem="09y-Wr-QL5" firstAttribute="centerX" secondItem="pyd-VS-VQl" secondAttribute="centerX" id="6io-Gm-cJk"/>
-                            <constraint firstItem="09y-Wr-QL5" firstAttribute="top" secondItem="wyM-OX-vYK" secondAttribute="bottom" constant="18" id="6to-jF-oAt"/>
+                            <constraint firstItem="09y-Wr-QL5" firstAttribute="top" secondItem="wyM-OX-vYK" secondAttribute="bottom" constant="78" id="6to-jF-oAt"/>
                             <constraint firstItem="eOx-d2-DBf" firstAttribute="trailing" secondItem="RXx-Rf-Ddo" secondAttribute="trailing" id="6va-sB-TOk"/>
-                            <constraint firstItem="hcn-gY-nNk" firstAttribute="leading" secondItem="9se-jz-4aJ" secondAttribute="leading" constant="41" id="AU9-qT-Whi"/>
-                            <constraint firstItem="9se-jz-4aJ" firstAttribute="trailing" secondItem="LOf-2k-7Ky" secondAttribute="trailing" constant="39" id="B5p-ZR-1QA"/>
+                            <constraint firstItem="hcn-gY-nNk" firstAttribute="leading" secondItem="9se-jz-4aJ" secondAttribute="leading" constant="39" id="AU9-qT-Whi"/>
+                            <constraint firstItem="9se-jz-4aJ" firstAttribute="trailing" secondItem="LOf-2k-7Ky" secondAttribute="trailing" constant="41" id="B5p-ZR-1QA"/>
                             <constraint firstItem="RXx-Rf-Ddo" firstAttribute="top" secondItem="B1k-yB-0TW" secondAttribute="bottom" constant="16" id="Cnl-Dr-ffL"/>
                             <constraint firstItem="hcn-gY-nNk" firstAttribute="trailing" secondItem="RXx-Rf-Ddo" secondAttribute="trailing" id="EMO-m8-mmr"/>
                             <constraint firstItem="hcn-gY-nNk" firstAttribute="top" secondItem="RXx-Rf-Ddo" secondAttribute="bottom" constant="16" id="EZZ-6k-uVX"/>
                             <constraint firstItem="eOx-d2-DBf" firstAttribute="trailing" secondItem="B1k-yB-0TW" secondAttribute="trailing" id="IQ7-Ra-vEc"/>
                             <constraint firstItem="vhl-k7-Zgy" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="LOf-2k-7Ky" secondAttribute="trailing" id="Jjt-p2-BLs"/>
-                            <constraint firstItem="vhl-k7-Zgy" firstAttribute="leading" secondItem="LOf-2k-7Ky" secondAttribute="leading" id="K12-Yq-OSZ"/>
+                            <constraint firstItem="vhl-k7-Zgy" firstAttribute="leading" secondItem="LOf-2k-7Ky" secondAttribute="leading" constant="2" id="K12-Yq-OSZ"/>
                             <constraint firstItem="wyM-OX-vYK" firstAttribute="leading" secondItem="9se-jz-4aJ" secondAttribute="leading" constant="122" id="Knf-0a-HfO"/>
                             <constraint firstItem="eOx-d2-DBf" firstAttribute="leading" secondItem="B1k-yB-0TW" secondAttribute="leading" id="MPO-ga-lwP"/>
                             <constraint firstItem="vhl-k7-Zgy" firstAttribute="top" secondItem="4Yt-BB-8Qc" secondAttribute="bottom" constant="15" id="S91-xF-0rP"/>
@@ -552,10 +552,10 @@
                             <constraint firstItem="RXx-Rf-Ddo" firstAttribute="top" secondItem="B1k-yB-0TW" secondAttribute="bottom" constant="16" id="cbV-J3-UrS"/>
                             <constraint firstItem="LOf-2k-7Ky" firstAttribute="top" secondItem="hcn-gY-nNk" secondAttribute="bottom" constant="31" id="djD-rb-8Ti"/>
                             <constraint firstItem="4Yt-BB-8Qc" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vhl-k7-Zgy" secondAttribute="trailing" id="k3T-8J-RRU"/>
-                            <constraint firstItem="LOf-2k-7Ky" firstAttribute="leading" secondItem="9se-jz-4aJ" secondAttribute="leading" constant="41" id="n0v-ZW-1iH"/>
+                            <constraint firstItem="LOf-2k-7Ky" firstAttribute="leading" secondItem="9se-jz-4aJ" secondAttribute="leading" constant="39" id="n0v-ZW-1iH"/>
                             <constraint firstItem="eOx-d2-DBf" firstAttribute="leading" secondItem="9se-jz-4aJ" secondAttribute="leading" constant="41" id="tg5-r1-NPC"/>
                             <constraint firstItem="09y-Wr-QL5" firstAttribute="leading" secondItem="9se-jz-4aJ" secondAttribute="leading" constant="39" id="zeA-HM-857"/>
-                            <constraint firstItem="9se-jz-4aJ" firstAttribute="trailing" secondItem="hcn-gY-nNk" secondAttribute="trailing" constant="37" id="znb-cE-2ig"/>
+                            <constraint firstItem="9se-jz-4aJ" firstAttribute="trailing" secondItem="hcn-gY-nNk" secondAttribute="trailing" constant="39" id="znb-cE-2ig"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="dS3-iD-NFc"/>
@@ -2016,7 +2016,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ole-Ga-Ckv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="12104.580152671755" y="-702.11267605633805"/>
+            <point key="canvasLocation" x="12105" y="-619"/>
         </scene>
         <!--Home-->
         <scene sceneID="HWj-6g-Y6F">
@@ -2037,7 +2037,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rcQ-em-yBR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="12960" y="-686"/>
+            <point key="canvasLocation" x="13042" y="-619"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5ev-bD-Cn3">
@@ -2092,14 +2092,14 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nr1-rh-4oo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14314" y="-619"/>
+            <point key="canvasLocation" x="14074" y="-619"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="651-AB-nO7"/>
-        <segue reference="LYh-Wz-AME"/>
+        <segue reference="llO-ze-ygf"/>
+        <segue reference="vbk-8J-x7B"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="qtl-9G-7g1"/>
+        <segue reference="BI1-l1-Jlu"/>
         <segue reference="paQ-p4-NU6"/>
     </inferredMetricsTieBreakers>
     <resources>

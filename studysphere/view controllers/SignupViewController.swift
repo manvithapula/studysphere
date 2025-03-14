@@ -44,28 +44,37 @@ class SignupViewController: UIViewController {
             return stack
         }()
         
-        private let logoImageView: UIImageView = {
-            let imageView = UIImageView()
-            imageView.backgroundColor = UIColor(red: 30/255, green: 41/255, blue: 59/255, alpha: 1)
-            imageView.layer.cornerRadius = 40
-            imageView.clipsToBounds = true
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            imageView.layer.shadowColor = UIColor(red: 37/255, green: 99/255, blue: 235/255, alpha: 0.3).cgColor
-            imageView.layer.shadowOffset = CGSize(width: 0, height: 4)
-            imageView.layer.shadowOpacity = 1
-            imageView.layer.shadowRadius = 20
-            return imageView
-        }()
+    private let logoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "LOGO") // Use the same logo image as login screen
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
         
-        private let titleLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Create Account"
-            label.font = .systemFont(ofSize: 28, weight: .bold)
-            label.textColor = .black
-            label.textAlignment = .center
-            return label
-        }()
-        
+    // First, fix the titleLabel and subtitleLabel properties
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Create Account"
+        label.font = .systemFont(ofSize: 24, weight: .bold) // Match login screen font size
+        label.textColor = .darkText // Match login screen color
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Fill in your details to get started"
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .systemGray
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    
+
         // MARK: - Lifecycle
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -83,54 +92,38 @@ class SignupViewController: UIViewController {
         view.endEditing(true)
     }
         
-        // MARK: - UI Setup
-            
-            private func setupUI() {
-                view.backgroundColor = .systemGray6
-                
-                // Setup scroll view hierarchy
-//                view.addSubview(scrollView)
-//                scrollView.addSubview(contentView)
-//                contentView.addSubview(stackView)
-//                
-//                // Add logo and title to stack view
-//                stackView.addArrangedSubview(logoImageView)
-//                stackView.addArrangedSubview(titleLabel)
-                
-                // Configure and add text fields to stack view
-                [firstNameTextField, lastNameTextField, emailTextField,
-                 passwordTextField, dateOfBirthTextField].forEach { textField in
-                    textField?.backgroundColor = .systemGray6
-                    textField?.layer.cornerRadius = 12
-                    textField?.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
-                    textField?.leftViewMode = .always
-                    textField?.font = .systemFont(ofSize: 16)
-                    // Add text fields to stack view
-//                    if let field = textField {
-//                        stackView.addArrangedSubview(field)
-//                    }
-                }
-//                contentView.addSubview(signUpButton)
-                // Configure sign up button
-                signUpButton.isUserInteractionEnabled = true
-                signUpButton.backgroundColor = AppTheme.primary
-                signUpButton.setTitleColor(.white, for: .normal)
-                signUpButton.layer.cornerRadius = 12
-                signUpButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+      
+    private func setupUI() {
+        view.backgroundColor = .systemBackground
+        view.addSubview(logoImageView)
+        view.addSubview(titleLabel)
+        view.addSubview(subtitleLabel)
 
-            
-            // Hide unused buttons
-            googleSignInButton.isHidden = true
-            appleSignInButton.isHidden = true
+        [firstNameTextField, lastNameTextField, emailTextField,
+         passwordTextField, dateOfBirthTextField].forEach { textField in
+            textField?.backgroundColor = .systemGray6
+            textField?.layer.cornerRadius = 12
+            textField?.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+            textField?.leftViewMode = .always
+            textField?.font = .systemFont(ofSize: 16)
+            if textField == emailTextField {
+                textField?.autocapitalizationType = .none
+            }
         }
+        signUpButton.isUserInteractionEnabled = true
+        signUpButton.backgroundColor = AppTheme.primary
+        signUpButton.setTitleColor(.white, for: .normal)
+        signUpButton.layer.cornerRadius = 12
+        signUpButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        googleSignInButton.isHidden = true
+        appleSignInButton.isHidden = true
+    }
         
         private func setupDatePicker() {
             datePicker.datePickerMode = .date
             datePicker.preferredDatePickerStyle = .wheels
             datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
             dateOfBirthTextField.inputView = datePicker
-            
-            // Add toolbar with Done button
             let toolbar = UIToolbar()
             toolbar.sizeToFit()
             let doneButton = UIBarButtonItem(title: "Done", style: .done,
@@ -140,40 +133,36 @@ class SignupViewController: UIViewController {
             dateOfBirthTextField.inputAccessoryView = toolbar
         }
         
-        private func setupConstraints() {
-            NSLayoutConstraint.activate([
-                // Scroll view
-//                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-//                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//                
-//                // Content view
-//                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-//                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-//                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-//                contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-//                
-//                // Stack view
-//                stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-//                stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-//                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-                
-                // Text field heights
-                firstNameTextField.heightAnchor.constraint(equalToConstant: 50),
-                lastNameTextField.heightAnchor.constraint(equalToConstant: 50),
-                emailTextField.heightAnchor.constraint(equalToConstant: 50),
-                passwordTextField.heightAnchor.constraint(equalToConstant: 50),
-                dateOfBirthTextField.heightAnchor.constraint(equalToConstant: 50),
-                
-                // Button height
-                signUpButton.heightAnchor.constraint(equalToConstant: 50),
-                
-                // Full width constraints
-            ])
-        }
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            
+            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 100),
+            logoImageView.heightAnchor.constraint(equalToConstant: 100),
+            
+            titleLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // Subtitle label
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // Existing constraints for text fields
+            firstNameTextField.heightAnchor.constraint(equalToConstant: 50),
+            lastNameTextField.heightAnchor.constraint(equalToConstant: 50),
+            emailTextField.heightAnchor.constraint(equalToConstant: 50),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 50),
+            dateOfBirthTextField.heightAnchor.constraint(equalToConstant: 50),
+            
+            // Button height
+            signUpButton.heightAnchor.constraint(equalToConstant: 50),
+        ])
+    }
         
         // MARK: - Actions
         @objc private func dateChanged(_ sender: UIDatePicker) {
@@ -209,7 +198,7 @@ class SignupViewController: UIViewController {
                                     createdAt: Timestamp(),
                                     updatedAt: Timestamp())
         
-        if let existingUser = userDB.findFirst(where: ["email": email]) {
+        if userDB.findFirst(where: ["email": email]) != nil {
             showAlert(message: "User with email \(email) already exists.")
             return
         }
@@ -246,7 +235,7 @@ class SignupViewController: UIViewController {
                                     createdAt: Timestamp(),
                                     updatedAt: Timestamp())
         
-        if let existingUser = userDB.findFirst(where: ["email": email]) {
+        if userDB.findFirst(where: ["email": email]) != nil {
             showAlert(message: "User with email \(email) already exists.")
             return
         }
