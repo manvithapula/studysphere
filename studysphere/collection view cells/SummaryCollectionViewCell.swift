@@ -1,41 +1,33 @@
 import UIKit
 
 class SummaryCollectionViewCell: UICollectionViewCell {
-    let containerView: GradientView = {
+    // MARK: - UI Elements
+    private let containerView: GradientView = {
         let view = GradientView()
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.font = .systemFont(ofSize: 17, weight: .semibold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-        
-    let timeLabel: UILabel = {
-            let label = UILabel()
-            label.font = .systemFont(ofSize: 14)
-            label.textColor = .gray
-            label.textAlignment = .right
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
-    
-    let subjectTag: UILabel = {
+
+    private let subjectTag: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .black
         label.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         label.layer.cornerRadius = 10
         label.clipsToBounds = true
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading.."
+        label.text = "Loading..."
         return label
     }()
     
@@ -81,7 +73,6 @@ class SummaryCollectionViewCell: UICollectionViewCell {
     
     func configure(title: String, itemCount: Int, time: String, subject: String, index: Int) {
         titleLabel.text = title
-        timeLabel.text = time
         subjectTag.text = subject
 
         // Apply gradient background based on index

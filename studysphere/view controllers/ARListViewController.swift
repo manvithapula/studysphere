@@ -1,17 +1,27 @@
-//
-//  ARListViewController.swift
-//  studysphere
-//
-//  Created by Dev on 18/11/24.
-//
 
 import UIKit
 
 class ARListViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
-    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var ARList: UICollectionView!
-    @IBOutlet weak var segmentControl: UISegmentedControl!
 
+        
+        private let searchBar: UISearchBar = {
+            let search = UISearchBar()
+            search.placeholder = "Search topics..."
+            search.translatesAutoresizingMaskIntoConstraints = false
+            return search
+        }()
+        
+        private let segmentControl: UISegmentedControl = {
+            let control = UISegmentedControl(items: ["Ongoing", "Completed"])
+            control.selectedSegmentIndex = 0
+            control.selectedSegmentTintColor = AppTheme.primary
+            control.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+            control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+            control.translatesAutoresizingMaskIntoConstraints = false
+            return control
+        }()
+        
         enum FilterState {
             case ongoing, completed
         }
@@ -40,16 +50,36 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         
         private func setupUI() {
+            view.backgroundColor = .systemBackground
+            view.addSubview(searchBar)
+            view.addSubview(segmentControl)
+            
             ARList.dataSource = self
             ARList.delegate = self
-            ARList.setCollectionViewLayout(generateLayout(), animated: true)
-            
+            ARList.setCollectionViewLayout(generateLayout(), animated: true) // Re-added!
+
             segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
-            segmentControl.selectedSegmentTintColor = AppTheme.primary
-            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
-            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-            
             searchBar.delegate = self
+            
+            setupConstraints()
+        }
+        
+        private func setupConstraints() {
+            NSLayoutConstraint.activate([
+                // SearchBar Constraints
+                searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+                searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                
+                // Segment Control Constraints
+                segmentControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8),
+                segmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                segmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                segmentControl.heightAnchor.constraint(equalToConstant: 32),
+                
+                // Adjust ARList position
+                ARList.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 16)
+            ])
         }
         
         private func fetchTopics() {
@@ -84,17 +114,16 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             return 1
         }
         
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AR", for: indexPath)
-        let topic = filteredQuestions[indexPath.item]
-        
-        if let cell = cell as? ARCollectionViewCell {
-            cell.configure(topic: topic, index: indexPath.item)
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AR", for: indexPath)
+            let topic = filteredQuestions[indexPath.item]
+            
+            if let cell = cell as? ARCollectionViewCell {
+                cell.configure(topic: topic, index: indexPath.item)
+            }
+            
+            return cell
         }
-        
-        return cell
-    }
-
         
         // MARK: - UICollectionView Layout
         private func generateLayout() -> UICollectionViewLayout {
@@ -131,3 +160,4 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             }
         }
     }
+
