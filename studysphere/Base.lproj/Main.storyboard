@@ -1656,19 +1656,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JPu-rw-qKc">
-                                <rect key="frame" x="0.0" y="103" width="393" height="56"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="dyS-1i-Sma">
-                                <rect key="frame" x="9" y="167" width="375" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="Ongoing"/>
-                                    <segment title="Completed"/>
-                                </segments>
-                            </segmentedControl>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="JCX-hL-CmR">
                                 <rect key="frame" x="0.0" y="198" width="393" height="571"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1698,8 +1685,6 @@
                     <navigationItem key="navigationItem" title="Spaced Repetition" leftItemsSupplementBackButton="YES" id="7wN-uW-DYm"/>
                     <connections>
                         <outlet property="SpacedRepetitionList" destination="JCX-hL-CmR" id="gtq-am-QDQ"/>
-                        <outlet property="searchBar" destination="JPu-rw-qKc" id="xgw-bD-jED"/>
-                        <outlet property="segmentControl" destination="dyS-1i-Sma" id="aAx-MQ-6Bm"/>
                         <segue destination="KzB-74-32G" kind="show" identifier="toSRSchedule" id="PO4-kN-YgS"/>
                     </connections>
                 </viewController>

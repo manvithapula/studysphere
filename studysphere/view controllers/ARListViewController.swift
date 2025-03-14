@@ -7,7 +7,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         private let searchBar: UISearchBar = {
             let search = UISearchBar()
-            search.placeholder = "Search topics..."
+            search.placeholder = "Find a topic you created..."
             search.translatesAutoresizingMaskIntoConstraints = false
             return search
         }()
