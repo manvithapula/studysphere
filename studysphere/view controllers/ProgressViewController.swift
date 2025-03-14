@@ -219,6 +219,10 @@ class ProgressViewController: UIViewController {
     private func configureStreakLineChart(
         lineChart: LineChartView, topic: TopicsType
     ) async {
+        lineChart.xAxis.drawGridLinesEnabled = false
+        lineChart.leftAxis.drawGridLinesEnabled = false
+        lineChart.rightAxis.drawGridLinesEnabled = false
+
         do {
             let chartData = try await getStreakChartData(topic: topic)
 
@@ -320,6 +324,10 @@ class ProgressViewController: UIViewController {
         // Configure bar chart to display scores
         private func configureScoreBarChart(barChart: BarChartView) async {
             do {
+                barChart.xAxis.drawGridLinesEnabled = false
+                barChart.leftAxis.drawGridLinesEnabled = false
+                barChart.rightAxis.drawGridLinesEnabled = false
+
                 let scoreData = try await getAverageScoresByTopic()
                 
                 // Limit to top 5 topics if there are more
