@@ -32,6 +32,39 @@ class FlashcardViewController: UIViewController {
     private let tutorialKey = AuthManager.shared.id!
         private var tutorialView: UIView?
         private var demoCard: UIView?
+    // Declare the label as a property in your class
+    @IBOutlet weak var cardLabel: UILabel!
+
+    // OR create it programmatically in viewDidLoad
+    private func setupCardLabel() {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Card Title"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .black
+        
+        cardView.addSubview(label)
+        
+        // Center the label in the cardView
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: cardView.centerXAnchor),
+            label.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16),
+            label.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16)
+        ])
+        
+        self.cardLabel = label
+        Task{
+            let topics = try await topicsDb.findAll(where: ["id":schedule!.topic])
+            if let topic = topics.first{
+                let subjects = try await subjectDb.findAll(where: ["id":topic.subject])
+                if let subject = subjects.first{
+                    cardLabel.text = subject.name
+                }
+            }
+        }
+    }
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -40,6 +73,7 @@ class FlashcardViewController: UIViewController {
                 self.flashcards = try await flashCardDb.findAll(where: ["topic":topic])
                 setupInitialCard()
                 setupPanGesture()
+                setupCardLabel()
                 tabBarController?.isTabBarHidden = true
                 if !UserDefaults.standard.bool(forKey: tutorialKey) {
                                 showTutorial()
@@ -47,6 +81,7 @@ class FlashcardViewController: UIViewController {
             }
             // hide tabbar
         }
+    
    
 
         private func setupPanGesture() {
