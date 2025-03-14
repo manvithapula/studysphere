@@ -310,17 +310,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="jFi-vT-Shr">
-                                <rect key="frame" x="0.0" y="103" width="393" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="AHc-5L-qrA"/>
-                                </constraints>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="ivI-JP-b7I" id="YIN-tH-Qbh"/>
-                                </connections>
-                            </searchBar>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="g8G-7j-hYW">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="g8G-7j-hYW">
                                 <rect key="frame" x="0.0" y="198" width="393" height="654"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wSx-TN-Izn">
@@ -341,33 +331,17 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="63j-NY-P6l">
-                                <rect key="frame" x="8" y="159" width="377" height="32"/>
-                                <segments>
-                                    <segment title="Ongoing"/>
-                                    <segment title="Complete"/>
-                                </segments>
-                            </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="7LO-3F-ioV"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="g8G-7j-hYW" secondAttribute="bottom" id="0Gu-a8-NyK"/>
-                            <constraint firstItem="jFi-vT-Shr" firstAttribute="trailing" secondItem="7LO-3F-ioV" secondAttribute="trailing" id="4Pm-ao-5pb"/>
-                            <constraint firstItem="63j-NY-P6l" firstAttribute="leading" secondItem="7LO-3F-ioV" secondAttribute="leading" constant="8" id="690-kH-1hs"/>
-                            <constraint firstItem="jFi-vT-Shr" firstAttribute="top" secondItem="7LO-3F-ioV" secondAttribute="top" id="7nk-Id-aDU"/>
                             <constraint firstItem="g8G-7j-hYW" firstAttribute="leading" secondItem="7LO-3F-ioV" secondAttribute="leading" id="Arr-EV-WWs"/>
                             <constraint firstItem="g8G-7j-hYW" firstAttribute="trailing" secondItem="7LO-3F-ioV" secondAttribute="trailing" id="KLH-f7-gbJ"/>
-                            <constraint firstItem="jFi-vT-Shr" firstAttribute="leading" secondItem="7LO-3F-ioV" secondAttribute="leading" id="fdO-Wd-EjF"/>
-                            <constraint firstItem="g8G-7j-hYW" firstAttribute="top" secondItem="jFi-vT-Shr" secondAttribute="bottom" constant="51" id="hzo-i5-vBO"/>
-                            <constraint firstItem="7LO-3F-ioV" firstAttribute="trailing" secondItem="63j-NY-P6l" secondAttribute="trailing" constant="8" id="iFN-zQ-yxB"/>
-                            <constraint firstItem="63j-NY-P6l" firstAttribute="top" secondItem="jFi-vT-Shr" secondAttribute="bottom" constant="12" id="kxl-WR-fMg"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Summariser" leftItemsSupplementBackButton="YES" id="llF-7p-cws"/>
                     <connections>
-                        <outlet property="searchBar" destination="jFi-vT-Shr" id="cUI-ya-llm"/>
-                        <outlet property="segmentControl" destination="63j-NY-P6l" id="woB-hd-Arj"/>
                         <outlet property="summaryList" destination="g8G-7j-hYW" id="3Mv-gL-I1w"/>
                         <segue destination="jcz-Zh-nQ0" kind="show" identifier="toSummary" id="paQ-p4-NU6"/>
                     </connections>
@@ -2086,7 +2060,7 @@
         <segue reference="PO4-kN-YgS"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
-        <segue reference="qdn-Bb-u7i"/>
+        <segue reference="paQ-p4-NU6"/>
         <segue reference="n0a-Ov-fy4"/>
     </inferredMetricsTieBreakers>
     <resources>
