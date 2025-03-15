@@ -203,7 +203,6 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
         private func performLogout() {
             // Clear user data
             AuthManager.shared.logOut()
-            userDB.clearCache()
             subjectDb.clearCache()
             scoreDb.clearCache()
             topicsDb.clearCache()
@@ -211,7 +210,12 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             flashCardDb.clearCache()
             summaryDb.clearCache()
             questionsDb.clearCache()
-
+            do{
+                try FirebaseAuthManager.shared.signOut()
+            }
+            catch{
+                print(error)
+            }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if let navVC = storyboard.instantiateViewController(withIdentifier: "loginNav") as? UINavigationController {
                         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = navVC
@@ -235,9 +239,25 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
         }
     
     private func loadImageFromUserDefaults() {
-        if let imageData = UserDefaults.standard.data(forKey: "profileImage"),
-           let image = UIImage(data: imageData) {
-            profileImageView.image = image
+        if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
+            // Download image data from the URL
+            URLSession.shared.dataTask(with: photoURL) { [weak self] data, response, error in
+                guard let self = self,
+                      let imageData = data,
+                      error == nil,
+                      let image = UIImage(data: imageData) else {
+                    print("Error loading profile image: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                // Update UI on main thread
+                DispatchQueue.main.async {
+                    self.profileImageView.image = image
+                }
+            }.resume()
+        } else {
+            // Set default image when no photo URL exists
+            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
         }
     }
 }

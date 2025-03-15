@@ -273,22 +273,19 @@ class LoginViewController: UIViewController {
             return
         }
         
-        Task {
-            do {
-                if let user = try await userDB.findAll(where: ["email": email]).first {
-                    if password != user.password {
-                        showAlert(message: "Invalid password.")
-                        return
-                    }
-                    AuthManager.shared.logIn(email: email, firstName: user.firstName, lastName: user.lastName, id: String(user.id))
-                    await checkAndNavigate()
-                } else {
-                    showAlert(message: "User not found.")
+        FirebaseAuthManager.shared.signIn(email: email, password: password) { result in
+            switch result {
+            case .success(let user):
+                print("User created: \(user.uid)")
+                Task{
+                    await self.checkAndNavigate()
                 }
-            } catch {
-                showAlert(message: "An error occurred. Please try again.")
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                self.showError(message: "\(error.localizedDescription)")
             }
         }
+
     }
     
     @objc func forgotPasswordTapped() {
@@ -296,20 +293,26 @@ class LoginViewController: UIViewController {
         forgotPasswordVC.modalPresentationStyle = .fullScreen
         present(forgotPasswordVC, animated: true)
     }
-    
+    private func showError(message: String) {
+        let alert = UIAlertController(
+            title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(
+            UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
     @IBAction func signUpButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "goToSignUp", sender: self)
     }
 
     
     private func checkAndNavigate() async {
-        guard AuthManager.shared.isLoggedIn,
-              let userEmail = AuthManager.shared.userEmail else {
+        guard FirebaseAuthManager.shared.isUserLoggedIn == true else {
             return
         }
-        
+        let user = FirebaseAuthManager.shared.currentUser
         do {
-            if let _ = try await userDB.findAll(where: ["email": userEmail]).first {
+            if let user = try await userDB.findAll(where: ["email": user!.email!]).first {
+                AuthManager.shared.logIn(email: user.email, firstName: user.firstName, lastName: user.lastName, id: user.id)
                 DispatchQueue.main.async {
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {

@@ -59,13 +59,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     private func checkAndNavigate() async {
-        guard AuthManager.shared.isLoggedIn,
-              let userEmail = AuthManager.shared.userEmail else {
+        guard FirebaseAuthManager.shared.isUserLoggedIn == true else {
             return
         }
-        
+        let user = FirebaseAuthManager.shared.currentUser
         do {
-            if let _ = try await userDB.findAll(where: ["email": userEmail]).first {
+            if let _ = try await userDB.findAll(where: ["email": user!.email!]).first {
                 DispatchQueue.main.async {
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {

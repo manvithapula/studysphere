@@ -421,7 +421,7 @@ class FakeDb<T: Codable & Identifiable> {
             return db.collection("usertemp")
         }
         return db.collection("userdata").document(
-            String(AuthManager.shared.id!)
+            String(FirebaseAuthManager.shared.currentUser?.uid ?? "default")
         ).collection(name)
     }
     private var ArchiveURL: URL {

@@ -186,32 +186,37 @@ class SignupViewController: UIViewController {
             showAlert(message: "Please fill out all fields.")
             return
         }
-        
-        var newUser = UserDetailsType(id: "",
-                                    firstName: firstName,
-                                    lastName: lastName,
-                                    dob: Timestamp(date: datePicker.date),
-                                    pushNotificationEnabled: false,
-                                    faceIdEnabled: false,
-                                    email: email,
-                                    password: password,
-                                    createdAt: Timestamp(),
-                                    updatedAt: Timestamp())
-        
-        if userDB.findFirst(where: ["email": email]) != nil {
-            showAlert(message: "User with email \(email) already exists.")
-            return
+        FirebaseAuthManager.shared.signUp(email: email, password: password) { result in
+            switch result {
+            case .success(let user):
+                print("User created: \(user.uid)")
+                var newUser = UserDetailsType(id: "",
+                                            firstName: firstName,
+                                            lastName: lastName,
+                                              dob: Timestamp(date: self.datePicker.date),
+                                            pushNotificationEnabled: false,
+                                            faceIdEnabled: false,
+                                            email: email,
+                                            password: password,
+                                            createdAt: Timestamp(),
+                                            updatedAt: Timestamp())
+                let createdUser = userDB.create(&newUser)
+
+                self.dismiss(animated: true)
+
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                self.showError(message: "Error: \(error.localizedDescription)")
+            }
         }
         
-        let db = FirestoreManager.shared.db
-        let createdUser = userDB.create(&newUser)
-        
-        do {
-            try db.collection("usertemp").document(createdUser.id).setData(createdUser.asDictionary())
-            dismiss(animated: true)
-        } catch {
-            showAlert(message: "Error creating user: \(error.localizedDescription)")
-        }
+    }
+    private func showError(message: String) {
+        let alert = UIAlertController(
+            title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(
+            UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     @objc private func signUp(){
         print("tapped")

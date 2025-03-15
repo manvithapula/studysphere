@@ -165,10 +165,21 @@ extension homeScreenViewController {
         profileButton.layer.cornerRadius = 25
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
         func loadImageFromUserDefaults() {
-            if let imageData = UserDefaults.standard.data(forKey: "profileImage"),
-               let image = UIImage(data: imageData) {
-                let roundedImage = makeRoundedImage(image)
-                profileButton.setImage(roundedImage, for: .normal)
+            if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
+                // Use URLSession to download the image data from the URL
+                URLSession.shared.dataTask(with: photoURL) { data, response, error in
+                    guard let imageData = data, error == nil,
+                          let image = UIImage(data: imageData) else {
+                        print("Error loading profile image: \(error?.localizedDescription ?? "Unknown error")")
+                        return
+                    }
+                    
+                    // Make sure UI updates happen on the main thread
+                    DispatchQueue.main.async {
+                        let roundedImage = makeRoundedImage(image)
+                        profileButton.setImage(roundedImage, for: .normal)
+                    }
+                }.resume()
             }
         }
         func makeRoundedImage(_ image: UIImage) -> UIImage? {

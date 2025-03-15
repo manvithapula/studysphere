@@ -30,14 +30,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
         
     private func checkAndNavigate() async {
-            guard AuthManager.shared.isLoggedIn,
-                  let userEmail = AuthManager.shared.userEmail else {
+        guard FirebaseAuthManager.shared.isUserLoggedIn else {
                 navigateToLogin()
                 return
             }
             
             do {
-                if let _ = try await userDB.findAll(where: ["email": userEmail]).first {
+                let user = FirebaseAuthManager.shared.currentUser
+                if let _ = try await userDB.findAll(where: ["email": user!.email!]).first {
                     navigateToMain()
                 } else {
                     navigateToLogin()

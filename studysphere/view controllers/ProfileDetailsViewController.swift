@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseCore
+import FirebaseStorage
 
 class ProfileDetailsViewController: UIViewController {
     
@@ -223,27 +224,87 @@ class ProfileDetailsViewController: UIViewController {
 
 //UIImagePickerControllerDelegate
 extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         var selectedImage: UIImage?
-                
-                if let editedImage = info[.editedImage] as? UIImage {
-                    selectedImage = editedImage
-                } else if let originalImage = info[.originalImage] as? UIImage {
-                    selectedImage = originalImage
+        
+        if let editedImage = info[.editedImage] as? UIImage {
+            selectedImage = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            selectedImage = originalImage
+        }
+        
+        if let image = selectedImage {
+            // Display the image
+            profileImageView.image = image
+            
+            // First upload the image to Firebase Storage, then update profile
+            uploadImageToFirebaseStorage(image) { [weak self] result in
+                switch result {
+                case .success(let downloadURL):
+                    // Now update the profile with the image URL
+                    FirebaseAuthManager.shared.updateProfile(photoURL: downloadURL) { updateResult in
+                        switch updateResult {
+                        case .success:
+                            print("Profile photo updated successfully")
+                            // Update your UI here if needed
+                        case .failure(let error):
+                            print("Failed to update profile photo: \(error.localizedDescription)")
+                            // Show error to user
+                        }
+                    }
+                case .failure(let error):
+                    print("Failed to upload image: \(error.localizedDescription)")
+                    // Show error to user
                 }
-                
-                if let image = selectedImage {
-                    // Display the image
-                    profileImageView.image = image
-                    
-                    // Save the image to UserDefaults
-                    saveImageToUserDefaults(image)
-                }
-                
-                
-
+            }
+        }
+        
         dismiss(animated: true)
     }
+    func uploadImageToFirebaseStorage(_ image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
+        // 1. Convert image to data
+        guard let imageData = image.jpegData(compressionQuality: 0.7) else {
+            let error = NSError(domain: "ImageError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not convert image to data"])
+            completion(.failure(error))
+            return
+        }
+        
+        // 2. Create a reference to Firebase Storage
+        guard let userId = FirebaseAuthManager.shared.currentUser?.uid else {
+            let error = NSError(domain: "AuthError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No user logged in"])
+            completion(.failure(error))
+            return
+        }
+        
+        let storageRef = Storage.storage().reference()
+        let profileImagesRef = storageRef.child("profile_images")
+        let imageRef = profileImagesRef.child("\(userId).jpg")
+        
+        // 3. Upload the image data
+        imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // 4. Get the download URL
+            imageRef.downloadURL { url, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let downloadURL = url else {
+                    let error = NSError(domain: "StorageError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No download URL returned"])
+                    completion(.failure(error))
+                    return
+                }
+                
+                completion(.success(downloadURL))
+            }
+        }
+    }
+
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true)
@@ -255,11 +316,26 @@ extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavig
             }
         }
         
-        // Load image from UserDefaults
-        private func loadImageFromUserDefaults() {
-            if let imageData = UserDefaults.standard.data(forKey: "profileImage"),
-               let image = UIImage(data: imageData) {
-                profileImageView.image = image
-            }
+    private func loadImageFromUserDefaults() {
+        if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
+            // Download image data from the URL
+            URLSession.shared.dataTask(with: photoURL) { [weak self] data, response, error in
+                guard let self = self,
+                      let imageData = data,
+                      error == nil,
+                      let image = UIImage(data: imageData) else {
+                    print("Error loading profile image: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                // Update UI on main thread
+                DispatchQueue.main.async {
+                    self.profileImageView.image = image
+                }
+            }.resume()
+        } else {
+            // Set default image when no photo URL exists
+            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
         }
+    }
 }
