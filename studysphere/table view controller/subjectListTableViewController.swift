@@ -13,11 +13,22 @@ class subjectListTableViewController: UITableViewController {
     @IBOutlet var subjectTableView: UITableView!
     
     public var subjects: [Subject] = []
-      
+    private let emptyStateLabel: UILabel = {
+           let label = UILabel()
+           label.text = "No subjects available.\nTap '+' to add a new subject."
+           label.textAlignment = .center
+           label.numberOfLines = 2
+           label.textColor = .systemGray
+           label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+           return label
+       }()
+         
       override func viewDidLoad() {
           super.viewDidLoad()
           setupUI()
           loadSubjects()
+          setupEmptyStateView()
+    
 //          setupTapGesture()
           Task {
               subjects = try await subjectDb.findAll()
@@ -53,10 +64,22 @@ class subjectListTableViewController: UITableViewController {
           // Register custom cell
           tableView.register(subjectListTableViewCell.self, forCellReuseIdentifier: "subjectCell")
       }
+    
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
 
     }
+    
+    private func setupEmptyStateView() {
+            tableView.backgroundView = emptyStateLabel
+        }
+
+        private func updateEmptyState() {
+            let isEmpty = subjects.isEmpty
+            emptyStateLabel.isHidden = !isEmpty
+            tableView.backgroundView = isEmpty ? emptyStateLabel : nil
+        }
+
     
     @objc func showAddSubjectModal() {
           let addSubjectVC = AddSubjectViewController()
@@ -105,6 +128,7 @@ class subjectListTableViewController: UITableViewController {
       }
       
       override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+          updateEmptyState()
           return subjects.count
       }
       
