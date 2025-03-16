@@ -2,7 +2,7 @@ import UIKit
 import AVFoundation
 import FirebaseCore
 
-class SummariserViewController: UIViewController {
+class SummaryViewController: UIViewController {
     
     // MARK: - UI Components
     private lazy var headingLabel: UILabel = {
@@ -266,7 +266,7 @@ class SummariserViewController: UIViewController {
 }
 
 // MARK: - UITextViewDelegate
-extension SummariserViewController: UITextViewDelegate {
+extension SummaryViewController: UITextViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let contentHeight = scrollView.contentSize.height
         let visibleHeight = scrollView.frame.size.height
@@ -280,7 +280,7 @@ extension SummariserViewController: UITextViewDelegate {
 }
 
 // MARK: - AVSpeechSynthesizerDelegate
-extension SummariserViewController: AVSpeechSynthesizerDelegate {
+extension SummaryViewController: AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         isPlayingAudio = false
         let config = UIImage.SymbolConfiguration(pointSize: 21, weight: .medium)

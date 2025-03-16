@@ -133,7 +133,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "spacedrepetition", for: indexPath)
            let card = filteredCards[indexPath.item]
            
-           if let cell = cell as? spacedCollectionViewCell {
+           if let cell = cell as? SRCollectionViewCell {
                cell.configure(topic: card, index: indexPath.item)
            }
 

@@ -139,7 +139,7 @@ class SummaryListViewController: UIViewController{
         // MARK: - Navigation
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "toSummary",
-               let destinationVC = segue.destination as? SummariserViewController,
+               let destinationVC = segue.destination as? SummaryViewController,
                let selectedIndex = sender as? Int {
                 let selectedCard = filteredCards[selectedIndex]
                 destinationVC.topic = selectedCard

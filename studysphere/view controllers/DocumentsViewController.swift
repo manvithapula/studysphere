@@ -28,7 +28,7 @@ class DocumentsViewController: UIViewController {
         cv.delegate = self
         cv.dataSource = self
         cv.showsHorizontalScrollIndicator = false
-        cv.register(SubjectCellDocs.self, forCellWithReuseIdentifier: SubjectCellDocs.reuseIdentifier)
+        cv.register(DocumentsCell.self, forCellWithReuseIdentifier: DocumentsCell.reuseIdentifier)
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
@@ -177,9 +177,9 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == subjectsCollectionView {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: SubjectCellDocs.reuseIdentifier,
+                withReuseIdentifier: DocumentsCell.reuseIdentifier,
                 for: indexPath
-            ) as? SubjectCellDocs else {
+            ) as? DocumentsCell else {
                 return UICollectionViewCell()
             }
             

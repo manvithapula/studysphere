@@ -7,7 +7,7 @@
 
 import UIKit
 
-class spacedCollectionViewCell: UICollectionViewCell {
+class SRCollectionViewCell: UICollectionViewCell {
         // MARK: - UI Elements
         private let containerView: GradientView = {
             let view = GradientView()

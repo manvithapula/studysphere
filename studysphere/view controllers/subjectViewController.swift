@@ -208,7 +208,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
                     destinationVC.topic = selectedCard
                 }
             case "toSummary":
-                if let destinationVC = segue.destination as? SummariserViewController {
+                if let destinationVC = segue.destination as? SummaryViewController {
                     destinationVC.topic = selectedCard
                 }
             default:

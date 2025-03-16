@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ScheduleViewController: UIViewController {
+class TodaysLearningViewController: UIViewController {
     
         // MARK: - Outlets
         @IBOutlet weak var mainStackView: UIStackView!
@@ -119,7 +119,7 @@ class ScheduleViewController: UIViewController {
             tableView.clipsToBounds = true
             tableView.delegate = self
             tableView.dataSource = self
-            tableView.register(ScheduleTableViewCell.self, forCellReuseIdentifier: "ScheduleTableViewCell")
+            tableView.register(TodaysLearningTableViewCell.self, forCellReuseIdentifier: "ScheduleTableViewCell")
             tableView.separatorStyle = .none
             tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         }
@@ -282,7 +282,7 @@ class ScheduleViewController: UIViewController {
 
 
     // MARK: - UITableView DataSource & Delegate
-    extension ScheduleViewController: UITableViewDelegate, UITableViewDataSource {
+    extension TodaysLearningViewController: UITableViewDelegate, UITableViewDataSource {
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return scheduleItems.count
         }
@@ -293,12 +293,12 @@ class ScheduleViewController: UIViewController {
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleTableViewCell",
-                                                        for: indexPath) as? ScheduleTableViewCell else {
+                                                        for: indexPath) as? TodaysLearningTableViewCell else {
                 return UITableViewCell()
             }
             
             let item = scheduleItems[indexPath.row]
-            cell.configure(with: item)
+            cell.configure(with: item, dateOffset: offset)
             return cell
         }
     }
