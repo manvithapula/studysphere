@@ -28,7 +28,7 @@ class DocumentsViewController: UIViewController {
         cv.delegate = self
         cv.dataSource = self
         cv.showsHorizontalScrollIndicator = false
-        cv.register(DocumentsCell.self, forCellWithReuseIdentifier: DocumentsCell.reuseIdentifier)
+        cv.register(DocumentsSubjectCell.self, forCellWithReuseIdentifier: DocumentsSubjectCell.reuseIdentifier)
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
@@ -50,7 +50,7 @@ class DocumentsViewController: UIViewController {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .secondaryLabel
+        label.textColor = .black
         label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -67,7 +67,7 @@ class DocumentsViewController: UIViewController {
     
     // MARK: - Setup UI
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGray6
         searchBar.delegate = self
         
         view.addSubview(searchBar)
@@ -177,9 +177,9 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == subjectsCollectionView {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: DocumentsCell.reuseIdentifier,
+                withReuseIdentifier: DocumentsSubjectCell.reuseIdentifier,
                 for: indexPath
-            ) as? DocumentsCell else {
+            ) as? DocumentsSubjectCell else {
                 return UICollectionViewCell()
             }
             

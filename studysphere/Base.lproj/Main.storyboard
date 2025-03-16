@@ -42,13 +42,13 @@
         <!--Subjects-->
         <scene sceneID="l41-vd-9Uv">
             <objects>
-                <tableViewController title="Subjects" modalPresentationStyle="fullScreen" id="t49-nW-ykK" customClass="subjectListTableViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Subjects" modalPresentationStyle="fullScreen" id="t49-nW-ykK" customClass="MySubjectListTableViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" sectionIndexMinimumDisplayRowCount="1" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="3jP-Nl-abc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="NpW-Qa-EVA">
+                        <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" id="NpW-Qa-EVA">
                             <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
@@ -353,12 +353,12 @@
         <!--Subject List-->
         <scene sceneID="iOy-po-6S0">
             <objects>
-                <viewController title="Subject List" id="Xu4-hE-HiR" customClass="subjectViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Subject List" id="Xu4-hE-HiR" customClass="SubjectDetailsViewController" customModule="studysphere" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LOT-0D-gS8">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="KP9-BL-Lr7">
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="KP9-BL-Lr7">
                                 <rect key="frame" x="0.0" y="103" width="393" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="0mC-Q0-TIR"/>
@@ -2056,8 +2056,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="bfc-Hh-3ad"/>
-        <segue reference="PO4-kN-YgS"/>
+        <segue reference="llO-ze-ygf"/>
+        <segue reference="vbk-8J-x7B"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
         <segue reference="paQ-p4-NU6"/>

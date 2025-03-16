@@ -386,13 +386,13 @@ class FlashcardResultViewController: UIViewController {
             
             // Update feedback text based on performance
             if percentage >= 0.8 {
-                encouragementLabel.text = "Amazing recall! ✨"
+                encouragementLabel.text = "Amazing recall!"
             } else if percentage >= 0.6 {
-                encouragementLabel.text = "Good progress! 📚"
+                encouragementLabel.text = "Good progress! "
             } else if percentage > 0 {
-                encouragementLabel.text = "Keep practicing! 💪"
+                encouragementLabel.text = "Keep practicing! "
             } else {
-                encouragementLabel.text = "Let's try again! 🚀"
+                encouragementLabel.text = "Let's try again! "
             }
             
             // Show/hide star based on performance

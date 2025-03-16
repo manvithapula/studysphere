@@ -7,7 +7,7 @@
 
 import UIKit
 
-class subjectViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
+class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
     
     var isSearching = false
     var selectedCategory: String = "Flashcards"
@@ -65,7 +65,7 @@ class subjectViewController: UIViewController, UICollectionViewDelegate, UIColle
             subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.secondaryLabel], for: .normal)
             
             // Configure view background
-            view.backgroundColor = .systemBackground
+            view.backgroundColor = .systemGray6
         }
         
         private func setupCollectionView() {

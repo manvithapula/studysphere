@@ -243,7 +243,7 @@ class CreateViewController: UIViewController {
 
     // MARK: - UI Setup
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGray6
 
         // Setup scroll view and content
         view.addSubview(scrollView)

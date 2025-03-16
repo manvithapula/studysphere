@@ -122,7 +122,7 @@ class QuestionResultViewController: UIViewController {
         
         // Encouragement label (replacing "That's better")
         encouragementLabel.translatesAutoresizingMaskIntoConstraints = false
-        encouragementLabel.text = "Let's try again! 🚀"
+        encouragementLabel.text = "Let's try again! "
         encouragementLabel.textColor = .black // Changed to black for visibility
         encouragementLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         encouragementLabel.textAlignment = .center
@@ -144,7 +144,7 @@ class QuestionResultViewController: UIViewController {
         
         // Progress message label (replacing comparison)
         progressMessageLabel.translatesAutoresizingMaskIntoConstraints = false
-        progressMessageLabel.text = "Every card mastered is progress! 🌱"
+        progressMessageLabel.text = "Every card mastered is progress! "
         progressMessageLabel.textColor = .black // Changed to black for visibility
         progressMessageLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         progressMessageLabel.textAlignment = .center
@@ -385,13 +385,13 @@ class QuestionResultViewController: UIViewController {
             
             // Update feedback text based on performance
             if percentage >= 0.8 {
-                encouragementLabel.text = "Excellent work! 🎯"
+                encouragementLabel.text = "Excellent work! "
             } else if percentage >= 0.6 {
-                encouragementLabel.text = "Good progress! 👍"
+                encouragementLabel.text = "Good progress! "
             } else if percentage > 0 {
-                encouragementLabel.text = "Keep practicing! 💪"
+                encouragementLabel.text = "Keep practicing! "
             } else {
-                encouragementLabel.text = "Let's try again! 🚀"
+                encouragementLabel.text = "Let's try again! "
             }
             
             // Show/hide star based on performance

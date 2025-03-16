@@ -8,20 +8,21 @@
 import UIKit
 import FirebaseCore
 
-class subjectListTableViewController: UITableViewController {
+class MySubjectListTableViewController: UITableViewController {
     
     @IBOutlet var subjectTableView: UITableView!
     
     public var subjects: [Subject] = []
     private let emptyStateLabel: UILabel = {
-           let label = UILabel()
-           label.text = "No subjects available.\nTap '+' to add a new subject."
-           label.textAlignment = .center
-           label.numberOfLines = 2
-           label.textColor = .systemGray
-           label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-           return label
-       }()
+        let label = UILabel()
+        label.text = "No subjects yet.\nTap '+' to add a new subject."
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
+
          
       override func viewDidLoad() {
           super.viewDidLoad()
@@ -100,7 +101,7 @@ class subjectListTableViewController: UITableViewController {
       }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toSubjectDetails",
-           let destinationVC = segue.destination as? subjectViewController,
+           let destinationVC = segue.destination as? SubjectDetailsViewController,
            let indexPath = sender as? IndexPath {
             let subject = subjects[indexPath.row]
             destinationVC.subject = subject

@@ -1,6 +1,6 @@
 import UIKit
 
-class DocumentsCell: UICollectionViewCell {
+class DocumentsSubjectCell: UICollectionViewCell {
     static let reuseIdentifier = "SubjectCellDocs"
     
     private let titleLabel: UILabel = {

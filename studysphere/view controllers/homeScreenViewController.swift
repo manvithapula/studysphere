@@ -79,12 +79,12 @@ class homeScreenViewController: UIViewController {
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toSubjectDetails" {
-            let destination = segue.destination as? subjectViewController
+            let destination = segue.destination as? SubjectDetailsViewController
             if let subject = sender as? Subject {
                 destination?.subject = subject
             }
         } else if segue.identifier == "toSubjectList" {
-            let destination = segue.destination as! subjectListTableViewController
+            let destination = segue.destination as! MySubjectListTableViewController
             destination.subjects = self.subjects
         }
         
@@ -458,11 +458,15 @@ extension homeScreenViewController {
         subjectsStack.spacing = 12
         subjectsStack.translatesAutoresizingMaskIntoConstraints = false
         
-        // Only show first 3 subjects
-        let displayedSubjects = subjects.prefix(3)
-        for (index, subject) in displayedSubjects.enumerated() {
-            let subjectCard = createSubjectCard(subject: subject, index: index)
-            subjectsStack.addArrangedSubview(subjectCard)
+        if subjects.isEmpty {
+            let emptyStateView = createEmptyStateView()
+            subjectsStack.addArrangedSubview(emptyStateView)
+        } else {
+            let displayedSubjects = subjects.prefix(3)
+            for (index, subject) in displayedSubjects.enumerated() {
+                let subjectCard = createSubjectCard(subject: subject, index: index)
+                subjectsStack.addArrangedSubview(subjectCard)
+            }
         }
         
         let mainStack = UIStackView(arrangedSubviews: [headerStack, subjectsStack])
@@ -481,6 +485,59 @@ extension homeScreenViewController {
         
         return containerView
     }
+
+    private func createEmptyStateView() -> UIView {
+        let emptyStateView = UIView()
+        emptyStateView.layer.cornerRadius = 12
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let emptyIcon = UIImageView()
+        emptyIcon.image = UIImage(systemName: "book.closed.fill") // Filled version for better visibility
+        emptyIcon.tintColor = AppTheme.primary
+        emptyIcon.contentMode = .scaleAspectFit
+        emptyIcon.translatesAutoresizingMaskIntoConstraints = false
+        
+        let emptyLabel = UILabel()
+        emptyLabel.text = "No subjects yet."
+        emptyLabel.font = .systemFont(ofSize: 16, weight: .medium)
+        emptyLabel.textColor = .black
+        emptyLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let actionLabel = UILabel()
+        actionLabel.text = "Go to Subjects"
+        actionLabel.font = .systemFont(ofSize: 14, weight: .semibold)
+        actionLabel.textColor = AppTheme.primary
+        actionLabel.isUserInteractionEnabled = true
+        actionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openSubjectsTab))
+        actionLabel.addGestureRecognizer(tapGesture)
+        
+        let stackView = UIStackView(arrangedSubviews: [emptyIcon, emptyLabel, actionLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        emptyStateView.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            emptyStateView.heightAnchor.constraint(equalToConstant: 50),
+            
+            stackView.centerXAnchor.constraint(equalTo: emptyStateView.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: emptyStateView.centerYAnchor),
+            
+            emptyIcon.widthAnchor.constraint(equalToConstant: 20),
+            emptyIcon.heightAnchor.constraint(equalToConstant: 20),
+        ])
+        
+        return emptyStateView
+    }
+
+    @objc private func openSubjectsTab() {
+        tabBarController?.selectedIndex = 1 // Navigate to "Subjects" tab
+    }
+
     
     private func createSubjectCard(subject: Subject, index: Int) -> UIView {
         // Card container
