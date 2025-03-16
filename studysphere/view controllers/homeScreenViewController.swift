@@ -623,7 +623,6 @@ extension homeScreenViewController {
         containerView.layer.shadowRadius = 8
         containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         
-        // Add current date and time
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d, yyyy"
         let currentDate = Date()
@@ -631,61 +630,94 @@ extension homeScreenViewController {
         
         let titleStack = UIStackView()
         titleStack.axis = .vertical
-        titleStack.spacing = 4
+        titleStack.spacing = 2
         
         let titleLabel = UILabel()
         titleLabel.text = "Today's Schedule"
-        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         titleLabel.textColor = .black
         
         let dateLabel = UILabel()
         dateLabel.text = dateString
-        dateLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        dateLabel.font = .systemFont(ofSize: 13, weight: .medium)
         dateLabel.textColor = .gray
         
         titleStack.addArrangedSubview(titleLabel)
         titleStack.addArrangedSubview(dateLabel)
-        titleStack.translatesAutoresizingMaskIntoConstraints = false
         
         let seeAllButton = UIButton()
         seeAllButton.setTitle("See All", for: .normal)
         seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
-        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
+        seeAllButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
         seeAllButton.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
         
         let headerStack = UIStackView(arrangedSubviews: [titleStack, seeAllButton])
         headerStack.axis = .horizontal
         headerStack.distribution = .equalSpacing
-        headerStack.alignment = .top
-        headerStack.translatesAutoresizingMaskIntoConstraints = false
+        headerStack.alignment = .center
         
         let scheduleStack = UIStackView()
         scheduleStack.axis = .vertical
         scheduleStack.spacing = 12
-        scheduleStack.translatesAutoresizingMaskIntoConstraints = false
         
-        // Add schedule items
-        for (index, item) in scheduleItems.prefix(3).enumerated() {
-            let scheduleItemView = createScheduleItemCard(for: item, index: index)
-            scheduleStack.addArrangedSubview(scheduleItemView)
+        if scheduleItems.isEmpty {
+            let emptyContainer = UIView()
+            emptyContainer.backgroundColor = AppTheme.secondary.withAlphaComponent(0.2)
+            emptyContainer.layer.cornerRadius = 12
+            emptyContainer.translatesAutoresizingMaskIntoConstraints = false
+            
+            let emptyIcon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+            emptyIcon.tintColor = AppTheme.primary
+            emptyIcon.contentMode = .scaleAspectFit
+            emptyIcon.translatesAutoresizingMaskIntoConstraints = false
+            emptyIcon.widthAnchor.constraint(equalToConstant: 18).isActive = true
+            emptyIcon.heightAnchor.constraint(equalToConstant: 18).isActive = true
+            
+            let emptyStateLabel = UILabel()
+            emptyStateLabel.text = "No tasks for today!"
+            emptyStateLabel.font = .systemFont(ofSize: 15, weight: .medium)
+            emptyStateLabel.textColor = .black
+            
+            let emptyStack = UIStackView(arrangedSubviews: [emptyIcon, emptyStateLabel])
+            emptyStack.axis = .horizontal
+            emptyStack.spacing = 6
+            emptyStack.alignment = .center
+            
+            emptyContainer.addSubview(emptyStack)
+            emptyStack.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                emptyStack.centerXAnchor.constraint(equalTo: emptyContainer.centerXAnchor),
+                emptyStack.centerYAnchor.constraint(equalTo: emptyContainer.centerYAnchor),
+                emptyContainer.heightAnchor.constraint(equalToConstant: 50)
+            ])
+            
+            scheduleStack.addArrangedSubview(emptyContainer)
+        }
+         else {
+            for (index, item) in scheduleItems.prefix(3).enumerated() {
+                let scheduleItemView = createScheduleItemCard(for: item, index: index)
+                scheduleStack.addArrangedSubview(scheduleItemView)
+            }
         }
         
         let mainStack = UIStackView(arrangedSubviews: [headerStack, scheduleStack])
         mainStack.axis = .vertical
-        mainStack.spacing = 16
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
+        mainStack.spacing = 12
         
         containerView.addSubview(mainStack)
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            mainStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            mainStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            mainStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            mainStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+            mainStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
+            mainStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
+            mainStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            mainStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12)
         ])
         
         return containerView
     }
+
 
     private func createScheduleItemCard(for item: ScheduleItem, index: Int) -> UIView {
         let containerView = UIView()
