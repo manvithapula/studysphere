@@ -662,7 +662,6 @@ extension homeScreenViewController {
         
         if scheduleItems.isEmpty {
             let emptyContainer = UIView()
-            emptyContainer.backgroundColor = AppTheme.secondary.withAlphaComponent(0.2)
             emptyContainer.layer.cornerRadius = 12
             emptyContainer.translatesAutoresizingMaskIntoConstraints = false
             
