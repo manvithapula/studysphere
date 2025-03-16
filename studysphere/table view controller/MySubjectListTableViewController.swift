@@ -11,7 +11,6 @@ import FirebaseCore
 class MySubjectListTableViewController: UITableViewController {
     
     @IBOutlet var subjectTableView: UITableView!
-    
     public var subjects: [Subject] = []
     
     private let emptyStateLabel: UILabel = {
@@ -58,12 +57,12 @@ class MySubjectListTableViewController: UITableViewController {
           addButton.tintColor = AppTheme.primary
           navigationItem.rightBarButtonItem = addButton
           
-          // Configure table view
+        
           tableView.backgroundColor = .systemGray6
           tableView.separatorStyle = .none
           tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
           
-          // Register custom cell
+          
           tableView.register(subjectListTableViewCell.self, forCellReuseIdentifier: "subjectCell")
       }
     

@@ -8,6 +8,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         private let searchBar: UISearchBar = {
             let search = UISearchBar()
             search.placeholder = "Find a topic you created..."
+            search.searchBarStyle = .minimal
             search.translatesAutoresizingMaskIntoConstraints = false
             return search
         }()
@@ -68,8 +69,8 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             NSLayoutConstraint.activate([
                 // SearchBar Constraints
                 searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-                searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-                searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+                searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
                 
                 // Segment Control Constraints
                 segmentControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8),

@@ -10,26 +10,17 @@ import UIKit
 class SummaryListViewController: UIViewController{
     @IBOutlet weak var summaryList: UICollectionView!
     
-    
     private var gradientLayer = CAGradientLayer()
     private let searchBar = UISearchBar()
-    private let segmentControl = UISegmentedControl(items: ["Ongoing", "Completed"])
-      
-        
+          
         // MARK: - Properties
-        enum FilterState {
-            case ongoing, completed
-        }
-        
         var cards: [Topics] = []
         var filteredCards: [Topics] {
             return cards.filter { card in
-                let matchesSegment = filterState == .ongoing ? card.completed == nil : card.completed != nil
                 let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
-                return matchesSegment && matchesSearch
+                return matchesSearch
             }
         }
-        var filterState: FilterState = .ongoing
         
         // MARK: - Lifecycle
         override func viewDidLoad() {
@@ -62,15 +53,6 @@ class SummaryListViewController: UIViewController{
             searchBar.delegate = self
             view.addSubview(searchBar)
             
-            // Setup Segment Control
-            segmentControl.translatesAutoresizingMaskIntoConstraints = false
-            segmentControl.selectedSegmentTintColor = AppTheme.primary
-            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
-            segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-            segmentControl.selectedSegmentIndex = 0
-            segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
-            view.addSubview(segmentControl)
-            
             // Setup Collection View
             summaryList.translatesAutoresizingMaskIntoConstraints = false
             summaryList.backgroundColor = .clear
@@ -86,12 +68,7 @@ class SummaryListViewController: UIViewController{
                 searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                 searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
                 
-                segmentControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 12),
-                segmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-                segmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-                segmentControl.heightAnchor.constraint(equalToConstant: 32),
-                
-                summaryList.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 12),
+                summaryList.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 12),
                 summaryList.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 summaryList.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 summaryList.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -122,18 +99,12 @@ class SummaryListViewController: UIViewController{
                 heightDimension: .estimated(120)
             )
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
             
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = 12
             
             return UICollectionViewCompositionalLayout(section: section)
-        }
-        
-        // MARK: - Actions
-        @objc private func segmentChanged() {
-            filterState = segmentControl.selectedSegmentIndex == 0 ? .ongoing : .completed
-            summaryList.reloadData()
         }
         
         // MARK: - Navigation
@@ -143,16 +114,6 @@ class SummaryListViewController: UIViewController{
                let selectedIndex = sender as? Int {
                 let selectedCard = filteredCards[selectedIndex]
                 destinationVC.topic = selectedCard
-                
-                destinationVC.completionHandler = { [weak self] updatedTopic in
-                    guard let self = self else { return }
-                    
-                    if let index = self.cards.firstIndex(where: { $0.id == updatedTopic.id }) {
-                        self.cards[index] = updatedTopic
-                    }
-                    
-                    self.summaryList.reloadData()
-                }
             }
         }
     }
@@ -204,4 +165,3 @@ class SummaryListViewController: UIViewController{
             searchBar.resignFirstResponder()
         }
     }
-

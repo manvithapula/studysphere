@@ -62,7 +62,7 @@ class SRScheduleTableViewCell: UITableViewCell {
         button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
         button.backgroundColor = AppTheme.primary
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = 22
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -149,12 +149,12 @@ class SRScheduleTableViewCell: UITableViewCell {
             statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
             statusIcon.tintColor = .systemGreen
             retentionContainer.isHidden = false
-            retentionLabel.text = "85% retained" // You can adjust this based on actual retention data
+            retentionLabel.text = "0% retained"
             startReviewButton.isHidden = true
             timeLabel.isHidden = true
         } else if Calendar.current.isDateInToday(schedule.date.dateValue()) {
             // Today's review
-            statusBar.backgroundColor = .systemBlue
+            statusBar.backgroundColor = AppTheme.primary
             statusIcon.image = UIImage(systemName: "books.vertical.circle.fill")
             statusIcon.tintColor = .systemBlue
             retentionContainer.isHidden = true

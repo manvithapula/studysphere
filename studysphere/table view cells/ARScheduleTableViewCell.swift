@@ -51,7 +51,7 @@ class ARScheduleTableViewCell: UITableViewCell {
     private let retentionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15)
-        label.textColor = .black
+        label.textColor = UIColor.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -60,9 +60,9 @@ class ARScheduleTableViewCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("Start Review", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = AppTheme.primary
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = 22
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -138,7 +138,7 @@ class ARScheduleTableViewCell: UITableViewCell {
     
     // MARK: - Configuration
     func configure(with model: ActiveRecallDay) {
-        dayLabel.text = "Day \(model.day)"
+        dayLabel.text = "Revision \(model.day)"
         
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMM yyyy"
@@ -155,7 +155,7 @@ class ARScheduleTableViewCell: UITableViewCell {
             upcomingLabel.isHidden = true
             
         case .current:
-            statusBar.backgroundColor = UIColor.systemBlue
+            statusBar.backgroundColor = AppTheme.primary
             statusIcon.image = UIImage(systemName: "questionmark.circle.fill")
             statusIcon.tintColor = .systemBlue
             retentionContainer.isHidden = true

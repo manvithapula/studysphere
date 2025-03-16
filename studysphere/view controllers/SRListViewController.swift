@@ -1,8 +1,6 @@
 //
 //  SRListViewController.swift
 //  studysphere
-//
-//
 
 import UIKit
 
@@ -13,6 +11,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
     private let searchBar: UISearchBar = {
            let search = UISearchBar()
            search.placeholder = "Find a topic you created..."
+           search.searchBarStyle = .minimal
            search.translatesAutoresizingMaskIntoConstraints = false
            return search
        }()
@@ -72,19 +71,18 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
        
        private func setupConstraints() {
            NSLayoutConstraint.activate([
-               // SearchBar Constraints
-               searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-               searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-               searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-               
-               // Segment Control Constraints
-               segmentControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8),
-               segmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-               segmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-               segmentControl.heightAnchor.constraint(equalToConstant: 32),
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            
+            // Segment Control Constraints
+            segmentControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 8),
+            segmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            segmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            segmentControl.heightAnchor.constraint(equalToConstant: 32),
                
                // Adjust SpacedRepetitionList position
-               SpacedRepetitionList.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 16)
+            SpacedRepetitionList.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 16)
            ])
        }
        

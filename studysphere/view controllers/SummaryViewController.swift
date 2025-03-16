@@ -1,6 +1,5 @@
 import UIKit
 import AVFoundation
-import FirebaseCore
 
 class SummaryViewController: UIViewController {
     
@@ -17,7 +16,7 @@ class SummaryViewController: UIViewController {
     private lazy var summaryTextView: UITextView = {
         let textView = UITextView()
         textView.font = .systemFont(ofSize: fontSize, weight: .regular)
-        textView.backgroundColor = .white
+        textView.backgroundColor = .systemBackground
         textView.textColor = .label
         textView.layer.cornerRadius = 16
         textView.layer.shadowColor = UIColor.black.cgColor
@@ -41,38 +40,11 @@ class SummaryViewController: UIViewController {
         return stack
     }()
     
-    private lazy var progressView: UIProgressView = {
-        let progress = UIProgressView(progressViewStyle: .default)
-        progress.progressTintColor = AppTheme.primary
-        progress.trackTintColor = AppTheme.primary.withAlphaComponent(0.1)
-        progress.layer.cornerRadius = 4
-        progress.clipsToBounds = true
-        progress.translatesAutoresizingMaskIntoConstraints = false
-        return progress
-    }()
-    
-    private lazy var progressLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textColor = AppTheme.primary
-        label.textAlignment = .right
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    // MARK: - Properties (Keeping existing)
+    // MARK: - Properties
     private var fontSize: CGFloat = 16
     private var isPlayingAudio: Bool = false
     private var synthesizer = AVSpeechSynthesizer()
-    private var hasCompletedReading: Bool = false
     var topic: Topics?
-    var completionHandler: ((Topics) -> Void)?
-    
-    private var progress: Float = 0.0 {
-        didSet {
-            updateProgress()
-        }
-    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -80,18 +52,25 @@ class SummaryViewController: UIViewController {
         setupUI()
         configureSynthesizer()
         loadContent()
-        setupCompleteButton()
+        hideTabBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        hideTabBar()
     }
     
     // MARK: - Setup
+    private func hideTabBar() {
+        tabBarController?.tabBar.isHidden = true
+    }
+    
     private func setupUI() {
         view.backgroundColor = .systemGray6
         
         view.addSubview(headingLabel)
         view.addSubview(summaryTextView)
         view.addSubview(buttonStack)
-        view.addSubview(progressView)
-        view.addSubview(progressLabel)
         
         let buttons = [
             createButton(imageName: "doc.on.doc", action: #selector(copyText)),
@@ -110,16 +89,7 @@ class SummaryViewController: UIViewController {
             summaryTextView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 16),
             summaryTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             summaryTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            summaryTextView.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -20),
-            
-            progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            progressView.trailingAnchor.constraint(equalTo: progressLabel.leadingAnchor, constant: -8),
-            progressView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor, constant: -20),
-            progressView.heightAnchor.constraint(equalToConstant: 4),
-            
-            progressLabel.centerYAnchor.constraint(equalTo: progressView.centerYAnchor),
-            progressLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            progressLabel.widthAnchor.constraint(equalToConstant: 50),
+            summaryTextView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor, constant: -20),
             
             buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -141,25 +111,13 @@ class SummaryViewController: UIViewController {
         return button
     }
     
-    private func setupCompleteButton() {
-        let completeButton = UIBarButtonItem(
-            title: "Complete",
-            style: .done,
-            target: self,
-            action: #selector(completeReading)
-        )
-        completeButton.tintColor = AppTheme.primary
-        navigationItem.rightBarButtonItem = completeButton
-        completeButton.isEnabled = false
-    }
-    
     private func showToast(message: String) {
         let toast = UILabel()
         toast.backgroundColor = AppTheme.primary
         toast.textColor = .white
         toast.textAlignment = .center
         toast.font = .systemFont(ofSize: 14, weight: .medium)
-        toast.text = "  \(message)  " // Added padding
+        toast.text = "  \(message)  "
         toast.alpha = 0
         toast.layer.cornerRadius = 16
         toast.clipsToBounds = true
@@ -185,17 +143,15 @@ class SummaryViewController: UIViewController {
         }
     }
     
-    
     private func loadContent() {
         headingLabel.text = topic?.title ?? "Summary"
-        Task{
+        Task {
             let alldata = try await summaryDb.findAll(where: ["topic": topic?.id ?? 0])
-            if let summary = alldata.first{
+            if let summary = alldata.first {
                 summaryTextView.text = summary.data
             } else {
                 summaryTextView.text = "No summary available"
             }
-            updateProgress()
         }
     }
     
@@ -203,27 +159,7 @@ class SummaryViewController: UIViewController {
         synthesizer.delegate = self
     }
     
-
-    
-    private func updateProgress() {
-        progressView.progress = progress
-        progressLabel.text = "\(Int(progress * 100))%"
-        navigationItem.rightBarButtonItem?.isEnabled = progress >= 0.99
-    }
-    
     // MARK: - Actions
-    @objc private func completeReading() {
-        guard progress >= 0.99 else { return }
-        topic?.completed = Timestamp()
-        Task{
-                        var newTopic = topic!
-                        try await topicsDb.update(&newTopic)
-                        if let completedTopic = topic {
-                            completionHandler?(completedTopic)
-                        }
-                    }
-    }
-    
     @objc private func copyText() {
         UIPasteboard.general.string = summaryTextView.text
         showToast(message: "Text copied to clipboard")
@@ -262,21 +198,11 @@ class SummaryViewController: UIViewController {
         fontSize = sizes[(currentIndex + 1) % sizes.count]
         summaryTextView.font = .systemFont(ofSize: fontSize, weight: .regular)
     }
-
 }
 
 // MARK: - UITextViewDelegate
 extension SummaryViewController: UITextViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let contentHeight = scrollView.contentSize.height
-        let visibleHeight = scrollView.frame.size.height
-        let offsetY = scrollView.contentOffset.y
-        let maximumOffset = contentHeight - visibleHeight
-        
-        if maximumOffset > 0 {
-            progress = min(max(Float(offsetY / maximumOffset), 0.0), 1.0)
-        }
-    }
+    // Empty implementation - removed progress tracking
 }
 
 // MARK: - AVSpeechSynthesizerDelegate
@@ -287,4 +213,3 @@ extension SummaryViewController: AVSpeechSynthesizerDelegate {
         (buttonStack.arrangedSubviews[2] as? UIButton)?.setImage(UIImage(systemName: "play.circle", withConfiguration: config), for: .normal)
     }
 }
-
