@@ -182,7 +182,7 @@ class FlashcardResultViewController: UIViewController {
         }
         
         memorisedIcon.tintColor = AppTheme.primary
-        needPracticeIcon.tintColor = AppTheme.secondary
+        needPracticeIcon.tintColor = AppTheme.primary
         
         // Memorised label
         memorisedL.translatesAutoresizingMaskIntoConstraints = false
@@ -202,7 +202,7 @@ class FlashcardResultViewController: UIViewController {
         nextBtn.setTitleColor(.white, for: .normal)
         nextBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         setupButtonGradient(for: nextBtn, isSecondary: true)
-        nextBtn.layer.cornerRadius = 28
+        nextBtn.layer.cornerRadius = 16
         nextBtn.layer.shadowColor = AppTheme.secondary.cgColor
         nextBtn.layer.shadowOffset = CGSize(width: 0, height: 4)
         nextBtn.layer.shadowRadius = 8

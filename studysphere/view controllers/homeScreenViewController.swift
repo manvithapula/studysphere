@@ -280,7 +280,7 @@ extension homeScreenViewController {
         uploadButton.setTitleColor(.white, for: .normal)
         uploadButton.backgroundColor = AppTheme.primary
         
-        uploadButton.layer.cornerRadius = 16
+        uploadButton.layer.cornerRadius = 20
         uploadButton.clipsToBounds = true
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         uploadButton.addTarget(self, action: #selector(uploadPDFButtonTapped), for: .touchUpInside)
@@ -691,7 +691,7 @@ extension homeScreenViewController {
         
         let titleLabel = UILabel()
         titleLabel.text = "Today's Schedule"
-        titleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
         titleLabel.textColor = .black
         
         let dateLabel = UILabel()

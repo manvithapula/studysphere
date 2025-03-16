@@ -176,12 +176,12 @@ class QuestionResultViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             let iconConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
-            learnedIcon.image = UIImage(systemName: "correctmark", withConfiguration: iconConfig)
-            reviewIcon.image = UIImage(systemName: "repeat", withConfiguration: iconConfig)
+            learnedIcon.image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: iconConfig)
+            reviewIcon.image = UIImage(systemName: "repeat.circle.fill", withConfiguration: iconConfig)
         }
         
         learnedIcon.tintColor = AppTheme.primary
-        reviewIcon.tintColor = AppTheme.secondary
+        reviewIcon.tintColor = AppTheme.primary
         
         // Learned label (replacing "memorised")
         learnedLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -201,7 +201,7 @@ class QuestionResultViewController: UIViewController {
         nextBtn.setTitleColor(.white, for: .normal)
         nextBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         setupButtonGradient(for: nextBtn, isSecondary: true) // Use secondary color
-        nextBtn.layer.cornerRadius = 28
+        nextBtn.layer.cornerRadius = 16
         nextBtn.layer.shadowColor = AppTheme.secondary.cgColor // Updated shadow color
         nextBtn.layer.shadowOffset = CGSize(width: 0, height: 4)
         nextBtn.layer.shadowRadius = 8
