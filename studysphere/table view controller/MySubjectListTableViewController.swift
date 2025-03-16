@@ -13,6 +13,7 @@ class MySubjectListTableViewController: UITableViewController {
     @IBOutlet var subjectTableView: UITableView!
     
     public var subjects: [Subject] = []
+    
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
         label.text = "No subjects yet.\nTap '+' to add a new subject."

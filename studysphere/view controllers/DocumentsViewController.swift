@@ -11,6 +11,7 @@ class DocumentsViewController: UIViewController {
     private let searchBar: UISearchBar = {
         let sb = UISearchBar()
         sb.placeholder = "Search documents..."
+        sb.searchBarStyle = .minimal
         sb.translatesAutoresizingMaskIntoConstraints = false
         return sb
     }()
@@ -24,7 +25,7 @@ class DocumentsViewController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .systemBackground
+        cv.backgroundColor = .systemGray6
         cv.delegate = self
         cv.dataSource = self
         cv.showsHorizontalScrollIndicator = false
@@ -36,7 +37,7 @@ class DocumentsViewController: UIViewController {
     private lazy var documentsCollectionView: UICollectionView = {
         let layout = createLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .systemBackground
+        cv.backgroundColor = .systemGray6
         cv.delegate = self
         cv.dataSource = self
         cv.register(DocumentCell.self, forCellWithReuseIdentifier: DocumentCell.reuseIdentifier)
@@ -60,7 +61,6 @@ class DocumentsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupNavigationBar()
         loadTestDocuments()
         loadSubjects()
     }
@@ -97,25 +97,27 @@ class DocumentsViewController: UIViewController {
         ])
     }
     
-    private func setupNavigationBar() {
-        title = "Documents"
-        navigationController?.navigationBar.prefersLargeTitles = true
-    }
+ 
     
     private func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(150)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-        
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 12
-        return UICollectionViewCompositionalLayout(section: section)
-    }
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(120)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(120)
+            )
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 12
+            
+            return UICollectionViewCompositionalLayout(section: section)
+        }
     
     // MARK: - Actions
     private func showStudyTechniquesModal(for document: FileMetadata) {

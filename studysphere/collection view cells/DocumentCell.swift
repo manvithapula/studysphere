@@ -233,31 +233,23 @@ class DocumentCell: UICollectionViewCell {
         }
         
         private func updateAppearance() {
-            // Update shadow color for dark mode support
+            
             containerView.layer.shadowColor = UIColor.black.cgColor
            
             if let document = (self.titleLabel.text).map({ StudyDocument(id: "", title: $0, dateAdded: Date(), fileURL: URL(fileURLWithPath: "")) }) {
-                let index = abs(document.title.hashValue) % 2 // Consistent index based on title
+                let index = abs(document.title.hashValue) % 2
                 setupColors(for: index)
             }
         }
-        
-        // Update prepareForReuse to handle new properties
         override func prepareForReuse() {
             super.prepareForReuse()
-            
-            // Reset text and images
             titleLabel.text = nil
             dateLabel.text = nil
             documentImageView.image = nil
             fileTypeLabel.text = nil
-            
-            // Reset appearance
             fileTypeLabel.backgroundColor = nil
             containerView.transform = .identity
             containerView.layer.shadowOpacity = 0.08
-            
-            // Reset gradients
             cardBackground.setGradient(startColor: .clear,
                                      endColor: .clear,
                                      startPoint: CGPoint(x: 0.0, y: 0.0),

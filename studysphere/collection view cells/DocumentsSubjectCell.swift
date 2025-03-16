@@ -21,7 +21,7 @@ class DocumentsSubjectCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        contentView.backgroundColor = .systemGray6
+        contentView.backgroundColor = .systemBackground
         contentView.layer.cornerRadius = 16
         contentView.layer.masksToBounds = true
         
@@ -39,10 +39,10 @@ class DocumentsSubjectCell: UICollectionViewCell {
         titleLabel.text = title
         
         if isSelected {
-            contentView.backgroundColor = .systemBlue
+            contentView.backgroundColor = AppTheme.primary
             titleLabel.textColor = .white
         } else {
-            contentView.backgroundColor = .systemGray6
+            contentView.backgroundColor = .systemBackground
             titleLabel.textColor = .label
         }
     }
