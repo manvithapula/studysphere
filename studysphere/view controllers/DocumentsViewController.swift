@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import UniformTypeIdentifiers
 
 class DocumentsViewController: UIViewController {
     // MARK: - Properties
@@ -135,6 +136,50 @@ class DocumentsViewController: UIViewController {
         
         present(studyTechniquesVC, animated: true)
     }
+    @IBAction private func uploadButtonTapped(_ sender: Any) {
+        // Show action sheet with options
+        let actionSheet = UIAlertController(
+            title: "Upload Document",
+            message: "Choose a document to upload",
+            preferredStyle: .actionSheet
+        )
+        
+        // Add option to pick from files
+        actionSheet.addAction(UIAlertAction(title: "Browse Files", style: .default) { [weak self] _ in
+            self?.presentDocumentPicker()
+        })
+        
+        // Add option to take a photo (scan document)
+        actionSheet.addAction(UIAlertAction(title: "Scan Document", style: .default) { [weak self] _ in
+            self?.presentDocumentScanner()
+        })
+        
+        // Add cancel option
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // Present the action sheet
+        present(actionSheet, animated: true)
+    }
+    private func presentDocumentPicker() {
+        // Create a document picker for PDFs
+        let documentTypes = [UTType.pdf.identifier]
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.pdf])
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        present(documentPicker, animated: true)
+    }
+    
+    private func presentDocumentScanner() {
+        // This would typically use VNDocumentCameraViewController
+        // For now, just show an alert that this feature is coming soon
+        let alert = UIAlertController(
+            title: "Coming Soon",
+            message: "Document scanning will be available in a future update.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - Search Functionality
@@ -222,6 +267,140 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
             showStudyTechniquesModal(for: document)
         }
     }
+    private func uploadDocument(from url: URL) {
+        // Show subject selection for the document
+        presentSubjectSelectionForUpload(documentURL: url)
+    }
+    private func presentSubjectSelectionForUpload(documentURL: URL) {
+        // Create alert controller for subject selection
+        let alert = UIAlertController(
+            title: "Select Subject",
+            message: "Choose a subject for this document",
+            preferredStyle: .actionSheet
+        )
+        
+        // Add actions for each subject
+        for subject in subjects {
+            alert.addAction(UIAlertAction(title: subject.name, style: .default) { [weak self] _ in
+                self?.processDocumentUpload(url: documentURL, subject: subject)
+            })
+        }
+        
+        // Add option to create new subject
+        alert.addAction(UIAlertAction(title: "New Subject", style: .default) { [weak self] _ in
+            self?.presentNewSubjectDialog(documentURL: documentURL)
+        })
+        
+        // Add cancel option
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // Present the alert
+        present(alert, animated: true)
+    }
+    private func presentNewSubjectDialog(documentURL: URL) {
+        let alert = UIAlertController(
+            title: "New Subject",
+            message: "Enter a name for the new subject",
+            preferredStyle: .alert
+        )
+        
+        alert.addTextField { textField in
+            textField.placeholder = "Subject Name"
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Create", style: .default) { [weak self, weak alert] _ in
+            guard let self = self,
+                  let textField = alert?.textFields?.first,
+                  let subjectName = textField.text,
+                  !subjectName.isEmpty else { return }
+            
+            // Create new subject
+            self.createNewSubject(name: subjectName) { subject in
+                self.processDocumentUpload(url: documentURL, subject: subject)
+            }
+        })
+        
+        present(alert, animated: true)
+    }
+    private func createNewSubject(name: String, completion: @escaping (Subject) -> Void) {
+        var newSubject = Subject(
+            id: "", name: name, createdAt: Timestamp(), updatedAt: Timestamp()
+        )
+        
+        // Save to database
+        newSubject = subjectDb.create(&newSubject)
+        subjects.append(newSubject)
+        subjectsCollectionView.reloadData()
+        
+        completion(newSubject)
+    }
+    private func processDocumentUpload(url: URL, subject: Subject) {
+        // Show loading indicator
+        let loadingIndicator = UIActivityIndicatorView(style: .large)
+        loadingIndicator.center = view.center
+        loadingIndicator.startAnimating()
+        view.addSubview(loadingIndicator)
+        
+        Task {
+            do {
+                // Get file name
+                let fileName = url.lastPathComponent
+                
+                // Create storage path
+                let storagePath = "documents/\(UUID().uuidString)_\(fileName)"
+                
+                // Upload to Firebase Storage
+                let storageURL = try await FirebaseStorageManager.shared.uploadFile(from: url, to: storagePath)
+                
+                // Create metadata object
+                var metadata = FileMetadata(
+                    id: "",
+                    title: fileName,
+                    documentUrl: storageURL.absoluteString,
+                    subjectId: subject.id,
+                    createdAt: Timestamp(),
+                    updatedAt: Timestamp()
+                )
+                
+                // Save metadata to database
+                metadata = metadataDb.create(&metadata)
+                
+                // Update UI
+                documents.append(metadata)
+                if selectedSubject == nil || selectedSubject?.id == subject.id {
+                    filteredDocuments.append(metadata)
+                }
+                
+                DispatchQueue.main.async {
+                    loadingIndicator.removeFromSuperview()
+                    self.documentsCollectionView.reloadData()
+                    
+                    // Show success message
+                    let successAlert = UIAlertController(
+                        title: "Upload Successful",
+                        message: "Your document has been uploaded.",
+                        preferredStyle: .alert
+                    )
+                    successAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(successAlert, animated: true)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    loadingIndicator.removeFromSuperview()
+                    
+                    // Show error message
+                    let errorAlert = UIAlertController(
+                        title: "Upload Failed",
+                        message: "Could not upload document: \(error.localizedDescription)",
+                        preferredStyle: .alert
+                    )
+                    errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(errorAlert, animated: true)
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Load Data
@@ -240,5 +419,21 @@ extension DocumentsViewController {
             subjects = try await subjectDb.findAll()
             subjectsCollectionView.reloadData()
         }
+    }
+}
+extension DocumentsViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let selectedURL = urls.first else { return }
+        
+        // Secure access to the URL
+        let securityScoped = selectedURL.startAccessingSecurityScopedResource()
+        defer {
+            if securityScoped {
+                selectedURL.stopAccessingSecurityScopedResource()
+            }
+        }
+        
+        // Process the document
+        uploadDocument(from: selectedURL)
     }
 }
