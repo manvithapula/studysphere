@@ -29,7 +29,7 @@ class FlashcardViewController: UIViewController {
         private let dragThreshold: CGFloat = 100 // Distance to trigger card change
         private var isDragging = false
     
-    private let tutorialKey = AuthManager.shared.id!
+    private let tutorialKey = AuthManager.shared.id! + "fltut"
         private var tutorialView: UIView?
         private var demoCard: UIView?
     // Declare the label as a property in your class
@@ -301,7 +301,7 @@ extension FlashcardViewController{
             // Got it button
             let gotItButton = UIButton(type: .system)
             gotItButton.setTitle("Got it!", for: .normal)
-            gotItButton.backgroundColor = .systemBlue
+            gotItButton.backgroundColor = AppTheme.primary
             gotItButton.setTitleColor(.white, for: .normal)
             gotItButton.layer.cornerRadius = 8
             gotItButton.frame = CGRect(x: 20,
