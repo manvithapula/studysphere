@@ -102,8 +102,24 @@ struct StudyDocument {
     let title: String
     let dateAdded: Date
     let fileURL: URL
-
 }
+
+
+struct Badge {
+    let name: String
+    let icon: String
+    let criteria: Int
+    var achieved: Bool
+    let description: String
+}
+
+struct StudyProgress {
+    let flashcardsCompleted: Int
+    let quizzesCompleted: Int
+    let summarizersCompleted: Int
+    let firstModuleCompleted: Bool
+}
+
 
 struct DashboardData {
     let userProfile: UserProfile
