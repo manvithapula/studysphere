@@ -91,8 +91,8 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Subjects" image="books.vertical.fill" catalog="system" selectedImage="books.vertical.fill" id="CXV-uH-8XA"/>
                     <navigationItem key="navigationItem" id="OAH-yn-YG3">
-                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="g3p-pZ-XMZ">
-                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                        <barButtonItem key="rightBarButtonItem" image="plus.circle.fill" catalog="system" style="plain" id="g3p-pZ-XMZ">
+                            <color key="tintColor" systemColor="systemBlueColor"/>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -114,7 +114,9 @@
                         <viewLayoutGuide key="safeArea" id="bfH-L7-okP"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Documents " id="rkH-gf-FU1"/>
+                    <navigationItem key="navigationItem" title="Documents " id="rkH-gf-FU1">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus.circle.fill" catalog="system" id="BhA-eS-gSc"/>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NED-0Y-kOd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1545,7 +1547,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -2879,6 +2881,7 @@ AAAAAAAAAgEAAAAAAAAAaAAAAAAAAAAAAAAAAAAAufw
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="plus.circle" catalog="system" width="128" height="123"/>
+        <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <image name="profile-avatar" width="272" height="272"/>
         <namedColor name="Main">
             <color red="0.10196078431372549" green="0.10196078431372549" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
