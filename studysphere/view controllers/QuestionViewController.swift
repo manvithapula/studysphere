@@ -9,6 +9,7 @@ class QuestionViewController: UIViewController {
      var topic: Topics?
      var questions: [Questions] = []
      var schedule: Schedule?
+    private var scoreValue:Score?
     private var selectedButton: UIButton?
     
     // MARK: - UI Components
@@ -445,8 +446,8 @@ class QuestionViewController: UIViewController {
             if var scheduleTemp = schedule {
                 try await schedulesDb.update(&scheduleTemp)
             }
-            var score = Score(id: "", score: score, total: questions.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
-            let _ = scoreDb.create(&score)
+            scoreValue = Score(id: "", score: score, total: questions.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
+            let _ = scoreDb.create(&scoreValue!)
             
         }
         performSegue(withIdentifier: "toARAnimation", sender: self)
@@ -631,9 +632,8 @@ class QuestionViewController: UIViewController {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? ARTestResultViewController {
-            destination.correct = score
-            destination.incorrect = questions.count - score
+        if let destination = segue.destination as? QuestionResultViewController {
+            destination.score = scoreValue
         }
     }
 }

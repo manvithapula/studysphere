@@ -7,6 +7,8 @@ class FlashcardResultViewController: UIViewController {
     var memorised: Float = 0
     var needPractice: Float = 0
     
+    var score:Score?
+    
     // MARK: - UI Elements
     private let containerView = UIView()
     private let confettiImageView = UIImageView()
@@ -372,38 +374,39 @@ class FlashcardResultViewController: UIViewController {
         scoreLabel.text = "\(Int(memorised))"
         
         // Calculate percentage
-        let total = memorised + needPractice
-        if total > 0 {
-            let percentage = memorised / total
-            percentageL.text = "\(Int(percentage * 100))%"
-            
-            // Update with flashcard-specific message
-            progressMessageLabel.text = "Building your memory one card at a time!"
-            
-            // Update memorised and need practice labels with counts
-            memorisedL.text = "Cards memorized: \(Int(memorised))"
-            needPracticeL.text = "Cards to review: \(Int(needPractice))"
-            
-            // Update feedback text based on performance
-            if percentage >= 0.8 {
-                encouragementLabel.text = "Amazing recall!"
-            } else if percentage >= 0.6 {
-                encouragementLabel.text = "Good progress! "
-            } else if percentage > 0 {
-                encouragementLabel.text = "Keep practicing! "
+            if score != nil {
+                let total = score!.total
+                let percentage = Float(score!.score) / Float(total)
+                percentageL.text = "\(Int(percentage * 100))%"
+                
+                // Update with flashcard-specific message
+                progressMessageLabel.text = "Building your memory one card at a time!"
+                
+                // Update memorised and need practice labels with counts
+                memorisedL.text = "Cards memorized: \(Int(score!.score))"
+                needPracticeL.text = "Cards to review: \(Int(total - score!.score))"
+                
+                // Update feedback text based on performance
+                if percentage >= 0.8 {
+                    encouragementLabel.text = "Amazing recall!"
+                } else if percentage >= 0.6 {
+                    encouragementLabel.text = "Good progress! "
+                } else if percentage > 0 {
+                    encouragementLabel.text = "Keep practicing! "
+                } else {
+                    encouragementLabel.text = "Let's try again! "
+                }
+                
+                // Show/hide star based on performance
+                starImageView.isHidden = percentage < 0.7
             } else {
-                encouragementLabel.text = "Let's try again! "
+                percentageL.text = "0%"
+                progressMessageLabel.text = "Start memorizing flashcards!"
+                memorisedL.text = "Cards memorized: 0"
+                needPracticeL.text = "Cards to review: 0"
+                starImageView.isHidden = true
             }
-            
-            // Show/hide star based on performance
-            starImageView.isHidden = percentage < 0.7
-        } else {
-            percentageL.text = "0%"
-            progressMessageLabel.text = "Start memorizing flashcards!"
-            memorisedL.text = "Cards memorized: 0"
-            needPracticeL.text = "Cards to review: 0"
-            starImageView.isHidden = true
-        }
+        
     }
     
     // MARK: - Animation Methods

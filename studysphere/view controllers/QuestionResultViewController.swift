@@ -5,6 +5,7 @@ class QuestionResultViewController: UIViewController {
     // MARK: - Properties
     var memorised: Float = 0
     var needPractice: Float = 0
+    var score:Score?
     
     // MARK: - UI Elements
     private let containerView = UIView()
@@ -371,17 +372,17 @@ class QuestionResultViewController: UIViewController {
         scoreLabel.text = "\(Int(memorised))"
         
         // Calculate percentage
-        let total = memorised + needPractice
-        if total > 0 {
-            let percentage = memorised / total
+        if score != nil{
+            let total = score!.total
+            let percentage = Float(score!.score) / Float(total)
             percentageLabel.text = "\(Int(percentage * 100))%"
             
             // Update with non-comparative message
-            progressMessageLabel.text = "Every card mastered is progress!"
+            progressMessageLabel.text = "Every Questions mastered is progress!"
             
             // Update learned and review labels with counts
-            learnedLabel.text = "Cards mastered: \(Int(memorised))"
-            reviewLabel.text = "Cards to review: \(Int(needPractice))"
+            learnedLabel.text = "Questions mastered: \(Int(score!.score))"
+            reviewLabel.text = "Questions to review: \(Int(total - score!.score))"
             
             // Update feedback text based on performance
             if percentage >= 0.8 {
@@ -398,9 +399,9 @@ class QuestionResultViewController: UIViewController {
             starImageView.isHidden = percentage < 0.7
         } else {
             percentageLabel.text = "0%"
-            progressMessageLabel.text = "Start mastering more flashcards!"
-            learnedLabel.text = "Cards mastered: 0"
-            reviewLabel.text = "Cards to review: 0"
+            progressMessageLabel.text = "Start mastering more Questions!"
+            learnedLabel.text = "Questions mastered: 0"
+            reviewLabel.text = "Questions to review: 0"
             starImageView.isHidden = true
         }
     }

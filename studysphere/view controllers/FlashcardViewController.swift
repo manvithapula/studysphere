@@ -21,6 +21,7 @@ class FlashcardViewController: UIViewController {
         var flashcards: [Flashcard] = []
         var schedule: Schedule?
     var topic:String = ""
+    var score:Score?
         
         var currentCardIndex = 0
         var isShowingAnswer = false
@@ -180,9 +181,9 @@ class FlashcardViewController: UIViewController {
         
         private func updateCompletion() {
             progressView.setProgress(1, animated: true)
+            score = Score(id: "", score: memorisedNumCount, total: flashcards.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
             Task{
-                var score = Score(id: "", score: memorisedNumCount, total: flashcards.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
-                let _ = scoreDb.create(&score)
+                let _ = scoreDb.create(&score!)
                 schedule?.completed = Timestamp()
                 var scheduleTemp = schedule
                 try await schedulesDb.update(&scheduleTemp!)
@@ -197,9 +198,8 @@ class FlashcardViewController: UIViewController {
         // Existing prepare for segue method
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             super.prepare(for: segue, sender: sender)
-            if let destination = segue.destination as? TestResultViewController {
-                destination.memorised = Float(memorisedNumCount)
-                destination.needPractice = Float(practiceNumCount)
+            if let destination = segue.destination as? FlashcardResultViewController {
+                destination.score = score
             }
         }
     @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
