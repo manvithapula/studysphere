@@ -180,7 +180,10 @@ class FlashcardViewController: UIViewController {
                 }
             }
         }
-        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        cardView.backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
+    }
         // Existing methods (setupInitialCard, updateCompletion, etc.) remain the same
         private func setupInitialCard() {
             answerLabel?.text = self.flashcards[0].question
@@ -216,7 +219,7 @@ class FlashcardViewController: UIViewController {
                 self.answerLabel.text = self.isShowingAnswer ?
                 self.flashcards[self.currentCardIndex].answer :
                 self.flashcards[self.currentCardIndex].question
-                self.cardView.backgroundColor = self.isShowingAnswer ? AppTheme.primary : .white
+                self.cardView.backgroundColor = self.isShowingAnswer ? AppTheme.secondary.withAlphaComponent(0.2) : AppTheme.primary.withAlphaComponent(0.2)
             }
         }
     }
@@ -303,7 +306,7 @@ extension FlashcardViewController{
             gotItButton.setTitle("Got it!", for: .normal)
             gotItButton.backgroundColor = AppTheme.primary
             gotItButton.setTitleColor(.white, for: .normal)
-            gotItButton.layer.cornerRadius = 8
+            gotItButton.layer.cornerRadius = 16
             gotItButton.frame = CGRect(x: 20,
                                      y: contentContainer.bounds.height - 60,
                                      width: contentContainer.bounds.width - 40,

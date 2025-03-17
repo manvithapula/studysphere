@@ -325,7 +325,7 @@ class ReviewCell: UITableViewCell {
     private let retentionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
-        label.textColor = .systemYellow
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -394,7 +394,7 @@ class ReviewCell: UITableViewCell {
     }
     
     func configure(day: Int, date: Date, isCompleted: Bool, schedule: String) {
-        titleLabel.text = "Day \(day)"
+        titleLabel.text = "Review \(day)"
         dateLabel.text = formatDate(date)
         
         Task {
