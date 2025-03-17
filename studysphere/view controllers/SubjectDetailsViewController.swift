@@ -61,7 +61,7 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
             // Configure segmented control
             subjectSegmentControl.backgroundColor = .systemBackground
             subjectSegmentControl.selectedSegmentTintColor = .systemBlue.withAlphaComponent(0.1)
-            subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBlue], for: .selected)
+            subjectSegmentControl.setTitleTextAttributes([.foregroundColor: AppTheme.primary], for: .selected)
             subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.secondaryLabel], for: .normal)
             
             // Configure view background
