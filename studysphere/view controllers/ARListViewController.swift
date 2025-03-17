@@ -51,7 +51,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         
         private func setupUI() {
-            view.backgroundColor = .systemBackground
+            view.backgroundColor = .systemGray6
             view.addSubview(searchBar)
             view.addSubview(segmentControl)
             

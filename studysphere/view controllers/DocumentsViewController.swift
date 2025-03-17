@@ -16,6 +16,7 @@ class DocumentsViewController: UIViewController {
         return sb
     }()
     
+    
     private lazy var subjectsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -67,6 +68,9 @@ class DocumentsViewController: UIViewController {
     
     // MARK: - Setup UI
     private func setupUI() {
+        
+      
+        
         view.backgroundColor = .systemGray6
         searchBar.delegate = self
         
