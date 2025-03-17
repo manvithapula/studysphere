@@ -110,6 +110,10 @@ class StudyTechniquesViewController: UIViewController {
     // MARK: - Actions
     @objc private func techniqueTapped(_ sender: UIButton) {
         guard let selectedTechnique = sender.configuration?.title else { return }
+        if((Topic.text?.isEmpty) != nil){
+            showError(message: "Enter a topic")
+            return
+        }
         switch(selectedTechnique){
         case techniques[0].0:
             createSR(self)

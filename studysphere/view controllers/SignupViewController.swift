@@ -201,8 +201,9 @@ class SignupViewController: UIViewController {
                                             createdAt: Timestamp(),
                                             updatedAt: Timestamp())
                 let createdUser = userDB.create(&newUser)
-
-                self.dismiss(animated: true)
+                Task{
+                    await self.checkAndNavigate()
+                }
 
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
@@ -210,6 +211,25 @@ class SignupViewController: UIViewController {
             }
         }
         
+    }
+    private func checkAndNavigate() async {
+        guard FirebaseAuthManager.shared.isUserLoggedIn == true else {
+            return
+        }
+        let user = FirebaseAuthManager.shared.currentUser
+        do {
+            if let user = try await userDB.findAll(where: ["email": user!.email!]).first {
+                AuthManager.shared.logIn(email: user.email, firstName: user.firstName, lastName: user.lastName, id: user.id)
+                DispatchQueue.main.async {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+                    }
+                }
+            }
+        } catch {
+            print("Error checking user: \(error)")
+        }
     }
     private func showError(message: String) {
         let alert = UIAlertController(
