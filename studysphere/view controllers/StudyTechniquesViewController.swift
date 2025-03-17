@@ -98,7 +98,7 @@ class StudyTechniquesViewController: UIViewController {
         config.imagePadding = 8
         config.baseBackgroundColor = UIColor.systemBlue.withAlphaComponent(0.1) // Light blue
         config.baseForegroundColor = color
-        config.cornerStyle = .medium
+        config.cornerStyle = .capsule
     
         button.configuration = config
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -110,7 +110,7 @@ class StudyTechniquesViewController: UIViewController {
     // MARK: - Actions
     @objc private func techniqueTapped(_ sender: UIButton) {
         guard let selectedTechnique = sender.configuration?.title else { return }
-        if((Topic.text?.isEmpty) != nil){
+        if(Topic.text == nil || Topic.text!.isEmpty){
             showError(message: "Enter a topic")
             return
         }
