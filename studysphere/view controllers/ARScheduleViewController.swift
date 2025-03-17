@@ -29,7 +29,6 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
     
     private let progressView: UIProgressView = {
         let progress = UIProgressView(progressViewStyle: .bar)
-
         progress.trackTintColor = AppTheme.secondary.withAlphaComponent(0.2)
         progress.progressTintColor = AppTheme.primary
         progress.layer.cornerRadius = 4

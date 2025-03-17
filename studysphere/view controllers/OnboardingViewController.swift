@@ -176,7 +176,7 @@ class OnboardingViewController: UIViewController {
         button.setTitle("Next", for: .normal)
         button.backgroundColor = AppTheme.primary
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = 20
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
