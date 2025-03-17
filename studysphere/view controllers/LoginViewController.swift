@@ -121,7 +121,7 @@ class LoginViewController: UIViewController {
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.backgroundColor = AppTheme.primary
         loginButton.setTitleColor(.white, for: .normal)
-        loginButton.layer.cornerRadius = 12
+        loginButton.layer.cornerRadius = 22
         loginButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
         loginButton.setTitle("Login", for: .normal)
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)

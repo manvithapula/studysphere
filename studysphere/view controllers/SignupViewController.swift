@@ -113,7 +113,7 @@ class SignupViewController: UIViewController {
         signUpButton.isUserInteractionEnabled = true
         signUpButton.backgroundColor = AppTheme.primary
         signUpButton.setTitleColor(.white, for: .normal)
-        signUpButton.layer.cornerRadius = 12
+        signUpButton.layer.cornerRadius = 22
         signUpButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
         googleSignInButton.isHidden = true
         appleSignInButton.isHidden = true

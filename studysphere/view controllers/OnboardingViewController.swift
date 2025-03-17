@@ -28,7 +28,7 @@ class OnboardingViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Study Techniques"
-        label.textColor = AppTheme.secondary
+        label.textColor = .black
         label.font = .systemFont(ofSize: 28, weight: .bold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +45,7 @@ class OnboardingViewController: UIViewController {
     private let spaceRepetitionImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "clock")
-        imageView.tintColor = AppTheme.primary
+        imageView.tintColor = .black
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -55,14 +55,14 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Spaced Repetition"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = AppTheme.primary
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let spaceRepetitionDescription: UILabel = {
         let label = UILabel()
-        label.text = "Review at intervals to retain information longer. This method leverages the spacing effect to optimize memory retention and recall."
+        label.text = "Review at intervals to retain information longer. This method leverages the spacing effect to help with memory retention"
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +89,7 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Active Recall"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = AppTheme.primary
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -123,14 +123,14 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Summarizer"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = AppTheme.primary
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let summarizerDescription: UILabel = {
         let label = UILabel()
-        label.text = "Simplify complex topics into concise, easy-to-review notes. This method helps reinforce learning and improve comprehension."
+        label.text = "Simplify complex topics into concise notes. This method helps reinforce learning and improve comprehension."
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -156,14 +156,14 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Document Organizer"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = AppTheme.primary
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let documentDescription: UILabel = {
         let label = UILabel()
-        label.text = "Add your study materials to the app and access them anytime, anywhere. This method helps you stay organized and focused and create any technique from the scratch."
+        label.text = "Add your study materials to the app and access them anytime."
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -176,7 +176,7 @@ class OnboardingViewController: UIViewController {
         button.setTitle("Next", for: .normal)
         button.backgroundColor = AppTheme.primary
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 26
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
