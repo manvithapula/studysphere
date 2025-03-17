@@ -4,6 +4,12 @@ class ProgressViewController: UIViewController {
     private var studyProgress: StudyProgress?
     private let itemsPerLevel = 10 //
     private var allTopics:[Schedule] = []
+    private var totalCompletedTopics:[Schedule]{
+        return allTopics.filter { card in
+            let matchesSegment = card.completed != nil
+            return matchesSegment
+        }
+    }
     private var totalQuestions:[Schedule] {
         return allTopics.filter { card in
             let matchesSegment = card.topicType  == TopicsType.quizzes
@@ -201,7 +207,7 @@ class ProgressViewController: UIViewController {
         guard let progress = studyProgress else { return }
         Task{
             allTopics = try await schedulesDb.findAll()
-            let totalItems = allTopics.count
+            let totalItems = totalCompletedTopics.count
             let nextLevelProgress = Float(totalItems % itemsPerLevel) / Float(itemsPerLevel)
             
             let statsViews = [
@@ -359,7 +365,7 @@ class ProgressViewController: UIViewController {
                     
                     // Calculate user's current level
                     guard let progress = studyProgress else { return }
-                    let totalItems = progress.flashcardsCompleted + progress.quizzesCompleted + progress.summarizersCompleted
+                    let totalItems = totalCompletedTopics.count
                     let userLevel = (totalItems / itemsPerLevel) + (progress.firstModuleCompleted ? 1 : 0)
                     
                     // Create and position each badge
