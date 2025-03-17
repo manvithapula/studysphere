@@ -108,7 +108,7 @@ class CreateViewController: UIViewController {
     private lazy var addSubjectButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "plus.circle"), for: .normal)
-        button.tintColor = AppTheme.primary
+        button.tintColor = AppTheme.secondary
         button.addTarget(
             self, action: #selector(addSubjectTapped), for: .touchUpInside)
         return button
@@ -143,7 +143,7 @@ class CreateViewController: UIViewController {
         button.setTitle(techniques[0].name, for: .normal)
         button.addTarget(
             self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
-        button.tintColor = AppTheme.primary
+        button.tintColor = AppTheme.secondary
         return button
     }()
 
@@ -156,7 +156,7 @@ class CreateViewController: UIViewController {
         button.setTitle(techniques[1].name, for: .normal)
         button.addTarget(
             self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
-        button.tintColor = AppTheme.primary
+        button.tintColor = AppTheme.secondary
         return button
     }()
 
@@ -169,7 +169,7 @@ class CreateViewController: UIViewController {
         button.setTitle(techniques[2].name, for: .normal)
         button.addTarget(
             self, action: #selector(techniqueTapped(_:)), for: .touchUpInside)
-        button.tintColor = AppTheme.primary
+        button.tintColor = AppTheme.secondary
         return button
     }()
 
@@ -580,7 +580,7 @@ class CreateViewController: UIViewController {
             && isDocUploaded == true
 
         createButton.backgroundColor =
-            isValidDoc ? AppTheme.primary : .systemGray4
+            isValidDoc ? AppTheme.secondary : .systemGray4
         createButton.isEnabled = isValidDoc
     }
 
