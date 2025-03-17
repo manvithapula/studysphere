@@ -45,7 +45,7 @@ class OnboardingViewController: UIViewController {
     private let spaceRepetitionImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "clock")
-        imageView.tintColor = .black
+        imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
