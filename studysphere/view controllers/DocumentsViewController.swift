@@ -49,7 +49,7 @@ class DocumentsViewController: UIViewController {
     
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = "No documents yet.\nUpload study materials from the home screen!"
+        label.text = "No documentd yet.\nTap '+' to add a upload a new document."
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
