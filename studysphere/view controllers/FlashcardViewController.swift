@@ -14,6 +14,8 @@ class FlashcardViewController: UIViewController {
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var needsPracticeCount: UILabel!
     @IBOutlet weak var memorisedCount: UILabel!
+    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var subjectLabel: UILabel!
     private var practiceNumCount: Int = 0
         private var memorisedNumCount: Int = 0
         var flashcards: [Flashcard] = []
@@ -33,34 +35,14 @@ class FlashcardViewController: UIViewController {
         private var tutorialView: UIView?
         private var demoCard: UIView?
     // Declare the label as a property in your class
-    @IBOutlet weak var cardLabel: UILabel!
-
     // OR create it programmatically in viewDidLoad
-    private func setupCardLabel() {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Card Title"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.textColor = .black
-        
-        cardView.addSubview(label)
-        
-        // Center the label in the cardView
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: cardView.centerXAnchor),
-            label.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16),
-            label.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16)
-        ])
-        
-        self.cardLabel = label
+    private func setupSubjectLabel() {
         Task{
             let topics = try await topicsDb.findAll(where: ["id":schedule!.topic])
             if let topic = topics.first{
                 let subjects = try await subjectDb.findAll(where: ["id":topic.subject])
                 if let subject = subjects.first{
-                    cardLabel.text = subject.name
+                    subjectLabel.text = subject.name
                 }
             }
         }
@@ -73,8 +55,7 @@ class FlashcardViewController: UIViewController {
                 self.flashcards = try await flashCardDb.findAll(where: ["topic":topic])
                 setupInitialCard()
                 setupPanGesture()
-                setupCardLabel()
-                tabBarController?.isTabBarHidden = true
+                setupSubjectLabel()
                 if !UserDefaults.standard.bool(forKey: tutorialKey) {
                                 showTutorial()
                             }
@@ -168,7 +149,8 @@ class FlashcardViewController: UIViewController {
                     self.isShowingAnswer = false
                     self.answerLabel.text = self.flashcards[self.currentCardIndex].question
                     self.updateCountLabels()
-                    
+                    let progress = Float(self.currentCardIndex) / Float(self.flashcards.count)
+                    self.progressView.setProgress(progress, animated: true)
                     // Reset card position
                     self.cardView.center = self.cardInitialCenter
                     self.cardView.transform = .identity
@@ -182,6 +164,12 @@ class FlashcardViewController: UIViewController {
         }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tabBarController?.isTabBarHidden = true
+        subjectLabel.backgroundColor = AppTheme.secondary.withAlphaComponent(0.1)
+        //add padding to text
+        subjectLabel.layer.cornerRadius = 16
+        progressView.progressTintColor = AppTheme.primary
+        progressView.trackTintColor = AppTheme.secondary.withAlphaComponent(0.2)
         cardView.backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
     }
         // Existing methods (setupInitialCard, updateCompletion, etc.) remain the same
@@ -191,6 +179,7 @@ class FlashcardViewController: UIViewController {
         }
         
         private func updateCompletion() {
+            progressView.setProgress(1, animated: true)
             Task{
                 var score = Score(id: "", score: memorisedNumCount, total: flashcards.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
                 let _ = scoreDb.create(&score)
