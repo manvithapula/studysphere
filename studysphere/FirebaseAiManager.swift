@@ -105,7 +105,9 @@ class FirebaseAiManager {
             let prompt = """
                 Create Summary for this PDF document.
                 Focus on key concepts and important details from the content.
-                so that i can give a quick look before the exam
+                do not add markup.
+                make it atlest 200 words.
+                Directly start from main content dont give this pdf contains 
                 """
 
             let content = ModelContent(
@@ -137,9 +139,6 @@ class FirebaseAiManager {
                 return summary
             }
 
-            return nil
-        } catch {
-            print(error)
             return nil
         }
     }
@@ -224,9 +223,6 @@ class FirebaseAiManager {
                 return flashcards
             }
 
-            return []
-        } catch {
-            print(error)
             return []
         }
     }
@@ -326,8 +322,6 @@ class FirebaseAiManager {
                 return questions
             }
 
-            return []
-        } catch {
             return []
         }
     }
