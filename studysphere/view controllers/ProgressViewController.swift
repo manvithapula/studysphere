@@ -2,7 +2,45 @@ import UIKit
 
 class ProgressViewController: UIViewController {
     private var studyProgress: StudyProgress?
-    private let itemsPerLevel = 10 // Items needed per level
+    private let itemsPerLevel = 10 //
+    private var allTopics:[Schedule] = []
+    private var totalQuestions:[Schedule] {
+        return allTopics.filter { card in
+            let matchesSegment = card.topicType  == TopicsType.quizzes
+            return matchesSegment
+        }
+    }
+    private var totalflashcards:[Schedule] {
+        return allTopics.filter { card in
+            let matchesSegment = card.topicType  == TopicsType.flashcards
+            return matchesSegment
+        }
+    }
+    private var totalSummary:[Schedule] {
+        return allTopics.filter { card in
+            let matchesSegment = card.topicType  == TopicsType.summary
+            return matchesSegment
+        }
+    }
+    
+    private var completedQuestions:[Schedule]{
+        return totalQuestions.filter { card in
+            let matchesSegment = card.completed != nil
+            return matchesSegment
+        }
+    }
+    private var completedFlashcards:[Schedule]{
+        return totalflashcards.filter { card in
+            let matchesSegment = card.completed != nil
+            return matchesSegment
+        }
+    }
+    private var completedSummary:[Schedule]{
+        return totalSummary.filter { card in
+            let matchesSegment = card.completed != nil
+            return matchesSegment
+        }
+    }
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -161,19 +199,21 @@ class ProgressViewController: UIViewController {
     
     private func createProgressStats() {
         guard let progress = studyProgress else { return }
-        
-        let totalItems = progress.flashcardsCompleted + progress.quizzesCompleted + progress.summarizersCompleted
-        let nextLevelProgress = Float(totalItems % itemsPerLevel) / Float(itemsPerLevel)
-        
-        let statsViews = [
-            createStatView(icon: "book.fill", title: "Flashcards Completed", value: "\(progress.flashcardsCompleted)"),
-            createStatView(icon: "doc.text.fill", title: "Quizzes Completed", value: "\(progress.quizzesCompleted)"),
-            createStatView(icon: "text.badge.checkmark", title: "Summarizers Completed", value: "\(progress.summarizersCompleted)"),
-           
-            createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
-        ]
-        
-        statsViews.forEach { statsStackView.addArrangedSubview($0) }
+        Task{
+            allTopics = try await schedulesDb.findAll()
+            let totalItems = allTopics.count
+            let nextLevelProgress = Float(totalItems % itemsPerLevel) / Float(itemsPerLevel)
+            
+            let statsViews = [
+                createStatView(icon: "book.fill", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
+                createStatView(icon: "doc.text.fill", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
+                createStatView(icon: "text.badge.checkmark", title: "Summarizers Completed", value: "\(completedSummary.count)"),
+                
+                createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
+            ]
+            
+            statsViews.forEach { statsStackView.addArrangedSubview($0) }
+        }
     }
     
     private func createStatView(icon: String, title: String, value: String) -> UIView {

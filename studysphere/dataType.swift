@@ -114,9 +114,9 @@ struct Badge {
 }
 
 struct StudyProgress {
-    let flashcardsCompleted: Int
-    let quizzesCompleted: Int
-    let summarizersCompleted: Int
+    var flashcardsCompleted: Int
+    var quizzesCompleted: Int
+    var summarizersCompleted: Int
     let firstModuleCompleted: Bool
 }
 
