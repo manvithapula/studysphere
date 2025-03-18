@@ -212,7 +212,7 @@ class ProgressViewController: UIViewController {
             
             let statsViews = [
                 createStatView(icon: "rectangle.on.rectangle.fill", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
-                createStatView(icon: "doc.questionmark", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
+                createStatView(icon: "doc.questionmark.fill", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
                 createStatView(icon: "doc.text.fill", title: "Summaries Completed", value: "\(completedSummary.count)"),
                 
                 createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
