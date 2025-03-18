@@ -441,12 +441,13 @@ class QuestionViewController: UIViewController {
     }
 
     private func showFinalScore() {
+        scoreValue = Score(id: "", score: score, total: questions.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
         Task {
             schedule?.completed = Timestamp()
             if var scheduleTemp = schedule {
                 try await schedulesDb.update(&scheduleTemp)
             }
-            scoreValue = Score(id: "", score: score, total: questions.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
+            
             let _ = scoreDb.create(&scoreValue!)
             
         }
