@@ -140,12 +140,12 @@ extension homeScreenViewController {
         contentView.addSubview(stackView)
         
         stackView.addArrangedSubview(createProfileHeaderView())
-        stackView.addArrangedSubview(createUploadPDFView()) // pdf
-        stackView.addArrangedSubview(createTodayScheduleView())
-        stackView.addArrangedSubview(createSubjectsGridView())
-        stackView.addArrangedSubview(createStudyTechniquesView())
+        stackView.addArrangedSubview(createUploadPDFView()) // pdf upload
+        stackView.addArrangedSubview(createTodayScheduleView()) // todays schedule
+        stackView.addArrangedSubview(createSubjectsGridView()) //recent subjects
+        // stackView.addArrangedSubview(createStudyTechniquesView())
         
-      
+        
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
@@ -154,7 +154,9 @@ extension homeScreenViewController {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
-    //HEADER
+    
+    
+    // MARK: HEADER
     private func createProfileHeaderView() -> UIView {
         let headerView = UIView()
         
@@ -217,7 +219,6 @@ extension homeScreenViewController {
             nameLabel.bottomAnchor.constraint(equalTo: headerView.centerYAnchor, constant: 8),
             
             profileButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            // Align with the top label (welcomeLabel)
             profileButton.topAnchor.constraint(equalTo: welcomeLabel.topAnchor),
             profileButton.widthAnchor.constraint(equalToConstant: 45),
             profileButton.heightAnchor.constraint(equalToConstant: 45),
@@ -227,7 +228,7 @@ extension homeScreenViewController {
         return headerView
     }
     
-    
+    //MARK: UPLOAD
     private func createUploadPDFView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
@@ -236,26 +237,21 @@ extension homeScreenViewController {
         containerView.layer.shadowOpacity = 0.08
         containerView.layer.shadowRadius = 8
         containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
-       
         let bannerView = UIView()
         bannerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         bannerView.layer.cornerRadius = 12
         bannerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Icon container with direct color instead of gradient
         let iconContainer = UIView()
         iconContainer.layer.cornerRadius = 25
         iconContainer.clipsToBounds = true
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         iconContainer.backgroundColor = AppTheme.secondary
-      
-        
         let pdfIcon = UIImageView()
         pdfIcon.image = UIImage(systemName: "doc.fill")
         pdfIcon.tintColor = .white
         pdfIcon.contentMode = .scaleAspectFit
         pdfIcon.translatesAutoresizingMaskIntoConstraints = false
-      
+        
         let titleLabel = UILabel()
         titleLabel.text = "Upload Study Material"
         titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
@@ -267,7 +263,7 @@ extension homeScreenViewController {
         subtitleLabel.textColor = .darkGray
         subtitleLabel.numberOfLines = 0
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-       
+        
         let uploadButton = UIButton()
         uploadButton.setTitle("Upload PDF", for: .normal)
         uploadButton.setTitleColor(.white, for: .normal)
@@ -277,8 +273,6 @@ extension homeScreenViewController {
         uploadButton.clipsToBounds = true
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         uploadButton.addTarget(self, action: #selector(uploadPDFButtonTapped), for: .touchUpInside)
-        
-        // Add animation effects
         uploadButton.addAction(UIAction { _ in
             UIView.animate(withDuration: 0.2) {
                 uploadButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
@@ -289,7 +283,7 @@ extension homeScreenViewController {
                 }
             }
         }, for: .touchDown)
-      
+        
         containerView.addSubview(bannerView)
         bannerView.addSubview(iconContainer)
         iconContainer.addSubview(pdfIcon)
@@ -333,6 +327,251 @@ extension homeScreenViewController {
     
     @objc private func uploadPDFButtonTapped() {
         performSegue(withIdentifier: "toCreate", sender: nil)
+    }
+    
+    //MARK: TODAYS LEARNING
+    private func createTodayScheduleView() -> UIView {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 16
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.08
+        containerView.layer.shadowRadius = 8
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        
+        // Fix date formatting to match the UI
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        let currentDate = Date()
+        let dateString = dateFormatter.string(from: currentDate)
+        
+        // Create title and date labels
+        let titleLabel = UILabel()
+        titleLabel.text = "Today's Schedule"
+        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.textColor = .black
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let dateLabel = UILabel()
+        dateLabel.text = dateString
+        dateLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        dateLabel.textColor = .gray
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let seeAllButton = UIButton()
+        seeAllButton.setTitle("See All", for: .normal)
+        seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
+        seeAllButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        seeAllButton.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
+        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add all elements to the container
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(dateLabel)
+        containerView.addSubview(seeAllButton)
+        
+        let scheduleStack = UIStackView()
+        scheduleStack.axis = .vertical
+        scheduleStack.spacing = 12
+        scheduleStack.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(scheduleStack)
+        
+   
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            dateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 18),
+            
+            seeAllButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            seeAllButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16)
+        ])
+        
+        // Add content to schedule stack
+        if scheduleItems.isEmpty {
+            let emptyContainer = UIView()
+            emptyContainer.layer.cornerRadius = 12
+            emptyContainer.translatesAutoresizingMaskIntoConstraints = false
+            
+            let emptyIcon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+            emptyIcon.tintColor = AppTheme.primary
+            emptyIcon.contentMode = .scaleAspectFit
+            emptyIcon.translatesAutoresizingMaskIntoConstraints = false
+            emptyIcon.widthAnchor.constraint(equalToConstant: 18).isActive = true
+            emptyIcon.heightAnchor.constraint(equalToConstant: 18).isActive = true
+            
+            let emptyStateLabel = UILabel()
+            emptyStateLabel.text = "No tasks for today!"
+            emptyStateLabel.font = .systemFont(ofSize: 15, weight: .medium)
+            emptyStateLabel.textColor = .black
+            
+            let emptyStack = UIStackView(arrangedSubviews: [emptyIcon, emptyStateLabel])
+            emptyStack.axis = .horizontal
+            emptyStack.spacing = 6
+            emptyStack.alignment = .center
+            
+            emptyContainer.addSubview(emptyStack)
+            emptyStack.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                emptyStack.centerXAnchor.constraint(equalTo: emptyContainer.centerXAnchor),
+                emptyStack.centerYAnchor.constraint(equalTo: emptyContainer.centerYAnchor),
+                emptyContainer.heightAnchor.constraint(equalToConstant: 50)
+            ])
+            
+            scheduleStack.addArrangedSubview(emptyContainer)
+        }
+        else {
+            for (index, item) in scheduleItems.prefix(3).enumerated() {
+                let scheduleItemView = createScheduleItemCard(for: item, index: index)
+                scheduleStack.addArrangedSubview(scheduleItemView)
+            }
+        }
+        
+        // Add constraints for schedule stack
+        NSLayoutConstraint.activate([
+            scheduleStack.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
+            scheduleStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            scheduleStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            scheduleStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+        ])
+        
+        return containerView
+    }
+    
+    private func createScheduleItemCard(for item: ScheduleItem, index: Int) -> UIView {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let isPrimary = index % 2 == 0
+        let mainColor = isPrimary ? AppTheme.primary : AppTheme.secondary
+        let cardBackground = UIView()
+        cardBackground.layer.cornerRadius = 12
+        cardBackground.clipsToBounds = true
+        cardBackground.backgroundColor = mainColor.withAlphaComponent(0.1)
+        cardBackground.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        let iconContainer = UIView()
+        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        iconContainer.layer.cornerRadius = 24
+        iconContainer.clipsToBounds = true
+        iconContainer.backgroundColor = mainColor
+        
+        let iconView = UIImageView()
+        iconView.contentMode = .scaleAspectFit
+        iconView.tintColor = .white
+        iconView.image = UIImage(systemName: item.iconName)
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let titleLabel = UILabel()
+        titleLabel.text = item.title
+        titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
+        titleLabel.textColor = .darkText
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let subjectTag = UILabel()
+        subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
+        subjectTag.text = "Loading..."
+        subjectTag.textColor = mainColor.withAlphaComponent(0.8)
+        subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
+        subjectTag.layer.cornerRadius = 8
+        subjectTag.clipsToBounds = true
+        subjectTag.translatesAutoresizingMaskIntoConstraints = false
+        subjectTag.setPadding(horizontal: 12, vertical: 4)
+        
+        let startButton = UIButton()
+        startButton.setTitle("Start", for: .normal)
+        startButton.setTitleColor(.white, for: .normal)
+        startButton.backgroundColor = mainColor
+        startButton.layer.cornerRadius = 16
+        startButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        startButton.addAction(UIAction { [weak self] _ in
+            Task {
+                let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
+                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+            }
+        }, for: .touchUpInside)
+        
+        
+        startButton.addAction(UIAction { _ in
+            UIView.animate(withDuration: 0.2) {
+                startButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                UIView.animate(withDuration: 0.2) {
+                    startButton.transform = .identity
+                }
+            }
+        }, for: .touchDown)
+        
+        containerView.addSubview(cardBackground)
+        cardBackground.addSubview(iconContainer)
+        iconContainer.addSubview(iconView)
+        cardBackground.addSubview(titleLabel)
+        cardBackground.addSubview(subjectTag)
+        cardBackground.addSubview(startButton)
+        
+        NSLayoutConstraint.activate([
+            cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
+            cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            iconContainer.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            iconContainer.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
+            iconContainer.widthAnchor.constraint(equalToConstant: 48),
+            iconContainer.heightAnchor.constraint(equalToConstant: 48),
+            
+            iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+            iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 24),
+            iconView.heightAnchor.constraint(equalToConstant: 24),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
+            
+            subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            
+            startButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            startButton.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
+            startButton.widthAnchor.constraint(equalToConstant: 80),
+            startButton.heightAnchor.constraint(equalToConstant: 32),
+            
+            containerView.heightAnchor.constraint(equalToConstant: 80)
+        ])
+        
+        
+        Task {
+            let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
+            if let topic = alltopics.first {
+                let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
+                if let subject = allSubjects.first {
+                    await MainActor.run {
+                        subjectTag.text = subject.name
+                    }
+                }
+            }
+        }
+        
+        return containerView
+    }
+    
+    @objc private func cardTapped(_ gesture: UITapGestureRecognizer) {
+        if let containerView = gesture.view {
+            UIView.animate(withDuration: 0.2) {
+                containerView.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                UIView.animate(withDuration: 0.2) {
+                    containerView.transform = .identity
+                }
+            }
+        }
     }
     
     private func createScheduleItemView(for item: ScheduleItem) -> UIView {
@@ -426,6 +665,8 @@ extension homeScreenViewController {
         return containerView
     }
     
+    
+    //MARK: RECENT SUBJECTS
     private func createSubjectsGridView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
@@ -478,14 +719,14 @@ extension homeScreenViewController {
         
         return containerView
     }
-
+    
     private func createEmptyStateView() -> UIView {
         let emptyStateView = UIView()
         emptyStateView.layer.cornerRadius = 12
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
         let emptyIcon = UIImageView()
-        emptyIcon.image = UIImage(systemName: "book.closed.fill") // Filled version for better visibility
+        emptyIcon.image = UIImage(systemName: "book.closed.fill")
         emptyIcon.tintColor = AppTheme.primary
         emptyIcon.contentMode = .scaleAspectFit
         emptyIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -526,41 +767,31 @@ extension homeScreenViewController {
         
         return emptyStateView
     }
-
+    
     @objc private func openSubjectsTab() {
-        tabBarController?.selectedIndex = 1 // Navigate to "Subjects" tab
+        tabBarController?.selectedIndex = 1
     }
-
+    
     
     private func createSubjectCard(subject: Subject, index: Int) -> UIView {
-        // Card container
+        
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Card background with solid color instead of gradient
         let cardBackground = UIView()
         cardBackground.layer.cornerRadius = 12
         cardBackground.clipsToBounds = true
         cardBackground.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Icon container with solid color instead of gradient
         let iconContainer = UIView()
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         iconContainer.layer.cornerRadius = 24
         iconContainer.clipsToBounds = true
-        
-        // Get appropriate icon using SubjectIconService
         let iconService = SubjectIconService()
         let iconResult = iconService.getIconAndCategory(for: subject.name)
-        
-        // Icon image view
         let iconImageView = UIImageView()
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.tintColor = .white
         iconImageView.image = UIImage(systemName: iconResult.iconName)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Subject title label
         let titleLabel = UILabel()
         titleLabel.text = subject.name
         titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
@@ -573,13 +804,12 @@ extension homeScreenViewController {
         Task {
             let allTopics = try await topicsDb.findAll(where: ["subject":subject.id])
             let topicsCount = allTopics.count
-
+            
             await MainActor.run {
                 topicsCountLabel.text = "\(topicsCount) modules"
             }
         }
         
-        // Setup colors based on index
         let colorSchemes: [(main: UIColor, text: UIColor)] = [
             (AppTheme.primary.withAlphaComponent(0.1), AppTheme.primary.withAlphaComponent(0.8)),
             (AppTheme.secondary.withAlphaComponent(0.1), AppTheme.secondary.withAlphaComponent(0.8))
@@ -592,22 +822,19 @@ extension homeScreenViewController {
         
         let colorIndex = index % colorSchemes.count
         let mainColor = colorSchemes[colorIndex].main
-        let textColor = colorSchemes[colorIndex].text
         let iconColor = iconColorSchemes[colorIndex]
         
-        // Apply colors directly
         cardBackground.backgroundColor = mainColor
         iconContainer.backgroundColor = iconColor
         topicsCountLabel.textColor = iconColorSchemes[colorIndex].withAlphaComponent(0.8)
         
-        // Create tap button for the whole card
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction { [weak self] _ in
             self?.performSegue(withIdentifier: "toSubjectDetails", sender: subject)
         }, for: .touchUpInside)
         
-        // Add all subviews
+        
         containerView.addSubview(cardBackground)
         containerView.addSubview(button)
         cardBackground.addSubview(iconContainer)
@@ -616,36 +843,30 @@ extension homeScreenViewController {
         cardBackground.addSubview(topicsCountLabel)
         
         NSLayoutConstraint.activate([
-            // Container view constraints
-            containerView.heightAnchor.constraint(equalToConstant: 80),
             
-            // Card background constraints
+            containerView.heightAnchor.constraint(equalToConstant: 80),
             cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
             cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
-            // Icon container constraints
             iconContainer.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
             iconContainer.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
             iconContainer.widthAnchor.constraint(equalToConstant: 48),
             iconContainer.heightAnchor.constraint(equalToConstant: 48),
             
-            // Icon image view constraints
             iconImageView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
             iconImageView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
             iconImageView.widthAnchor.constraint(equalToConstant: 24),
             iconImageView.heightAnchor.constraint(equalToConstant: 24),
             
-            // Title label constraints
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             
-            // Topics count label constraints
+            
             topicsCountLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             topicsCountLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
             
-            // Button constraints (cover the whole card)
             button.topAnchor.constraint(equalTo: containerView.topAnchor),
             button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
@@ -654,250 +875,12 @@ extension homeScreenViewController {
         
         return containerView
     }
+}
     
-    private func createTodayScheduleView() -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 16
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOpacity = 0.08
-        containerView.layer.shadowRadius = 8
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d, yyyy"
-        let currentDate = Date()
-        let dateString = dateFormatter.string(from: currentDate)
-        
-        let titleStack = UIStackView()
-        titleStack.axis = .vertical
-        titleStack.spacing = 2
-        
-        let titleLabel = UILabel()
-        titleLabel.text = "Today's Schedule"
-        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
-        titleLabel.textColor = .black
-        
-        let dateLabel = UILabel()
-        dateLabel.text = dateString
-        dateLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        dateLabel.textColor = .gray
-        
-        titleStack.addArrangedSubview(titleLabel)
-        titleStack.addArrangedSubview(dateLabel)
-        
-        let seeAllButton = UIButton()
-        seeAllButton.setTitle("See All", for: .normal)
-        seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
-        seeAllButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        seeAllButton.addTarget(self, action: #selector(seeAllButtonTapped), for: .touchUpInside)
-        
-        let headerStack = UIStackView(arrangedSubviews: [titleStack, seeAllButton])
-        headerStack.axis = .horizontal
-        headerStack.distribution = .equalSpacing
-        headerStack.alignment = .center
-        
-        let scheduleStack = UIStackView()
-        scheduleStack.axis = .vertical
-        scheduleStack.spacing = 12
-        
-        if scheduleItems.isEmpty {
-            let emptyContainer = UIView()
-            emptyContainer.layer.cornerRadius = 12
-            emptyContainer.translatesAutoresizingMaskIntoConstraints = false
-            
-            let emptyIcon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
-            emptyIcon.tintColor = AppTheme.primary
-            emptyIcon.contentMode = .scaleAspectFit
-            emptyIcon.translatesAutoresizingMaskIntoConstraints = false
-            emptyIcon.widthAnchor.constraint(equalToConstant: 18).isActive = true
-            emptyIcon.heightAnchor.constraint(equalToConstant: 18).isActive = true
-            
-            let emptyStateLabel = UILabel()
-            emptyStateLabel.text = "No tasks for today!"
-            emptyStateLabel.font = .systemFont(ofSize: 15, weight: .medium)
-            emptyStateLabel.textColor = .black
-            
-            let emptyStack = UIStackView(arrangedSubviews: [emptyIcon, emptyStateLabel])
-            emptyStack.axis = .horizontal
-            emptyStack.spacing = 6
-            emptyStack.alignment = .center
-            
-            emptyContainer.addSubview(emptyStack)
-            emptyStack.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                emptyStack.centerXAnchor.constraint(equalTo: emptyContainer.centerXAnchor),
-                emptyStack.centerYAnchor.constraint(equalTo: emptyContainer.centerYAnchor),
-                emptyContainer.heightAnchor.constraint(equalToConstant: 50)
-            ])
-            
-            scheduleStack.addArrangedSubview(emptyContainer)
-        }
-         else {
-            for (index, item) in scheduleItems.prefix(3).enumerated() {
-                let scheduleItemView = createScheduleItemCard(for: item, index: index)
-                scheduleStack.addArrangedSubview(scheduleItemView)
-            }
-        }
-        
-        let mainStack = UIStackView(arrangedSubviews: [headerStack, scheduleStack])
-        mainStack.axis = .vertical
-        mainStack.spacing = 12
-        
-        containerView.addSubview(mainStack)
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            mainStack.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-            mainStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
-            mainStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
-            mainStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12)
-        ])
-        
-        return containerView
-    }
-
-
-    private func createScheduleItemCard(for item: ScheduleItem, index: Int) -> UIView {
-        let containerView = UIView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Determine colors based on index
-        let isPrimary = index % 2 == 0
-        let mainColor = isPrimary ? AppTheme.primary : AppTheme.secondary
-        
-        // Card background with solid color instead of gradient
-        let cardBackground = UIView()
-        cardBackground.layer.cornerRadius = 12
-        cardBackground.clipsToBounds = true
-        cardBackground.backgroundColor = mainColor.withAlphaComponent(0.1)
-        cardBackground.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Icon container with solid color instead of gradient
-        let iconContainer = UIView()
-        iconContainer.translatesAutoresizingMaskIntoConstraints = false
-        iconContainer.layer.cornerRadius = 24
-        iconContainer.clipsToBounds = true
-        iconContainer.backgroundColor = mainColor
-        
-        let iconView = UIImageView()
-        iconView.contentMode = .scaleAspectFit
-        iconView.tintColor = .white
-        iconView.image = UIImage(systemName: item.iconName)
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let titleLabel = UILabel()
-        titleLabel.text = item.title
-        titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
-        titleLabel.textColor = .darkText
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let subjectTag = UILabel()
-        subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
-        subjectTag.text = "Loading..."
-        subjectTag.textColor = mainColor.withAlphaComponent(0.8)
-        subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
-        subjectTag.layer.cornerRadius = 8
-        subjectTag.clipsToBounds = true
-        subjectTag.translatesAutoresizingMaskIntoConstraints = false
-        subjectTag.setPadding(horizontal: 12, vertical: 4)
-        
-        let startButton = UIButton()
-        startButton.setTitle("Start", for: .normal)
-        startButton.setTitleColor(.white, for: .normal)
-        startButton.backgroundColor = mainColor
-        startButton.layer.cornerRadius = 16
-        startButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add start action
-        startButton.addAction(UIAction { [weak self] _ in
-            Task {
-                let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
-                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
-            }
-        }, for: .touchUpInside)
-        
-        // Add tap animation for button
-        startButton.addAction(UIAction { _ in
-            UIView.animate(withDuration: 0.2) {
-                startButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                UIView.animate(withDuration: 0.2) {
-                    startButton.transform = .identity
-                }
-            }
-        }, for: .touchDown)
-        
-        // Add all subviews
-        containerView.addSubview(cardBackground)
-        cardBackground.addSubview(iconContainer)
-        iconContainer.addSubview(iconView)
-        cardBackground.addSubview(titleLabel)
-        cardBackground.addSubview(subjectTag)
-        cardBackground.addSubview(startButton)
-        
-        NSLayoutConstraint.activate([
-            cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
-            cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            
-            iconContainer.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
-            iconContainer.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
-            iconContainer.widthAnchor.constraint(equalToConstant: 48),
-            iconContainer.heightAnchor.constraint(equalToConstant: 48),
-            
-            iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
-            iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
-            iconView.widthAnchor.constraint(equalToConstant: 24),
-            iconView.heightAnchor.constraint(equalToConstant: 24),
-            
-            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
-            
-            subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            
-            startButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
-            startButton.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
-            startButton.widthAnchor.constraint(equalToConstant: 80),
-            startButton.heightAnchor.constraint(equalToConstant: 32),
-            
-            containerView.heightAnchor.constraint(equalToConstant: 80)
-        ])
-        
-        // Fetch and update subject name
-        Task {
-            let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
-            if let topic = alltopics.first {
-                let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
-                if let subject = allSubjects.first {
-                    await MainActor.run {
-                        subjectTag.text = subject.name
-                    }
-                }
-            }
-        }
-        
-        return containerView
-    }
     
-    @objc private func cardTapped(_ gesture: UITapGestureRecognizer) {
-        if let containerView = gesture.view {
-            UIView.animate(withDuration: 0.2) {
-                containerView.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                UIView.animate(withDuration: 0.2) {
-                    containerView.transform = .identity
-                }
-            }
-        }
-    }
+    //MARK: CHANGE HERE
     
-    private func createStudyTechniquesView() -> UIView {
+   /* private func createStudyTechniquesView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 16
@@ -1025,5 +1008,5 @@ extension homeScreenViewController {
         
         return containerView
     }
-}
+}*/
 
