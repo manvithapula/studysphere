@@ -104,13 +104,11 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         let backgroundColors: [UIColor] = [
             AppTheme.primary.withAlphaComponent(0.15),
             AppTheme.secondary.withAlphaComponent(0.15),
-            UIColor.systemGray.withAlphaComponent(0.15) // Fallback color
         ]
         
         let iconBackgroundColors: [UIColor] = [
             AppTheme.primary,
             AppTheme.secondary,
-            UIColor.systemGray // Fallback color
         ]
         
         let colorIndex = index % backgroundColors.count
