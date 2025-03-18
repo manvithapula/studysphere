@@ -89,8 +89,7 @@ class homeScreenViewController: UIViewController {
             let destination = segue.destination as! MySubjectListTableViewController
             destination.subjects = self.subjects
         }
-        
-        if segue.identifier == "toFLS" || segue.identifier == "toQTS" {
+        if segue.identifier == "toFLS" || segue.identifier == "toQTS" || segue.identifier == "toSummary"{
             if let destinationVC = segue.destination as? SRScheduleViewController {
                 if let topic = sender as? Topics {
                     destinationVC.topic = topic
@@ -100,6 +99,11 @@ class homeScreenViewController: UIViewController {
                     destinationVC.topic = topic
                 }
             }
+        else if let destinationVC = segue.destination as? SummaryViewController {
+            if let topic = sender as? Topics {
+                destinationVC.topic = topic
+            }
+        }
             else if let destinationVC = segue.destination as? UINavigationController{
                 if let destination = destinationVC.topViewController as? SRScheduleViewController{
                     if let topic = sender as? Topics {
@@ -922,7 +926,7 @@ extension homeScreenViewController {
             } else {
                 let displayedSubjects = fileterdTopics.prefix(3)
                 for (index, subject) in displayedSubjects.enumerated() {
-                    let subjectCard = createSpaceRepetitionCard(subject: subject, index: index)
+                    let subjectCard = createSpaceRepetitionCard(subject: subject, index: index,type: type)
                     subjectsStack.addArrangedSubview(subjectCard)
                 }
             }
@@ -998,7 +1002,7 @@ extension homeScreenViewController {
             return emptyStateView
         }
         
-    private func createSpaceRepetitionCard(subject: Topics, index: Int) -> UIView {
+    private func createSpaceRepetitionCard(subject: Topics, index: Int,type:TopicsType) -> UIView {
             
             let containerView = UIView()
             containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -1026,14 +1030,8 @@ extension homeScreenViewController {
             let topicsCountLabel = UILabel()
             topicsCountLabel.font = .systemFont(ofSize: 13, weight: .medium)
             topicsCountLabel.translatesAutoresizingMaskIntoConstraints = false
-            Task {
-                let allTopics = try await topicsDb.findAll(where: ["subject":subject.id])
-                let topicsCount = allTopics.count
-                
-                await MainActor.run {
-                    topicsCountLabel.text = "\(topicsCount) modules"
-                }
-            }
+            topicsCountLabel.text = subject.subtitle
+
             
             let colorSchemes: [(main: UIColor, text: UIColor)] = [
                 (AppTheme.primary.withAlphaComponent(0.1), AppTheme.primary.withAlphaComponent(0.8)),
@@ -1052,11 +1050,21 @@ extension homeScreenViewController {
             cardBackground.backgroundColor = mainColor
             iconContainer.backgroundColor = iconColor
             topicsCountLabel.textColor = iconColorSchemes[colorIndex].withAlphaComponent(0.8)
+            var identifier = "toFLS"
+        
+        switch(type){
+        case .flashcards:
+            identifier = "toFLS"
+        case .quizzes:
+            identifier = "toQTS"
+        case TopicsType.summary:
+            identifier = "toSummary"
+        }
             
             let button = UIButton()
             button.translatesAutoresizingMaskIntoConstraints = false
             button.addAction(UIAction { [weak self] _ in
-                self?.performSegue(withIdentifier: "toSubjectDetails", sender: subject)
+                self?.performSegue(withIdentifier: identifier, sender: subject)
             }, for: .touchUpInside)
             
             
