@@ -144,7 +144,17 @@ class TodaysLearningTableViewCell: UITableViewCell {
         UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: [], animations: {
             self.statusTagButton.transform = .identity
         })
-        subjectTag.text = "Loading..."
+        Task {
+            let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
+            if let topic = alltopics.first{
+                let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
+                if let subject = allSubjects.first {
+                    await MainActor.run {
+                        subjectTag.text = subject.name
+                    }
+                }
+            }
+        }
     }
     
     private func setupColors(for index: Int) {
