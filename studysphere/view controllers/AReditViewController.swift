@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class AReditViewController: UIViewController {
 
@@ -68,7 +69,7 @@ extension AReditViewController: UITableViewDelegate, UITableViewDataSource {
         
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 120, height: 30)
-        button.setTitle(formatDateToString(date: schedule.date), for: .normal)
+        button.setTitle(formatDateToString(date: schedule.date.dateValue()), for: .normal)
         
         button.tag = indexPath.row
         button.addTarget(self, action: #selector(dateButtonTapped(_:)), for: .touchUpInside)
@@ -87,7 +88,7 @@ extension AReditViewController: UITableViewDelegate, UITableViewDataSource {
     }
     @objc func dateChanged(_ sender: UIDatePicker) {
         if let indexPath = activeIndexPath {
-            schedules[indexPath.row].date = sender.date
+            schedules[indexPath.row].date = Timestamp(date:sender.date)
             ARedittable.reloadRows(at: [indexPath], with: .none)
         }
     }
@@ -98,7 +99,7 @@ extension AReditViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
             // Set current date
-            datePicker?.date = schedules[indexPath.row].date
+        datePicker?.date = schedules[indexPath.row].date.dateValue()
             activeIndexPath = indexPath
             
             // Show date picker and toolbar

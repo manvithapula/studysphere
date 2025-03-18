@@ -16,28 +16,53 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard (scene is UIWindowScene) else { return }
 
-//        window = UIWindow(windowScene: windowScene)
-//                
-//                // Check login status and set root view controller
-//                if true {
-//                    setHomeAsRoot()
-//                } else {
-//                    setLoginAsRoot()
-//                }
-//                
-//                window?.makeKeyAndVisible()
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+                
+                window = UIWindow(windowScene: windowScene)
+                let loadingVC = LoadingViewController()
+                window?.rootViewController = loadingVC
+                window?.makeKeyAndVisible()
+                
+                Task {
+                    await checkAndNavigate()
+                }
     }
-    func setHomeAsRoot() {
-            let homeVC = homeScreenViewController()
-            let nav = UINavigationController(rootViewController: homeVC)
-            window?.rootViewController = nav
+        
+    private func checkAndNavigate() async {
+        guard FirebaseAuthManager.shared.isUserLoggedIn else {
+                navigateToLogin()
+                return
+            }
+            
+            do {
+                let user = FirebaseAuthManager.shared.currentUser
+                if let _ = try await userDB.findAll(where: ["email": user!.email!]).first {
+                    navigateToMain()
+                } else {
+                    navigateToLogin()
+                }
+            } catch {
+                print("Error checking user: \(error)")
+                navigateToLogin()
+            }
         }
         
-        func setLoginAsRoot() {
-            let loginVC = LoginViewController()
-            window?.rootViewController = loginVC
+        private func navigateToMain() {
+            DispatchQueue.main.async {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                    self.window?.rootViewController = tabBarVC
+                }
+            }
+        }
+        
+        private func navigateToLogin() {
+            DispatchQueue.main.async {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let loginVC = storyboard.instantiateInitialViewController()
+                self.window?.rootViewController = loginVC
+            }
         }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -60,7 +85,45 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
+        if let rootVC = window?.rootViewController {
+                refreshViewController(rootVC)
+            }
     }
+    private func refreshViewController(_ viewController: UIViewController) {
+        // Refresh labels in the view controller
+        for subview in viewController.view.subviews {
+            if let label = subview as? UILabel {
+                label.setNeedsDisplay()
+            }
+            // Recursive search for labels
+            findAndRefreshLabels(in: subview)
+        }
+        
+        // Handle navigation controllers, tab bar controllers, etc.
+        if let navController = viewController as? UINavigationController {
+            navController.viewControllers.forEach { refreshViewController($0) }
+        } else if let tabController = viewController as? UITabBarController {
+            tabController.viewControllers?.forEach { refreshViewController($0) }
+        } else if let presented = viewController.presentedViewController {
+            refreshViewController(presented)
+        }
+    }
+
+    private func findAndRefreshLabels(in view: UIView) {
+        for subview in view.subviews {
+            if let label = subview as? UILabel {
+                // Force redraw
+                label.setNeedsDisplay()
+                // Ensure text color is set
+                if label.textColor == nil || label.textColor == .clear {
+                    label.textColor = .black
+                }
+            }
+            findAndRefreshLabels(in: subview)
+        }
+    }
+
+
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.

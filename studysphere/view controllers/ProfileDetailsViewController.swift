@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseStorage
 
 class ProfileDetailsViewController: UIViewController {
     
@@ -31,6 +33,15 @@ class ProfileDetailsViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupDatePicker()
+        setupTapGesture()
+    }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     private func setupUI() {
@@ -42,6 +53,7 @@ class ProfileDetailsViewController: UIViewController {
         profileImageView.contentMode = .scaleAspectFit
         profileImageView.layer.cornerRadius = 50
         profileImageView.clipsToBounds = true
+       
         
         // Add tap gesture to profile image
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped))
@@ -58,6 +70,8 @@ class ProfileDetailsViewController: UIViewController {
         [lastNameTextField, dateTextField,firstNameTextField].forEach { textField in
             textField.textColor = .gray
         }
+        
+        loadImageFromUserDefaults()
     }
     
     private func setupLabels() {
@@ -80,12 +94,12 @@ class ProfileDetailsViewController: UIViewController {
         dateOfBirthLabel.text = "Date of Birth"
         firstNameValueLabel.text = user.firstName
         lastNameValueLabel.text = user.lastName
-        dateOfBirthValueLabel.text = formatDateToString(date: user.dob)
+        dateOfBirthValueLabel.text = formatDateToString(date: user.dob.dateValue())
         
         firstNameTextField.text = user.firstName
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMMM yyyy"
-        dateOfBirthValueLabel.text = dateFormatter.string(from: user.dob)
+        dateOfBirthValueLabel.text = dateFormatter.string(from: user.dob.dateValue())
     }
     
     private func createTextField(withText text: String?) -> UITextField {
@@ -175,8 +189,11 @@ class ProfileDetailsViewController: UIViewController {
         if let lastname = lastNameTextField.text, !lastname.isEmpty {
             user.lastName = lastname
         }
-        user.dob = datePicker.date
-        userDB.update(&user)
+        AuthManager.shared.updateName(firstName: user.firstName, lastName: user.lastName)
+        user.dob = Timestamp(date:datePicker.date)
+        Task{
+            try await userDB.update(&user)
+        }
         
         // Here you would typically save to your data source
         // saveToDataSource()
@@ -207,17 +224,118 @@ class ProfileDetailsViewController: UIViewController {
 
 //UIImagePickerControllerDelegate
 extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        var selectedImage: UIImage?
+        
         if let editedImage = info[.editedImage] as? UIImage {
-            profileImageView.image = editedImage
+            selectedImage = editedImage
         } else if let originalImage = info[.originalImage] as? UIImage {
-            profileImageView.image = originalImage
+            selectedImage = originalImage
+        }
+        
+        if let image = selectedImage {
+            // Display the image
+            profileImageView.image = image
+            
+            // First upload the image to Firebase Storage, then update profile
+            uploadImageToFirebaseStorage(image) { [weak self] result in
+                switch result {
+                case .success(let downloadURL):
+                    // Now update the profile with the image URL
+                    FirebaseAuthManager.shared.updateProfile(photoURL: downloadURL) { updateResult in
+                        switch updateResult {
+                        case .success:
+                            print("Profile photo updated successfully")
+                            // Update your UI here if needed
+                        case .failure(let error):
+                            print("Failed to update profile photo: \(error.localizedDescription)")
+                            // Show error to user
+                        }
+                    }
+                case .failure(let error):
+                    print("Failed to upload image: \(error.localizedDescription)")
+                    // Show error to user
+                }
+            }
         }
         
         dismiss(animated: true)
     }
+    func uploadImageToFirebaseStorage(_ image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
+        // 1. Convert image to data
+        guard let imageData = image.jpegData(compressionQuality: 0.7) else {
+            let error = NSError(domain: "ImageError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not convert image to data"])
+            completion(.failure(error))
+            return
+        }
+        
+        // 2. Create a reference to Firebase Storage
+        guard let userId = FirebaseAuthManager.shared.currentUser?.uid else {
+            let error = NSError(domain: "AuthError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No user logged in"])
+            completion(.failure(error))
+            return
+        }
+        
+        let storageRef = Storage.storage().reference()
+        let profileImagesRef = storageRef.child("profile_images")
+        let imageRef = profileImagesRef.child("\(userId).jpg")
+        
+        // 3. Upload the image data
+        imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // 4. Get the download URL
+            imageRef.downloadURL { url, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let downloadURL = url else {
+                    let error = NSError(domain: "StorageError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No download URL returned"])
+                    completion(.failure(error))
+                    return
+                }
+                
+                completion(.success(downloadURL))
+            }
+        }
+    }
+
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true)
+    }
+    private func saveImageToUserDefaults(_ image: UIImage) {
+            // Convert image to data
+            if let imageData = image.jpegData(compressionQuality: 0.8) {
+                UserDefaults.standard.set(imageData, forKey: "profileImage")
+            }
+        }
+        
+    private func loadImageFromUserDefaults() {
+        if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
+            // Download image data from the URL
+            URLSession.shared.dataTask(with: photoURL) { [weak self] data, response, error in
+                guard let self = self,
+                      let imageData = data,
+                      error == nil,
+                      let image = UIImage(data: imageData) else {
+                    print("Error loading profile image: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                // Update UI on main thread
+                DispatchQueue.main.async {
+                    self.profileImageView.image = image
+                }
+            }.resume()
+        } else {
+            // Set default image when no photo URL exists
+            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+        }
     }
 }
