@@ -371,7 +371,7 @@ class FlashcardResultViewController: UIViewController {
         }
         
         // Set score label
-        scoreLabel.text = "\(Int(memorised))"
+        scoreLabel.text = "\(Int(score!.score))"
         
         // Calculate percentage
             if score != nil {
