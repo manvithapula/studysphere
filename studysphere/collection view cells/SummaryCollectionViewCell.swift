@@ -2,8 +2,8 @@ import UIKit
 
 class SummaryCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
-    private let containerView: GradientView = {
-        let view = GradientView()
+    private let containerView: UIView = {
+        let view = UIView()
         view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -66,8 +66,8 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         subjectTag.layer.cornerRadius = 8
         subjectTag.setPadding(horizontal: 12, vertical: 4)
 
-        // Apply gradient background and shadow to containerView
-        CardBackgroundHelper.applyGradient(to: containerView, index: 0) // Adjust index dynamically if needed
+        // Apply solid background color and shadow to containerView
+        CardBackgroundHelper.applyBackgroundColor(to: containerView, index: 0) // Default index
         CardBackgroundHelper.applyShadow(to: containerView)
     }
     
@@ -75,15 +75,12 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         titleLabel.text = title
         subjectTag.text = subject
 
-        // Apply gradient background based on index
-        if let gradientView = containerView as? GradientView {
-            CardBackgroundHelper.applyGradient(to: gradientView, index: index)
-        }
+        // Apply background color based on index
+        CardBackgroundHelper.applyBackgroundColor(to: containerView, index: index)
         
         // Apply shadow
         CardBackgroundHelper.applyShadow(to: containerView)
     }
-
     
     func updateSubject(topic: Topics) {
         titleLabel.text = topic.title
@@ -122,23 +119,16 @@ extension UILabel {
     }
 }
 
-
 class CardBackgroundHelper {
-    static func applyGradient(to view: GradientView, index: Int) {
-        let colorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05)),
-            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05))
+    static func applyBackgroundColor(to view: UIView, index: Int) {
+        let backgroundColors: [UIColor] = [
+            AppTheme.primary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15),
+            UIColor.systemGray.withAlphaComponent(0.15) // Fallback color
         ]
         
-        let colorIndex = index % colorSchemes.count
-        let colors = colorSchemes[colorIndex]
-        
-        view.setGradient(
-            startColor: colors.start,
-            endColor: colors.end,
-            startPoint: CGPoint(x: 0.0, y: 0.0),
-            endPoint: CGPoint(x: 1.0, y: 1.0)
-        )
+        let colorIndex = index % backgroundColors.count
+        view.backgroundColor = backgroundColors[colorIndex]
     }
     
     static func applyShadow(to view: UIView) {
@@ -149,4 +139,3 @@ class CardBackgroundHelper {
         view.layer.shadowRadius = 4
     }
 }
-

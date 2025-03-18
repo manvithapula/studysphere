@@ -237,20 +237,13 @@ extension homeScreenViewController {
         containerView.layer.shadowRadius = 8
         containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
        
-        let bannerView = GradientView()
+        let bannerView = UIView()
+        bannerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         bannerView.layer.cornerRadius = 12
         bannerView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Create gradient with primary and hint of secondary
-        bannerView.setGradient(
-            startColor: AppTheme.primary.withAlphaComponent(0.1),
-            endColor: AppTheme.secondary.withAlphaComponent(0.05),
-            startPoint: CGPoint(x: 0.0, y: 0.0),
-            endPoint: CGPoint(x: 1.0, y: 1.0)
-        )
-        
-        // Icon container with gradient
-        let iconContainer = GradientView()
+        // Icon container with direct color instead of gradient
+        let iconContainer = UIView()
         iconContainer.layer.cornerRadius = 25
         iconContainer.clipsToBounds = true
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -259,7 +252,7 @@ extension homeScreenViewController {
         
         let pdfIcon = UIImageView()
         pdfIcon.image = UIImage(systemName: "doc.fill")
-        pdfIcon.tintColor = .white // Changed to white for better contrast
+        pdfIcon.tintColor = .white
         pdfIcon.contentMode = .scaleAspectFit
         pdfIcon.translatesAutoresizingMaskIntoConstraints = false
       
@@ -337,7 +330,7 @@ extension homeScreenViewController {
         
         return containerView
     }
-
+    
     @objc private func uploadPDFButtonTapped() {
         performSegue(withIdentifier: "toCreate", sender: nil)
     }
@@ -544,14 +537,14 @@ extension homeScreenViewController {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Card background with gradient
-        let cardBackground = GradientView()
+        // Card background with solid color instead of gradient
+        let cardBackground = UIView()
         cardBackground.layer.cornerRadius = 12
         cardBackground.clipsToBounds = true
         cardBackground.translatesAutoresizingMaskIntoConstraints = false
         
-        // Icon container with gradient
-        let iconContainer = GradientView()
+        // Icon container with solid color instead of gradient
+        let iconContainer = UIView()
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         iconContainer.layer.cornerRadius = 24
         iconContainer.clipsToBounds = true
@@ -574,7 +567,6 @@ extension homeScreenViewController {
         titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        
         let topicsCountLabel = UILabel()
         topicsCountLabel.font = .systemFont(ofSize: 13, weight: .medium)
         topicsCountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -588,33 +580,25 @@ extension homeScreenViewController {
         }
         
         // Setup colors based on index
-        let colorSchemes: [(start: UIColor, end: UIColor, pattern: UIColor)] = [
-            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05), AppTheme.primary.withAlphaComponent(0.1)),
-            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05), AppTheme.secondary.withAlphaComponent(0.1))
+        let colorSchemes: [(main: UIColor, text: UIColor)] = [
+            (AppTheme.primary.withAlphaComponent(0.1), AppTheme.primary.withAlphaComponent(0.8)),
+            (AppTheme.secondary.withAlphaComponent(0.1), AppTheme.secondary.withAlphaComponent(0.8))
         ]
         
-        let iconColorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary, AppTheme.primary.adjustBrightness(by: 0.2)),
-            (AppTheme.secondary, AppTheme.secondary.adjustBrightness(by: 0.2))
+        let iconColorSchemes: [UIColor] = [
+            AppTheme.primary,
+            AppTheme.secondary
         ]
         
         let colorIndex = index % colorSchemes.count
-        let colors = colorSchemes[colorIndex]
-        let iconColors = iconColorSchemes[colorIndex]
+        let mainColor = colorSchemes[colorIndex].main
+        let textColor = colorSchemes[colorIndex].text
+        let iconColor = iconColorSchemes[colorIndex]
         
-        // Set up gradients
-        cardBackground.setGradient(startColor: colors.start,
-                                   endColor: colors.end,
-                                   startPoint: CGPoint(x: 0.0, y: 0.0),
-                                   endPoint: CGPoint(x: 1.0, y: 1.0))
-        
-        iconContainer.setGradient(startColor: iconColors.start,
-                                  endColor: iconColors.end,
-                                  startPoint: CGPoint(x: 0.0, y: 0.0),
-                                  endPoint: CGPoint(x: 1.0, y: 1.0))
-        
-        // Set topics count label color
-        topicsCountLabel.textColor = iconColors.start.withAlphaComponent(0.8)
+        // Apply colors directly
+        cardBackground.backgroundColor = mainColor
+        iconContainer.backgroundColor = iconColor
+        topicsCountLabel.textColor = iconColorSchemes[colorIndex].withAlphaComponent(0.8)
         
         // Create tap button for the whole card
         let button = UIButton()
@@ -783,29 +767,19 @@ extension homeScreenViewController {
         let isPrimary = index % 2 == 0
         let mainColor = isPrimary ? AppTheme.primary : AppTheme.secondary
         
-        // Card background with gradient
-        let cardBackground = GradientView()
+        // Card background with solid color instead of gradient
+        let cardBackground = UIView()
         cardBackground.layer.cornerRadius = 12
         cardBackground.clipsToBounds = true
-        cardBackground.setGradient(
-            startColor: mainColor.withAlphaComponent(0.15),
-            endColor: mainColor.withAlphaComponent(0.05),
-            startPoint: CGPoint(x: 0.0, y: 0.0),
-            endPoint: CGPoint(x: 1.0, y: 1.0)
-        )
+        cardBackground.backgroundColor = mainColor.withAlphaComponent(0.1)
         cardBackground.translatesAutoresizingMaskIntoConstraints = false
         
-        // Icon container with gradient
-        let iconContainer = GradientView()
+        // Icon container with solid color instead of gradient
+        let iconContainer = UIView()
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         iconContainer.layer.cornerRadius = 24
         iconContainer.clipsToBounds = true
-        iconContainer.setGradient(
-            startColor: mainColor,
-            endColor: mainColor.adjustBrightness(by: 0.2),
-            startPoint: CGPoint(x: 0.0, y: 0.0),
-            endPoint: CGPoint(x: 1.0, y: 1.0)
-        )
+        iconContainer.backgroundColor = mainColor
         
         let iconView = UIImageView()
         iconView.contentMode = .scaleAspectFit
@@ -909,6 +883,7 @@ extension homeScreenViewController {
         
         return containerView
     }
+    
     @objc private func cardTapped(_ gesture: UITapGestureRecognizer) {
         if let containerView = gesture.view {
             UIView.animate(withDuration: 0.2) {

@@ -30,14 +30,14 @@ class AddSubjectViewController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = AppTheme.primary
-        button.layer.cornerRadius = 8
+        button.layer.cornerRadius = 22
         button.addTarget(self, action: #selector(saveSubject), for: .touchUpInside)
         return button
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray6
         setupUI()
 //        setupTapGesture()
     }

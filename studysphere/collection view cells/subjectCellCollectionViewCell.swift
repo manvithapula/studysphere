@@ -2,8 +2,8 @@ import UIKit
 
 class SubjectCellCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
-    private let containerView = GradientView()
-    private let iconContainerView = GradientView()
+    private let containerView = UIView()
+    private let iconContainerView = UIView()
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
@@ -100,41 +100,30 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         subtitleLabel.text = subtitle
         iconImageView.image = UIImage(systemName: iconName)
 
-        // Define gradient colors based on the index
-        let colorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05)),
-            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05))
+        // Define background colors based on the index
+        let backgroundColors: [UIColor] = [
+            AppTheme.primary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15),
+            UIColor.systemGray.withAlphaComponent(0.15) // Fallback color
         ]
         
-        let iconColorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary, AppTheme.primary.adjustBrightness(by: 0.2)),
-            (AppTheme.secondary, AppTheme.secondary.adjustBrightness(by: 0.2))
+        let iconBackgroundColors: [UIColor] = [
+            AppTheme.primary,
+            AppTheme.secondary,
+            UIColor.systemGray // Fallback color
         ]
         
-        let colorIndex = index % colorSchemes.count
-        let colors = colorSchemes[colorIndex]
-        let iconColors = iconColorSchemes[colorIndex]
+        let colorIndex = index % backgroundColors.count
+        let backgroundColor = backgroundColors[colorIndex]
+        let iconBackgroundColor = iconBackgroundColors[colorIndex]
 
-     
-        containerView.setGradient(
-            startColor: colors.start,
-            endColor: colors.end,
-            startPoint: CGPoint(x: 0.0, y: 0.0),
-            endPoint: CGPoint(x: 1.0, y: 1.0)
-        )
-
-        // Apply gradient to iconContainerView
-        iconContainerView.setGradient(
-            startColor: iconColors.start,
-            endColor: iconColors.end,
-            startPoint: CGPoint(x: 0.0, y: 0.0),
-            endPoint: CGPoint(x: 1.0, y: 1.0)
-        )
+        // Apply solid background colors
+        containerView.backgroundColor = backgroundColor
+        iconContainerView.backgroundColor = iconBackgroundColor
 
         // Adjust subtitle text color
-        subtitleLabel.textColor = iconColors.start.withAlphaComponent(0.8)
+        subtitleLabel.textColor = iconBackgroundColor.withAlphaComponent(0.8)
     }
-
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -148,4 +137,3 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         iconImageView.image = nil
     }
 }
-

@@ -85,7 +85,45 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
+        if let rootVC = window?.rootViewController {
+                refreshViewController(rootVC)
+            }
     }
+    private func refreshViewController(_ viewController: UIViewController) {
+        // Refresh labels in the view controller
+        for subview in viewController.view.subviews {
+            if let label = subview as? UILabel {
+                label.setNeedsDisplay()
+            }
+            // Recursive search for labels
+            findAndRefreshLabels(in: subview)
+        }
+        
+        // Handle navigation controllers, tab bar controllers, etc.
+        if let navController = viewController as? UINavigationController {
+            navController.viewControllers.forEach { refreshViewController($0) }
+        } else if let tabController = viewController as? UITabBarController {
+            tabController.viewControllers?.forEach { refreshViewController($0) }
+        } else if let presented = viewController.presentedViewController {
+            refreshViewController(presented)
+        }
+    }
+
+    private func findAndRefreshLabels(in view: UIView) {
+        for subview in view.subviews {
+            if let label = subview as? UILabel {
+                // Force redraw
+                label.setNeedsDisplay()
+                // Ensure text color is set
+                if label.textColor == nil || label.textColor == .clear {
+                    label.textColor = .black
+                }
+            }
+            findAndRefreshLabels(in: subview)
+        }
+    }
+
+
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.

@@ -49,7 +49,7 @@ class DocumentsViewController: UIViewController {
     
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = "No documents yet.\nUpload study materials from the home screen!"
+        label.text = "No documentd yet.\nTap '+' to add a upload a new document."
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
@@ -119,7 +119,7 @@ class DocumentsViewController: UIViewController {
             group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
             
             let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 12
+            section.interGroupSpacing = 8
             
             return UICollectionViewCompositionalLayout(section: section)
         }
@@ -161,7 +161,7 @@ class DocumentsViewController: UIViewController {
         present(actionSheet, animated: true)
     }
     private func presentDocumentPicker() {
-        // Create a document picker for PDFs
+       
         let documentTypes = [UTType.pdf.identifier]
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.pdf])
         documentPicker.delegate = self

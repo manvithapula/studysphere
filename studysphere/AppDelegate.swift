@@ -18,29 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         UINavigationBar.appearance().tintColor = AppTheme.primary
+        print(UILabel.appearance().textColor)
         //change tabbar color
         UITabBar.appearance().tintColor = AppTheme.primary
         FirebaseApp.configure()
-        if #available(iOS 13.0, *) {
-                    // Using SceneDelegate, do nothing here
-                    return true
-                }
-                
-                window = UIWindow(frame: UIScreen.main.bounds)
-                let loadingVC = LoadingViewController()
-                window?.rootViewController = loadingVC
-                window?.makeKeyAndVisible()
-                
-                Task {
-                    await checkAndNavigate()
-                }
-                
-                if let bundleIdentifier = Bundle.main.bundleIdentifier {
-                    print("Bundle identifier: \(bundleIdentifier)")
-                }
-                if let filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") {
-                    print("Firebase config file exists at: \(filePath)")
-                }
                 
                 return true
     }

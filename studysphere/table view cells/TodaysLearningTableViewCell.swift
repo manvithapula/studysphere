@@ -2,27 +2,13 @@ import UIKit
 
 class TodaysLearningTableViewCell: UITableViewCell {
     private let containerView = UIView()
-    private let cardBackground: GradientView = {
-        let view = GradientView()
-        view.layer.cornerRadius = 16
-        view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let cardBackground = UIView()
     
-    private let iconContainer: GradientView = {
-        let view = GradientView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 22
-        view.clipsToBounds = true
-        return view
-    }()
-    
+    private let iconContainer = UIView()
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
     private let statusTagButton = UIButton()
     
-    // Add a property to store the current date offset
     var currentDateOffset: Int = 0
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -48,16 +34,21 @@ class TodaysLearningTableViewCell: UITableViewCell {
         containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
+        cardBackground.layer.cornerRadius = 16
+        cardBackground.translatesAutoresizingMaskIntoConstraints = false
+        
+        iconContainer.layer.cornerRadius = 22
+        iconContainer.clipsToBounds = true
+        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = .white // Now using white for the icon
+        iconImageView.tintColor = .white
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Enhanced title label
         titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
-        titleLabel.numberOfLines = 2 // Allow two lines for longer titles
+        titleLabel.numberOfLines = 2
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        // Create the status tag button
         configureStatusTagButton()
         
         contentView.addSubview(containerView)
@@ -148,39 +139,28 @@ class TodaysLearningTableViewCell: UITableViewCell {
     
     private func setupColors(for index: Int) {
         // Define color schemes
-        let colorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05)),
-            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05))
+        let colors: [UIColor] = [
+            AppTheme.primary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15)
         ]
         
-        let iconColorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary, AppTheme.primary.adjustBrightness(by: 0.2)),
-            (AppTheme.secondary, AppTheme.secondary.adjustBrightness(by: 0.2))
+        let iconColors: [UIColor] = [
+            AppTheme.primary,
+            AppTheme.secondary
         ]
         
         // Ensure index is within bounds
-        let safeIndex = index % colorSchemes.count
+        let safeIndex = index % 2 // First color is primary, second is secondary
         
-        // Get colors
-        let colors = colorSchemes[safeIndex]
-        let iconColors = iconColorSchemes[safeIndex]
-        
-        // Set card background gradient
-        cardBackground.setGradient(startColor: colors.start,
-                                 endColor: colors.end,
-                                 startPoint: CGPoint(x: 0.0, y: 0.0),
-                                 endPoint: CGPoint(x: 1.0, y: 1.0))
-        
-        // Set icon container gradient
-        iconContainer.setGradient(startColor: iconColors.start,
-                                endColor: iconColors.end,
-                                startPoint: CGPoint(x: 0.0, y: 0.0),
-                                endPoint: CGPoint(x: 1.0, y: 1.0))
+        // Set card background and icon container color
+        cardBackground.backgroundColor = colors[safeIndex]
+        iconContainer.backgroundColor = iconColors[safeIndex]
         
         // Update title label color based on the theme
-        titleLabel.textColor = iconColors.start.withAlphaComponent(0.8)
+        titleLabel.textColor = .black
     }
-    
+
+
     // Animation for highlighted state
     override var isHighlighted: Bool {
         didSet {
@@ -244,15 +224,6 @@ class TodaysLearningTableViewCell: UITableViewCell {
         containerView.transform = .identity
         containerView.layer.shadowOpacity = 0.08
         
-        // Reset gradients
-        cardBackground.setGradient(startColor: .clear,
-                                 endColor: .clear,
-                                 startPoint: CGPoint(x: 0.0, y: 0.0),
-                                 endPoint: CGPoint(x: 1.0, y: 1.0))
-        
-        iconContainer.setGradient(startColor: .clear,
-                                endColor: .clear,
-                                startPoint: CGPoint(x: 0.0, y: 0.0),
-                                endPoint: CGPoint(x: 1.0, y: 1.0))
+       
     }
 }

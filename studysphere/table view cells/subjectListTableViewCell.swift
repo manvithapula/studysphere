@@ -21,26 +21,25 @@ class subjectListTableViewCell: UITableViewCell {
         return view
     }()
     
-    // Card background with gradient
-    private let cardBackground: GradientView = {
-        let view = GradientView()
+    
+    private let cardBackground: UIView = {
+        let view = UIView()
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    
-    // Icon container with animated gradient
-    private let iconContainer: GradientView = {
-        let view = GradientView()
+
+  
+    private let iconContainer: UIView = {
+        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 24
         view.clipsToBounds = true
         return view
     }()
     
-    // Icon image view
+
     private let iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -49,7 +48,7 @@ class subjectListTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    // Subject title label
+  
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .bold)
@@ -59,7 +58,7 @@ class subjectListTableViewCell: UITableViewCell {
     }()
     
   
-    // Topics count label
+    
     private let topicsCountLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .medium)
@@ -460,44 +459,39 @@ class subjectListTableViewCell: UITableViewCell {
         // Set the icon
         let iconName = result.iconName
         iconImageView.image = UIImage(systemName: iconName)
-        
-        // Optionally, you could add category to the UI if desired
-        // categoryLabel.text = result.category.rawValue
-        
-        // You could also adjust colors based on category if desired
-        // adjustColorsBasedOnCategory(result.category)
+    
     }
     
+  
     private func setupColors(for index: Int) {
-        // Create a color scheme based on index using only AppTheme.primary and AppTheme.secondary
-        let colorSchemes: [(start: UIColor, end: UIColor, pattern: UIColor)] = [
-            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05), AppTheme.primary.withAlphaComponent(0.1)),
-            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05), AppTheme.secondary.withAlphaComponent(0.1))
+      
+        let colorSchemes: [UIColor] = [
+            AppTheme.primary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15)
         ]
         
-        let iconColorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary, AppTheme.primary.adjustBrightness(by: 0.2)),
-            (AppTheme.secondary, AppTheme.secondary.adjustBrightness(by: 0.2))
+        let iconColorSchemes: [UIColor] = [
+            AppTheme.primary,
+            AppTheme.secondary
         ]
         
         let colorIndex = index % colorSchemes.count
-        let colors = colorSchemes[colorIndex]
-        let iconColors = iconColorSchemes[colorIndex]
+        let backgroundColor = colorIndex < colorSchemes.count ?
+                             colorSchemes[colorIndex] :
+                             UIColor.systemGray.withAlphaComponent(0.15)
         
-        // Set card background gradient
-        cardBackground.setGradient(startColor: colors.start,
-                                  endColor: colors.end,
-                                  startPoint: CGPoint(x: 0.0, y: 0.0),
-                                  endPoint: CGPoint(x: 1.0, y: 1.0))
+        let iconColor = colorIndex < iconColorSchemes.count ?
+                       iconColorSchemes[colorIndex] :
+                       UIColor.systemGray
         
-        // Set icon container gradient
-        iconContainer.setGradient(startColor: iconColors.start,
-                                 endColor: iconColors.end,
-                                 startPoint: CGPoint(x: 0.0, y: 0.0),
-                                 endPoint: CGPoint(x: 1.0, y: 1.0))
+   
+        cardBackground.backgroundColor = backgroundColor
         
-        // Set topics count label color
-        topicsCountLabel.textColor = iconColors.start.withAlphaComponent(0.8)
+      
+        iconContainer.backgroundColor = iconColor
+        
+     
+        topicsCountLabel.textColor = iconColor.withAlphaComponent(0.8)
     }
     
     // MARK: - Interaction
@@ -519,9 +513,8 @@ class subjectListTableViewCell: UITableViewCell {
     }
 }
 
-// MARK: - Helper Classes
 
-class GradientView: UIView {
+/*class GradientView: UIView {
     private var gradientLayer: CAGradientLayer?
     
     override class var layerClass: AnyClass {
@@ -535,14 +528,4 @@ class GradientView: UIView {
         gradientLayer?.endPoint = endPoint
         self.gradientLayer = gradientLayer
     }
-}
-
-// MARK: - Extensions
-
-extension UIColor {
-    func adjustBrightness(by percentage: CGFloat) -> UIColor {
-        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
-        return UIColor(hue: h, saturation: s, brightness: b * (1 + percentage), alpha: a)
-    }
-}
+}*/

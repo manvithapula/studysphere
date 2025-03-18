@@ -85,7 +85,7 @@ class ProgressViewController: UIViewController {
         let label = UILabel()
         label.text = "Your Badges"
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        label.textColor = .darkGray
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -211,9 +211,9 @@ class ProgressViewController: UIViewController {
             let nextLevelProgress = Float(totalItems % itemsPerLevel) / Float(itemsPerLevel)
             
             let statsViews = [
-                createStatView(icon: "book.fill", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
-                createStatView(icon: "doc.text.fill", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
-                createStatView(icon: "text.badge.checkmark", title: "Summarizers Completed", value: "\(completedSummary.count)"),
+                createStatView(icon: "rectangle.on.rectangle.fill", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
+                createStatView(icon: "doc.questionmark", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
+                createStatView(icon: "doc.text.fill", title: "Summaries Completed", value: "\(completedSummary.count)"),
                 
                 createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
             ]
@@ -360,8 +360,8 @@ class ProgressViewController: UIViewController {
                     
                     // Calculate badge size and spacing
                     let containerWidth = UIScreen.main.bounds.width - 70 // Accounting for padding
-                    let badgeSize: CGFloat = containerWidth / 3 - 20
-                    let spacing: CGFloat = 10
+                    let badgeSize: CGFloat = containerWidth / 3 - 10
+                    let spacing: CGFloat = 16
                     
                     // Calculate user's current level
                     guard let progress = studyProgress else { return }
@@ -442,7 +442,6 @@ class ProgressViewController: UIViewController {
                     
                     // Lock icon for locked badges
                     let lockView = UIImageView()
-                    lockView.image = UIImage(systemName: "lock.fill")
                     lockView.tintColor = UIColor.gray.withAlphaComponent(0.7)
                     lockView.contentMode = .scaleAspectFit
                     lockView.translatesAutoresizingMaskIntoConstraints = false
