@@ -119,7 +119,7 @@ class DocumentsViewController: UIViewController {
             group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
             
             let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 12
+            section.interGroupSpacing = 8
             
             return UICollectionViewCompositionalLayout(section: section)
         }

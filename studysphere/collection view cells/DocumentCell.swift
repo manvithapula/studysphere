@@ -16,20 +16,19 @@ class DocumentCell: UICollectionViewCell {
         return view
     }()
     
-    // Card background with gradient
-    private let cardBackground: GradientView = {
-        let view = GradientView()
+    private let cardBackground: UIView = {
+        let view = UIView()
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    // Icon container with animated gradient
-    private let iconContainer: GradientView = {
-        let view = GradientView()
+    private let iconContainer: UIView = {
+        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 24
+        view.backgroundColor = AppTheme.primary
         view.clipsToBounds = true
         return view
     }()
@@ -37,6 +36,7 @@ class DocumentCell: UICollectionViewCell {
     private let documentImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
         imageView.tintColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -54,7 +54,6 @@ class DocumentCell: UICollectionViewCell {
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .medium)
-        label.textColor = AppTheme.primary.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -69,7 +68,7 @@ class DocumentCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,7 +79,7 @@ class DocumentCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup
+    // MARK: - Setup UI
     private func setupUI() {
         backgroundColor = .clear
         contentView.addSubview(containerView)
@@ -96,7 +95,6 @@ class DocumentCell: UICollectionViewCell {
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 110),
             
             cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
             cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -117,32 +115,29 @@ class DocumentCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             
-            fileTypeLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 12),
-            fileTypeLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -12),
-            fileTypeLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 32),
-            fileTypeLabel.heightAnchor.constraint(equalToConstant: 20),
-            
             dateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             dateLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             dateLabel.bottomAnchor.constraint(lessThanOrEqualTo: cardBackground.bottomAnchor, constant: -16)
         ])
     }
-    
-    // MARK: - Configuration
+
+    // MARK: - Configure Cell
     func configure(with document: FileMetadata, index: Int) {
         titleLabel.text = document.title
         
-        // Format date
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateLabel.text = dateFormatter.string(from: document.createdAt.dateValue())
         
-        // Set document type icon and file type label based on extension
-        let fileExtension = "pdf"
-        setupDocumentType(fileExtension: fileExtension)
-        setupColors(for: index)
+        let color = index % 2 == 0 ? AppTheme.primary : AppTheme.secondary
+        iconContainer.backgroundColor = color
+        cardBackground.backgroundColor = color.withAlphaComponent(0.1)
+        dateLabel.textColor = color.withAlphaComponent(0.8)
+        fileTypeLabel.backgroundColor = color
     }
+
+ 
     
     private func setupDocumentType(fileExtension: String) {
         switch fileExtension {
@@ -177,17 +172,10 @@ class DocumentCell: UICollectionViewCell {
         let colors = colorSchemes[colorIndex]
         let iconColors = iconColorSchemes[colorIndex]
         
-        // Set card background gradient
-        cardBackground.setGradient(startColor: colors.start,
-                                 endColor: colors.end,
-                                 startPoint: CGPoint(x: 0.0, y: 0.0),
-                                 endPoint: CGPoint(x: 1.0, y: 1.0))
         
-        // Set icon container gradient
-        iconContainer.setGradient(startColor: iconColors.start,
-                                endColor: iconColors.end,
-                                startPoint: CGPoint(x: 0.0, y: 0.0),
-                                endPoint: CGPoint(x: 1.0, y: 1.0))
+        // Set icon container background color
+        iconContainer.backgroundColor = iconColors.start
+
         
         // Update labels colors
         dateLabel.textColor = iconColors.start.withAlphaComponent(0.8)
@@ -250,14 +238,9 @@ class DocumentCell: UICollectionViewCell {
             fileTypeLabel.backgroundColor = nil
             containerView.transform = .identity
             containerView.layer.shadowOpacity = 0.08
-            cardBackground.setGradient(startColor: .clear,
-                                     endColor: .clear,
-                                     startPoint: CGPoint(x: 0.0, y: 0.0),
-                                     endPoint: CGPoint(x: 1.0, y: 1.0))
             
-            iconContainer.setGradient(startColor: .clear,
-                                    endColor: .clear,
-                                    startPoint: CGPoint(x: 0.0, y: 0.0),
-                                    endPoint: CGPoint(x: 1.0, y: 1.0))
+            
+   
+
         }
     }
