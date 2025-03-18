@@ -3,8 +3,8 @@ import UIKit
 class ARCollectionViewCell: UICollectionViewCell {
     
     // MARK: - UI Elements
-    private let containerView: GradientView = {
-        let view = GradientView()
+    private let containerView: UIView = {
+        let view = UIView()
         view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -93,51 +93,49 @@ class ARCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Configuration
     func configure(topic: Topics, index: Int) {
-           titleLabel.text = topic.title
-           subtitleLabel.text = topic.subtitle
-           subjectTag.text = "Loading..." // Temporary until data is fetched
+        titleLabel.text = topic.title
+        subtitleLabel.text = topic.subtitle
+        subjectTag.text = "Loading..." // Temporary until data is fetched
 
-           // Apply gradient based on index
-           let colorSchemes: [(start: UIColor, end: UIColor)] = [
-               (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05)),
-               (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05))
-           ]
-           
-           let colorIndex = index % colorSchemes.count
-           let colors = colorSchemes[colorIndex]
-           
-           containerView.setGradient(
-               startColor: colors.start,
-               endColor: colors.end,
-               startPoint: CGPoint(x: 0.0, y: 0.0),
-               endPoint: CGPoint(x: 1.0, y: 1.0)
-           )
-           
-           subtitleLabel.textColor = colors.start.withAlphaComponent(0.8)
+        // Define background colors based on the index
+        let backgroundColors: [UIColor] = [
+            AppTheme.primary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15),
+            UIColor.systemGray.withAlphaComponent(0.15) // Fallback color
+        ]
+        
+        let colorIndex = index % backgroundColors.count
+        let backgroundColor = backgroundColors[colorIndex]
+        
+        // Apply solid background color
+        containerView.backgroundColor = backgroundColor
+        
+        // Set subtitle text color to match theme
+        subtitleLabel.textColor = backgroundColors[colorIndex].withAlphaComponent(0.8)
 
-           // Fetch subject asynchronously
-           fetchSubject(topic: topic)
-       }
-       
-       private func fetchSubject(topic: Topics) {
-           Task {
-               do {
-                   let subjects = try await subjectDb.findAll(where: ["id": topic.subject])
-                   if let subject = subjects.first {
-                       await MainActor.run {
-                           self.subjectTag.text = subject.name
-                       }
-                   }
-               } catch {
-                   print("Error fetching subject: \(error)")
-               }
-           }
-       }
-       
-       override func prepareForReuse() {
-           super.prepareForReuse()
-           titleLabel.text = nil
-           subtitleLabel.text = nil
-           subjectTag.text = "Loading..."
-       }
+        // Fetch subject asynchronously
+        fetchSubject(topic: topic)
+    }
+    
+    private func fetchSubject(topic: Topics) {
+        Task {
+            do {
+                let subjects = try await subjectDb.findAll(where: ["id": topic.subject])
+                if let subject = subjects.first {
+                    await MainActor.run {
+                        self.subjectTag.text = subject.name
+                    }
+                }
+            } catch {
+                print("Error fetching subject: \(error)")
+            }
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLabel.text = nil
+        subtitleLabel.text = nil
+        subjectTag.text = "Loading..."
+    }
 }

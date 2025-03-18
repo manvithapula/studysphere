@@ -130,26 +130,27 @@ class DocumentCell: UICollectionViewCell {
         dateFormatter.dateStyle = .medium
         dateLabel.text = dateFormatter.string(from: document.createdAt.dateValue())
         
-        let color = index % 2 == 0 ? AppTheme.primary : AppTheme.secondary
-        iconContainer.backgroundColor = color
-        cardBackground.backgroundColor = color.withAlphaComponent(0.1)
-        dateLabel.textColor = color.withAlphaComponent(0.8)
-        fileTypeLabel.backgroundColor = color
+        setupColors(for: index)
+        
+        // Assuming file extension property exists on FileMetadata
+        if let fileExtension = document.title.components(separatedBy: ".").last {
+            setupDocumentType(fileExtension: fileExtension)
+        } else {
+            setupDocumentType(fileExtension: "")
+        }
     }
 
- 
-    
     private func setupDocumentType(fileExtension: String) {
-        switch fileExtension {
+        switch fileExtension.lowercased() {
         case "pdf":
-            documentImageView.image = UIImage(systemName: "doc.fill")
+            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
             fileTypeLabel.text = "PDF"
         case "doc", "docx":
-            documentImageView.image = UIImage(systemName: "doc.fill")
+            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
             fileTypeLabel.text = "DOC"
         default:
-            documentImageView.image = UIImage(systemName: "doc.fill")
-            fileTypeLabel.text = fileExtension.uppercased()
+            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
+            fileTypeLabel.text = fileExtension.isEmpty ? "DOC" : fileExtension.uppercased()
         }
         
         fileTypeLabel.sizeToFit()
@@ -158,89 +159,78 @@ class DocumentCell: UICollectionViewCell {
     
     private func setupColors(for index: Int) {
         // Create a color scheme based on index using AppTheme colors
-        let colorSchemes: [(start: UIColor, end: UIColor, pattern: UIColor)] = [
-            (AppTheme.primary.withAlphaComponent(0.15), AppTheme.primary.withAlphaComponent(0.05), AppTheme.primary.withAlphaComponent(0.1)),
-            (AppTheme.secondary.withAlphaComponent(0.15), AppTheme.secondary.withAlphaComponent(0.05), AppTheme.secondary.withAlphaComponent(0.1))
-        ]
+        let mainColor: UIColor
+        let backgroundAlpha: CGFloat = 0.1
         
-        let iconColorSchemes: [(start: UIColor, end: UIColor)] = [
-            (AppTheme.primary, AppTheme.primary.adjustBrightness(by: 0.2)),
-            (AppTheme.secondary, AppTheme.secondary.adjustBrightness(by: 0.2))
-        ]
+        // Determine which theme color to use based on index
+        if index % 2 == 0 {
+            mainColor = AppTheme.primary
+        } else {
+            mainColor = AppTheme.secondary
+        }
         
-        let colorIndex = index % colorSchemes.count
-        let colors = colorSchemes[colorIndex]
-        let iconColors = iconColorSchemes[colorIndex]
-        
-        
-        // Set icon container background color
-        iconContainer.backgroundColor = iconColors.start
-
-        
-        // Update labels colors
-        dateLabel.textColor = iconColors.start.withAlphaComponent(0.8)
-        fileTypeLabel.backgroundColor = iconColors.start
+        // Apply solid colors
+        iconContainer.backgroundColor = mainColor
+        cardBackground.backgroundColor = mainColor.withAlphaComponent(backgroundAlpha)
+        dateLabel.textColor = mainColor.withAlphaComponent(0.8)
+        fileTypeLabel.backgroundColor = mainColor
     }
     
     override var isHighlighted: Bool {
-            didSet {
-                animateHighlightState()
-            }
-        }
-        
-        private func animateHighlightState() {
-            let transform: CGAffineTransform = isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
-            let shadowOpacity: Float = isHighlighted ? 0.12 : 0.08
-            
-            if #available(iOS 17.0, *) {
-                containerView.layer.shadowOpacity = shadowOpacity
-                UIView.animate(.bouncy) {
-                    self.containerView.transform = transform
-                }
-            } else {
-                UIView.animate(withDuration: 0.2,
-                             delay: 0,
-                             options: [.allowUserInteraction, .beginFromCurrentState],
-                             animations: {
-                    self.containerView.transform = transform
-                    self.containerView.layer.shadowOpacity = shadowOpacity
-                })
-            }
-        }
-        
-        // Update trait collection handling
-        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
-            
-            // Check for specific trait changes
-            if #available(iOS 13.0, *) {
-                if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-                    updateAppearance()
-                }
-            }
-        }
-        
-        private func updateAppearance() {
-            
-            containerView.layer.shadowColor = UIColor.black.cgColor
-           
-            if let document = (self.titleLabel.text).map({ StudyDocument(id: "", title: $0, dateAdded: Date(), fileURL: URL(fileURLWithPath: "")) }) {
-                let index = abs(document.title.hashValue) % 2
-                setupColors(for: index)
-            }
-        }
-        override func prepareForReuse() {
-            super.prepareForReuse()
-            titleLabel.text = nil
-            dateLabel.text = nil
-            documentImageView.image = nil
-            fileTypeLabel.text = nil
-            fileTypeLabel.backgroundColor = nil
-            containerView.transform = .identity
-            containerView.layer.shadowOpacity = 0.08
-            
-            
-   
-
+        didSet {
+            animateHighlightState()
         }
     }
+        
+    private func animateHighlightState() {
+        let transform: CGAffineTransform = isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+        let shadowOpacity: Float = isHighlighted ? 0.12 : 0.08
+        
+        if #available(iOS 17.0, *) {
+            containerView.layer.shadowOpacity = shadowOpacity
+            UIView.animate(.bouncy) {
+                self.containerView.transform = transform
+            }
+        } else {
+            UIView.animate(withDuration: 0.2,
+                         delay: 0,
+                         options: [.allowUserInteraction, .beginFromCurrentState],
+                         animations: {
+                self.containerView.transform = transform
+                self.containerView.layer.shadowOpacity = shadowOpacity
+            })
+        }
+    }
+        
+    // Update trait collection handling
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        // Check for specific trait changes
+        if #available(iOS 13.0, *) {
+            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+                updateAppearance()
+            }
+        }
+    }
+        
+    private func updateAppearance() {
+        containerView.layer.shadowColor = UIColor.black.cgColor
+       
+        if let title = self.titleLabel.text {
+            let index = abs(title.hashValue) % 2
+            setupColors(for: index)
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLabel.text = nil
+        dateLabel.text = nil
+        documentImageView.image = nil
+        fileTypeLabel.text = nil
+        fileTypeLabel.backgroundColor = nil
+        containerView.transform = .identity
+        containerView.layer.shadowOpacity = 0.08
+    }
+}

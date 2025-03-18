@@ -121,7 +121,7 @@ class OnboardingViewController: UIViewController {
     
     private let summarizerTitle: UILabel = {
         let label = UILabel()
-        label.text = "Summarizer"
+        label.text = "Summariser"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -154,7 +154,7 @@ class OnboardingViewController: UIViewController {
     
     private let DocumnetTitle: UILabel = {
         let label = UILabel()
-        label.text = "Document Organizer"
+        label.text = "Document Organiser"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
