@@ -44,7 +44,7 @@ class DocumentCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .bold)
+        label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .darkText
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
