@@ -18,7 +18,6 @@ class QuestionResultViewController: UIViewController {
     private let percentageCardView = UIView()
     private let percentageLabel = UILabel()
     private let progressMessageLabel = UILabel()
-    private let starImageView = UIImageView()
     private let statsCardView = UIView()
     private let learnedLabel = UILabel()
     private let reviewLabel = UILabel()
@@ -60,7 +59,7 @@ class QuestionResultViewController: UIViewController {
         
         percentageCardView.addSubview(percentageLabel)
         percentageCardView.addSubview(progressMessageLabel)
-        percentageCardView.addSubview(starImageView)
+       
         
         statsCardView.addSubview(learnedLabel)
         statsCardView.addSubview(reviewLabel)
@@ -96,7 +95,7 @@ class QuestionResultViewController: UIViewController {
         // Trophy image
         trophyImageView.translatesAutoresizingMaskIntoConstraints = false
         trophyImageView.contentMode = .scaleAspectFit
-        trophyImageView.image = UIImage(named: "trophy") // Use asset image
+        trophyImageView.image = UIImage(named: "trophy")
         trophyImageView.tintColor = .systemYellow
         
         // Score card view - with improved styling
@@ -111,24 +110,23 @@ class QuestionResultViewController: UIViewController {
         // You got label
         youGot.translatesAutoresizingMaskIntoConstraints = false
         youGot.text = "You got"
-        youGot.textColor = .black // Changed to black for visibility
+        youGot.textColor = .black
         youGot.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         youGot.textAlignment = .center
         
         // Score label
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
-        scoreLabel.textColor = .black // Changed to black for visibility
+        scoreLabel.textColor = .black
         scoreLabel.font = UIFont.systemFont(ofSize: 72, weight: .bold)
         scoreLabel.textAlignment = .center
         
-        // Encouragement label (replacing "That's better")
         encouragementLabel.translatesAutoresizingMaskIntoConstraints = false
         encouragementLabel.text = "Let's try again! "
-        encouragementLabel.textColor = .black // Changed to black for visibility
+        encouragementLabel.textColor = .black
         encouragementLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         encouragementLabel.textAlignment = .center
         
-        // Percentage card view - with improved styling
+
         percentageCardView.translatesAutoresizingMaskIntoConstraints = false
         setupCardGradient(for: percentageCardView)
         percentageCardView.layer.cornerRadius = 30
@@ -139,28 +137,18 @@ class QuestionResultViewController: UIViewController {
         
         // Percentage label
         percentageLabel.translatesAutoresizingMaskIntoConstraints = false
-        percentageLabel.textColor = .black // Changed to black for visibility
+        percentageLabel.textColor = .black
         percentageLabel.font = UIFont.systemFont(ofSize: 38, weight: .bold)
         percentageLabel.textAlignment = .center
-        
-        // Progress message label (replacing comparison)
+       
         progressMessageLabel.translatesAutoresizingMaskIntoConstraints = false
         progressMessageLabel.text = "Every card mastered is progress! "
-        progressMessageLabel.textColor = .black // Changed to black for visibility
+        progressMessageLabel.textColor = .black
         progressMessageLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         progressMessageLabel.textAlignment = .center
         progressMessageLabel.numberOfLines = 0
         
-        // Star image view
-        starImageView.translatesAutoresizingMaskIntoConstraints = false
-        starImageView.contentMode = .scaleAspectFit
-        if #available(iOS 13.0, *) {
-            let starConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular)
-            starImageView.image = UIImage(systemName: "star.fill", withConfiguration: starConfig)
-        } else {
-            starImageView.image = UIImage(named: "star")
-        }
-        starImageView.tintColor = .systemYellow
+       
         
         // Stats card view - with improved styling
         statsCardView.translatesAutoresizingMaskIntoConstraints = false
@@ -311,11 +299,7 @@ class QuestionResultViewController: UIViewController {
             percentageLabel.topAnchor.constraint(equalTo: percentageCardView.topAnchor, constant: 20),
             percentageLabel.centerXAnchor.constraint(equalTo: percentageCardView.centerXAnchor),
             
-            // Star image view
-            starImageView.centerYAnchor.constraint(equalTo: percentageLabel.centerYAnchor),
-            starImageView.leadingAnchor.constraint(equalTo: percentageLabel.trailingAnchor, constant: 8),
-            starImageView.heightAnchor.constraint(equalToConstant: 30),
-            starImageView.widthAnchor.constraint(equalToConstant: 30),
+          
             
             // Progress message label
             progressMessageLabel.topAnchor.constraint(equalTo: percentageLabel.bottomAnchor, constant: 8),
@@ -395,14 +379,13 @@ class QuestionResultViewController: UIViewController {
                 encouragementLabel.text = "Let's try again! "
             }
             
-            // Show/hide star based on performance
-            starImageView.isHidden = percentage < 0.7
+         
         } else {
             percentageLabel.text = "0%"
             progressMessageLabel.text = "Start mastering more Questions!"
             learnedLabel.text = "Questions mastered: 0"
             reviewLabel.text = "Questions to review: 0"
-            starImageView.isHidden = true
+            
         }
     }
     
@@ -457,72 +440,49 @@ class QuestionResultViewController: UIViewController {
     }
     
     private func playConfettiAnimation() {
-        // Create more subtle confetti using CAEmitterLayer
+        guard let score = score else { return }
+        let percentage = Float(score.score) / Float(score.total) * 100
+        guard percentage >= 85 else { return }
+    
         let emitterLayer = CAEmitterLayer()
-        emitterLayer.emitterPosition = CGPoint(x: view.bounds.width / 2, y: -20)
+        emitterLayer.emitterPosition = CGPoint(x: view.bounds.width / 2, y: -50)
         emitterLayer.emitterShape = .line
-        emitterLayer.emitterSize = CGSize(width: view.bounds.width * 0.8, height: 1)
+        emitterLayer.emitterSize = CGSize(width: view.bounds.width, height: 1)
         
-        let colors: [UIColor] = [
-            AppTheme.primary.withAlphaComponent(0.7),
-            AppTheme.secondary.withAlphaComponent(0.7),
-            .systemYellow.withAlphaComponent(0.7),
-            .systemPink.withAlphaComponent(0.7),
-            .systemGreen.withAlphaComponent(0.7)
-        ]
-        
-        var cells: [CAEmitterCell] = []
+      
+        var cells = [CAEmitterCell]()
+        let colors = [UIColor.red, UIColor.green, UIColor.blue, UIColor.yellow, UIColor.purple, UIColor.orange]
         
         for color in colors {
             let cell = CAEmitterCell()
-            cell.birthRate = 2 // Reduced from 4
-            cell.lifetime = 6  // Reduced from 8
-            cell.velocity = 100 // Reduced from 150
-            cell.velocityRange = 30 // Reduced from 50
+            cell.birthRate = 5
+            cell.lifetime = 8
+            cell.velocity = 150
+            cell.velocityRange = 100
             cell.emissionLongitude = .pi
-            cell.emissionRange = .pi / 5
-            cell.spin = 2.0 // Reduced from 3.5
-            cell.spinRange = 0.5 // Reduced from 1
-            cell.scaleRange = 0.2 // Reduced from 0.25
-            cell.scaleSpeed = -0.05 // Reduced from -0.1
-            cell.contents = createConfettiShape(color: color)?.cgImage
+            cell.emissionRange = .pi / 4
+            cell.spin = 3.5
+            cell.spinRange = 1
+            cell.scaleRange = 0.25
+            cell.scaleSpeed = -0.1
+       
+            let size = CGSize(width: 10, height: 5)
+            UIGraphicsBeginImageContext(size)
+            let context = UIGraphicsGetCurrentContext()!
+            context.setFillColor(color.cgColor)
+            context.fill(CGRect(origin: .zero, size: size))
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            cell.contents = image?.cgImage
             cells.append(cell)
         }
         
         emitterLayer.emitterCells = cells
         view.layer.addSublayer(emitterLayer)
-        
-        // Clean up after animation finishes - shorter duration
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { // Reduced from 5
-            emitterLayer.birthRate = 0
-        }
-    }
 
-    private func createConfettiShape(color: UIColor) -> UIImage? {
-        let size = CGSize(width: 8, height: 8) // Smaller confetti (was 12x12)
-        let renderer = UIGraphicsImageRenderer(size: size)
-        
-        return renderer.image { ctx in
-            color.setFill()
-            
-            // Create different shapes
-            let shapeName = arc4random_uniform(3)
-            
-            if shapeName == 0 {
-                // Rectangle
-                ctx.fill(CGRect(origin: .zero, size: size))
-            } else if shapeName == 1 {
-                // Circle
-                ctx.cgContext.fillEllipse(in: CGRect(origin: .zero, size: size))
-            } else {
-                // Triangle
-                let path = UIBezierPath()
-                path.move(to: CGPoint(x: size.width/2, y: 0))
-                path.addLine(to: CGPoint(x: size.width, y: size.height))
-                path.addLine(to: CGPoint(x: 0, y: size.height))
-                path.close()
-                path.fill()
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            emitterLayer.birthRate = 0
         }
     }
     // MARK: - Action Methods
