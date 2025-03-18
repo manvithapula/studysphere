@@ -183,7 +183,7 @@ class StudyTechniquesViewController: UIViewController {
     func createSR(title:String) {
         var newTopic = Topics(
             id: "", title: title, subject: document.subjectId,
-            type: .flashcards, subtitle: "6 more to go", createdAt: Timestamp(),
+            type: .flashcards, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text: "Generating flashcards...")
@@ -212,7 +212,7 @@ class StudyTechniquesViewController: UIViewController {
     func createAR(title:String) {
         var newTopic = Topics(
             id: "", title: title, subject: document.subjectId,
-            type: .quizzes, subtitle: "6 more to go", createdAt: Timestamp(),
+            type: .quizzes, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text: "Generating Quiz...")

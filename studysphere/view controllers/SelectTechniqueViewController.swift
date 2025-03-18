@@ -58,7 +58,7 @@ class SelectTechniqueViewController: UIViewController {
         } else {
             print("API Key not found!")
         }
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 revision remaining",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text:"Generating flashcards...")
         Task{
@@ -123,7 +123,7 @@ class SelectTechniqueViewController: UIViewController {
         } else {
             print("API Key not found!")
         }
-        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,subtitle: "6 more to go",createdAt: Timestamp(),updatedAt: Timestamp())
+        var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,subtitle: "6 revision remaining",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text:"Generating Quiz...")
         Task{

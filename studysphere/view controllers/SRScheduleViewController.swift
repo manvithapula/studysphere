@@ -139,8 +139,8 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
                 topic?.subtitle = "All flashcards reviewed"
                 topic?.completed = Timestamp()
             } else {
-                subtitleLabel.text = "\(countDiff) sets remaining"
-                topic?.subtitle = "\(countDiff) sets remaining"
+                subtitleLabel.text = "\(countDiff) revision remaining"
+                topic?.subtitle = "\(countDiff) revision remaining"
             }
             let allScores = try await scoreDb.findAll(where: ["topicId": topic!.id])
             if allScores.count > 0 {

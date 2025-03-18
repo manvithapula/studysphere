@@ -706,7 +706,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
     func createSR(_ sender: Any) {
         var newTopic = Topics(
             id: "", title: Topic.text!, subject: selectedSubject!.id,
-            type: .flashcards, subtitle: "6 more to go", createdAt: Timestamp(),
+            type: .flashcards, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text: "Generating flashcards...")
@@ -735,7 +735,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
     func createAR(_ sender: Any) {
         var newTopic = Topics(
             id: "", title: Topic.text!, subject: selectedSubject!.id,
-            type: .quizzes, subtitle: "6 more to go", createdAt: Timestamp(),
+            type: .quizzes, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text: "Generating Quiz...")
