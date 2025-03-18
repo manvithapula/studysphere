@@ -41,6 +41,17 @@ class DocumentCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    let previewButton:UIButton = {
+        let startButton = UIButton()
+        startButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
+        startButton.tintColor = .white
+        startButton.setTitleColor(.white, for: .normal)
+        startButton.backgroundColor = AppTheme.primary
+        startButton.layer.cornerRadius = 16
+        startButton.translatesAutoresizingMaskIntoConstraints = false
+        startButton.isUserInteractionEnabled = true
+        return startButton
+    }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -88,7 +99,7 @@ class DocumentCell: UICollectionViewCell {
         iconContainer.addSubview(documentImageView)
         cardBackground.addSubview(titleLabel)
         cardBackground.addSubview(dateLabel)
-        cardBackground.addSubview(fileTypeLabel)
+        cardBackground.addSubview(previewButton)
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -114,6 +125,11 @@ class DocumentCell: UICollectionViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            
+            previewButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,constant: 8),
+            previewButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            previewButton.widthAnchor.constraint(equalToConstant:32),
+            previewButton.heightAnchor.constraint(equalToConstant: 32),
             
             dateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
@@ -181,6 +197,8 @@ class DocumentCell: UICollectionViewCell {
             animateHighlightState()
         }
     }
+
+    
         
     private func animateHighlightState() {
         let transform: CGAffineTransform = isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity

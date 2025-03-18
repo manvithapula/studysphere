@@ -1,6 +1,7 @@
 import UIKit
 import FirebaseFirestore
 import UniformTypeIdentifiers
+import PDFKit
 
 class DocumentsViewController: UIViewController {
     // MARK: - Properties
@@ -248,8 +249,113 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
             
             let document = filteredDocuments[indexPath.item]
             cell.configure(with: document, index: indexPath.item)
+            cell.previewButton.tag = indexPath.row
+            cell.previewButton.addTarget(self, action: #selector(previewPDFTapped(_:)), for: .touchUpInside)
+
             return cell
         }
+    }
+    @objc func previewPDFTapped(_ sender: UIButton) {
+        // Get the document URL from the tag or from the cell
+        let indexPath = IndexPath(row: sender.tag, section: 0)
+        let document = documents[indexPath.row]
+        
+        
+        displayPDF(at: document)
+
+    }
+    func displayPDF(at document: FileMetadata) {
+        let fileName = document.id + ".pdf"
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let localFileURL = documentsDirectory.appendingPathComponent(fileName)
+        
+        func showPDF(at url: URL) {
+            let pdfView = PDFView()
+            pdfView.autoScales = true
+            
+            if let pdfDocument = PDFDocument(url: url) {
+                pdfView.document = pdfDocument
+            } else {
+                print("Failed to load PDF document")
+                return
+            }
+            
+            let pdfViewController = UIViewController()
+            
+            let navigationController = UINavigationController(rootViewController: pdfViewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            
+            pdfViewController.title = document.title
+            
+            let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(dismissPDFView))
+            pdfViewController.navigationItem.leftBarButtonItem = backButton
+            
+            pdfView.translatesAutoresizingMaskIntoConstraints = false
+            pdfViewController.view.addSubview(pdfView)
+            
+            NSLayoutConstraint.activate([
+                pdfView.topAnchor.constraint(equalTo: pdfViewController.view.topAnchor),
+                pdfView.bottomAnchor.constraint(equalTo: pdfViewController.view.bottomAnchor),
+                pdfView.leadingAnchor.constraint(equalTo: pdfViewController.view.leadingAnchor),
+                pdfView.trailingAnchor.constraint(equalTo: pdfViewController.view.trailingAnchor)
+            ])
+            
+            pdfViewController.view.backgroundColor = .white
+            
+            present(navigationController, animated: true)
+        }
+        
+        if FileManager.default.fileExists(atPath: localFileURL.path) {
+            print("PDF found in cache, loading from: \(localFileURL.path)")
+            showPDF(at: localFileURL)
+        } else {
+            print("PDF not in cache, downloading...")
+            
+            guard let remoteURL = URL(string: document.documentUrl) else {
+                print("Invalid document URL")
+                return
+            }
+            
+            let loadingAlert = UIAlertController(title: "Loading", message: "Downloading document...", preferredStyle: .alert)
+            present(loadingAlert, animated: true)
+            
+            let task = URLSession.shared.downloadTask(with: remoteURL) { (tempLocalUrl, response, error) in
+                DispatchQueue.main.async {
+                    loadingAlert.dismiss(animated: true)
+                }
+                
+                if let error = error {
+                    print("Download error: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      httpResponse.statusCode == 200,
+                      let tempLocalUrl = tempLocalUrl else {
+                    print("Invalid response or missing temporary URL")
+                    return
+                }
+                
+                do {
+                    try FileManager.default.createDirectory(at: documentsDirectory, withIntermediateDirectories: true)
+                    
+                    try FileManager.default.copyItem(at: tempLocalUrl, to: localFileURL)
+                    print("PDF saved to cache: \(localFileURL.path)")
+                    
+                    DispatchQueue.main.async {
+                        showPDF(at: localFileURL)
+                    }
+                } catch {
+                    print("Error saving PDF to cache: \(error.localizedDescription)")
+                }
+            }
+            
+            task.resume()
+        }
+    }
+
+    @objc func dismissPDFView() {
+        dismiss(animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
