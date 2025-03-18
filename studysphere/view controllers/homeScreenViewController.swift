@@ -550,7 +550,7 @@ extension homeScreenViewController {
         iconContainer.clipsToBounds = true
         
         // Get appropriate icon using SubjectIconService
-        let iconService = subjectListTableViewCell.SubjectIconService()
+        let iconService = SubjectIconService()
         let iconResult = iconService.getIconAndCategory(for: subject.name)
         
         // Icon image view

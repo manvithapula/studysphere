@@ -149,28 +149,19 @@ class DocumentCell: UICollectionViewCell {
         setupColors(for: index)
         
         // Assuming file extension property exists on FileMetadata
-        if let fileExtension = document.title.components(separatedBy: ".").last {
-            setupDocumentType(fileExtension: fileExtension)
-        } else {
-            setupDocumentType(fileExtension: "")
-        }
+        setupDocumentType(fileExtension: document.subjectId)
+
     }
 
     private func setupDocumentType(fileExtension: String) {
-        switch fileExtension.lowercased() {
-        case "pdf":
-            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
-            fileTypeLabel.text = "PDF"
-        case "doc", "docx":
-            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
-            fileTypeLabel.text = "DOC"
-        default:
-            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
-            fileTypeLabel.text = fileExtension.isEmpty ? "DOC" : fileExtension.uppercased()
+        Task{
+            let allsubjects = try await subjectDb.findAll(where: ["id":fileExtension])
+            if let subject = allsubjects.first{
+                documentImageView.image = UIImage(systemName: SubjectIconService.shared.getIconName(for:subject.name ))?.withRenderingMode(.alwaysTemplate)
+            }
+            fileTypeLabel.sizeToFit()
+            fileTypeLabel.layoutMargins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         }
-        
-        fileTypeLabel.sizeToFit()
-        fileTypeLabel.layoutMargins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
     }
     
     private func setupColors(for index: Int) {
