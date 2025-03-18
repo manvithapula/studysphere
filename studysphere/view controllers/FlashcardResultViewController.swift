@@ -20,7 +20,6 @@ class FlashcardResultViewController: UIViewController {
     private let percentageCardView = UIView()
     private let percentageL = UILabel()
     private let progressMessageLabel = UILabel()
-    private let starImageView = UIImageView()
     private let statsCardView = UIView()
     private let memorisedL = UILabel()
     private let needPracticeL = UILabel()
@@ -62,7 +61,7 @@ class FlashcardResultViewController: UIViewController {
         
         percentageCardView.addSubview(percentageL)
         percentageCardView.addSubview(progressMessageLabel)
-        percentageCardView.addSubview(starImageView)
+      
         
         statsCardView.addSubview(memorisedL)
         statsCardView.addSubview(needPracticeL)
@@ -153,17 +152,7 @@ class FlashcardResultViewController: UIViewController {
         progressMessageLabel.textAlignment = .center
         progressMessageLabel.numberOfLines = 0
         
-        // Star image view
-        starImageView.translatesAutoresizingMaskIntoConstraints = false
-        starImageView.contentMode = .scaleAspectFit
-        if #available(iOS 13.0, *) {
-            let starConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular)
-            starImageView.image = UIImage(systemName: "star.fill", withConfiguration: starConfig)
-        } else {
-            starImageView.image = UIImage(named: "star")
-        }
-        starImageView.tintColor = .systemYellow
-        
+      
         // Stats card view - with improved styling
         statsCardView.translatesAutoresizingMaskIntoConstraints = false
         setupCardGradient(for: statsCardView)
@@ -312,12 +301,7 @@ class FlashcardResultViewController: UIViewController {
             // Percentage label
             percentageL.topAnchor.constraint(equalTo: percentageCardView.topAnchor, constant: 20),
             percentageL.centerXAnchor.constraint(equalTo: percentageCardView.centerXAnchor),
-            
-            // Star image view
-            starImageView.centerYAnchor.constraint(equalTo: percentageL.centerYAnchor),
-            starImageView.leadingAnchor.constraint(equalTo: percentageL.trailingAnchor, constant: 8),
-            starImageView.heightAnchor.constraint(equalToConstant: 30),
-            starImageView.widthAnchor.constraint(equalToConstant: 30),
+        
             
             // Progress message label
             progressMessageLabel.topAnchor.constraint(equalTo: percentageL.bottomAnchor, constant: 8),
@@ -390,21 +374,20 @@ class FlashcardResultViewController: UIViewController {
                 if percentage >= 0.8 {
                     encouragementLabel.text = "Amazing recall!"
                 } else if percentage >= 0.6 {
-                    encouragementLabel.text = "Good progress! "
+                    encouragementLabel.text = "Good progress!"
                 } else if percentage > 0 {
-                    encouragementLabel.text = "Keep practicing! "
+                    encouragementLabel.text = "Keep practicing!"
                 } else {
-                    encouragementLabel.text = "Let's try again! "
+                    encouragementLabel.text = "Let's try again!"
                 }
                 
-                // Show/hide star based on performance
-                starImageView.isHidden = percentage < 0.7
+              
             } else {
                 percentageL.text = "0%"
                 progressMessageLabel.text = "Start memorizing flashcards!"
                 memorisedL.text = "Cards memorized: 0"
                 needPracticeL.text = "Cards to review: 0"
-                starImageView.isHidden = true
+              
             }
         
     }
