@@ -15,7 +15,7 @@ class FlashcardViewController: UIViewController {
     @IBOutlet weak var needsPracticeCount: UILabel!
     @IBOutlet weak var memorisedCount: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var subjectLabel: UILabel!
+    @IBOutlet weak var subjectBtn: UIButton!
     private var practiceNumCount: Int = 0
         private var memorisedNumCount: Int = 0
         var flashcards: [Flashcard] = []
@@ -43,7 +43,7 @@ class FlashcardViewController: UIViewController {
             if let topic = topics.first{
                 let subjects = try await subjectDb.findAll(where: ["id":topic.subject])
                 if let subject = subjects.first{
-                    subjectLabel.text = subject.name
+                    subjectBtn.setTitle(subject.name, for: .normal)
                 }
             }
         }
@@ -166,9 +166,10 @@ class FlashcardViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.isTabBarHidden = true
-        subjectLabel.backgroundColor = AppTheme.secondary.withAlphaComponent(0.1)
+
+        subjectBtn.tintColor = AppTheme.secondary
+        subjectBtn.setTitleColor(AppTheme.primary, for: .normal)
         //add padding to text
-        subjectLabel.layer.cornerRadius = 16
         progressView.progressTintColor = AppTheme.primary
         progressView.trackTintColor = AppTheme.secondary.withAlphaComponent(0.2)
         cardView.backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
