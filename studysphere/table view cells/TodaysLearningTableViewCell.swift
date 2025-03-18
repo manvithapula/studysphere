@@ -3,11 +3,24 @@ import UIKit
 class TodaysLearningTableViewCell: UITableViewCell {
     private let containerView = UIView()
     private let cardBackground = UIView()
-    
     private let iconContainer = UIView()
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
     private let statusTagButton = UIButton()
+    
+ 
+    private let subjectTag: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = .black
+        label.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
+        label.layer.cornerRadius = 10
+        label.clipsToBounds = true
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Loading..."
+        return label
+    }()
     
     var currentDateOffset: Int = 0
     
@@ -25,7 +38,6 @@ class TodaysLearningTableViewCell: UITableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
         
-        // Enhanced container view with more pronounced shadow
         containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 16
         containerView.layer.shadowColor = UIColor.black.cgColor
@@ -57,6 +69,7 @@ class TodaysLearningTableViewCell: UITableViewCell {
         iconContainer.addSubview(iconImageView)
         cardBackground.addSubview(titleLabel)
         cardBackground.addSubview(statusTagButton)
+        cardBackground.addSubview(subjectTag)
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
@@ -80,42 +93,41 @@ class TodaysLearningTableViewCell: UITableViewCell {
             iconImageView.heightAnchor.constraint(equalToConstant: 22),
             
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: statusTagButton.leadingAnchor, constant: -10),
-            titleLabel.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: statusTagButton.leadingAnchor, constant: -10),
+            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 12),
+            
+            subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subjectTag.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            subjectTag.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             
             statusTagButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
-            statusTagButton.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
+            statusTagButton.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 12),
             statusTagButton.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
     
     private func configureStatusTagButton() {
-        // Configure the tag button with rounded corners and padding
         statusTagButton.layer.cornerRadius = 12
         statusTagButton.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         statusTagButton.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
-        statusTagButton.isUserInteractionEnabled = false // Disable user interaction if it's just an indicator
+        statusTagButton.isUserInteractionEnabled = false
         statusTagButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
+   
+
     func configure(with item: ScheduleItem, dateOffset: Int = 0) {
         iconImageView.image = UIImage(systemName: item.iconName)
         titleLabel.text = item.title
         currentDateOffset = dateOffset
-        
-        // Setup colors based on a consistent index (using hash of title for consistency)
         let colorIndex = abs(item.title.hashValue) % 2
         setupColors(for: colorIndex)
-        
-        // Update status tag button based on completion status
         if item.progress == 1 {
-            // Task is completed
+         
             statusTagButton.setTitle("Completed", for: .normal)
             statusTagButton.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.2)
             statusTagButton.setTitleColor(UIColor.black, for: .normal)
         } else {
-            // Task is incomplete
-            // If dateOffset is 0, it's today; otherwise, it's a future date
             if dateOffset == 0 {
                 statusTagButton.setTitle("Yet to Complete", for: .normal)
                 statusTagButton.backgroundColor = UIColor.white
@@ -126,19 +138,16 @@ class TodaysLearningTableViewCell: UITableViewCell {
                 statusTagButton.setTitleColor(UIColor.black, for: .normal)
             }
         }
-        
-        // Make sure the button width adjusts to accommodate the text
+    
         statusTagButton.sizeToFit()
-        
-        // Add a subtle animation when the cell appears
         statusTagButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: [], animations: {
             self.statusTagButton.transform = .identity
         })
+        subjectTag.text = "Loading..."
     }
     
     private func setupColors(for index: Int) {
-        // Define color schemes
         let colors: [UIColor] = [
             AppTheme.primary.withAlphaComponent(0.15),
             AppTheme.secondary.withAlphaComponent(0.15)
@@ -148,20 +157,12 @@ class TodaysLearningTableViewCell: UITableViewCell {
             AppTheme.primary,
             AppTheme.secondary
         ]
-        
-        // Ensure index is within bounds
-        let safeIndex = index % 2 // First color is primary, second is secondary
-        
-        // Set card background and icon container color
+        let safeIndex = index % 2
         cardBackground.backgroundColor = colors[safeIndex]
         iconContainer.backgroundColor = iconColors[safeIndex]
-        
-        // Update title label color based on the theme
         titleLabel.textColor = .black
     }
 
-
-    // Animation for highlighted state
     override var isHighlighted: Bool {
         didSet {
             animateHighlightState()
@@ -188,23 +189,9 @@ class TodaysLearningTableViewCell: UITableViewCell {
         }
     }
     
-    // Update trait collection handling
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        // Check for specific trait changes
-        if #available(iOS 13.0, *) {
-            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-                updateAppearance()
-            }
-        }
-    }
     
     private func updateAppearance() {
-        // Update shadow color for dark mode support
         containerView.layer.shadowColor = UIColor.black.cgColor
-        
-        // Re-apply colors for the current theme
         if let title = titleLabel.text {
             let colorIndex = abs(title.hashValue) % 2
             setupColors(for: colorIndex)
@@ -213,17 +200,12 @@ class TodaysLearningTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        // Reset text and images
         titleLabel.text = nil
         iconImageView.image = nil
         statusTagButton.setTitle(nil, for: .normal)
-        
-        // Reset appearance
+        subjectTag.text = nil
         statusTagButton.backgroundColor = nil
         containerView.transform = .identity
         containerView.layer.shadowOpacity = 0.08
-        
-       
     }
 }
