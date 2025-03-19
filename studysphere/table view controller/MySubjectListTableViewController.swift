@@ -26,11 +26,11 @@ class MySubjectListTableViewController: UITableViewController {
          
       override func viewDidLoad() {
           super.viewDidLoad()
+          setupTapGesture()
           setupUI()
           loadSubjects()
           setupEmptyStateView()
     
-//          setupTapGesture()
           Task {
               subjects = try await subjectDb.findAll()
               tableView.reloadData()
@@ -38,6 +38,8 @@ class MySubjectListTableViewController: UITableViewController {
       }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+            
         view.addGestureRecognizer(tapGesture)
     }
 

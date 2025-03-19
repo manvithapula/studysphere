@@ -25,6 +25,7 @@ class SummaryListViewController: UIViewController{
         // MARK: - Lifecycle
         override func viewDidLoad() {
             super.viewDidLoad()
+            setupTapGesture()
             setupUI()
             configureCollectionView()
             loadData()
@@ -35,6 +36,16 @@ class SummaryListViewController: UIViewController{
             tabBarController?.isTabBarHidden = true
             loadData()
         }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+            
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
         
         override func viewWillDisappear(_ animated: Bool) {
             super.viewWillDisappear(animated)

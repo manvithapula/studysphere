@@ -44,6 +44,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
        
        override func viewDidLoad() {
            super.viewDidLoad()
+           setupTapGesture()
            setupUI()
            fetchTopics()
        }
@@ -87,6 +88,8 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
        
        private func setupTapGesture() {
            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+           tapGesture.cancelsTouchesInView = false
+               
            view.addGestureRecognizer(tapGesture)
        }
 
