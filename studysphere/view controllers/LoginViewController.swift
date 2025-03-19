@@ -106,7 +106,7 @@ class LoginViewController: UIViewController {
         emailTextField.autocapitalizationType = .none
         
         // Create Password TextField
-        passwordTextField = UITextField()
+        passwordTextField = PasswordTextField()
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
         passwordTextField.placeholder = "Password"
         passwordTextField.backgroundColor = .systemGray6
@@ -115,6 +115,7 @@ class LoginViewController: UIViewController {
         passwordTextField.leftViewMode = .always
         passwordTextField.font = .systemFont(ofSize: 16)
         passwordTextField.isSecureTextEntry = true
+
         
         // Create Login Button
         loginButton = UIButton(type: .system)
