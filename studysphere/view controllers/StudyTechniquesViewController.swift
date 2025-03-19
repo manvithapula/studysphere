@@ -85,7 +85,6 @@ class StudyTechniquesViewController: UIViewController {
             ])
         }
     private func checkDocumentValue() {
-            showLoading(text: "Checking document...")
             
             // Simulating asynchronous function to check if document has value
             Task {
@@ -100,7 +99,6 @@ class StudyTechniquesViewController: UIViewController {
                     }
                     // Update UI on main thread
                     await MainActor.run {
-                        self.hideLoading()
                         
                         if !self.documentHasValue {
                             self.setupValueDependentUI()
