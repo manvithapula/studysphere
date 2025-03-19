@@ -38,7 +38,7 @@ class TodaysLearningViewController: UIViewController {
             var temp: [ScheduleItem] = []
             for schedule in filterSchedules {
                 let scheduleItem = ScheduleItem(
-                    iconName: schedule.topicType == TopicsType.flashcards ? "clock.fill" : schedule.topicType == TopicsType.quizzes ? "brain.head.profile" : "doc.text.fill",
+                    iconName: schedule.topicType == TopicsType.flashcards ? "clock" : schedule.topicType == TopicsType.quizzes ? "brain.head.profile" : "doc.text",
                     title: schedule.title,
                     subtitle: "",
                     progress: (schedule.completed != nil) ? 1 : 0,

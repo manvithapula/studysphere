@@ -36,9 +36,9 @@ class StudyTechniquesViewController: UIViewController {
         return stack
     }()
     private  let techniques = [
-        ("Spaced Repetition", "rectangle.on.rectangle.fill", UIColor.systemBlue),
-        ("Active Recall", "doc.questionmark.fill", UIColor.systemBlue),
-        ("Summariser", "doc.text.fill", UIColor.systemBlue)
+        ("Spaced Repetition", "clock", UIColor.systemBlue),
+        ("Active Recall", "brain", UIColor.systemBlue),
+        ("Summariser", "doc.text", UIColor.systemBlue)
     ]
     
     

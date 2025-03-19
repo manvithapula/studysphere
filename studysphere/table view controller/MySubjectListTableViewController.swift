@@ -49,7 +49,7 @@ class MySubjectListTableViewController: UITableViewController {
           // Configure navigation bar
           title = "My Subjects"
           let addButton = UIBarButtonItem(
-              image: UIImage(systemName: "plus.circle.fill"),
+              image: UIImage(systemName: "plus.circle"),
               style: .plain,
               target: self,
               action: #selector(showAddSubjectModal)

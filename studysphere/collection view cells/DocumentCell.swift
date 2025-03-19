@@ -36,14 +36,14 @@ class DocumentCell: UICollectionViewCell {
     private let documentImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
+        imageView.image = UIImage(systemName: "doc.text")?.withRenderingMode(.alwaysTemplate)
         imageView.tintColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     let previewButton:UIButton = {
         let startButton = UIButton()
-        startButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
+        startButton.setImage(UIImage(systemName: "eye"), for: .normal)
         startButton.tintColor = .white
         startButton.setTitleColor(.white, for: .normal)
         startButton.backgroundColor = AppTheme.primary

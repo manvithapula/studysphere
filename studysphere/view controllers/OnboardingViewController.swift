@@ -44,7 +44,7 @@ class OnboardingViewController: UIViewController {
     
     private let spaceRepetitionImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "rectangle.on.rectangle.fill")
+        imageView.image = UIImage(systemName: "clock")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +78,7 @@ class OnboardingViewController: UIViewController {
     
     private let activeRecallImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "doc.questionmark.fill")
+        imageView.image = UIImage(systemName: "brain.head.profile")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +112,7 @@ class OnboardingViewController: UIViewController {
     
     private let summarizerImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "doc.text.fill")
+        imageView.image = UIImage(systemName: "doc.text")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -145,7 +145,7 @@ class OnboardingViewController: UIViewController {
     
     private let documnetImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "doc.on.doc.fill")
+        imageView.image = UIImage(systemName: "doc.on.doc")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false

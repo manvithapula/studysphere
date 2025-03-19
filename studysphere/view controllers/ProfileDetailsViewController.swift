@@ -335,7 +335,7 @@ extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavig
             }.resume()
         } else {
             // Set default image when no photo URL exists
-            profileImageView.image = UIImage(systemName: "person.crop.circle.fill")
+            profileImageView.image = UIImage(systemName: "person.crop.circle")
         }
     }
 }

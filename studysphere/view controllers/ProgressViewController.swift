@@ -438,9 +438,9 @@ class ProgressViewController: UIViewController {
             let nextLevelProgress = Float(totalItems % itemsPerLevel) / Float(itemsPerLevel)
             
             let statsViews = [
-                createStatView(icon: "rectangle.on.rectangle.fill", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
-                createStatView(icon: "doc.questionmark.fill", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
-                createStatView(icon: "doc.text.fill", title: "Summaries Completed", value: "\(completedSummary.count)"),
+                createStatView(icon: "clock", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
+                createStatView(icon: "brain", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
+                createStatView(icon: "doc.text", title: "Summaries Completed", value: "\(completedSummary.count)"),
                 
                 createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
             ]

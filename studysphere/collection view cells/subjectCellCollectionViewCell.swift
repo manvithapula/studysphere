@@ -95,7 +95,7 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         buttonTapped?()
     }
     
-    func configure(title: String, subtitle: String, iconName: String = "book.fill", index: Int) {
+    func configure(title: String, subtitle: String, iconName: String = "book", index: Int) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
         iconImageView.image = UIImage(systemName: iconName)

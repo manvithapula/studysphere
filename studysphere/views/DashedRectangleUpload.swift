@@ -58,7 +58,7 @@ class DashedRectangleUpload: UIView, UIDocumentPickerDelegate {
     private let uploadIcon: UIImageView = {
         let imageView = UIImageView()
         let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .light)
-        imageView.image = UIImage(systemName: "arrow.up.doc.fill", withConfiguration: config)
+        imageView.image = UIImage(systemName: "arrow.up.doc", withConfiguration: config)
         imageView.tintColor = .systemBlue.withAlphaComponent(0.8)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

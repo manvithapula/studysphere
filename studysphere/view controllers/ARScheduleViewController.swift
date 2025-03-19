@@ -399,7 +399,7 @@ class ReviewCell: UITableViewCell {
         Task {
             if isCompleted {
                 statusBar.backgroundColor = .systemGreen
-                statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
+                statusIcon.image = UIImage(systemName: "checkmark.circle")
                 statusIcon.tintColor = .systemGreen
                 startButton.isHidden = true
                 retentionLabel.isHidden = false
@@ -413,7 +413,7 @@ class ReviewCell: UITableViewCell {
             } else {
                 let isToday = Calendar.current.isDateInToday(date)
                 statusBar.backgroundColor = isToday ? .systemBlue : .systemGray5
-                statusIcon.image = isToday ? UIImage(systemName: "arrow.right.circle.fill") : UIImage(systemName: "circle.dashed")
+                statusIcon.image = isToday ? UIImage(systemName: "arrow.right.circle") : UIImage(systemName: "circle.dashed")
                 statusIcon.tintColor = isToday ? .systemBlue : .systemGray3
                 startButton.isHidden = !isToday
                 retentionLabel.isHidden = true

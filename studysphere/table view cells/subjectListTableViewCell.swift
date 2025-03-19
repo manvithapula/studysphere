@@ -213,7 +213,7 @@ class subjectListTableViewCell: UITableViewCell {
         super.prepareForReuse()
         titleLabel.text = nil
         topicsCountLabel.text = nil
-        iconImageView.image = UIImage(systemName: "book.fill")
+        iconImageView.image = UIImage(systemName: "book")
         // Reset any other properties that need resetting
     }
 }

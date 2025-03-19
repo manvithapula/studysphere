@@ -165,8 +165,8 @@ class QuestionResultViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             let iconConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
-            learnedIcon.image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: iconConfig)
-            reviewIcon.image = UIImage(systemName: "repeat.circle.fill", withConfiguration: iconConfig)
+            learnedIcon.image = UIImage(systemName: "checkmark.circle", withConfiguration: iconConfig)
+            reviewIcon.image = UIImage(systemName: "repeat.circle", withConfiguration: iconConfig)
         }
         
         learnedIcon.tintColor = AppTheme.primary

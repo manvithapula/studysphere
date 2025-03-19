@@ -168,8 +168,8 @@ class FlashcardResultViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             let iconConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
-            memorisedIcon.image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: iconConfig)
-            needPracticeIcon.image = UIImage(systemName: "repeat.circle.fill", withConfiguration: iconConfig)
+            memorisedIcon.image = UIImage(systemName: "checkmark.circle", withConfiguration: iconConfig)
+            needPracticeIcon.image = UIImage(systemName: "repeat.circle", withConfiguration: iconConfig)
         }
         
         memorisedIcon.tintColor = AppTheme.primary

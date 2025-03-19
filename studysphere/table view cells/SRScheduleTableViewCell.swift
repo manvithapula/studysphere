@@ -41,7 +41,7 @@ class SRScheduleTableViewCell: UITableViewCell {
     }()
     
     private let starIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
+        let imageView = UIImageView(image: UIImage(systemName: ""))
         imageView.tintColor = .systemYellow
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -146,7 +146,7 @@ class SRScheduleTableViewCell: UITableViewCell {
         if let completed = schedule.completed {
             // Completed state
             statusBar.backgroundColor = .systemGreen
-            statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
+            statusIcon.image = UIImage(systemName: "checkmark.circle")
             statusIcon.tintColor = .systemGreen
             retentionContainer.isHidden = false
             retentionLabel.text = "0% retained"
@@ -155,7 +155,7 @@ class SRScheduleTableViewCell: UITableViewCell {
         } else if Calendar.current.isDateInToday(schedule.date.dateValue()) {
             // Today's review
             statusBar.backgroundColor = AppTheme.primary
-            statusIcon.image = UIImage(systemName: "books.vertical.circle.fill")
+            statusIcon.image = UIImage(systemName: "books.vertical.circle")
             statusIcon.tintColor = .systemBlue
             retentionContainer.isHidden = true
             startReviewButton.isHidden = false
@@ -163,7 +163,7 @@ class SRScheduleTableViewCell: UITableViewCell {
         } else {
             // Upcoming review
             statusBar.backgroundColor = .systemGray4
-            statusIcon.image = UIImage(systemName: "clock.circle.fill")
+            statusIcon.image = UIImage(systemName: "clock.circle")
             statusIcon.tintColor = .systemGray3
             retentionContainer.isHidden = true
             startReviewButton.isHidden = true

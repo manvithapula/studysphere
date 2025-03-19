@@ -501,7 +501,7 @@ class QuestionViewController: UIViewController {
             }
             
             // Add checkmark
-            let checkmarkImage = UIImageView(image: UIImage(systemName: "checkmark.circle.fill")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal))
+            let checkmarkImage = UIImageView(image: UIImage(systemName: "checkmark.circle")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal))
             checkmarkImage.translatesAutoresizingMaskIntoConstraints = false
             sender.addSubview(checkmarkImage)
             
@@ -530,7 +530,7 @@ class QuestionViewController: UIViewController {
             }
             
             // Add X mark
-            let xmarkImage = UIImageView(image: UIImage(systemName: "xmark.circle.fill")?.withTintColor(.systemRed, renderingMode: .alwaysOriginal))
+            let xmarkImage = UIImageView(image: UIImage(systemName: "xmark.circle")?.withTintColor(.systemRed, renderingMode: .alwaysOriginal))
             xmarkImage.translatesAutoresizingMaskIntoConstraints = false
             sender.addSubview(xmarkImage)
             
@@ -568,7 +568,7 @@ class QuestionViewController: UIViewController {
                     }
                     
                     // Add checkmark to correct answer
-                    let correctMark = UIImageView(image: UIImage(systemName: "checkmark.circle.fill")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal))
+                    let correctMark = UIImageView(image: UIImage(systemName: "checkmark.circle")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal))
                     correctMark.translatesAutoresizingMaskIntoConstraints = false
                     button.addSubview(correctMark)
                     

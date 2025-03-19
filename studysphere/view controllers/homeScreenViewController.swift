@@ -34,7 +34,7 @@ class homeScreenViewController: UIViewController {
                 .prefix(3)
                 .compactMap { schedule in
                         return ScheduleItem(
-                            iconName: schedule.topicType == TopicsType.flashcards ? "clock.fill" : schedule.topicType == TopicsType.quizzes ? "brain.head.profile" : "doc.text.fill",
+                            iconName: schedule.topicType == TopicsType.flashcards ? "clock" : schedule.topicType == TopicsType.quizzes ? "brain.head.profile" : "doc.text",
                             title: schedule.title,
                             subtitle: "",
                             progress: 0,
@@ -172,7 +172,7 @@ extension homeScreenViewController {
         let headerView = UIView()
         
         let profileButton = UIButton()
-        profileButton.setImage(UIImage(systemName: "person.crop.circle.fill"), for: .normal)
+        profileButton.setImage(UIImage(systemName: "person.crop.circle"), for: .normal)
         
         profileButton.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         profileButton.layer.cornerRadius = 25
@@ -258,7 +258,7 @@ extension homeScreenViewController {
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         iconContainer.backgroundColor = AppTheme.secondary
         let pdfIcon = UIImageView()
-        pdfIcon.image = UIImage(systemName: "doc.fill")
+        pdfIcon.image = UIImage(systemName: "doc")
         pdfIcon.tintColor = .white
         pdfIcon.contentMode = .scaleAspectFit
         pdfIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -405,7 +405,7 @@ extension homeScreenViewController {
             emptyContainer.layer.cornerRadius = 12
             emptyContainer.translatesAutoresizingMaskIntoConstraints = false
             
-            let emptyIcon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+            let emptyIcon = UIImageView(image: UIImage(systemName: "checkmark.circle"))
             emptyIcon.tintColor = AppTheme.primary
             emptyIcon.contentMode = .scaleAspectFit
             emptyIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -737,7 +737,7 @@ extension homeScreenViewController {
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
         let emptyIcon = UIImageView()
-        emptyIcon.image = UIImage(systemName: "book.closed.fill")
+        emptyIcon.image = UIImage(systemName: "book.closed")
         emptyIcon.tintColor = AppTheme.primary
         emptyIcon.contentMode = .scaleAspectFit
         emptyIcon.translatesAutoresizingMaskIntoConstraints = false

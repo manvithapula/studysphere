@@ -138,7 +138,7 @@ class CreateViewController: UIViewController {
         let button = TechniqueButton()
         let imageConfig = UIImage.SymbolConfiguration(scale: .small)
         let clockImage = UIImage(
-            systemName: "rectangle.on.rectangle.fill", withConfiguration: imageConfig)
+            systemName: "clock", withConfiguration: imageConfig)
         button.setImage(clockImage, for: .normal)
         button.setTitle(techniques[0].name, for: .normal)
         button.addTarget(
@@ -151,7 +151,7 @@ class CreateViewController: UIViewController {
         let button = TechniqueButton()
         let imageConfig = UIImage.SymbolConfiguration(scale: .small)
         let brainImage = UIImage(
-            systemName: "doc.questionmark.fill", withConfiguration: imageConfig)
+            systemName: "brain.head.profile", withConfiguration: imageConfig)
         button.setImage(brainImage, for: .normal)
         button.setTitle(techniques[1].name, for: .normal)
         button.addTarget(
@@ -164,7 +164,7 @@ class CreateViewController: UIViewController {
         let button = TechniqueButton()
         let imageConfig = UIImage.SymbolConfiguration(scale: .small)
         let textImage = UIImage(
-            systemName: "doc.text.fill", withConfiguration: imageConfig)
+            systemName: "doc.text", withConfiguration: imageConfig)
         button.setImage(textImage, for: .normal)
         button.setTitle(techniques[2].name, for: .normal)
         button.addTarget(
@@ -548,7 +548,6 @@ class CreateViewController: UIViewController {
                 }
             }
             do {
-
                 switch selectedTechnique {
                 case techniques[0].name:
                     createSR(self)

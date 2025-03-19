@@ -41,7 +41,7 @@ class ARScheduleTableViewCell: UITableViewCell {
     }()
     
     private let starIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "star.fill"))
+        let imageView = UIImageView(image: UIImage(systemName: ""))
         imageView.tintColor = .systemYellow
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -147,7 +147,7 @@ class ARScheduleTableViewCell: UITableViewCell {
         switch model.status {
         case .completed(let retention):
             statusBar.backgroundColor = UIColor.systemGreen
-            statusIcon.image = UIImage(systemName: "checkmark.circle.fill")
+            statusIcon.image = UIImage(systemName: "checkmark.circle")
             statusIcon.tintColor = .systemGreen
             retentionContainer.isHidden = false
             retentionLabel.text = "\(retention)% retained"
@@ -156,7 +156,7 @@ class ARScheduleTableViewCell: UITableViewCell {
             
         case .current:
             statusBar.backgroundColor = AppTheme.primary
-            statusIcon.image = UIImage(systemName: "questionmark.circle.fill")
+            statusIcon.image = UIImage(systemName: "questionmark.circle")
             statusIcon.tintColor = .systemBlue
             retentionContainer.isHidden = true
             startReviewButton.isHidden = false
@@ -164,7 +164,7 @@ class ARScheduleTableViewCell: UITableViewCell {
             
         case .locked:
             statusBar.backgroundColor = .systemGray4
-            statusIcon.image = UIImage(systemName: "lock.circle.fill")
+            statusIcon.image = UIImage(systemName: "lock.circle")
             statusIcon.tintColor = .systemGray3
             retentionContainer.isHidden = true
             startReviewButton.isHidden = true
