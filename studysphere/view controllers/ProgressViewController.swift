@@ -2,6 +2,7 @@ import UIKit
 import DGCharts
 import Charts
 
+
 class ProgressViewController: UIViewController {
     
     private var studyProgress: StudyProgress?
@@ -126,6 +127,7 @@ class ProgressViewController: UIViewController {
     private var confettiLayer: CAEmitterLayer?
     
     private let streakLineChartView = LineChartView()
+
 
     private let retentionChartTitle: UILabel = {
         let label = UILabel()
@@ -887,6 +889,7 @@ class ProgressViewController: UIViewController {
             chartContainer.trailingAnchor.constraint(equalTo: retentionChartView.trailingAnchor, constant: -15),
             chartContainer.bottomAnchor.constraint(equalTo: retentionChartView.bottomAnchor, constant: -15)
         ])
+        
         Task{
             createChartContainer(
                 title: "Spaced Repetition", chartView: streakLineChartView,
@@ -914,6 +917,7 @@ class ProgressViewController: UIViewController {
     
     @objc private func timeRangeChanged() {
 //        updateChart()
+
     }
     
     private func updateChart() {
