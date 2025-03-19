@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>457709654946-2u645kap2k43rng14l2tqk98varg8uri.apps.googleusercontent.com</string>
+	<string>457709654946-af50vk3qpjs8rg2vflrmb6p5hu95rlug.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.457709654946-2u645kap2k43rng14l2tqk98varg8uri</string>
+	<string>com.googleusercontent.apps.457709654946-af50vk3qpjs8rg2vflrmb6p5hu95rlug</string>
 	<key>API_KEY</key>
 	<string>AIzaSyByGGCty0k39Se7o-krYaAVlud8TYwqOs8</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>manvitha.studysphere</string>
+	<string>com.srmist.memoriso</string>
 	<key>PROJECT_ID</key>
 	<string>studysphere-c985d</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:457709654946:ios:3967808b38c5ae8df118fb</string>
+	<string>1:457709654946:ios:1e485c56a74eedfbf118fb</string>
 </dict>
 </plist>
