@@ -22,14 +22,16 @@ class ProfileMainViewController: UIViewController {
         super.viewDidLoad()
         let email = AuthManager.shared.userEmail
         print(email as Any)
-        if let item = userDB.findFirst(where: ["email":email!]){
-            user = item
-            print(item)
-        }else{
-            user = userDB.create(&user)
+        Task{
+            if let item = try await userDB.findAll(where: ["email":email!]).first{
+                user = item
+                print(item)
+            }else{
+                user = userDB.create(&user)
+            }
+            setupUI()
+            setupTableView()
         }
-        setupUI()
-        setupTableView()
     }
     
     override func viewDidLayoutSubviews() {
