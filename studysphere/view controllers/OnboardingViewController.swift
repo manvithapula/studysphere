@@ -29,7 +29,7 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Study Techniques"
         label.textColor = .black
-        label.font = .systemFont(ofSize: 28, weight: .bold)
+        label.font = .systemFont(ofSize: 25, weight: .bold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -44,7 +44,7 @@ class OnboardingViewController: UIViewController {
     
     private let spaceRepetitionImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "clock")
+        imageView.image = UIImage(systemName: "rectangle.on.rectangle.fill")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -62,7 +62,7 @@ class OnboardingViewController: UIViewController {
     
     private let spaceRepetitionDescription: UILabel = {
         let label = UILabel()
-        label.text = "Review at intervals to retain information longer. This method leverages the spacing effect to help with memory retention"
+        label.text = "Review at optimal intervals to maximize memory retention"
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +78,7 @@ class OnboardingViewController: UIViewController {
     
     private let activeRecallImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "brain")
+        imageView.image = UIImage(systemName: "doc.questionmark.fill")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +96,7 @@ class OnboardingViewController: UIViewController {
     
     private let activeRecallDescription: UILabel = {
         let label = UILabel()
-        label.text = "Test yourself to strengthen memory and identify gaps. This method enhances long-term retention and promotes deeper understanding."
+        label.text = "Test yourself to strengthen memory and understanding"
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +112,7 @@ class OnboardingViewController: UIViewController {
     
     private let summarizerImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "text.alignleft")
+        imageView.image = UIImage(systemName: "doc.text.fill")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -130,7 +130,7 @@ class OnboardingViewController: UIViewController {
     
     private let summarizerDescription: UILabel = {
         let label = UILabel()
-        label.text = "Simplify complex topics into concise notes. This method helps reinforce learning and improve comprehension."
+        label.text = "Create concise notes to improve comprehension"
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -145,7 +145,7 @@ class OnboardingViewController: UIViewController {
     
     private let documnetImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "doc.text")
+        imageView.image = UIImage(systemName: "doc.on.doc.fill")
         imageView.tintColor = AppTheme.primary
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -163,7 +163,7 @@ class OnboardingViewController: UIViewController {
     
     private let documentDescription: UILabel = {
         let label = UILabel()
-        label.text = "Add your study materials to the app and access them anytime."
+        label.text = "Organize and access your study materials easily"
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -197,34 +197,34 @@ class OnboardingViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
+        // Update icon sizes
+        [spaceRepetitionImageView, activeRecallImageView, summarizerImageView, documnetImageView].forEach { imageView in
+            imageView.tintColor = AppTheme.primary
+            imageView.contentMode = .scaleAspectFit
+            imageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            imageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        }
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        // Add container views
         contentView.addSubview(titleLabel)
         
-        // Setup Spaced Repetition container
-        contentView.addSubview(spaceRepetitionContainer)
-        spaceRepetitionContainer.addSubview(spaceRepetitionImageView)
-        spaceRepetitionContainer.addSubview(spaceRepetitionTitle)
+        // Add all components directly to contentView instead of containers
+        contentView.addSubview(spaceRepetitionImageView)
+        contentView.addSubview(spaceRepetitionTitle)
         contentView.addSubview(spaceRepetitionDescription)
         
-        // Setup Active Recall container
-        contentView.addSubview(activeRecallContainer)
-        activeRecallContainer.addSubview(activeRecallImageView)
-        activeRecallContainer.addSubview(activeRecallTitle)
+        contentView.addSubview(activeRecallImageView)
+        contentView.addSubview(activeRecallTitle)
         contentView.addSubview(activeRecallDescription)
         
-        // Setup Summarizer container
-        contentView.addSubview(summarizerContainer)
-        summarizerContainer.addSubview(summarizerImageView)
-        summarizerContainer.addSubview(summarizerTitle)
+        contentView.addSubview(summarizerImageView)
+        contentView.addSubview(summarizerTitle)
         contentView.addSubview(summarizerDescription)
         
-        // Setup Document container
-        contentView.addSubview(documnetContainer)
-        documnetContainer.addSubview(documnetImageView)
-        documnetContainer.addSubview(DocumnetTitle)
+        contentView.addSubview(documnetImageView)
+        contentView.addSubview(DocumnetTitle)
         contentView.addSubview(documentDescription)
         
         contentView.addSubview(nextButton)
@@ -246,79 +246,47 @@ class OnboardingViewController: UIViewController {
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             // Spaced Repetition constraints
-            spaceRepetitionContainer.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
-            spaceRepetitionContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            spaceRepetitionContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            spaceRepetitionContainer.heightAnchor.constraint(equalToConstant: 30),
-            
-            spaceRepetitionImageView.leadingAnchor.constraint(equalTo: spaceRepetitionContainer.leadingAnchor),
-            spaceRepetitionImageView.centerYAnchor.constraint(equalTo: spaceRepetitionContainer.centerYAnchor),
-            spaceRepetitionImageView.widthAnchor.constraint(equalToConstant: 30),
-            spaceRepetitionImageView.heightAnchor.constraint(equalToConstant: 30),
+            spaceRepetitionImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
+            spaceRepetitionImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             
             spaceRepetitionTitle.leadingAnchor.constraint(equalTo: spaceRepetitionImageView.trailingAnchor, constant: 12),
-            spaceRepetitionTitle.centerYAnchor.constraint(equalTo: spaceRepetitionContainer.centerYAnchor),
-            spaceRepetitionTitle.trailingAnchor.constraint(equalTo: spaceRepetitionContainer.trailingAnchor),
+            spaceRepetitionTitle.centerYAnchor.constraint(equalTo: spaceRepetitionImageView.centerYAnchor),
             
-            spaceRepetitionDescription.topAnchor.constraint(equalTo: spaceRepetitionContainer.bottomAnchor, constant: 12),
-            spaceRepetitionDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            spaceRepetitionDescription.topAnchor.constraint(equalTo: spaceRepetitionImageView.bottomAnchor, constant: 8),
+            spaceRepetitionDescription.leadingAnchor.constraint(equalTo: spaceRepetitionImageView.leadingAnchor,constant: 50),
             spaceRepetitionDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             // Active Recall constraints
-            activeRecallContainer.topAnchor.constraint(equalTo: spaceRepetitionDescription.bottomAnchor, constant: 32),
-            activeRecallContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            activeRecallContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            activeRecallContainer.heightAnchor.constraint(equalToConstant: 30),
-            
-            activeRecallImageView.leadingAnchor.constraint(equalTo: activeRecallContainer.leadingAnchor),
-            activeRecallImageView.centerYAnchor.constraint(equalTo: activeRecallContainer.centerYAnchor),
-            activeRecallImageView.widthAnchor.constraint(equalToConstant: 30),
-            activeRecallImageView.heightAnchor.constraint(equalToConstant: 30),
+            activeRecallImageView.topAnchor.constraint(equalTo: spaceRepetitionDescription.bottomAnchor, constant: 32),
+            activeRecallImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             
             activeRecallTitle.leadingAnchor.constraint(equalTo: activeRecallImageView.trailingAnchor, constant: 12),
-            activeRecallTitle.centerYAnchor.constraint(equalTo: activeRecallContainer.centerYAnchor),
-            activeRecallTitle.trailingAnchor.constraint(equalTo: activeRecallContainer.trailingAnchor),
+            activeRecallTitle.centerYAnchor.constraint(equalTo: activeRecallImageView.centerYAnchor),
             
-            activeRecallDescription.topAnchor.constraint(equalTo: activeRecallContainer.bottomAnchor, constant: 12),
-            activeRecallDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            activeRecallDescription.topAnchor.constraint(equalTo: activeRecallImageView.bottomAnchor, constant: 8),
+            activeRecallDescription.leadingAnchor.constraint(equalTo: spaceRepetitionImageView.leadingAnchor,constant: 50),
             activeRecallDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             // Summarizer constraints
-            summarizerContainer.topAnchor.constraint(equalTo: activeRecallDescription.bottomAnchor, constant: 32),
-            summarizerContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            summarizerContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            summarizerContainer.heightAnchor.constraint(equalToConstant: 30),
-            
-            summarizerImageView.leadingAnchor.constraint(equalTo: summarizerContainer.leadingAnchor),
-            summarizerImageView.centerYAnchor.constraint(equalTo: summarizerContainer.centerYAnchor),
-            summarizerImageView.widthAnchor.constraint(equalToConstant: 30),
-            summarizerImageView.heightAnchor.constraint(equalToConstant: 30),
+            summarizerImageView.topAnchor.constraint(equalTo: activeRecallDescription.bottomAnchor, constant: 32),
+            summarizerImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             
             summarizerTitle.leadingAnchor.constraint(equalTo: summarizerImageView.trailingAnchor, constant: 12),
-            summarizerTitle.centerYAnchor.constraint(equalTo: summarizerContainer.centerYAnchor),
-            summarizerTitle.trailingAnchor.constraint(equalTo: summarizerContainer.trailingAnchor),
+            summarizerTitle.centerYAnchor.constraint(equalTo: summarizerImageView.centerYAnchor),
             
-            summarizerDescription.topAnchor.constraint(equalTo: summarizerContainer.bottomAnchor, constant: 12),
-            summarizerDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            summarizerDescription.topAnchor.constraint(equalTo: summarizerImageView.bottomAnchor, constant: 8),
+            summarizerDescription.leadingAnchor.constraint(equalTo: summarizerImageView.leadingAnchor,constant: 52),
             summarizerDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             // Document constraints
-            documnetContainer.topAnchor.constraint(equalTo: summarizerDescription.bottomAnchor, constant: 32),
-            documnetContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            documnetContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            documnetContainer.heightAnchor.constraint(equalToConstant: 30),
-            
-            documnetImageView.leadingAnchor.constraint(equalTo: documnetContainer.leadingAnchor),
-            documnetImageView.centerYAnchor.constraint(equalTo: documnetContainer.centerYAnchor),
-            documnetImageView.widthAnchor.constraint(equalToConstant: 30),
-            documnetImageView.heightAnchor.constraint(equalToConstant: 30),
+            documnetImageView.topAnchor.constraint(equalTo: summarizerDescription.bottomAnchor, constant: 32),
+            documnetImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             
             DocumnetTitle.leadingAnchor.constraint(equalTo: documnetImageView.trailingAnchor, constant: 12),
-            DocumnetTitle.centerYAnchor.constraint(equalTo: documnetContainer.centerYAnchor),
-            DocumnetTitle.trailingAnchor.constraint(equalTo: documnetContainer.trailingAnchor),
+            DocumnetTitle.centerYAnchor.constraint(equalTo: documnetImageView.centerYAnchor),
             
-            documentDescription.topAnchor.constraint(equalTo: documnetContainer.bottomAnchor, constant: 12),
-            documentDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            documentDescription.topAnchor.constraint(equalTo: documnetImageView.bottomAnchor, constant: 8),
+            documentDescription.leadingAnchor.constraint(equalTo: documnetImageView.leadingAnchor,constant: 52),
             documentDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             nextButton.topAnchor.constraint(equalTo: documentDescription.bottomAnchor, constant: 40),
@@ -327,23 +295,6 @@ class OnboardingViewController: UIViewController {
             nextButton.heightAnchor.constraint(equalToConstant: 50),
             nextButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -40)
         ])
-        
-        // Add subtle animations to the images
-        animateImages()
-    }
-    
-    private func animateImages() {
-        // Apply a subtle pulse animation to each image
-        let images = [spaceRepetitionImageView, activeRecallImageView, summarizerImageView, documnetImageView]
-        
-        for (index, imageView) in images.enumerated() {
-            // Delay each animation slightly
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.2) {
-                UIView.animate(withDuration: 1.0, delay: 0, options: [.autoreverse, .repeat], animations: {
-                    imageView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-                }, completion: nil)
-            }
-        }
     }
     
     private func setupActions() {
@@ -351,11 +302,14 @@ class OnboardingViewController: UIViewController {
     }
     
     @objc private func nextButtonTapped() {
-        markOnboardingAsSeen()
+        // Set onboarding as seen
+        UserDefaults.standard.set(true, forKey: hasSeenOnboardingKey)
+        
+        // Navigate to TabBarController
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
             tabBarVC.modalPresentationStyle = .fullScreen
-            present(tabBarVC, animated: true)
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
         }
     }
     

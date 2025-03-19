@@ -221,7 +221,7 @@ class SignupViewController: UIViewController {
             if let user = try await userDB.findAll(where: ["email": user!.email!]).first {
                 AuthManager.shared.logIn(email: user.email, firstName: user.firstName, lastName: user.lastName, id: user.id)
                 DispatchQueue.main.async {
-                    // Always show onboarding for new users
+                    // For new sign ups, always show onboarding first
                     let onboardingVC = OnboardingViewController()
                     onboardingVC.modalPresentationStyle = .fullScreen
                     (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = onboardingVC

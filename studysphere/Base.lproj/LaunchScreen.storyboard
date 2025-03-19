@@ -16,11 +16,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StudySphere" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Ah-Uv-UKF">
-                                <rect key="frame" x="127" y="486" width="147" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Memoriso" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Ah-Uv-UKF">
+                                <rect key="frame" x="8" y="486" width="377" height="27"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="147" id="5Fq-pX-fof"/>
-                                    <constraint firstAttribute="height" constant="27" id="anA-J3-OzT"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="27" id="v06-mx-sEZ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
@@ -37,8 +35,8 @@
                         <constraints>
                             <constraint firstItem="8Ah-Uv-UKF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="427" id="4sO-vy-rx2"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8Ah-Uv-UKF" secondAttribute="bottom" constant="305" id="bXc-CC-st8"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8Ah-Uv-UKF" secondAttribute="trailing" constant="119" id="pow-30-7MC"/>
-                            <constraint firstItem="8Ah-Uv-UKF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="127" id="uiK-Jx-lax"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8Ah-Uv-UKF" secondAttribute="trailing" constant="8" id="pow-30-7MC"/>
+                            <constraint firstItem="8Ah-Uv-UKF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="uiK-Jx-lax"/>
                         </constraints>
                     </view>
                 </viewController>

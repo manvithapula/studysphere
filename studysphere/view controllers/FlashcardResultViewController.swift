@@ -20,7 +20,6 @@ class FlashcardResultViewController: UIViewController {
     private let percentageCardView = UIView()
     private let percentageL = UILabel()
     private let progressMessageLabel = UILabel()
-    private let starImageView = UIImageView()
     private let statsCardView = UIView()
     private let memorisedL = UILabel()
     private let needPracticeL = UILabel()
@@ -62,7 +61,7 @@ class FlashcardResultViewController: UIViewController {
         
         percentageCardView.addSubview(percentageL)
         percentageCardView.addSubview(progressMessageLabel)
-        percentageCardView.addSubview(starImageView)
+      
         
         statsCardView.addSubview(memorisedL)
         statsCardView.addSubview(needPracticeL)
@@ -153,17 +152,7 @@ class FlashcardResultViewController: UIViewController {
         progressMessageLabel.textAlignment = .center
         progressMessageLabel.numberOfLines = 0
         
-        // Star image view
-        starImageView.translatesAutoresizingMaskIntoConstraints = false
-        starImageView.contentMode = .scaleAspectFit
-        if #available(iOS 13.0, *) {
-            let starConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular)
-            starImageView.image = UIImage(systemName: "star.fill", withConfiguration: starConfig)
-        } else {
-            starImageView.image = UIImage(named: "star")
-        }
-        starImageView.tintColor = .systemYellow
-        
+      
         // Stats card view - with improved styling
         statsCardView.translatesAutoresizingMaskIntoConstraints = false
         setupCardGradient(for: statsCardView)
@@ -312,12 +301,7 @@ class FlashcardResultViewController: UIViewController {
             // Percentage label
             percentageL.topAnchor.constraint(equalTo: percentageCardView.topAnchor, constant: 20),
             percentageL.centerXAnchor.constraint(equalTo: percentageCardView.centerXAnchor),
-            
-            // Star image view
-            starImageView.centerYAnchor.constraint(equalTo: percentageL.centerYAnchor),
-            starImageView.leadingAnchor.constraint(equalTo: percentageL.trailingAnchor, constant: 8),
-            starImageView.heightAnchor.constraint(equalToConstant: 30),
-            starImageView.widthAnchor.constraint(equalToConstant: 30),
+        
             
             // Progress message label
             progressMessageLabel.topAnchor.constraint(equalTo: percentageL.bottomAnchor, constant: 8),
@@ -390,21 +374,20 @@ class FlashcardResultViewController: UIViewController {
                 if percentage >= 0.8 {
                     encouragementLabel.text = "Amazing recall!"
                 } else if percentage >= 0.6 {
-                    encouragementLabel.text = "Good progress! "
+                    encouragementLabel.text = "Good progress!"
                 } else if percentage > 0 {
-                    encouragementLabel.text = "Keep practicing! "
+                    encouragementLabel.text = "Keep practicing!"
                 } else {
-                    encouragementLabel.text = "Let's try again! "
+                    encouragementLabel.text = "Let's try again!"
                 }
                 
-                // Show/hide star based on performance
-                starImageView.isHidden = percentage < 0.7
+              
             } else {
                 percentageL.text = "0%"
                 progressMessageLabel.text = "Start memorizing flashcards!"
                 memorisedL.text = "Cards memorized: 0"
                 needPracticeL.text = "Cards to review: 0"
-                starImageView.isHidden = true
+              
             }
         
     }
@@ -459,76 +442,53 @@ class FlashcardResultViewController: UIViewController {
         }, completion: nil)
     }
     
+    
     private func playConfettiAnimation() {
-        // Create more subtle confetti using CAEmitterLayer
+        guard let score = score else { return }
+        let percentage = Float(score.score) / Float(score.total) * 100
+        guard percentage >= 85 else { return }
+    
         let emitterLayer = CAEmitterLayer()
-        emitterLayer.emitterPosition = CGPoint(x: view.bounds.width / 2, y: -20)
+        emitterLayer.emitterPosition = CGPoint(x: view.bounds.width / 2, y: -50)
         emitterLayer.emitterShape = .line
-        emitterLayer.emitterSize = CGSize(width: view.bounds.width * 0.8, height: 1)
+        emitterLayer.emitterSize = CGSize(width: view.bounds.width, height: 1)
         
-        let colors: [UIColor] = [
-            AppTheme.primary.withAlphaComponent(0.7),
-            AppTheme.secondary.withAlphaComponent(0.7),
-            .systemYellow.withAlphaComponent(0.7),
-            .systemPink.withAlphaComponent(0.7),
-            .systemGreen.withAlphaComponent(0.7)
-        ]
-        
-        var cells: [CAEmitterCell] = []
+      
+        var cells = [CAEmitterCell]()
+        let colors = [UIColor.red, UIColor.green, UIColor.blue, UIColor.yellow, UIColor.purple, UIColor.orange]
         
         for color in colors {
             let cell = CAEmitterCell()
-            cell.birthRate = 2
-            cell.lifetime = 6
-            cell.velocity = 100
-            cell.velocityRange = 30
+            cell.birthRate = 5
+            cell.lifetime = 8
+            cell.velocity = 150
+            cell.velocityRange = 100
             cell.emissionLongitude = .pi
-            cell.emissionRange = .pi / 5
-            cell.spin = 2.0
-            cell.spinRange = 0.5
-            cell.scaleRange = 0.2
-            cell.scaleSpeed = -0.05
-            cell.contents = createConfettiShape(color: color)?.cgImage
+            cell.emissionRange = .pi / 4
+            cell.spin = 3.5
+            cell.spinRange = 1
+            cell.scaleRange = 0.25
+            cell.scaleSpeed = -0.1
+       
+            let size = CGSize(width: 10, height: 5)
+            UIGraphicsBeginImageContext(size)
+            let context = UIGraphicsGetCurrentContext()!
+            context.setFillColor(color.cgColor)
+            context.fill(CGRect(origin: .zero, size: size))
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            cell.contents = image?.cgImage
             cells.append(cell)
         }
         
         emitterLayer.emitterCells = cells
         view.layer.addSublayer(emitterLayer)
-        
-        // Clean up after animation finishes - shorter duration
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             emitterLayer.birthRate = 0
         }
     }
-
-    private func createConfettiShape(color: UIColor) -> UIImage? {
-        let size = CGSize(width: 8, height: 8)
-        let renderer = UIGraphicsImageRenderer(size: size)
-        
-        return renderer.image { ctx in
-            color.setFill()
-            
-            // Create different shapes
-            let shapeName = arc4random_uniform(3)
-            
-            if shapeName == 0 {
-                // Rectangle
-                ctx.fill(CGRect(origin: .zero, size: size))
-            } else if shapeName == 1 {
-                // Circle
-                ctx.cgContext.fillEllipse(in: CGRect(origin: .zero, size: size))
-            } else {
-                // Triangle
-                let path = UIBezierPath()
-                path.move(to: CGPoint(x: size.width/2, y: 0))
-                path.addLine(to: CGPoint(x: size.width, y: size.height))
-                path.addLine(to: CGPoint(x: 0, y: size.height))
-                path.close()
-                path.fill()
-            }
-        }
-    }
-    
     // MARK: - Action Methods
     @objc private func backButtonTapped() {
         performSegue(withIdentifier: "toScheduleUnwind", sender: nil)

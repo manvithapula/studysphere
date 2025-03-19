@@ -5,6 +5,8 @@ class StudyTechniquesViewController: UIViewController {
     
     // MARK: - Properties
     private let document: FileMetadata
+    private var documentHasValue: Bool = false
+    private var topic:Topics?
     
     private let unitNameLabel: UILabel = {
         let label = UILabel()
@@ -34,15 +36,16 @@ class StudyTechniquesViewController: UIViewController {
         return stack
     }()
     private  let techniques = [
-        ("Spaced Repetition", "clock", UIColor.systemBlue),
-        ("Active Recall", "brain.head.profile", UIColor.systemBlue),
-        ("Summariser", "text.alignleft", UIColor.systemBlue)
+        ("Spaced Repetition", "rectangle.on.rectangle.fill", UIColor.systemBlue),
+        ("Active Recall", "doc.questionmark.fill", UIColor.systemBlue),
+        ("Summariser", "doc.text.fill", UIColor.systemBlue)
     ]
     
     
     // MARK: - Initialization
     init(document: FileMetadata) {
         self.document = document
+        self.topic = nil
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,42 +55,93 @@ class StudyTechniquesViewController: UIViewController {
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-    }
+           super.viewDidLoad()
+           setupUI()
+           checkDocumentValue()
+       }
     
     // MARK: - Setup UI
     private func setupUI() {
-        view.backgroundColor = .systemBackground
-        Topic.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(unitNameLabel)
-        view.addSubview(Topic)
-        view.addSubview(titleLabel)
-        view.addSubview(stackView)
-        
-        techniques.forEach { title, image, color in
-            let button = createTechniqueButton(title: title, imageName: image, color: color)
-            stackView.addArrangedSubview(button)
+            view.backgroundColor = .systemBackground
+            Topic.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Add title label and technique buttons by default
+            view.addSubview(titleLabel)
+            view.addSubview(stackView)
+            
+            techniques.forEach { title, image, color in
+                let button = createTechniqueButton(title: title, imageName: image, color: color)
+                stackView.addArrangedSubview(button)
+            }
+            
+            // Set up constraints for title label and techniques
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+                titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                
+                stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+                stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            ])
+        }
+    private func checkDocumentValue() {
+            showLoading(text: "Checking document...")
+            
+            // Simulating asynchronous function to check if document has value
+            Task {
+                // Replace this with your actual asynchronous check
+                do {
+                    // Example of an asynchronous check
+                    let alltopics = try await topicsDb.findAll(where: ["subject":document.subjectId])
+                    print(alltopics)
+                    self.documentHasValue = alltopics.first != nil
+                    if(self.documentHasValue){
+                        topic = alltopics.first
+                    }
+                    // Update UI on main thread
+                    await MainActor.run {
+                        self.hideLoading()
+                        
+                        if !self.documentHasValue {
+                            self.setupValueDependentUI()
+                        } else {
+                            print("Document has no value. Showing only technique buttons.")
+                        }
+                    }
+                } catch {
+                    await MainActor.run {
+                    }
+                }
+            }
         }
         
-        // Constraints
-        NSLayoutConstraint.activate([
-            unitNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            unitNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+        // Setup UI elements that depend on document value
+        private func setupValueDependentUI() {
+            // Add unitNameLabel and Topic only if document has value
+            view.addSubview(unitNameLabel)
+            view.addSubview(Topic)
             
-            Topic.topAnchor.constraint(equalTo: unitNameLabel.bottomAnchor, constant: 24),
-            Topic.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            Topic.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-
-            titleLabel.topAnchor.constraint(equalTo: Topic.bottomAnchor, constant: 24),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            // Adjust constraints based on the presence of unitNameLabel and Topic
+            NSLayoutConstraint.activate([
+                unitNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+                unitNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                
+                Topic.topAnchor.constraint(equalTo: unitNameLabel.bottomAnchor, constant: 24),
+                Topic.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                Topic.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                
+                // Adjust the title label's top anchor to be below the Topic
+                titleLabel.topAnchor.constraint(equalTo: Topic.bottomAnchor, constant: 24)
+            ])
             
-            stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
-    }
-    
+            // Remove the original top constraint for the title label
+            for constraint in view.constraints {
+                if constraint.firstItem === titleLabel && constraint.firstAttribute == .top && constraint.secondItem === view.safeAreaLayoutGuide {
+                    constraint.isActive = false
+                    break
+                }
+            }
+        }
     private func createTechniqueButton(title: String, imageName: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .system)
         
@@ -110,25 +164,26 @@ class StudyTechniquesViewController: UIViewController {
     // MARK: - Actions
     @objc private func techniqueTapped(_ sender: UIButton) {
         guard let selectedTechnique = sender.configuration?.title else { return }
-        if(Topic.text == nil || Topic.text!.isEmpty){
+        if(!documentHasValue && (Topic.text == nil || Topic.text!.isEmpty)){
             showError(message: "Enter a topic")
             return
         }
+        let title = documentHasValue ? topic!.title : Topic.text
         switch(selectedTechnique){
         case techniques[0].0:
-            createSR(self)
+            createSR(title: title!)
         case techniques[1].0:
-            createAR(self)
+            createAR(title: title!)
         case techniques[2].0:
-            createSummarizer(self)
+            createSummarizer(title: title!)
         default:
             return
         }
     }
-    func createSR(_ sender: Any) {
+    func createSR(title:String) {
         var newTopic = Topics(
-            id: "", title: Topic.text!, subject: document.subjectId,
-            type: .flashcards, subtitle: "6 more to go", createdAt: Timestamp(),
+            id: "", title: title, subject: document.subjectId,
+            type: .flashcards, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text: "Generating flashcards...")
@@ -154,10 +209,10 @@ class StudyTechniquesViewController: UIViewController {
         }
 
     }
-    func createAR(_ sender: Any) {
+    func createAR(title:String) {
         var newTopic = Topics(
-            id: "", title: Topic.text!, subject: document.subjectId,
-            type: .quizzes, subtitle: "6 more to go", createdAt: Timestamp(),
+            id: "", title: title, subject: document.subjectId,
+            type: .quizzes, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
         showLoading(text: "Generating Quiz...")
@@ -182,9 +237,9 @@ class StudyTechniquesViewController: UIViewController {
         }
     }
 
-    func createSummarizer(_ sender: Any) {
+    func createSummarizer(title:String) {
         var newTopic = Topics(
-            id: "", title: Topic.text!, subject: document.subjectId,
+            id: "", title: title, subject: document.subjectId,
             type: .summary, subtitle: "", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)

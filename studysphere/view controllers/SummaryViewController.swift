@@ -64,6 +64,11 @@ class SummaryViewController: UIViewController {
     private func hideTabBar() {
         tabBarController?.tabBar.isHidden = true
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+
+    }
     
     private func setupUI() {
         view.backgroundColor = .systemGray6

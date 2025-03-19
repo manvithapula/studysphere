@@ -41,10 +41,21 @@ class DocumentCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    let previewButton:UIButton = {
+        let startButton = UIButton()
+        startButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
+        startButton.tintColor = .white
+        startButton.setTitleColor(.white, for: .normal)
+        startButton.backgroundColor = AppTheme.primary
+        startButton.layer.cornerRadius = 16
+        startButton.translatesAutoresizingMaskIntoConstraints = false
+        startButton.isUserInteractionEnabled = true
+        return startButton
+    }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .bold)
+        label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .darkText
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -88,7 +99,7 @@ class DocumentCell: UICollectionViewCell {
         iconContainer.addSubview(documentImageView)
         cardBackground.addSubview(titleLabel)
         cardBackground.addSubview(dateLabel)
-        cardBackground.addSubview(fileTypeLabel)
+        cardBackground.addSubview(previewButton)
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -115,6 +126,11 @@ class DocumentCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             
+            previewButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,constant: 8),
+            previewButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            previewButton.widthAnchor.constraint(equalToConstant:32),
+            previewButton.heightAnchor.constraint(equalToConstant: 32),
+            
             dateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             dateLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
@@ -133,28 +149,19 @@ class DocumentCell: UICollectionViewCell {
         setupColors(for: index)
         
         // Assuming file extension property exists on FileMetadata
-        if let fileExtension = document.title.components(separatedBy: ".").last {
-            setupDocumentType(fileExtension: fileExtension)
-        } else {
-            setupDocumentType(fileExtension: "")
-        }
+        setupDocumentType(fileExtension: document.subjectId)
+
     }
 
     private func setupDocumentType(fileExtension: String) {
-        switch fileExtension.lowercased() {
-        case "pdf":
-            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
-            fileTypeLabel.text = "PDF"
-        case "doc", "docx":
-            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
-            fileTypeLabel.text = "DOC"
-        default:
-            documentImageView.image = UIImage(systemName: "doc.fill")?.withRenderingMode(.alwaysTemplate)
-            fileTypeLabel.text = fileExtension.isEmpty ? "DOC" : fileExtension.uppercased()
+        Task{
+            let allsubjects = try await subjectDb.findAll(where: ["id":fileExtension])
+            if let subject = allsubjects.first{
+                documentImageView.image = UIImage(systemName: SubjectIconService.shared.getIconName(for:subject.name ))?.withRenderingMode(.alwaysTemplate)
+            }
+            fileTypeLabel.sizeToFit()
+            fileTypeLabel.layoutMargins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         }
-        
-        fileTypeLabel.sizeToFit()
-        fileTypeLabel.layoutMargins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
     }
     
     private func setupColors(for index: Int) {
@@ -181,6 +188,8 @@ class DocumentCell: UICollectionViewCell {
             animateHighlightState()
         }
     }
+
+    
         
     private func animateHighlightState() {
         let transform: CGAffineTransform = isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity

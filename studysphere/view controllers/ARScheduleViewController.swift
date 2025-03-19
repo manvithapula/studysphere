@@ -140,8 +140,8 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
                     topic?.subtitle = "All schedules completed"
                     topic?.completed = Timestamp()
                 } else {
-                    subtitleLabel.text = "\(countDiff) more to go"
-                    topic?.subtitle = "\(countDiff) more to go"
+                    subtitleLabel.text = "\(countDiff) revision remaining"
+                    topic?.subtitle = "\(countDiff) revision remaining"
                 }
                 let allScores = try await scoreDb.findAll(where: ["topicId": topic!.id])
                 if allScores.count > 0 {

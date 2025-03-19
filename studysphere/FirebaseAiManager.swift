@@ -103,11 +103,7 @@ class FirebaseAiManager {
                 return nil
             }
             let prompt = """
-                Create Summary for this PDF document.
-                Focus on key concepts and important details from the content.
-                do not add markup.
-                make it atlest 200 words.
-                Directly start from main content dont give this pdf contains 
+                Summarize the following text into concise, clear key points. Focus on the most important facts, arguments, and conclusions. Use bullet points for clarity. Maintain the original context and meaning without adding personal opinions. Ignore any special characters like asterisks, markdown symbols, or unusual formatting. Output should be professional and easy to read.
                 """
 
             let content = ModelContent(
