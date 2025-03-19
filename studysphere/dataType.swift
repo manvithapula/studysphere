@@ -545,27 +545,23 @@ class FakeDb<T: Codable & Identifiable> {
 
         do {
             let querySnapshot = try await collection.getDocuments()
-
             let documents = querySnapshot.documents
 
             var fetchedItems: [T] = []
             for document in documents {
                 let data = document.data()
                 do {
-                    let jsonData = try JSONSerialization.data(
-                        withJSONObject: data, options: [])
+                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
                     let item = try decoder.decode(T.self, from: jsonData)
                     fetchedItems.append(item)
                 } catch {
-                    print(
-                        "Error decoding document: \(document.documentID), error: \(error)"
-                    )
+                    print("Error decoding document: \(document.documentID), error: \(error)")
                 }
             }
-            self.items = fetchedItems
-            self.loaded = true
+
+
             return fetchedItems
         } catch {
             print("Error getting documents: \(error)")

@@ -154,7 +154,7 @@ extension homeScreenViewController {
         
         stackView.addArrangedSubview(spacedRepetitionGridView(type: .quizzes, title: "Active Recall", action: #selector(ARseeAllButtonTapped)))
         
-        stackView.addArrangedSubview(spacedRepetitionGridView(type: .summary, title: "Summeriser", action: #selector(summaryseeAllButtonTapped)))
+        stackView.addArrangedSubview(spacedRepetitionGridView(type: .summary, title: "Summariser", action: #selector(summaryseeAllButtonTapped)))
         
         
         
