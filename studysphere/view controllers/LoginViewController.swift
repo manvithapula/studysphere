@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
     
     private let appTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "StudySphere"
+        label.text = "Memoriso"
         label.font = .systemFont(ofSize: 24, weight: .bold)
         label.textColor = .darkText
         label.textAlignment = .center
