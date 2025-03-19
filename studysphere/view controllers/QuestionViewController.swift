@@ -654,27 +654,6 @@ extension UILabel {
         }
     }
 
-    override open func draw(_ rect: CGRect) {
-        let insets = textInsets
-        super.draw(rect.inset(by: insets))
-    }
-
-    override open var intrinsicContentSize: CGSize {
-        let size = super.intrinsicContentSize
-        let insets = textInsets
-        return CGSize(width: size.width + insets.left + insets.right,
-                      height: size.height + insets.top + insets.bottom)
-    }
-
-    override open func sizeThatFits(_ size: CGSize) -> CGSize {
-        let insets = textInsets
-        var newSize = CGSize(width: size.width - insets.left - insets.right,
-                             height: size.height - insets.top - insets.bottom)
-        newSize = super.sizeThatFits(newSize)
-        newSize.width += insets.left + insets.right
-        newSize.height += insets.top + insets.bottom
-        return newSize
-    }
 }
 
 // Extension for tab bar hiding
