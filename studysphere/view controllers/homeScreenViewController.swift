@@ -276,7 +276,7 @@ extension homeScreenViewController {
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let uploadButton = UIButton()
-        uploadButton.setTitle("Upload PDF", for: .normal)
+        uploadButton.setTitle("Create module", for: .normal)
         uploadButton.setTitleColor(.white, for: .normal)
         uploadButton.backgroundColor = AppTheme.primary
         
