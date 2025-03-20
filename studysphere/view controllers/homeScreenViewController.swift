@@ -290,7 +290,7 @@ extension homeScreenViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let subtitleLabel = UILabel()
-        subtitleLabel.text = "Create flashcards, quizzes and summaries from your PDFs"
+        subtitleLabel.text = "Create flashcards, quizzes and summaries from your materials"
         subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
         subtitleLabel.textColor = .darkGray
         subtitleLabel.numberOfLines = 0
@@ -1225,7 +1225,6 @@ extension homeScreenViewController {
         titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        
         let subjectTag = UILabel()
         subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
         subjectTag.text = " "
@@ -1236,12 +1235,40 @@ extension homeScreenViewController {
         subjectTag.translatesAutoresizingMaskIntoConstraints = false
         subjectTag.setPadding(horizontal: 12, vertical: 4)
         
+        let continueButton = UIButton()
+           continueButton.setTitle("Start", for: .normal)
+           continueButton.setTitleColor(.white, for: .normal)
+           continueButton.backgroundColor = mainColor
+           continueButton.layer.cornerRadius = 16
+           continueButton.clipsToBounds = true
+           continueButton.translatesAutoresizingMaskIntoConstraints = false
+           
+           continueButton.addAction(UIAction { [weak self] _ in
+               Task {
+                   let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
+                   let segueIdentifier = item.topicType == .flashcards ? "toFLS" :
+                                         item.topicType == .quizzes ? "toQTS" : "toSummary"
+                   self?.performSegue(withIdentifier: segueIdentifier, sender: topic)
+               }
+           }, for: .touchUpInside)
+           
+           continueButton.addAction(UIAction { _ in
+               UIView.animate(withDuration: 0.2) {
+                   continueButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+               }
+               DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                   UIView.animate(withDuration: 0.2) {
+                       continueButton.transform = .identity
+                   }
+               }
+           }, for: .touchDown)
+        
         containerView.addSubview(cardBackground)
         cardBackground.addSubview(iconContainer)
         iconContainer.addSubview(iconView)
         cardBackground.addSubview(titleLabel)
-      //  cardBackground.addSubview(subtitleLabel)
         cardBackground.addSubview(subjectTag)
+        cardBackground.addSubview(continueButton)
         
         NSLayoutConstraint.activate([
             cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -1261,24 +1288,24 @@ extension homeScreenViewController {
             
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
-            
-         /*   subtitleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            subtitleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),*/
+            titleLabel.trailingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -8),
             
             subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             subjectTag.bottomAnchor.constraint(equalTo: cardBackground.bottomAnchor, constant: -16),
             
+            continueButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+                continueButton.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
+                continueButton.widthAnchor.constraint(equalToConstant: 90),
+                continueButton.heightAnchor.constraint(equalToConstant: 32),
             containerView.heightAnchor.constraint(equalToConstant: 100)
         ])
         
-        // Add tap gesture recognizer for the whole item
+        // Add tap gesture recognizer with animation
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(moduleItemTapped(_:)))
         cardBackground.addGestureRecognizer(tapGesture)
         cardBackground.isUserInteractionEnabled = true
-        cardBackground.tag = Int(item.topicId) ?? 0 // Convert string ID to Int for tag (or use a different approach for storing the ID)
+        cardBackground.tag = Int(item.topicId) ?? 0 // Store the topic ID in the tag
         
         // Asynchronously load subject name
         Task {
@@ -1296,6 +1323,7 @@ extension homeScreenViewController {
         return containerView
     }
 
+    
     // Helper to format date for subtitle
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -1316,7 +1344,6 @@ extension homeScreenViewController {
                 view.transform = .identity
             }
         }
-        
         // Find topic by ID and navigate
         Task {
             let topicId = String(view.tag)
