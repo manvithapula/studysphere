@@ -27,10 +27,16 @@ class ForgotPasswordViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Email"
         textField.borderStyle = .roundedRect
+        textField.backgroundColor = .systemGray6
         textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.layer.cornerRadius = 12
+        textField.font = .systemFont(ofSize: 16)
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
+    
+    
     
     private let resetButton: UIButton = {
         let button = UIButton(type: .system)

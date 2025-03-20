@@ -1,63 +1,56 @@
-//
-//  SignupViewController.swift
-//  studysphere
-//
-//  Created by admin64 on 12/11/24.
-//
-
 import UIKit
 import FirebaseCore
 
 class SignupViewController: UIViewController {
-
-
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var firstNameTextField: UITextField!
-    @IBOutlet weak var lastNameTextField: UITextField!
-    @IBOutlet weak var dateOfBirthTextField: UITextField!
-    @IBOutlet weak var googleSignInButton: UIButton!
-    @IBOutlet weak var appleSignInButton: UIButton!
-    @IBOutlet weak var signUpButton: UIButton!
-   
-        
-        private let datePicker = UIDatePicker()
-        
-        private let scrollView: UIScrollView = {
-            let scrollView = UIScrollView()
-            scrollView.translatesAutoresizingMaskIntoConstraints = false
-            return scrollView
-        }()
-        
-        private let contentView: UIView = {
-            let view = UIView()
-            view.translatesAutoresizingMaskIntoConstraints = false
-            return view
-        }()
-        
-        private let stackView: UIStackView = {
-            let stack = UIStackView()
-            stack.axis = .vertical
-            stack.spacing = 24
-            stack.alignment = .center
-            stack.translatesAutoresizingMaskIntoConstraints = false
-            return stack
-        }()
-        
+    
+    // MARK: - Properties
+    var emailTextField: UITextField!
+    var passwordTextField: UITextField!
+    var firstNameTextField: UITextField!
+    var signUpButton: UIButton!
+    
+    // Hidden fields 
+    var lastNameTextField: UITextField!
+    var dateOfBirthTextField: UITextField!
+    var googleSignInButton: UIButton!
+    var appleSignInButton: UIButton!
+    
+    private let datePicker = UIDatePicker()
+    
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "LOGO") // Use the same logo image as login screen
+        imageView.image = UIImage(named: "LOGO")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-        
-    // First, fix the titleLabel and subtitleLabel properties
+    
+    private let appTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Memoriso"
+        label.textColor = AppTheme.primary
+        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Create Account"
-        label.font = .systemFont(ofSize: 24, weight: .bold) // Match login screen font size
-        label.textColor = .darkText // Match login screen color
+        label.font = .systemFont(ofSize: 24, weight: .bold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -67,22 +60,37 @@ class SignupViewController: UIViewController {
         let label = UILabel()
         label.text = "Fill in your details to get started"
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .systemGray
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
+    private let fieldsStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 16
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
     
+    private let stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
 
-        // MARK: - Lifecycle
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            setupUI()
-            setupConstraints()
-            setupDatePicker()
-            setupTapGesture()
-        }
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        createViews()
+        setupUI()
+        setupConstraints()
+        setupTapGesture()
+    }
+    
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -91,109 +99,184 @@ class SignupViewController: UIViewController {
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    // MARK: - Create Views Programmatically
+    private func createViews() {
+        // Create First Name TextField
+        firstNameTextField = UITextField()
+        firstNameTextField.translatesAutoresizingMaskIntoConstraints = false
+        firstNameTextField.placeholder = "First Name"
+        firstNameTextField.backgroundColor = .systemGray6
+        firstNameTextField.layer.cornerRadius = 12
+        firstNameTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        firstNameTextField.leftViewMode = .always
+        firstNameTextField.font = .systemFont(ofSize: 16)
+        firstNameTextField.autocorrectionType = .no
         
-      
-    private func setupUI() {
-        view.backgroundColor = .systemBackground
-        view.addSubview(logoImageView)
-        view.addSubview(titleLabel)
-        view.addSubview(subtitleLabel)
-
-        [firstNameTextField, lastNameTextField, emailTextField,
-         passwordTextField, dateOfBirthTextField].forEach { textField in
-            textField?.backgroundColor = .systemGray6
-            textField?.layer.cornerRadius = 12
-            textField?.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
-            textField?.leftViewMode = .always
-            textField?.font = .systemFont(ofSize: 16)
-            if textField == emailTextField {
-                textField?.autocapitalizationType = .none
-            }
-        }
-        signUpButton.isUserInteractionEnabled = true
+        // Create Email TextField
+        emailTextField = UITextField()
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        emailTextField.placeholder = "Email"
+        emailTextField.backgroundColor = .systemGray6
+        emailTextField.layer.cornerRadius = 12
+        emailTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        emailTextField.leftViewMode = .always
+        emailTextField.font = .systemFont(ofSize: 16)
+        emailTextField.autocapitalizationType = .none
+        emailTextField.autocorrectionType = .no
+        
+        // Create Password TextField
+        passwordTextField = UITextField()
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.placeholder = "Password"
+        passwordTextField.backgroundColor = .systemGray6
+        passwordTextField.layer.cornerRadius = 12
+        passwordTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        passwordTextField.leftViewMode = .always
+        passwordTextField.font = .systemFont(ofSize: 16)
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.autocorrectionType = .no
+        passwordTextField.autocapitalizationType = .none
+        
+        // Create Sign Up Button
+        signUpButton = UIButton(type: .system)
+        signUpButton.translatesAutoresizingMaskIntoConstraints = false
         signUpButton.backgroundColor = AppTheme.primary
         signUpButton.setTitleColor(.white, for: .normal)
-        signUpButton.layer.cornerRadius = 25
+        signUpButton.layer.cornerRadius = 22
         signUpButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        signUpButton.setTitle("Sign Up", for: .normal)
+        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        
+        // Create hidden fields (for backend compatibility)
+        lastNameTextField = UITextField()
+        lastNameTextField.isHidden = true
+        lastNameTextField.text = ""
+        
+        dateOfBirthTextField = UITextField()
+        dateOfBirthTextField.isHidden = true
+        
+        googleSignInButton = UIButton(type: .system)
         googleSignInButton.isHidden = true
+        
+        appleSignInButton = UIButton(type: .system)
         appleSignInButton.isHidden = true
     }
+    
+    private func setupUI() {
+        // Set background color to match login screen
+        view.backgroundColor = .systemBackground
         
-        private func setupDatePicker() {
-            datePicker.datePickerMode = .date
-            datePicker.preferredDatePickerStyle = .wheels
-            datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
-            dateOfBirthTextField.inputView = datePicker
-            let toolbar = UIToolbar()
-            toolbar.sizeToFit()
-            let doneButton = UIBarButtonItem(title: "Done", style: .done,
-                                             target: self, action: #selector(doneButtonTapped))
-            toolbar.setItems([UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-                             doneButton], animated: true)
-            dateOfBirthTextField.inputAccessoryView = toolbar
-        }
+        // Setup scroll view hierarchy
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
+        // Setup stack views
+        contentView.addSubview(stackView)
+        
+        // Add logo and title elements
+        stackView.addArrangedSubview(logoImageView)
+        stackView.addArrangedSubview(appTitleLabel)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(subtitleLabel)
+        
+        // Add spacing between title and fields
+        let spacerView = UIView()
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.heightAnchor.constraint(equalToConstant: 10).isActive = true
+        stackView.addArrangedSubview(spacerView)
+        
+        // Setup fields stack
+        fieldsStackView.addArrangedSubview(firstNameTextField)
+        fieldsStackView.addArrangedSubview(emailTextField)
+        fieldsStackView.addArrangedSubview(passwordTextField)
+        stackView.addArrangedSubview(fieldsStackView)
+        
+        // Add sign up button
+        stackView.addArrangedSubview(signUpButton)
+        
+        // Add hidden fields to the view hierarchy
+        view.addSubview(lastNameTextField)
+        view.addSubview(dateOfBirthTextField)
+        view.addSubview(googleSignInButton)
+        view.addSubview(appleSignInButton)
+    }
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            // Scroll view
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImageView.widthAnchor.constraint(equalToConstant: 100),
-            logoImageView.heightAnchor.constraint(equalToConstant: 100),
+            // Content view
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            // Stack view - positioned with proper spacing
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 60),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20),
+            
+            // Logo image
+            logoImageView.widthAnchor.constraint(equalToConstant: 200),
+            logoImageView.heightAnchor.constraint(equalToConstant: 200),
+            
+            // App title label
+            appTitleLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            appTitleLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            
+            // Title label
+            titleLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             
             // Subtitle label
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            subtitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            subtitleLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             
-            // Existing constraints for text fields
+            // Fields stack
+            fieldsStackView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            
+            // Text fields
             firstNameTextField.heightAnchor.constraint(equalToConstant: 50),
-            lastNameTextField.heightAnchor.constraint(equalToConstant: 50),
+            firstNameTextField.widthAnchor.constraint(equalTo: fieldsStackView.widthAnchor),
             emailTextField.heightAnchor.constraint(equalToConstant: 50),
+            emailTextField.widthAnchor.constraint(equalTo: fieldsStackView.widthAnchor),
             passwordTextField.heightAnchor.constraint(equalToConstant: 50),
-            dateOfBirthTextField.heightAnchor.constraint(equalToConstant: 50),
+            passwordTextField.widthAnchor.constraint(equalTo: fieldsStackView.widthAnchor),
             
-            // Button height
+            // Button
             signUpButton.heightAnchor.constraint(equalToConstant: 50),
+            signUpButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
         ])
     }
-        
-        // MARK: - Actions
-        @objc private func dateChanged(_ sender: UIDatePicker) {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            dateOfBirthTextField.text = formatter.string(from: sender.date)
-        }
-        
-        @objc private func doneButtonTapped() {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            dateOfBirthTextField.text = formatter.string(from: datePicker.date)
-            dateOfBirthTextField.resignFirstResponder()
-        }
-    @IBAction func signUpButtonTapped(_ sender: UIButton) {
+    
+    // MARK: - Actions
+    @objc func signUpButtonTapped(_ sender: UIButton) {
         guard let email = emailTextField.text, !email.isEmpty,
               let firstName = firstNameTextField.text, !firstName.isEmpty,
-              let lastName = lastNameTextField.text, !lastName.isEmpty,
-              let dateOfBirth = dateOfBirthTextField.text, !dateOfBirth.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
             showAlert(message: "Please fill out all fields.")
             return
         }
+        
         FirebaseAuthManager.shared.signUp(email: email, password: password) { result in
             switch result {
             case .success(let user):
                 print("User created: \(user.uid)")
+                // Set default values for lastName and dateOfBirth since they're now hidden
+                let lastName = ""
+                
                 var newUser = UserDetailsType(id: "",
                                             firstName: firstName,
                                             lastName: lastName,
-                                              dob: Timestamp(date: self.datePicker.date),
+                                            dob: Timestamp(date: Date()), // Use current date as default
                                             pushNotificationEnabled: false,
                                             faceIdEnabled: false,
                                             email: email,
@@ -210,8 +293,8 @@ class SignupViewController: UIViewController {
                 self.showError(message: "Error: \(error.localizedDescription)")
             }
         }
-        
     }
+    
     private func checkAndNavigate() async {
         guard FirebaseAuthManager.shared.isUserLoggedIn == true else {
             return
@@ -231,6 +314,7 @@ class SignupViewController: UIViewController {
             print("Error checking user: \(error)")
         }
     }
+    
     private func showError(message: String) {
         let alert = UIAlertController(
             title: "Error", message: message, preferredStyle: .alert)
@@ -238,46 +322,10 @@ class SignupViewController: UIViewController {
             UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
-    @objc private func signUp(){
-        print("tapped")
-        guard let email = emailTextField.text, !email.isEmpty,
-              let firstName = firstNameTextField.text, !firstName.isEmpty,
-              let lastName = lastNameTextField.text, !lastName.isEmpty,
-              let dateOfBirth = dateOfBirthTextField.text, !dateOfBirth.isEmpty,
-              let password = passwordTextField.text, !password.isEmpty else {
-            showAlert(message: "Please fill out all fields.")
-            return
-        }
-        
-        var newUser = UserDetailsType(id: "",
-                                    firstName: firstName,
-                                    lastName: lastName,
-                                    dob: Timestamp(date: datePicker.date),
-                                    pushNotificationEnabled: false,
-                                    faceIdEnabled: false,
-                                    email: email,
-                                    password: password,
-                                    createdAt: Timestamp(),
-                                    updatedAt: Timestamp())
-        
-        if userDB.findFirst(where: ["email": email]) != nil {
-            showAlert(message: "User with email \(email) already exists.")
-            return
-        }
-        
-        let db = FirestoreManager.shared.db
-        let createdUser = userDB.create(&newUser)
-        
-        do {
-            try db.collection("usertemp").document(createdUser.id).setData(createdUser.asDictionary())
-            dismiss(animated: true)
-        } catch {
-            showAlert(message: "Error creating user: \(error.localizedDescription)")
-        }
-    }
+    
     private func showAlert(message: String) {
-            let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
-        }
+        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
+}

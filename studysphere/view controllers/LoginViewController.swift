@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
     
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "LOGO") // Load logo from assets
+        imageView.image = UIImage(named: "LOGO")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -41,8 +41,8 @@ class LoginViewController: UIViewController {
     private let appTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Memoriso"
+        label.textColor = AppTheme.primary
         label.font = .systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .darkText
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -51,7 +51,7 @@ class LoginViewController: UIViewController {
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 20
+        stack.spacing = 8
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -67,9 +67,8 @@ class LoginViewController: UIViewController {
     
     private let subtitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Sign in to continue"
+        label.text = "Login in to continue"
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .systemGray
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -104,6 +103,7 @@ class LoginViewController: UIViewController {
         emailTextField.leftViewMode = .always
         emailTextField.font = .systemFont(ofSize: 16)
         emailTextField.autocapitalizationType = .none
+        emailTextField.autocorrectionType = .no
         
         // Create Password TextField
         passwordTextField = PasswordTextField()
@@ -115,6 +115,7 @@ class LoginViewController: UIViewController {
         passwordTextField.leftViewMode = .always
         passwordTextField.font = .systemFont(ofSize: 16)
         passwordTextField.isSecureTextEntry = true
+        passwordTextField.autocorrectionType = .no
 
         
         // Create Login Button
@@ -238,8 +239,8 @@ class LoginViewController: UIViewController {
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20),
             
             // Logo image
-            logoImageView.widthAnchor.constraint(equalToConstant: 100),
-            logoImageView.heightAnchor.constraint(equalToConstant: 100),
+            logoImageView.widthAnchor.constraint(equalToConstant: 200),
+            logoImageView.heightAnchor.constraint(equalToConstant: 200),
             
             // Title label constraints
             appTitleLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),

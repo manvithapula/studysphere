@@ -289,34 +289,36 @@ class CreateViewController: UIViewController {
             contentView.bottomAnchor.constraint(
                 equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
-            // Unit Name
-            unitNameLabel.topAnchor.constraint(
-                equalTo: contentView.topAnchor, constant: 20),
-            unitNameLabel.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor, constant: 20),
-            Topic.topAnchor.constraint(
-                equalTo: unitNameLabel.bottomAnchor, constant: 8),
-            Topic.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor, constant: 20),
-            Topic.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor, constant: -20),
-
+            
+            
             // Subject
             subjectLabel.topAnchor.constraint(
-                equalTo: Topic.bottomAnchor, constant: 20),
-            subjectLabel.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor, constant: 20),
-            subjectField.topAnchor.constraint(
-                equalTo: subjectLabel.bottomAnchor, constant: 8),
-            subjectField.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor, constant: 20),
-            subjectField.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor, constant: -20),
+                   equalTo: contentView.topAnchor, constant: 20),
+               subjectLabel.leadingAnchor.constraint(
+                   equalTo: contentView.leadingAnchor, constant: 20),
+               subjectField.topAnchor.constraint(
+                   equalTo: subjectLabel.bottomAnchor, constant: 8),
+               subjectField.leadingAnchor.constraint(
+                   equalTo: contentView.leadingAnchor, constant: 20),
+               subjectField.trailingAnchor.constraint(
+                   equalTo: contentView.trailingAnchor, constant: -20),
+            
+            // Unit Name
+            unitNameLabel.topAnchor.constraint(
+                   equalTo: subjectField.bottomAnchor, constant: 20),
+            unitNameLabel.leadingAnchor.constraint(
+                   equalTo: contentView.leadingAnchor, constant: 20),
+            Topic.topAnchor.constraint(
+                   equalTo: unitNameLabel.bottomAnchor, constant: 8),
+               Topic.leadingAnchor.constraint(
+                   equalTo: contentView.leadingAnchor, constant: 20),
+               Topic.trailingAnchor.constraint(
+                   equalTo: contentView.trailingAnchor, constant: -20),
             techniqueLabel.topAnchor.constraint(
-                equalTo: subjectField.bottomAnchor, constant: 20),
-            techniqueLabel.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor, constant: 20),
+                   equalTo: Topic.bottomAnchor, constant: 20),
+               techniqueLabel.leadingAnchor.constraint(
+                   equalTo: contentView.leadingAnchor, constant: 20),
+
 
             // Technique stack view
             techniquesStackView.topAnchor.constraint(
