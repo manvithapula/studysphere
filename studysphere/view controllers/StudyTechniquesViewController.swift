@@ -37,7 +37,7 @@ class StudyTechniquesViewController: UIViewController {
     }()
     private  let techniques = [
         ("Spaced Repetition", "clock", UIColor.systemBlue),
-        ("Active Recall", "brain", UIColor.systemBlue),
+        ("Active Recall", "brain.head.profile", UIColor.systemBlue),
         ("Summariser", "doc.text", UIColor.systemBlue)
     ]
     

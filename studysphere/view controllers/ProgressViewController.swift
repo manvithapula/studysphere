@@ -89,7 +89,7 @@ class ProgressViewController: UIViewController {
         let label = UILabel()
         label.text = "Your Badges"
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        label.textColor = .black
+      
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -133,7 +133,7 @@ class ProgressViewController: UIViewController {
         let label = UILabel()
         label.text = "Retention Score"
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        label.textColor = .black
+    
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -182,7 +182,7 @@ class ProgressViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.99, alpha: 1.0)
+        view.backgroundColor = .systemGray6
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -577,8 +577,8 @@ class ProgressViewController: UIViewController {
     private func createBadges() {
         // Define badges with their level requirements
         let badgeDefinitions = [
-            (name: "Beginner", icon: "star.fill", level: 1, color: AppTheme.primary),
-            (name: "Intermediate", icon: "star.leadinghalf.filled", level: 2, color: AppTheme.secondary),
+            (name: "Beginner", icon: "star.leadinghalf.filled", level: 1, color: AppTheme.primary),
+            (name: "Intermediate", icon: "star.fill", level: 2, color: AppTheme.secondary),
             (name: "Advanced", icon: "star.circle.fill", level: 3, color: UIColor(red: 0.2, green: 0.6, blue: 0.4, alpha: 1.0)),
             (name: "Expert", icon: "star.square.fill", level: 4, color: UIColor(red: 0.8, green: 0.4, blue: 0.2, alpha: 1.0)),
             (name: "Master", icon: "star.circle", level: 5, color: UIColor(red: 0.6, green: 0.2, blue: 0.8, alpha: 1.0)),

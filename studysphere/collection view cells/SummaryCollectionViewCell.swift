@@ -2,32 +2,44 @@ import UIKit
 
 class SummaryCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
+    // MARK: - UI Elements
     private let containerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 12
-        view.layer.masksToBounds = true
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 16
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.08
+        view.layer.shadowRadius = 1.5
+        view.layer.shadowOffset = CGSize(width: 0, height: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let cardBackground: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 16
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17, weight: .semibold)
         label.textColor = .black
+        label.font = .systemFont(ofSize: 17, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private let subjectTag: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .black
-        label.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         label.layer.cornerRadius = 10
         label.clipsToBounds = true
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = " "
+        label.text = ""
         return label
     }()
     
@@ -43,49 +55,50 @@ class SummaryCollectionViewCell: UICollectionViewCell {
     
     private func setupViews() {
         contentView.addSubview(containerView)
+        contentView.addSubview(cardBackground)
         containerView.addSubview(titleLabel)
         containerView.addSubview(subjectTag)
 
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            
+            // Card Background
+            cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
+            cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            
+            // Title Label
+            titleLabel.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             
             subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            subjectTag.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            subjectTag.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            subjectTag.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            subjectTag.bottomAnchor.constraint(equalTo: cardBackground.bottomAnchor, constant: -16),
             subjectTag.widthAnchor.constraint(greaterThanOrEqualToConstant: 60)
         ])
 
         subjectTag.layoutIfNeeded()
         subjectTag.layer.cornerRadius = 8
         subjectTag.setPadding(horizontal: 12, vertical: 4)
-
-        // Apply solid background color and shadow to containerView
-        CardBackgroundHelper.applyBackgroundColor(to: containerView, index: 0) // Default index
-        CardBackgroundHelper.applyShadow(to: containerView)
+        setupColors(for: 0)
     }
     
     func configure(title: String, itemCount: Int, time: String, subject: String, index: Int) {
         titleLabel.text = title
         subjectTag.text = subject
 
-        // Apply background color based on index
-        CardBackgroundHelper.applyBackgroundColor(to: containerView, index: index)
-        
-        // Apply shadow
-        CardBackgroundHelper.applyShadow(to: containerView)
+        setupColors(for: index)
     }
     
     func updateSubject(topic: Topics) {
         titleLabel.text = topic.title
         
-        // Fetch subject name asynchronously
+    
         Task {
             let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
             if let subject = allSubjects.first {
@@ -93,6 +106,49 @@ class SummaryCollectionViewCell: UICollectionViewCell {
                     self.subjectTag.text = subject.name
                 }
             }
+        }
+    }
+    
+    private func setupColors(for index: Int) {
+        let colorSchemes: [UIColor] = [
+            AppTheme.primary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15)
+        ]
+        let iconColorSchemes: [UIColor] = [
+            AppTheme.primary,
+            AppTheme.secondary
+        ]
+        
+        let colorIndex = index % colorSchemes.count
+        let backgroundColor = colorIndex < colorSchemes.count ?
+                             colorSchemes[colorIndex] :
+                             UIColor.systemGray.withAlphaComponent(0.15)
+        
+        let iconColor = colorIndex < iconColorSchemes.count ?
+                       iconColorSchemes[colorIndex] :
+                       UIColor.systemGray
+        
+        cardBackground.backgroundColor = backgroundColor
+        subjectTag.backgroundColor = iconColor.withAlphaComponent(0.2)
+    }
+
+    private func animateHighlightState() {
+        let transform: CGAffineTransform = isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+        let shadowOpacity: Float = isHighlighted ? 0.12 : 0.08 // Shadow opacity changes on highlight
+
+        if #available(iOS 17.0, *) {
+            containerView.layer.shadowOpacity = shadowOpacity
+            UIView.animate(.bouncy) {
+                self.containerView.transform = transform
+            }
+        } else {
+            UIView.animate(withDuration: 0.2,
+                           delay: 0,
+                           options: [.allowUserInteraction, .beginFromCurrentState],
+                           animations: {
+                self.containerView.transform = transform
+                self.containerView.layer.shadowOpacity = shadowOpacity // Animate shadow opacity
+            })
         }
     }
 }
@@ -116,26 +172,5 @@ extension UILabel {
             frame.size.height = rect.height + padding.top + padding.bottom
             frame.size.width = rect.width + padding.left + padding.right
         }
-    }
-}
-
-class CardBackgroundHelper {
-    static func applyBackgroundColor(to view: UIView, index: Int) {
-        let backgroundColors: [UIColor] = [
-            AppTheme.primary.withAlphaComponent(0.15),
-            AppTheme.secondary.withAlphaComponent(0.15),
-            UIColor.systemGray.withAlphaComponent(0.15) // Fallback color
-        ]
-        
-        let colorIndex = index % backgroundColors.count
-        view.backgroundColor = backgroundColors[colorIndex]
-    }
-    
-    static func applyShadow(to view: UIView) {
-        view.layer.cornerRadius = 16
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.1
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
     }
 }

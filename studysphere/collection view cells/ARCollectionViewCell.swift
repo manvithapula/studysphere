@@ -5,16 +5,28 @@ class ARCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
     private let containerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 12
-        view.layer.masksToBounds = true
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 16
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.08
+        view.layer.shadowRadius = 1.5
+        view.layer.shadowOffset = CGSize(width: 0, height: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let cardBackground: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 16
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .black
         label.font = .systemFont(ofSize: 17, weight: .semibold)
-
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -31,7 +43,6 @@ class ARCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .black
-        label.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         label.layer.cornerRadius = 10
         label.clipsToBounds = true
         label.textAlignment = .center
@@ -39,6 +50,8 @@ class ARCollectionViewCell: UICollectionViewCell {
         label.text = ""
         return label
     }()
+    
+
     
     // MARK: - Initializers
     override init(frame: CGRect) {
@@ -56,9 +69,10 @@ class ARCollectionViewCell: UICollectionViewCell {
     // MARK: - Setup
     private func setupViews() {
         contentView.addSubview(containerView)
-        containerView.addSubview(titleLabel)
-        containerView.addSubview(subtitleLabel)
-        containerView.addSubview(subjectTag)
+        containerView.addSubview(cardBackground)
+        cardBackground.addSubview(titleLabel)
+        cardBackground.addSubview(subtitleLabel)
+        cardBackground.addSubview(subjectTag)
     }
     
     private func setupConstraints() {
@@ -69,20 +83,26 @@ class ARCollectionViewCell: UICollectionViewCell {
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
+            // Card Background
+            cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
+            cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            
             // Title Label
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             
             // Subtitle Label
-            subtitleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            subtitleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            subtitleLabel.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            subtitleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
             
             // Subject Tag
-            subjectTag.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            subjectTag.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
             subjectTag.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 8),
-            subjectTag.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            subjectTag.bottomAnchor.constraint(equalTo: cardBackground.bottomAnchor, constant: -16),
             subjectTag.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
             subjectTag.heightAnchor.constraint(equalToConstant: 24)
         ])
@@ -91,29 +111,54 @@ class ARCollectionViewCell: UICollectionViewCell {
         subjectTag.setPadding(horizontal: 12, vertical: 4)
     }
     
+ 
+
     // MARK: - Configuration
     func configure(topic: Topics, index: Int) {
         titleLabel.text = topic.title
         subtitleLabel.text = topic.subtitle
         subjectTag.text = "" // Temporary until data is fetched
-
-        // Define background colors based on the index
-        let backgroundColors: [UIColor] = [
-            AppTheme.primary.withAlphaComponent(0.15),
-            AppTheme.secondary.withAlphaComponent(0.15),
-        ]
         
-        let colorIndex = index % backgroundColors.count
-        let backgroundColor = backgroundColors[colorIndex]
+        setupColors(for: index)
         
-        // Apply solid background color
-        containerView.backgroundColor = backgroundColor
-        
-        // Set subtitle text color to match theme
-        subtitleLabel.textColor = backgroundColors[colorIndex].withAlphaComponent(0.8)
-
         // Fetch subject asynchronously
         fetchSubject(topic: topic)
+    }
+
+    private func setupColors(for index: Int) {
+        let colorSchemes: [UIColor] = [
+            AppTheme.primary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15)
+        ]
+        
+        let iconColorSchemes: [UIColor] = [
+            AppTheme.primary,
+            AppTheme.secondary
+        ]
+        
+        let colorIndex = index % colorSchemes.count
+        let backgroundColor = colorIndex < colorSchemes.count ?
+                             colorSchemes[colorIndex] :
+                             UIColor.systemGray.withAlphaComponent(0.15)
+        
+        let iconColor = colorIndex < iconColorSchemes.count ?
+                       iconColorSchemes[colorIndex] :
+                       UIColor.systemGray
+        
+        cardBackground.backgroundColor = backgroundColor
+  //      iconImageView.tintColor = iconColor
+        subtitleLabel.textColor = iconColor.withAlphaComponent(0.8)
+        subjectTag.backgroundColor = iconColor.withAlphaComponent(0.2)
+    }
+
+    // MARK: - Highlight Handling
+    override var isHighlighted: Bool {
+        didSet {
+            UIView.animate(withDuration: 0.2) {
+                self.containerView.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+                self.containerView.layer.shadowOpacity = self.isHighlighted ? 0.12 : 0.08
+            }
+        }
     }
     
     private func fetchSubject(topic: Topics) {
@@ -123,6 +168,7 @@ class ARCollectionViewCell: UICollectionViewCell {
                 if let subject = subjects.first {
                     await MainActor.run {
                         self.subjectTag.text = subject.name
+                       
                     }
                 }
             } catch {
@@ -130,6 +176,7 @@ class ARCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    
     
     override func prepareForReuse() {
         super.prepareForReuse()

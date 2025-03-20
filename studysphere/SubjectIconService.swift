@@ -257,33 +257,33 @@ enum SubjectCategory: String, CaseIterable {
         case .computerScience:
             return "desktopcomputer"
         case .literature:
-            return "text.book.closed.fill"
+            return "text.book.closed"
         case .history:
-            return "clock.fill"
+            return "clock"
         case .art:
-            return "paintbrush.fill"
+            return "paintbrush"
         case .music:
             return "music.note"
         case .languages:
-            return "character.bubble.fill"
+            return "character.bubble"
         case .business:
-            return "briefcase.fill"
+            return "briefcase"
         case .engineering:
             return "gear"
         case .psychology:
             return "brain.head.profile"
         case .philosophy:
-            return "lightbulb.fill"
+            return "lightbulb"
         case .physicalEducation:
             return "figure.run"
         case .socialStudies:
-            return "person.3.fill"
+            return "person.3"
             
         // More specialized subjects
         case .biology:
-            return "leaf.fill"
+            return "leaf"
         case .chemistry:
-            return "flask.fill"
+            return "flask"
         case .physics:
             return "atom"
         case .economics:
@@ -291,17 +291,17 @@ enum SubjectCategory: String, CaseIterable {
         case .law:
             return "scale.3d"
         case .medicine:
-            return "heart.fill"
+            return "heart"
         case .geography:
             return "globe"
         case .astronomy:
-            return "moon.stars.fill"
+            return "moon.stars"
         case .statistics:
-            return "chart.bar.fill"
+            return "chart.bar"
             
         // Default
         case .other:
-            return "book.fill"
+            return "book"
         }
     }
 }
