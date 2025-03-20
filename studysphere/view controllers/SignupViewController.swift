@@ -266,6 +266,18 @@ class SignupViewController: UIViewController {
             return
         }
         
+        // Check if email is valid and is a Gmail address
+        if !regexValidateEmail(email: email) {
+            showAlert(message: "Please use a valid Gmail address for registration.")
+            return
+        }
+        
+        // Check password length
+        if !regexValidatePassword(password: password) {
+            showAlert(message: "Password must be at least 6 characters long.")
+            return
+        }
+        
         FirebaseAuthManager.shared.signUp(email: email, password: password) { [weak self] result in
             guard let self = self else { return }
             
@@ -356,4 +368,13 @@ class SignupViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+}
+
+private func regexValidateEmail(email: String) -> Bool {
+    let gmailRegex = "[A-Z0-9a-z._%+-]+@gmail\\.com"
+    return NSPredicate(format: "SELF MATCHES %@", gmailRegex).evaluate(with: email)
+}
+
+private func regexValidatePassword(password: String) -> Bool {
+    return password.count >= 6
 }

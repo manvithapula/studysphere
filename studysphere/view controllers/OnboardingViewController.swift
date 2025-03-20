@@ -27,14 +27,14 @@ class OnboardingViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Study Techniques"
+        label.text = "Welcome to\nMemoriso"
         label.textColor = .black
-        label.font = .systemFont(ofSize: 25, weight: .bold)
+        label.font = .systemFont(ofSize: 30, weight: .bold)
         label.textAlignment = .center
+        label.numberOfLines = 0 // Important for supporting multiple lines
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
     // Space Repetition Section
     private let spaceRepetitionContainer: UIView = {
         let view = UIView()
@@ -173,7 +173,7 @@ class OnboardingViewController: UIViewController {
     
     private let nextButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Next", for: .normal)
+        button.setTitle("Get Started", for: .normal)
         button.backgroundColor = AppTheme.primary
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 26
@@ -303,13 +303,13 @@ class OnboardingViewController: UIViewController {
     
     @objc private func nextButtonTapped() {
         // Set onboarding as seen
-        UserDefaults.standard.set(true, forKey: hasSeenOnboardingKey)
+        markOnboardingAsSeen()
         
-        // Navigate to TabBarController
+        // Navigate to Login screen
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let tabBarVC = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-            tabBarVC.modalPresentationStyle = .fullScreen
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = tabBarVC
+        if let loginVC = storyboard.instantiateInitialViewController() {
+            loginVC.modalPresentationStyle = .fullScreen
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = loginVC
         }
     }
     

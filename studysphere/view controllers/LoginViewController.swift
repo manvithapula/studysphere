@@ -268,10 +268,23 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: - Actions
+
     @objc func loginButtonTapped(_ sender: UIButton) {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-            showAlert(message: "Please enter both email and password.")
+            showAlert(message: "Please fill out all fields.")
+            return
+        }
+        
+        // Check if email is valid and is a Gmail address
+        if !regexValidateEmail(email: email) {
+            showAlert(message: "Please use a valid Gmail address for registration.")
+            return
+        }
+        
+        // Check password length
+        if !regexValidatePassword(password: password) {
+            showAlert(message: "Password must be at least 6 characters long.")
             return
         }
         
@@ -388,4 +401,14 @@ class LoginViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+}
+
+
+private func regexValidateEmail(email: String) -> Bool {
+    let gmailRegex = "[A-Z0-9a-z._%+-]+@gmail\\.com"
+    return NSPredicate(format: "SELF MATCHES %@", gmailRegex).evaluate(with: email)
+}
+
+private func regexValidatePassword(password: String) -> Bool {
+    return password.count >= 6
 }
