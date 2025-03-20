@@ -34,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         // User has seen onboarding, proceed with normal auth flow
-        guard FirebaseAuthManager.shared.isUserLoggedIn else {
+        guard FirebaseAuthManager.shared.isUserLoggedIn && FirebaseAuthManager.shared.currentUser!.isEmailVerified else {
             navigateToLogin()
             return
         }
