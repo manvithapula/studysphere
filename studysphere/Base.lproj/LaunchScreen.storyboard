@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -17,26 +17,33 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Memoriso" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Ah-Uv-UKF">
-                                <rect key="frame" x="8" y="486" width="377" height="27"/>
+                                <rect key="frame" x="136" y="486" width="121" height="27"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="NrE-KN-Fjm"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="27" id="v06-mx-sEZ"/>
+                                    <constraint firstAttribute="height" constant="27" id="xG6-3c-1DT"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <color key="textColor" red="0.1019607843" green="0.1019607843" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" systemColor="systemBlueColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="LOGO" translatesAutoresizingMaskIntoConstraints="NO" id="hPk-MF-lOk">
-                                <rect key="frame" x="4" y="278" width="393" height="277"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="LOGO" translatesAutoresizingMaskIntoConstraints="NO" id="hPk-MF-lOk">
+                                <rect key="frame" x="87" y="260" width="219" height="333"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="8Ah-Uv-UKF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="427" id="4sO-vy-rx2"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8Ah-Uv-UKF" secondAttribute="bottom" constant="305" id="bXc-CC-st8"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8Ah-Uv-UKF" secondAttribute="trailing" constant="8" id="pow-30-7MC"/>
-                            <constraint firstItem="8Ah-Uv-UKF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="uiK-Jx-lax"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="8Ah-Uv-UKF" secondAttribute="trailing" symbolic="YES" id="C5B-sy-t4B"/>
+                            <constraint firstItem="hPk-MF-lOk" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Cp4-U1-gke"/>
+                            <constraint firstItem="hPk-MF-lOk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="87" id="GIo-z6-weO"/>
+                            <constraint firstItem="hPk-MF-lOk" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="201" id="KKR-do-6tv"/>
+                            <constraint firstItem="8Ah-Uv-UKF" firstAttribute="top" secondItem="hPk-MF-lOk" secondAttribute="bottom" constant="143" id="U2q-hN-lWx"/>
+                            <constraint firstItem="hPk-MF-lOk" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="brU-bI-BYu"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8Ah-Uv-UKF" secondAttribute="bottom" constant="312" id="dKd-ao-vJO"/>
+                            <constraint firstItem="hPk-MF-lOk" firstAttribute="centerX" secondItem="8Ah-Uv-UKF" secondAttribute="centerX" id="ph1-Sn-9lG"/>
+                            <constraint firstItem="8Ah-Uv-UKF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="136" id="yqM-Nf-IpJ"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -46,9 +53,12 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LOGO" width="1024" height="1024"/>
+        <image name="LOGO" width="500" height="500"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

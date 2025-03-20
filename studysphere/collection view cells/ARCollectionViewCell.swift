@@ -14,7 +14,7 @@ class ARCollectionViewCell: UICollectionViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .semibold)
-        label.textColor = .black
+
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
