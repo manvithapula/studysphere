@@ -464,6 +464,9 @@ class FakeDb<T: Codable & Identifiable> {
         func getItems() -> [T] {
             return items
         }
+        func addItems(_ item:T){
+            items.append(item)
+        }
         
         func isLoaded() -> Bool {
             return loaded
@@ -491,6 +494,10 @@ class FakeDb<T: Codable & Identifiable> {
         item.id = UUID().uuidString
         item.createdAt = Timestamp()
         items.append(item)
+        let copy = item
+        Task{
+            await dataStore.addItems(copy)
+        }
         try! collection.document(item.id).setData(item.asDictionary())
         saveData()
         return item
