@@ -12,6 +12,15 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             search.translatesAutoresizingMaskIntoConstraints = false
             return search
         }()
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No modules yet.\n Click on upload to create module."
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
         
         private let segmentControl: UISegmentedControl = {
             let control = UISegmentedControl(items: ["Ongoing", "Completed"])
@@ -44,6 +53,16 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             setupTapGesture()
             setupUI()
             fetchTopics()
+            setupEmptyStateView()
+        }
+    private func setupEmptyStateView() {
+        ARList.backgroundView = emptyStateLabel
+        }
+
+        private func updateEmptyState() {
+            let isEmpty = questions.isEmpty
+            emptyStateLabel.isHidden = !isEmpty
+            ARList.backgroundView = isEmpty ? emptyStateLabel : nil
         }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -119,6 +138,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         // MARK: - UICollectionView DataSource
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            updateEmptyState()
             return filteredQuestions.count
         }
         

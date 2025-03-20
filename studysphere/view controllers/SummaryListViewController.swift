@@ -12,6 +12,15 @@ class SummaryListViewController: UIViewController{
     
     private var gradientLayer = CAGradientLayer()
     private let searchBar = UISearchBar()
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No modules yet.\n Click on upload to create module."
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
           
         // MARK: - Properties
         var cards: [Topics] = []
@@ -29,6 +38,16 @@ class SummaryListViewController: UIViewController{
             setupUI()
             configureCollectionView()
             loadData()
+            setupEmptyStateView()
+        }
+    private func setupEmptyStateView() {
+        summaryList.backgroundView = emptyStateLabel
+        }
+
+        private func updateEmptyState() {
+            let isEmpty = cards.isEmpty
+            emptyStateLabel.isHidden = !isEmpty
+            summaryList.backgroundView = isEmpty ? emptyStateLabel : nil
         }
         
         override func viewWillAppear(_ animated: Bool) {
@@ -132,6 +151,7 @@ class SummaryListViewController: UIViewController{
     // MARK: - UICollectionViewDelegate & DataSource
     extension SummaryListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            updateEmptyState()
             return filteredCards.count
         }
         

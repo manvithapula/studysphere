@@ -15,6 +15,15 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            search.translatesAutoresizingMaskIntoConstraints = false
            return search
        }()
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No modules yet.\n Click on upload to create module."
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
        
        private let segmentControl: UISegmentedControl = {
            let control = UISegmentedControl(items: ["Ongoing", "Completed"])
@@ -47,8 +56,17 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            setupTapGesture()
            setupUI()
            fetchTopics()
+           setupEmptyStateView()
        }
-       
+    private func setupEmptyStateView() {
+        SpacedRepetitionList.backgroundView = emptyStateLabel
+        }
+
+        private func updateEmptyState() {
+            let isEmpty = cards.isEmpty
+            emptyStateLabel.isHidden = !isEmpty
+            SpacedRepetitionList.backgroundView = isEmpty ? emptyStateLabel : nil
+        }
        override func viewWillAppear(_ animated: Bool) {
            super.viewWillAppear(animated)
            fetchTopics()
@@ -122,6 +140,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
        
        // MARK: - UICollectionView DataSource
        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+           updateEmptyState()
            return filteredCards.count
        }
        

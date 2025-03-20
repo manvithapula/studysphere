@@ -14,11 +14,31 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
     var subject:Subject?
     var cards: [Topics] = []
     var filteredCards: [Topics] {
+        var type = TopicsType.flashcards
+        switch subjectSegmentControl.selectedSegmentIndex {
+        case 0:
+            type = TopicsType.flashcards
+        case 1:
+            type = TopicsType.quizzes
+        case 2:
+            type = TopicsType.summary
+        default:
+            break
+        }
         return cards.filter { card in
-            let matchesSearch = searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())
+            let matchesSearch = (searchBar.text?.isEmpty ?? true || card.title.lowercased().contains(searchBar.text!.lowercased())) && card.type == type
             return  matchesSearch
         }
     }
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No modules yet.\n Click on upload to create module."
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
     
     
     @IBOutlet weak var subjectSegmentControl: UISegmentedControl!
@@ -31,7 +51,17 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
             super.viewDidLoad()
             setupUI()
             setupCollectionView()
-            updateCards()
+            loadCards()
+            setupEmptyStateView()
+        }
+    private func setupEmptyStateView() {
+        SubjectCollectionView.backgroundView = emptyStateLabel
+        }
+
+        private func updateEmptyState() {
+            let isEmpty = cards.isEmpty
+            emptyStateLabel.isHidden = !isEmpty
+            SubjectCollectionView.backgroundView = isEmpty ? emptyStateLabel : nil
         }
         
         override func viewWillAppear(_ animated: Bool) {
@@ -71,26 +101,17 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
         
         // MARK: - Actions
         @IBAction func segmentControlValueChanged(_ sender: UISegmentedControl) {
-            updateCards()
+//
+            SubjectCollectionView.reloadData()
         }
    
         // MARK: - Data
-        private func updateCards() {
-            Task {
-                switch subjectSegmentControl.selectedSegmentIndex {
-                case 0:
-                    self.cards = try await topicsDb.findAll(where: ["subject": subject!.id, "type": TopicsType.flashcards.rawValue])
-                case 1:
-                    self.cards = try await topicsDb.findAll(where: ["subject": subject!.id, "type": TopicsType.quizzes.rawValue])
-                case 2:
-                    self.cards = try await topicsDb.findAll(where: ["subject": subject!.id, "type": TopicsType.summary.rawValue])
-                default:
-                    break
-                }
-                print("Cards loaded: \(cards.count)")
-                SubjectCollectionView.reloadData()
-            }
+    private func loadCards(){
+        Task{
+            cards = try await topicsDb.findAll(where: ["subject": subject!.id])
+            SubjectCollectionView.reloadData()
         }
+    }
         
         // MARK: - Search Bar Delegate
         func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -104,7 +125,7 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
         
         // MARK: - Collection View Data Source
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-           
+            updateEmptyState()
             return filteredCards.count
             
         }
