@@ -327,8 +327,8 @@ extension homeScreenViewController {
             subtitleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
             
             uploadButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 16),
-            uploadButton.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            uploadButton.widthAnchor.constraint(equalToConstant: 120),
+            uploadButton.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 20),
+            uploadButton.widthAnchor.constraint(equalToConstant: 140),
             uploadButton.heightAnchor.constraint(equalToConstant: 40),
             uploadButton.bottomAnchor.constraint(equalTo: bannerView.bottomAnchor, constant: -20)
         ])
