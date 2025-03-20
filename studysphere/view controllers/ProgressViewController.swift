@@ -239,6 +239,12 @@ class ProgressViewController: UIViewController {
             lineChart.xAxis.drawGridLinesEnabled = false
             lineChart.leftAxis.drawGridLinesEnabled = false
             lineChart.rightAxis.drawGridLinesEnabled = false
+            
+            lineChart.xAxis.labelTextColor = .black
+            lineChart.leftAxis.labelTextColor = .black
+            lineChart.rightAxis.labelTextColor = .black
+            lineChart.legend.textColor = .black
+            
 
             do {
                 let chartData = try await getStreakChartData(topic: topic)

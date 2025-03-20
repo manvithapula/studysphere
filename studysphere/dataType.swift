@@ -464,6 +464,9 @@ class FakeDb<T: Codable & Identifiable> {
         func getItems() -> [T] {
             return items
         }
+        func addItems(_ item:T){
+            items.append(item)
+        }
         
         func isLoaded() -> Bool {
             return loaded
@@ -491,6 +494,10 @@ class FakeDb<T: Codable & Identifiable> {
         item.id = UUID().uuidString
         item.createdAt = Timestamp()
         items.append(item)
+        let copy = item
+        Task{
+            await dataStore.addItems(copy)
+        }
         try! collection.document(item.id).setData(item.asDictionary())
         saveData()
         return item
@@ -538,22 +545,46 @@ class FakeDb<T: Codable & Identifiable> {
         }
     }
 
-    public func update(_ item: inout T) async throws {
+    public func update(_ item: inout T) async {
+        // Update timestamp
         item.updatedAt = Timestamp()
+        
+        // Update local items array
         if let index = items.firstIndex(where: { $0.id == item.id }) {
             items[index] = item
+        } else {
+            // If item doesn't exist in local cache, add it
+            items.append(item)
         }
-
+        
+        // Create a copy for the actor
+        let itemCopy = item
+        
+        // Update the actor-based data store
+        Task {
+            let currentItems = await dataStore.getItems()
+            if let index = currentItems.firstIndex(where: { $0.id == itemCopy.id }) {
+                var newItems = currentItems
+                newItems[index] = itemCopy
+                await dataStore.setItems(newItems)
+            } else {
+                await dataStore.addItems(itemCopy)
+            }
+        }
+        
+        // Update Firestore
         let documentRef = collection.document(item.id)
         do {
             let data = try item.asDictionary()
             try await documentRef.updateData(data)
+            
+            // Save to local persistence
+            saveData()
+            
             print("Document with id \(item.id) successfully updated.")
         } catch {
             print("Error updating document: \(error)")
-            throw error
         }
-
     }
 
     public func delete(id: String) {
