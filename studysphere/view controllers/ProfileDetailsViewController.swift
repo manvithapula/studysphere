@@ -318,7 +318,21 @@ extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavig
         
     private func loadImageFromUserDefaults() {
         if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
-            // Download image data from the URL
+            // Create a unique cache key based on the URL
+            let cacheKey = photoURL.absoluteString
+            
+            // Check if image exists in UserDefaults cache
+            if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
+               let cachedImage = UIImage(data: cachedImageData) {
+                // Use cached image
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.profileImageView.image = cachedImage
+                }
+                return
+            }
+            
+            // If not in cache, download from network
             URLSession.shared.dataTask(with: photoURL) { [weak self] data, response, error in
                 guard let self = self,
                       let imageData = data,
@@ -327,6 +341,9 @@ extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavig
                     print("Error loading profile image: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
+                
+                // Save to UserDefaults cache
+                UserDefaults.standard.set(imageData, forKey: cacheKey)
                 
                 // Update UI on main thread
                 DispatchQueue.main.async {

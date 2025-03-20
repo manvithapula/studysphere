@@ -179,13 +179,30 @@ extension homeScreenViewController {
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
         func loadImageFromUserDefaults() {
             if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
-                // Use URLSession to download the image data from the URL
+                // Create a unique cache key based on the URL
+                let cacheKey = photoURL.absoluteString
+                
+                // Check if image exists in UserDefaults cache
+                if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
+                   let cachedImage = UIImage(data: cachedImageData) {
+                    // Use cached image
+                    DispatchQueue.main.async {
+                        let roundedImage = makeRoundedImage(cachedImage)
+                        profileButton.setImage(roundedImage, for: .normal)
+                    }
+                    return
+                }
+                
+                // If not in cache, download from network
                 URLSession.shared.dataTask(with: photoURL) { data, response, error in
                     guard let imageData = data, error == nil,
                           let image = UIImage(data: imageData) else {
                         print("Error loading profile image: \(error?.localizedDescription ?? "Unknown error")")
                         return
                     }
+                    
+                    // Save to UserDefaults cache
+                    UserDefaults.standard.set(imageData, forKey: cacheKey)
                     
                     // Make sure UI updates happen on the main thread
                     DispatchQueue.main.async {
