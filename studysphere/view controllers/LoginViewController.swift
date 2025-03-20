@@ -278,7 +278,7 @@ class LoginViewController: UIViewController {
         
         // Check if email is valid and is a Gmail address
         if !regexValidateEmail(email: email) {
-            showAlert(message: "Please use a valid Gmail address for registration.")
+            showAlert(message: "Please use a valid email address for registration.")
             return
         }
         
@@ -405,8 +405,8 @@ class LoginViewController: UIViewController {
 
 
 private func regexValidateEmail(email: String) -> Bool {
-    let gmailRegex = "[A-Z0-9a-z._%+-]+@gmail\\.com"
-    return NSPredicate(format: "SELF MATCHES %@", gmailRegex).evaluate(with: email)
+    let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+    return NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: email)
 }
 
 private func regexValidatePassword(password: String) -> Bool {
