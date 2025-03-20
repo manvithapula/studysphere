@@ -289,6 +289,7 @@ extension homeScreenViewController {
         titleLabel.text = "Upload Study Material"
         titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textColor = .black
         
         let subtitleLabel = UILabel()
         subtitleLabel.text = "Create flashcards, quizzes and summaries from your materials"
