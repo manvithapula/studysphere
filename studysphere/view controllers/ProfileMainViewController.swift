@@ -20,7 +20,7 @@ class ProfileMainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let email = AuthManager.shared.userEmail
+        let email = AuthManager.shared.userEmail ?? FirebaseAuthManager.shared.currentUser!.email
         print(email as Any)
         Task{
             if let item = try await userDB.findAll(where: ["email":email!]).first{

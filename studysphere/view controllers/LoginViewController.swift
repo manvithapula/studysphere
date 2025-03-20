@@ -275,19 +275,65 @@ class LoginViewController: UIViewController {
             return
         }
         
-        FirebaseAuthManager.shared.signIn(email: email, password: password) { result in
+        // Show loading indicator
+        let loadingIndicator = UIActivityIndicatorView(style: .medium)
+        loadingIndicator.center = view.center
+        loadingIndicator.startAnimating()
+        view.addSubview(loadingIndicator)
+        
+        FirebaseAuthManager.shared.signIn(email: email, password: password) { [weak self] result in
+            guard let self = self else { return }
+            
+            // Hide loading indicator
+            DispatchQueue.main.async {
+                loadingIndicator.removeFromSuperview()
+            }
+            
             switch result {
             case .success(let user):
-                print("User created: \(user.uid)")
-                Task{
-                    await self.checkAndNavigate()
+                print("User logged in: \(user.uid)")
+                
+                // Check if email is verified
+                if user.isEmailVerified {
+                    // Email is verified, proceed with login
+                    Task {
+                        await self.checkAndNavigate()
+                    }
+                } else {
+                    // Email is not verified
+                    let alert = UIAlertController(
+                        title: "Email Not Verified",
+                        message: "Please verify your email before logging in. Would you like to resend the verification email?",
+                        preferredStyle: .alert
+                    )
+                    
+                    alert.addAction(UIAlertAction(title: "Resend Email", style: .default) { _ in
+                        // Resend verification email
+                        FirebaseAuthManager.shared.sendEmailVerification { verificationResult in
+                            switch verificationResult {
+                            case .success():
+                                self.showAlert(message: "Verification email sent. Please check your inbox.")
+                            case .failure(let error):
+                                self.showAlert(message: "Failed to send verification email: \(error.localizedDescription)")
+                            }
+                        }
+                    })
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                        // Sign out the user since they can't proceed without verification
+                        try? FirebaseAuthManager.shared.signOut()
+                    })
+                    
+                    DispatchQueue.main.async {
+                        self.present(alert, animated: true)
+                    }
                 }
+                
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
                 self.showError(message: "\(error.localizedDescription)")
             }
         }
-
     }
     
     @objc func forgotPasswordTapped() {

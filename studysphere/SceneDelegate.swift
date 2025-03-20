@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
         
     private func checkAndNavigate() async {
-        guard FirebaseAuthManager.shared.isUserLoggedIn else {
+        guard FirebaseAuthManager.shared.isUserLoggedIn  && FirebaseAuthManager.shared.currentUser!.isEmailVerified else {
                 navigateToLogin()
                 return
             }

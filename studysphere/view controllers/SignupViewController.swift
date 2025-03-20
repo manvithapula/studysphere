@@ -266,7 +266,9 @@ class SignupViewController: UIViewController {
             return
         }
         
-        FirebaseAuthManager.shared.signUp(email: email, password: password) { result in
+        FirebaseAuthManager.shared.signUp(email: email, password: password) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let user):
                 print("User created: \(user.uid)")
@@ -283,11 +285,37 @@ class SignupViewController: UIViewController {
                                             password: password,
                                             createdAt: Timestamp(),
                                             updatedAt: Timestamp())
-                let createdUser = userDB.create(&newUser)
-                Task{
-                    await self.checkAndNavigate()
+                _ = userDB.create(&newUser)
+                
+                // Send email verification
+                FirebaseAuthManager.shared.sendEmailVerification { [weak self] verificationResult in
+                    guard let self = self else { return }
+                    
+                    switch verificationResult {
+                    case .success():
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(
+                                title: "Email Sent",
+                                message: "Verification email sent. Please check your inbox.",
+                                preferredStyle: .alert
+                            )
+                            
+                            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                                // Dismiss the screen only after the user taps OK on the alert
+                                self.dismiss(animated: true)
+                            })
+                            
+                            self.present(alert, animated: true)
+                        }
+                        
+                    case .failure(let error):
+                        print("Failed to send verification email: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            self.showAlert(message: "Account created but failed to send verification email. You can request it later from your profile.")
+                        }
+                    }
                 }
-
+                
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
                 self.showError(message: "Error: \(error.localizedDescription)")
