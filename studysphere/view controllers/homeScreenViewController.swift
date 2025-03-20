@@ -6,7 +6,8 @@ class homeScreenViewController: UIViewController {
     private var scheduleItems: [ScheduleItem] = []
     private var allTopics:[Topics] = []
     private var studyTechniques: [String] = ["Spaced Repetition", "Active Recall", "Summariser"]
-    
+    private var viewTopicIds = [UIView: String]()
+
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private var gradientLayer = CAGradientLayer()
@@ -235,7 +236,7 @@ extension homeScreenViewController {
         
         
         let nameLabel = UILabel()
-        nameLabel.text = AuthManager.shared.firstName! ?? "Loading"
+        nameLabel.text = AuthManager.shared.firstName ?? "Loading"
         nameLabel.font = .systemFont(ofSize: 22, weight: .bold)
         
         [welcomeLabel, nameLabel, profileButton].forEach {
@@ -1235,40 +1236,20 @@ extension homeScreenViewController {
         subjectTag.translatesAutoresizingMaskIntoConstraints = false
         subjectTag.setPadding(horizontal: 12, vertical: 4)
         
-        let continueButton = UIButton()
-           continueButton.setTitle("Start", for: .normal)
-           continueButton.setTitleColor(.white, for: .normal)
-           continueButton.backgroundColor = mainColor
-           continueButton.layer.cornerRadius = 16
-           continueButton.clipsToBounds = true
-           continueButton.translatesAutoresizingMaskIntoConstraints = false
-           
-           continueButton.addAction(UIAction { [weak self] _ in
-               Task {
-                   let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
-                   let segueIdentifier = item.topicType == .flashcards ? "toFLS" :
-                                         item.topicType == .quizzes ? "toQTS" : "toSummary"
-                   self?.performSegue(withIdentifier: segueIdentifier, sender: topic)
-               }
-           }, for: .touchUpInside)
-           
-           continueButton.addAction(UIAction { _ in
-               UIView.animate(withDuration: 0.2) {
-                   continueButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-               }
-               DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                   UIView.animate(withDuration: 0.2) {
-                       continueButton.transform = .identity
-                   }
-               }
-           }, for: .touchDown)
+        /**
+         Task {
+             let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
+             let segueIdentifier = item.topicType == .flashcards ? "toFLS" :
+                                   item.topicType == .quizzes ? "toQTS" : "toSummary"
+             self?.performSegue(withIdentifier: segueIdentifier, sender: topic)
+         }
+         */
         
         containerView.addSubview(cardBackground)
         cardBackground.addSubview(iconContainer)
         iconContainer.addSubview(iconView)
         cardBackground.addSubview(titleLabel)
         cardBackground.addSubview(subjectTag)
-        cardBackground.addSubview(continueButton)
         
         NSLayoutConstraint.activate([
             cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -1288,16 +1269,11 @@ extension homeScreenViewController {
             
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -8),
+//            titleLabel.trailingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: -8),
             
             subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             subjectTag.bottomAnchor.constraint(equalTo: cardBackground.bottomAnchor, constant: -16),
-            
-            continueButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
-                continueButton.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
-                continueButton.widthAnchor.constraint(equalToConstant: 90),
-                continueButton.heightAnchor.constraint(equalToConstant: 32),
             containerView.heightAnchor.constraint(equalToConstant: 100)
         ])
         
@@ -1305,8 +1281,8 @@ extension homeScreenViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(moduleItemTapped(_:)))
         cardBackground.addGestureRecognizer(tapGesture)
         cardBackground.isUserInteractionEnabled = true
-        cardBackground.tag = Int(item.topicId) ?? 0 // Store the topic ID in the tag
-        
+        viewTopicIds[cardBackground] = item.topicId
+
         // Asynchronously load subject name
         Task {
             let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
@@ -1335,7 +1311,6 @@ extension homeScreenViewController {
     // Handle module item tap
     @objc private func moduleItemTapped(_ sender: UITapGestureRecognizer) {
         guard let view = sender.view else { return }
-        
         // Animate tap
         UIView.animate(withDuration: 0.1) {
             view.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
@@ -1345,15 +1320,17 @@ extension homeScreenViewController {
             }
         }
         // Find topic by ID and navigate
-        Task {
-            let topicId = String(view.tag)
-            let topic = try await topicsDb.findAll(where: ["id": topicId]).first
-            
-            if let topic = topic {
-                let segueIdentifier = topic.type == .flashcards ? "toFLS" :
-                                      topic.type == .quizzes ? "toQTS" : "toSummary"
-                self.performSegue(withIdentifier: segueIdentifier, sender: topic)
+        if let tappedView = sender.view, let topicId = viewTopicIds[tappedView] {
+            Task {
+                let topic = try await topicsDb.findAll(where: ["id": topicId]).first
+                
+                if let topic = topic {
+                    let segueIdentifier = topic.type == .flashcards ? "toFLS" :
+                    topic.type == .quizzes ? "toQTS" : "toSummary"
+                    self.performSegue(withIdentifier: segueIdentifier, sender: topic)
+                }
             }
+            
         }
     }
 
