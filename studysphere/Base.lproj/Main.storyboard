@@ -92,7 +92,7 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Subjects" image="books.vertical.fill" catalog="system" selectedImage="books.vertical.fill" id="CXV-uH-8XA"/>
                     <navigationItem key="navigationItem" id="OAH-yn-YG3">
-                        <barButtonItem key="rightBarButtonItem" image="plus.circle.fill" catalog="system" style="plain" id="g3p-pZ-XMZ">
+                        <barButtonItem key="rightBarButtonItem" image="plus.circle" catalog="system" style="plain" id="g3p-pZ-XMZ">
                             <color key="tintColor" systemColor="systemBlueColor"/>
                         </barButtonItem>
                     </navigationItem>
@@ -116,7 +116,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="Documents " id="rkH-gf-FU1">
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus.circle.fill" catalog="system" id="BhA-eS-gSc">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus.circle" catalog="system" id="BhA-eS-gSc">
                             <connections>
                                 <action selector="uploadButtonTapped:" destination="I7W-gS-w28" id="6yA-1e-wqG"/>
                             </connections>
@@ -2000,7 +2000,7 @@
         <segue reference="651-AB-nO7"/>
         <segue reference="LYh-Wz-AME"/>
         <segue reference="xRt-nh-R8f"/>
-        <segue reference="qtl-9G-7g1"/>
+        <segue reference="BI1-l1-Jlu"/>
         <segue reference="961-LY-nh0"/>
         <segue reference="G44-wD-cmq"/>
         <segue reference="IXb-z0-nX3"/>
@@ -2817,7 +2817,6 @@ AAAAAAAAAgEAAAAAAAAAaAAAAAAAAAAAAAAAAAAAufw
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="plus.circle" catalog="system" width="128" height="123"/>
-        <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <image name="profile-avatar" width="272" height="272"/>
         <namedColor name="Main">
             <color red="0.10196078431372549" green="0.10196078431372549" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

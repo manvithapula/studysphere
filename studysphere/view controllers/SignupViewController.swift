@@ -9,7 +9,7 @@ class SignupViewController: UIViewController {
     var firstNameTextField: UITextField!
     var signUpButton: UIButton!
     
-    // Hidden fields (keeping these for backend logic)
+    // Hidden fields 
     var lastNameTextField: UITextField!
     var dateOfBirthTextField: UITextField!
     var googleSignInButton: UIButton!
