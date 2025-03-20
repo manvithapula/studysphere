@@ -484,7 +484,7 @@ extension homeScreenViewController {
         
         let subjectTag = UILabel()
         subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
-        subjectTag.text = "Loading..."
+        subjectTag.text = " "
         subjectTag.textColor = mainColor.withAlphaComponent(0.8)
         subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
         subjectTag.layer.cornerRadius = 8
@@ -628,7 +628,7 @@ extension homeScreenViewController {
             label.clipsToBounds = true
             label.textAlignment = .center
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.text = "Loading.."
+            label.text = " "
             return label
         }()
         containerView.addSubview(iconView)
@@ -968,7 +968,7 @@ extension homeScreenViewController {
             emptyStateView.translatesAutoresizingMaskIntoConstraints = false
             
             let emptyIcon = UIImageView()
-            emptyIcon.image = UIImage(systemName: "book.closed.fill")
+            emptyIcon.image = UIImage(systemName: "book.closed")
             emptyIcon.tintColor = AppTheme.primary
             emptyIcon.contentMode = .scaleAspectFit
             emptyIcon.translatesAutoresizingMaskIntoConstraints = false

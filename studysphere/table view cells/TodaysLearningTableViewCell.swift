@@ -18,7 +18,7 @@ class TodaysLearningTableViewCell: UITableViewCell {
         label.clipsToBounds = true
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading..."
+        label.text = " "
         return label
     }()
     

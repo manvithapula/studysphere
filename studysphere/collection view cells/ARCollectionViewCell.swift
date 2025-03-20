@@ -36,7 +36,7 @@ class ARCollectionViewCell: UICollectionViewCell {
         label.clipsToBounds = true
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading..."
+        label.text = ""
         return label
     }()
     
@@ -95,7 +95,7 @@ class ARCollectionViewCell: UICollectionViewCell {
     func configure(topic: Topics, index: Int) {
         titleLabel.text = topic.title
         subtitleLabel.text = topic.subtitle
-        subjectTag.text = "Loading..." // Temporary until data is fetched
+        subjectTag.text = "" // Temporary until data is fetched
 
         // Define background colors based on the index
         let backgroundColors: [UIColor] = [
@@ -135,6 +135,6 @@ class ARCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         titleLabel.text = nil
         subtitleLabel.text = nil
-        subjectTag.text = "Loading..."
+        subjectTag.text = ""
     }
 }
