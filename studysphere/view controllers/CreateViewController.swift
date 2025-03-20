@@ -1,4 +1,5 @@
 import FirebaseCore
+import VisionKit
 import FirebaseStorage
 import FirebaseVertexAI
 import Foundation
@@ -234,8 +235,9 @@ class CreateViewController: UIViewController {
         setupTapGesture()
     }
     private func setupTapGesture() {
-        let tapGesture = UITapGestureRecognizer(
-            target: self, action: #selector(dismissKeyboard))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+            
         view.addGestureRecognizer(tapGesture)
     }
 
@@ -368,7 +370,10 @@ class CreateViewController: UIViewController {
         ])
 
         // Setup file upload view
-        fileUploadView.setup(in: self)
+        let tapGesture = UITapGestureRecognizer(
+            target: self, action: #selector(uploadButtonTapped))
+        fileUploadView.addGestureRecognizer(tapGesture)
+        fileUploadView.isUserInteractionEnabled = true
     }
 
     private func setupActions() {
@@ -952,10 +957,10 @@ class DashedRectangle: UIView {
         }
     }
 
-    func setup(in viewController: UIViewController) {
+    func setup(in viewController: UIViewController,selector:Selector) {
         // Add tap gesture
         let tapGesture = UITapGestureRecognizer(
-            target: self, action: #selector(handleTap))
+            target: self, action: selector)
         addGestureRecognizer(tapGesture)
         isUserInteractionEnabled = true
     }
@@ -987,4 +992,169 @@ extension UIView {
         }
         return nil
     }
+}
+// MARK: - Ducument uploader
+extension CreateViewController: VNDocumentCameraViewControllerDelegate,UIDocumentInteractionControllerDelegate{
+    @objc private func uploadButtonTapped() {
+        // Show action sheet with options
+        let actionSheet = UIAlertController(
+            title: "Upload Document",
+            message: "Choose a document to upload",
+            preferredStyle: .actionSheet
+        )
+        
+        // Add option to pick from files
+        actionSheet.addAction(UIAlertAction(title: "Browse Files", style: .default) { [weak self] _ in
+            self?.presentDocumentPicker()
+        })
+        
+        // Add option to take a photo (scan document)
+        actionSheet.addAction(UIAlertAction(title: "Scan Document", style: .default) { [weak self] _ in
+            self?.presentDocumentScanner()
+        })
+        
+        // Add cancel option
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // Present the action sheet
+        present(actionSheet, animated: true)
+    }
+    private func presentDocumentPicker() {
+       
+        let documentTypes = [UTType.pdf.identifier]
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.pdf])
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        present(documentPicker, animated: true)
+    }
+    private func presentDocumentScanner() {
+        // Check if document scanning is available on this device
+        if VNDocumentCameraViewController.isSupported {
+            let documentCameraViewController = VNDocumentCameraViewController()
+            documentCameraViewController.delegate = self
+            present(documentCameraViewController, animated: true)
+        } else {
+            // Device doesn't support document scanning
+            let alert = UIAlertController(
+                title: "Not Available",
+                message: "Document scanning is not available on this device.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
+    }
+    func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
+        // Dismiss the camera controller
+        controller.dismiss(animated: true)
+        
+        // Process the scanned images
+        let images = (0..<scan.pageCount).map { scan.imageOfPage(at: $0) }
+        
+        // Do something with the scanned images
+        processScannedDocuments(images)
+    }
+    
+    func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFailWithError error: Error) {
+        // Handle the error
+        controller.dismiss(animated: true)
+        
+        let alert = UIAlertController(
+            title: "Scanning Failed",
+            message: "There was an error scanning your document: \(error.localizedDescription)",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
+        // User canceled the scan
+        controller.dismiss(animated: true)
+    }
+    
+    // Process the scanned document images
+    private func processScannedDocuments(_ images: [UIImage]) {
+        // Save original images to document directory
+        for (index, image) in images.enumerated() {
+            if let data = image.jpegData(compressionQuality: 0.8) {
+                let filename = getDocumentsDirectory().appendingPathComponent("scan_\(Date().timeIntervalSince1970)_\(index).jpg")
+                try? data.write(to: filename)
+            }
+        }
+        
+        // Create PDF from images
+        let pdfURL = createPDF(from: images)
+        
+        // Example: Show confirmation to the user with PDF path
+        let alert = UIAlertController(
+            title: "Scan Complete",
+            message: "Successfully scanned \(images.count) page(s) and created PDF",
+            preferredStyle: .alert
+        )
+        
+        // Add action to view the PDF
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        document = pdfURL
+        docUploaded()
+        updateCreateButtonState()
+    }
+
+    // Create PDF from array of images
+    private func createPDF(from images: [UIImage]) -> URL {
+        // Create a unique filename for the PDF
+        let pdfFilename = getDocumentsDirectory().appendingPathComponent("scan_\(Date().timeIntervalSince1970).pdf")
+        
+        // PDF page width and height
+        let pageWidth: CGFloat = 612
+        let pageHeight: CGFloat = 792
+        
+        // Create PDF context
+        UIGraphicsBeginPDFContextToFile(pdfFilename.path, CGRect.zero, nil)
+        
+        // Go through all images
+        for image in images {
+            // Start a new PDF page
+            UIGraphicsBeginPDFPageWithInfo(CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), nil)
+            
+            // Calculate scaling to fit image proportionally within the page
+            let imageWidth = image.size.width
+            let imageHeight = image.size.height
+            
+            let ratio = min(pageWidth / imageWidth, pageHeight / imageHeight)
+            let newWidth = imageWidth * ratio
+            let newHeight = imageHeight * ratio
+            
+            // Center the image on the page
+            let xOffset = (pageWidth - newWidth) / 2
+            let yOffset = (pageHeight - newHeight) / 2
+            
+            // Draw the image on the PDF page
+            image.draw(in: CGRect(x: xOffset, y: yOffset, width: newWidth, height: newHeight))
+        }
+        
+        // End the PDF context to save the file
+        UIGraphicsEndPDFContext()
+        
+        return pdfFilename
+    }
+
+    // Helper method to view the PDF
+    private func viewPDF(at url: URL) {
+        // This is a simple implementation that uses a UIDocumentInteractionController
+        // For a more integrated experience, you might want to use PDFKit or a custom view
+        let documentInteractionController = UIDocumentInteractionController(url: url)
+        documentInteractionController.delegate = self
+        documentInteractionController.presentPreview(animated: true)
+    }
+    
+    // Helper to get documents directory
+    private func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+            return self
+        }
 }
