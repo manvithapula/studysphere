@@ -306,7 +306,7 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
             
             pdfViewController.title = document.title
             
-            let backButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(dismissPDFView))
+            let backButton = UIBarButtonItem(title: "Dismiss", style: .plain, target: self, action: #selector(dismissPDFView))
             pdfViewController.navigationItem.rightBarButtonItem = backButton
             
             pdfView.translatesAutoresizingMaskIntoConstraints = false
