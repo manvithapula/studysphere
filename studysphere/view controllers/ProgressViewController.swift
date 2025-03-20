@@ -440,13 +440,15 @@ class ProgressViewController: UIViewController {
         guard let progress = studyProgress else { return }
         Task{
             allTopics = try await schedulesDb.findAll()
-            let totalItems = totalCompletedTopics.count
+            let allSummaries = try await topicsDb.findAll(where: ["type":TopicsType.summary.rawValue])
+            let totalItems = totalCompletedTopics.count + allSummaries.count
             let nextLevelProgress = Float(totalItems % itemsPerLevel) / Float(itemsPerLevel)
             
             let statsViews = [
                 createStatView(icon: "clock", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
                 createStatView(icon: "brain.head.profile", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
-               // createStatView(icon: "doc.text", title: "Summaries Completed", value: "\(completedSummary.count)"),
+                createStatView(icon: "doc.text", title: "Summaries Completed", value: "\(allSummaries.count)"),
+
                 
                 createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
             ]
