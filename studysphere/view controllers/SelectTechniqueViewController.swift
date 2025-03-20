@@ -543,7 +543,7 @@ class LoadingView: UIView {
         
         // Create container for indicator and label
         let containerView = UIView()
-        containerView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        containerView.backgroundColor = UIColor.black.withAlphaComponent(0.0)
         containerView.layer.cornerRadius = 12
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
