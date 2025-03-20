@@ -22,29 +22,19 @@ class FirebaseAiManager {
         }
         print(pdfData)
         do {
-            let toPath = "documents/\(UUID().uuidString).pdf"
-            let downloadURL = try await FirebaseStorageManager.shared
-                .uploadFile(
-                    from: document,
-                    to: toPath
-                )
             let documentObject = FileMetadata(
-                id: "", title: document.lastPathComponent,
-                documentUrl: downloadURL.absoluteString,
+                id: "", title: "",
+                documentUrl: "",
                 subjectId: selectedSubject, createdAt: Timestamp(),
                 updatedAt: Timestamp())
-            var temp = documentObject
-            let _ = metadataDb.create(&temp)
-
-            print("File uploaded successfully: \(downloadURL)")
-            let storage = Storage.storage()
-            let storageRef = storage.reference(withPath: toPath)
-            let bucket = storageRef.bucket
-            let fullPath = storageRef.fullPath
-            let storageURL = "gs://\(bucket)/\(fullPath)"
-            return storageURL
-        } catch {
-            return nil
+            if let uploaded = await DocumentManager.shared.upload(document: document, metadata: documentObject){
+                
+                print("File uploaded successfully: \(uploaded.documentUrl)")
+                return uploaded.documentUrl
+            }
+            else{
+                return nil
+            }
         }
     }
     private func getResponse(model: GenerativeModel, content: ModelContent)

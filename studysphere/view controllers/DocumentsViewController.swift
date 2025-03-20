@@ -472,56 +472,50 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
                 // Get file name
                 let fileName = url.lastPathComponent
                 
-                // Create storage path
-                let storagePath = "documents/\(UUID().uuidString)_\(fileName)"
-                
-                // Upload to Firebase Storage
-                let storageURL = try await FirebaseStorageManager.shared.uploadFile(from: url, to: storagePath)
-                
-                // Create metadata object
                 var metadata = FileMetadata(
                     id: "",
                     title: fileName,
-                    documentUrl: storageURL.absoluteString,
+                    documentUrl: "",
                     subjectId: subject.id,
                     createdAt: Timestamp(),
                     updatedAt: Timestamp()
                 )
-                
-                // Save metadata to database
-                metadata = metadataDb.create(&metadata)
-                
-                // Update UI
-                documents.append(metadata)
-                if selectedSubject == nil || selectedSubject?.id == subject.id {
-                    filteredDocuments.append(metadata)
-                }
-                
-                DispatchQueue.main.async {
-                    loadingIndicator.removeFromSuperview()
-                    self.documentsCollectionView.reloadData()
+                if let uploaded = await DocumentManager.shared.upload(document: url, metadata: metadata){
                     
-                    // Show success message
-                    let successAlert = UIAlertController(
-                        title: "Upload Successful",
-                        message: "Your document has been uploaded.",
-                        preferredStyle: .alert
-                    )
-                    successAlert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self.present(successAlert, animated: true)
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    loadingIndicator.removeFromSuperview()
                     
-                    // Show error message
-                    let errorAlert = UIAlertController(
-                        title: "Upload Failed",
-                        message: "Could not upload document: \(error.localizedDescription)",
-                        preferredStyle: .alert
-                    )
-                    errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self.present(errorAlert, animated: true)
+                    // Update UI
+                    documents.append(uploaded)
+                    if selectedSubject == nil || selectedSubject?.id == subject.id {
+                        filteredDocuments.append(uploaded)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        loadingIndicator.removeFromSuperview()
+                        self.documentsCollectionView.reloadData()
+                        
+                        // Show success message
+                        let successAlert = UIAlertController(
+                            title: "Upload Successful",
+                            message: "Your document has been uploaded.",
+                            preferredStyle: .alert
+                        )
+                        successAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(successAlert, animated: true)
+                    }
+                }
+                else{
+                    DispatchQueue.main.async {
+                        loadingIndicator.removeFromSuperview()
+                        
+                        // Show success message
+                        let errorAlert = UIAlertController(
+                            title: "Upload Failed",
+                            message: "Could not upload document",
+                            preferredStyle: .alert
+                        )
+                        errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(errorAlert, animated: true)
+                    }
                 }
             }
         }
