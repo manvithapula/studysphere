@@ -333,6 +333,7 @@
 				DEVELOPMENT_TEAM = K75YG36RDS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = studysphere/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Memoriso;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera permission is needed to scan document";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -367,6 +368,7 @@
 				DEVELOPMENT_TEAM = K75YG36RDS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = studysphere/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Memoriso;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera permission is needed to scan document";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
