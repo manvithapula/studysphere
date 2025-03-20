@@ -231,7 +231,7 @@ extension homeScreenViewController {
         
         
         let nameLabel = UILabel()
-        nameLabel.text = AuthManager.shared.firstName!
+        nameLabel.text = AuthManager.shared.firstName! ?? "Loading"
         nameLabel.font = .systemFont(ofSize: 22, weight: .bold)
         
         [welcomeLabel, nameLabel, profileButton].forEach {
