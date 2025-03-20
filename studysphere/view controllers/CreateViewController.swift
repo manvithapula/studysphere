@@ -16,6 +16,9 @@ import UniformTypeIdentifiers
 //        self.name = name
 //    }
 //}
+
+
+
 struct Technique {
     var name: String
 }
@@ -82,6 +85,10 @@ class TechniqueButton: UIButton {
 }
 
 class CreateViewController: UIViewController {
+    
+    
+  
+   
     // MARK: - Properties
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -224,7 +231,7 @@ class CreateViewController: UIViewController {
         apiKey = Secrets.geminiAPIKey
         setupUI()
         setupActions()
-        //        setupTapGesture()
+        setupTapGesture()
     }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(
