@@ -8,8 +8,9 @@ class SignupViewController: UIViewController {
     var passwordTextField: UITextField!
     var firstNameTextField: UITextField!
     var signUpButton: UIButton!
+    var eyeButton: UIButton!
     
-    // Hidden fields 
+    // Hidden fields
     var lastNameTextField: UITextField!
     var dateOfBirthTextField: UITextField!
     var googleSignInButton: UIButton!
@@ -55,7 +56,7 @@ class SignupViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private let subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Fill in your details to get started"
@@ -64,7 +65,7 @@ class SignupViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private let fieldsStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
@@ -81,7 +82,15 @@ class SignupViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-
+    
+    private func createEyeButton() {
+        eyeButton = UIButton(type: .custom)
+        eyeButton.translatesAutoresizingMaskIntoConstraints = false
+        eyeButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
+        eyeButton.tintColor = .gray
+        eyeButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,7 +104,7 @@ class SignupViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
     }
-
+    
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -137,6 +146,9 @@ class SignupViewController: UIViewController {
         passwordTextField.isSecureTextEntry = true
         passwordTextField.autocorrectionType = .no
         passwordTextField.autocapitalizationType = .none
+        createEyeButton()
+        passwordTextField.rightView = eyeButton
+        passwordTextField.rightViewMode = .always
         
         // Create Sign Up Button
         signUpButton = UIButton(type: .system)
@@ -288,15 +300,15 @@ class SignupViewController: UIViewController {
                 let lastName = ""
                 
                 var newUser = UserDetailsType(id: "",
-                                            firstName: firstName,
-                                            lastName: lastName,
-                                            dob: Timestamp(date: Date()), // Use current date as default
-                                            pushNotificationEnabled: false,
-                                            faceIdEnabled: false,
-                                            email: email,
-                                            password: password,
-                                            createdAt: Timestamp(),
-                                            updatedAt: Timestamp())
+                                              firstName: firstName,
+                                              lastName: lastName,
+                                              dob: Timestamp(date: Date()), // Use current date as default
+                                              pushNotificationEnabled: false,
+                                              faceIdEnabled: false,
+                                              email: email,
+                                              password: password,
+                                              createdAt: Timestamp(),
+                                              updatedAt: Timestamp())
                 _ = userDB.create(&newUser)
                 
                 // Send email verification
@@ -353,6 +365,15 @@ class SignupViewController: UIViewController {
         } catch {
             print("Error checking user: \(error)")
         }
+    }
+    
+    @objc private func togglePasswordVisibility() {
+        // Toggle the isSecureTextEntry property of the passwordTextField
+        passwordTextField.isSecureTextEntry.toggle()
+        
+        // Change the eye icon based on the visibility
+        let eyeIcon = passwordTextField.isSecureTextEntry ? "eye.slash" : "eye"
+        eyeButton.setImage(UIImage(systemName: eyeIcon), for: .normal)
     }
     
     private func showError(message: String) {
