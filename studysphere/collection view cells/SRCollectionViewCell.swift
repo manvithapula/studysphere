@@ -42,7 +42,7 @@ class SRCollectionViewCell: UICollectionViewCell {
         label.clipsToBounds = true
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading..."
+        label.text = " "
         return label
     }()
 
@@ -100,7 +100,7 @@ class SRCollectionViewCell: UICollectionViewCell {
     func configure(topic: Topics, index: Int) {
         titleLabel.text = topic.title
         subtitleLabel.text = topic.subtitle
-        subjectTag.text = "Loading..." // Temporary until data is fetched
+        subjectTag.text = " " // Temporary until data is fetched
 
         // Apply background color based on index
         applyBackgroundColor(forIndex: index)
@@ -143,6 +143,6 @@ class SRCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         titleLabel.text = nil
         subtitleLabel.text = nil
-        subjectTag.text = "Loading..."
+        subjectTag.text = " "
     }
 }

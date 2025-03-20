@@ -146,12 +146,12 @@ class SummaryListViewController: UIViewController{
             
             let topic = filteredCards[indexPath.item]
             
-            // Configure cell with placeholder values for item count and time
+          
             cell.configure(
                 title: topic.title,
                 itemCount: 0,
-                time: "--",           // Default value, replace if needed
-                subject: "Loading...", // Temporary text until `updateSubject` fetches the real subject
+                time: "--",
+                subject: " ",
                 index: indexPath.item
             )
             

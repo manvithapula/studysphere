@@ -60,7 +60,7 @@ class SelectTechniqueViewController: UIViewController {
         }
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .flashcards,subtitle: "6 revision remaining",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading(text:"Generating flashcards...")
+        showLoading(text:"We're on it! Please wait a moment.")
         Task{
             let cards = await createFlashCards(topic: newTopic.id)
             if(cards.isEmpty){
@@ -125,7 +125,7 @@ class SelectTechniqueViewController: UIViewController {
         }
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .quizzes,subtitle: "6 revision remaining",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading(text:"Generating Quiz...")
+        showLoading(text:"We're on it! Please wait a moment.")
         Task{
             let ques = await createQuestions(topic: newTopic.id)
             if(ques.isEmpty){
@@ -182,7 +182,7 @@ class SelectTechniqueViewController: UIViewController {
         }
         var newTopic = Topics(id: "", title: topic!, subject: subject!.id, type: .summary,subtitle: "",createdAt: Timestamp(),updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading(text:"Generating summary...")
+        showLoading(text:"We're on it! Please wait a moment.")
         Task{
             let summary = await createSummary(topic: newTopic.id)
             hideLoading()
@@ -509,7 +509,7 @@ class LoadingView: UIView {
     private let activityIndicator: UIActivityIndicatorView
     private let messageLabel: UILabel
     private let blurEffect: UIVisualEffectView
-    var text = "Generating..."
+    var text = "We're on it! Please wait a moment."
     
     init() {
         // Create blur effect

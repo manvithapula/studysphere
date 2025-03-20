@@ -589,7 +589,7 @@ class QuestionViewController: UIViewController {
         }
 
         // Enable next button with animation
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 3.0) {
             self.nextButton.isEnabled = true
             self.nextButton.alpha = 1.0
             
@@ -601,7 +601,7 @@ class QuestionViewController: UIViewController {
 
     @objc private func nextButtonTapped() {
         // Animate transition to next question
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.65, animations: {
             self.questionCardView.alpha = 0.7
             self.optionStackView.alpha = 0.7
             self.questionCardView.transform = CGAffineTransform(translationX: -30, y: 0)

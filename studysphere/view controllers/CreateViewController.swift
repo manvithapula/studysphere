@@ -17,6 +17,9 @@ import UniformTypeIdentifiers
 //        self.name = name
 //    }
 //}
+
+
+
 struct Technique {
     var name: String
 }
@@ -83,6 +86,10 @@ class TechniqueButton: UIButton {
 }
 
 class CreateViewController: UIViewController {
+    
+    
+  
+   
     // MARK: - Properties
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -225,7 +232,7 @@ class CreateViewController: UIViewController {
         apiKey = Secrets.geminiAPIKey
         setupUI()
         setupActions()
-                setupTapGesture()
+        setupTapGesture()
     }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -715,7 +722,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
             type: .flashcards, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading(text: "Generating flashcards...")
+        showLoading(text: "We're on it! Please wait a moment.")
         Task {
             let cards = await FirebaseAiManager.shared.createFlashcards(
                 topic: newTopic.id, document: document!,
@@ -744,7 +751,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
             type: .quizzes, subtitle: "6 revision remaining", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading(text: "Generating Quiz...")
+        showLoading(text: "We're on it! Please wait a moment.")
         Task {
             let ques = await FirebaseAiManager.shared.createQuiz(
                 topic: newTopic.id, document: document!,
@@ -772,7 +779,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
             type: .summary, subtitle: "", createdAt: Timestamp(),
             updatedAt: Timestamp())
         newTopic = topicsDb.create(&newTopic)
-        showLoading(text: "Generating summary...")
+        showLoading(text: "We're on it! Please wait a moment.")
         Task {
             let summary = await FirebaseAiManager.shared.createSummary(
                 topic: newTopic.id, document: document!,

@@ -276,7 +276,7 @@ extension homeScreenViewController {
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let uploadButton = UIButton()
-        uploadButton.setTitle("Upload PDF", for: .normal)
+        uploadButton.setTitle("Create module", for: .normal)
         uploadButton.setTitleColor(.white, for: .normal)
         uploadButton.backgroundColor = AppTheme.primary
         
@@ -327,8 +327,8 @@ extension homeScreenViewController {
             subtitleLabel.trailingAnchor.constraint(equalTo: bannerView.trailingAnchor, constant: -16),
             
             uploadButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 16),
-            uploadButton.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            uploadButton.widthAnchor.constraint(equalToConstant: 120),
+            uploadButton.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 20),
+            uploadButton.widthAnchor.constraint(equalToConstant: 140),
             uploadButton.heightAnchor.constraint(equalToConstant: 40),
             uploadButton.bottomAnchor.constraint(equalTo: bannerView.bottomAnchor, constant: -20)
         ])
@@ -484,7 +484,7 @@ extension homeScreenViewController {
         
         let subjectTag = UILabel()
         subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
-        subjectTag.text = "Loading..."
+        subjectTag.text = " "
         subjectTag.textColor = mainColor.withAlphaComponent(0.8)
         subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
         subjectTag.layer.cornerRadius = 8
@@ -628,7 +628,7 @@ extension homeScreenViewController {
             label.clipsToBounds = true
             label.textAlignment = .center
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.text = "Loading.."
+            label.text = " "
             return label
         }()
         containerView.addSubview(iconView)
@@ -968,7 +968,7 @@ extension homeScreenViewController {
             emptyStateView.translatesAutoresizingMaskIntoConstraints = false
             
             let emptyIcon = UIImageView()
-            emptyIcon.image = UIImage(systemName: "book.closed.fill")
+            emptyIcon.image = UIImage(systemName: "book.closed")
             emptyIcon.tintColor = AppTheme.primary
             emptyIcon.contentMode = .scaleAspectFit
             emptyIcon.translatesAutoresizingMaskIntoConstraints = false
