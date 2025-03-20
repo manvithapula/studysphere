@@ -6,7 +6,7 @@ import Charts
 class ProgressViewController: UIViewController {
     
     private var studyProgress: StudyProgress?
-    private let itemsPerLevel = 10 //
+    private let itemsPerLevel = 20 //
     private var allTopics:[Schedule] = []
     private var totalCompletedTopics:[Schedule]{
         return allTopics.filter { card in
@@ -446,7 +446,7 @@ class ProgressViewController: UIViewController {
             let statsViews = [
                 createStatView(icon: "clock", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
                 createStatView(icon: "brain.head.profile", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
-                createStatView(icon: "doc.text", title: "Summaries Completed", value: "\(completedSummary.count)"),
+               // createStatView(icon: "doc.text", title: "Summaries Completed", value: "\(completedSummary.count)"),
                 
                 createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
             ]
