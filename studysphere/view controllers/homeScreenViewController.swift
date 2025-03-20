@@ -505,6 +505,13 @@ extension homeScreenViewController {
         titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = item.subtitle
+        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.textColor = mainColor.withAlphaComponent(0.8)
+        
+        
         let subjectTag = UILabel()
         subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
         subjectTag.text = " "
@@ -546,6 +553,7 @@ extension homeScreenViewController {
         cardBackground.addSubview(iconContainer)
         iconContainer.addSubview(iconView)
         cardBackground.addSubview(titleLabel)
+        cardBackground.addSubview(subtitleLabel)
         cardBackground.addSubview(subjectTag)
         cardBackground.addSubview(startButton)
         
@@ -567,6 +575,9 @@ extension homeScreenViewController {
             
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
+            
+            subtitleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 16),
             
             subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
@@ -1024,7 +1035,7 @@ extension homeScreenViewController {
                 let button = UIButton()
                 button.setTitle(title, for: .normal)
                 button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-                button.layer.cornerRadius = 18
+                button.layer.cornerRadius = 19
                 button.clipsToBounds = true
                 button.tag = index
                 button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
@@ -1116,13 +1127,12 @@ extension homeScreenViewController {
             for (index, topic) in filteredTopics.enumerated() {
                 let iconName = type == .flashcards ? "clock" : type == .quizzes ? "brain.head.profile" : "doc.text"
                 
-                // Create subtitle based on topic details
-                let subtitle = "Last updated"
+               
                 
                 let item = ScheduleItem(
                     iconName: iconName,
                     title: topic.title,
-                    subtitle: subtitle,
+                    subtitle: topic.subtitle,
                     progress: Float.random(in: 0...1), // Keeping this for data structure compatibility
                     topicType: type,
                     topicId: topic.id
@@ -1227,6 +1237,12 @@ extension homeScreenViewController {
         titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = item.subtitle // Assuming ScheduleItem has a subtitle property
+        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.textColor = mainColor.withAlphaComponent(0.8)
+        
         let subjectTag = UILabel()
         subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
         subjectTag.text = " "
@@ -1237,46 +1253,50 @@ extension homeScreenViewController {
         subjectTag.translatesAutoresizingMaskIntoConstraints = false
         subjectTag.setPadding(horizontal: 12, vertical: 4)
         
-        /**
-         Task {
-             let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
-             let segueIdentifier = item.topicType == .flashcards ? "toFLS" :
-                                   item.topicType == .quizzes ? "toQTS" : "toSummary"
-             self?.performSegue(withIdentifier: segueIdentifier, sender: topic)
-         }
-         */
-        
+        // Add views to hierarchy
         containerView.addSubview(cardBackground)
         cardBackground.addSubview(iconContainer)
         iconContainer.addSubview(iconView)
         cardBackground.addSubview(titleLabel)
+        cardBackground.addSubview(subtitleLabel)
         cardBackground.addSubview(subjectTag)
         
         NSLayoutConstraint.activate([
+            // Card background constraints
             cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
             cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            cardBackground.heightAnchor.constraint(equalToConstant: 95),
             
+            // Icon container constraints
+            iconContainer.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             iconContainer.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
-            iconContainer.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
             iconContainer.widthAnchor.constraint(equalToConstant: 48),
             iconContainer.heightAnchor.constraint(equalToConstant: 48),
             
+            // Icon view constraints
             iconView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
             iconView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor),
             iconView.widthAnchor.constraint(equalToConstant: 24),
             iconView.heightAnchor.constraint(equalToConstant: 24),
             
-            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
+            // Title label constraints
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
-//            titleLabel.trailingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: -8),
+            titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 12),
+            titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             
-            subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            subjectTag.bottomAnchor.constraint(equalTo: cardBackground.bottomAnchor, constant: -16),
-            containerView.heightAnchor.constraint(equalToConstant: 100)
+            // Subtitle label constraints
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            
+            // Subject tag constraints - removed bottom constraint to card
+            subjectTag.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 8),
+            subjectTag.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
+            // No longer using: subjectTag.bottomAnchor.constraint(equalTo: cardBackground.bottomAnchor, constant: -16)
         ])
+
         
         // Add tap gesture recognizer with animation
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(moduleItemTapped(_:)))
@@ -1301,13 +1321,7 @@ extension homeScreenViewController {
     }
 
     
-    // Helper to format date for subtitle
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter.string(from: date)
-    }
+   
 
     // Handle module item tap
     @objc private func moduleItemTapped(_ sender: UITapGestureRecognizer) {
