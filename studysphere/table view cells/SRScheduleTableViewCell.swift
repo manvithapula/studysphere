@@ -51,7 +51,7 @@ class SRScheduleTableViewCell: UITableViewCell {
     private let retentionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15)
-        label.textColor = .black
+       // label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

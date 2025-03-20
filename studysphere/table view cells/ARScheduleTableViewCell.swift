@@ -51,7 +51,7 @@ class ARScheduleTableViewCell: UITableViewCell {
     private let retentionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15)
-        label.textColor = UIColor.black
+      //  label.textColor = UIColor.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -256,3 +256,5 @@ class ActiveRecallViewController: UITableViewController {
         return cell
     }
 }
+
+
