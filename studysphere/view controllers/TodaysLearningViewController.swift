@@ -298,7 +298,7 @@ class TodaysLearningViewController: UIViewController {
             }
             
             let item = scheduleItems[indexPath.row]
-            cell.configure(with: item, dateOffset: offset)
+            cell.configure(with: item, at: 0, dateOffset: offset)
             return cell
         }
     }

@@ -8,7 +8,6 @@ class TodaysLearningTableViewCell: UITableViewCell {
     private let titleLabel = UILabel()
     private let statusTagButton = UIButton()
     
- 
     private let subjectTag: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
@@ -18,11 +17,12 @@ class TodaysLearningTableViewCell: UITableViewCell {
         label.clipsToBounds = true
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = " "
+        label.layoutMargins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         return label
     }()
     
     var currentDateOffset: Int = 0
+    private var itemIndex: Int = 0 // Add this to store the item's index
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -98,7 +98,8 @@ class TodaysLearningTableViewCell: UITableViewCell {
             
             subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
             subjectTag.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            subjectTag.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            subjectTag.heightAnchor.constraint(equalToConstant: 20),
+            subjectTag.bottomAnchor.constraint(lessThanOrEqualTo: cardBackground.bottomAnchor, constant: -12),
             
             statusTagButton.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             statusTagButton.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 12),
@@ -114,16 +115,17 @@ class TodaysLearningTableViewCell: UITableViewCell {
         statusTagButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
-   
-
-    func configure(with item: ScheduleItem, dateOffset: Int = 0) {
+    // Add this new function to configure with index
+    func configure(with item: ScheduleItem, at index: Int, dateOffset: Int = 0) {
         iconImageView.image = UIImage(systemName: item.iconName)
         titleLabel.text = item.title
         currentDateOffset = dateOffset
-        let colorIndex = abs(item.title.hashValue) % 2
-        setupColors(for: colorIndex)
+        itemIndex = index
+        
+        // Use simple index-based coloring
+        setupColors(for: index)
+        
         if item.progress == 1 {
-         
             statusTagButton.setTitle("Completed", for: .normal)
             statusTagButton.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.2)
             statusTagButton.setTitleColor(UIColor.black, for: .normal)
@@ -138,19 +140,21 @@ class TodaysLearningTableViewCell: UITableViewCell {
                 statusTagButton.setTitleColor(UIColor.black, for: .normal)
             }
         }
-    
+        
         statusTagButton.sizeToFit()
         statusTagButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: [], animations: {
             self.statusTagButton.transform = .identity
         })
+        
         Task {
             let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
-            if let topic = alltopics.first{
+            if let topic = alltopics.first {
                 let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
                 if let subject = allSubjects.first {
                     await MainActor.run {
-                        subjectTag.text = subject.name
+                        self.subjectTag.text = "  \(subject.name)  "
+                        self.subjectTag.sizeToFit()
                     }
                 }
             }
@@ -167,12 +171,16 @@ class TodaysLearningTableViewCell: UITableViewCell {
             AppTheme.primary,
             AppTheme.secondary
         ]
-        let safeIndex = index % 2
-        cardBackground.backgroundColor = colors[safeIndex]
-        iconContainer.backgroundColor = iconColors[safeIndex]
+        
+        // Simple alternating pattern based on index
+        let colorIndex = index % 2
+        
+        cardBackground.backgroundColor = colors[colorIndex]
+        iconContainer.backgroundColor = iconColors[colorIndex]
         titleLabel.textColor = .black
+        subjectTag.backgroundColor = colors[colorIndex]
     }
-
+    
     override var isHighlighted: Bool {
         didSet {
             animateHighlightState()
@@ -199,13 +207,9 @@ class TodaysLearningTableViewCell: UITableViewCell {
         }
     }
     
-    
     private func updateAppearance() {
         containerView.layer.shadowColor = UIColor.black.cgColor
-        if let title = titleLabel.text {
-            let colorIndex = abs(title.hashValue) % 2
-            setupColors(for: colorIndex)
-        }
+        setupColors(for: itemIndex)
     }
     
     override func prepareForReuse() {

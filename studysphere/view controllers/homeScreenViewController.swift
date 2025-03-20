@@ -909,6 +909,19 @@ extension homeScreenViewController {
     }
     
     // MARK: RECENT MODULES
+    
+    
+    @objc private func SRseeAllButtonTapped() {
+    performSegue(withIdentifier: "toSrListView", sender: nil)
+    }
+    @objc private func ARseeAllButtonTapped() {
+    performSegue(withIdentifier: "toArListView", sender: nil)
+    }
+    @objc private func summaryseeAllButtonTapped() {
+    performSegue(withIdentifier: "toSuListView", sender: nil)
+    }
+    
+    
     private func createRecentModulesView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
@@ -925,6 +938,23 @@ extension homeScreenViewController {
         titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        let titleContainer = UIStackView()
+           titleContainer.axis = .horizontal
+           titleContainer.distribution = .equalSpacing
+           titleContainer.alignment = .center
+           titleContainer.translatesAutoresizingMaskIntoConstraints = false
+           
+        
+        let seeAllButton = UIButton()
+           seeAllButton.setTitle("See All", for: .normal)
+           seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
+           seeAllButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+           seeAllButton.tag = 200 // Tag for reference
+           seeAllButton.addTarget(self, action: #selector(SRseeAllButtonTapped), for: .touchUpInside)
+        titleContainer.addArrangedSubview(titleLabel)
+        titleContainer.addArrangedSubview(seeAllButton)
+     
+        
         // Custom circular segment control
         let segmentControl = CircularSegmentControl(
             items: ["Spaced Repetition", "Active Recall", "Summariser"],
@@ -939,30 +969,32 @@ extension homeScreenViewController {
         moduleItemsContainer.translatesAutoresizingMaskIntoConstraints = false
         
         // Add all elements to container
-        containerView.addSubview(titleLabel)
-        containerView.addSubview(segmentControl)
-        containerView.addSubview(moduleItemsContainer)
-        
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            
-            segmentControl.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
-            segmentControl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            segmentControl.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            segmentControl.heightAnchor.constraint(equalToConstant: 44),
-            
-            moduleItemsContainer.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 16),
-            moduleItemsContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            moduleItemsContainer.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            moduleItemsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
-        ])
-        
-        // Initial load of All (Spaced Repetition) content
-        loadModuleItemsForType(.flashcards, container: moduleItemsContainer)
-        
-        return containerView
-    }
+          containerView.addSubview(titleContainer)
+          containerView.addSubview(segmentControl)
+          containerView.addSubview(moduleItemsContainer)
+          
+          NSLayoutConstraint.activate([
+              titleContainer.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+              titleContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+              titleContainer.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+              
+              segmentControl.topAnchor.constraint(equalTo: titleContainer.bottomAnchor, constant: 16),
+              segmentControl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+              segmentControl.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+              segmentControl.heightAnchor.constraint(equalToConstant: 44),
+              
+              moduleItemsContainer.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 16),
+              moduleItemsContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+              moduleItemsContainer.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+              moduleItemsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+          ])
+          
+          // Initial load of All (Spaced Repetition) content
+          loadModuleItemsForType(.flashcards, container: moduleItemsContainer)
+          
+          return containerView
+      }
+
 
     // Custom Circular Segment Control
     class CircularSegmentControl: UIControl {
@@ -1300,32 +1332,30 @@ extension homeScreenViewController {
 
     // Handler for circular segment changes
     @objc private func circularSegmentChanged(_ sender: CircularSegmentControl) {
-        if let container = view.viewWithTag(100) {
+        if let container = view.viewWithTag(100), let seeAllButton = view.viewWithTag(200) as? UIButton {
             let topicType: TopicsType
+            
+            // Update See All button action based on selected segment
             switch sender.selectedSegmentIndex {
             case 0:
-                topicType = .flashcards  // All (Spaced Repetition)
+                topicType = .flashcards  // Spaced Repetition
+                seeAllButton.removeTarget(nil, action: nil, for: .touchUpInside)
+                seeAllButton.addTarget(self, action: #selector(SRseeAllButtonTapped), for: .touchUpInside)
             case 1:
                 topicType = .quizzes     // Active Recall
+                seeAllButton.removeTarget(nil, action: nil, for: .touchUpInside)
+                seeAllButton.addTarget(self, action: #selector(ARseeAllButtonTapped), for: .touchUpInside)
             case 2:
                 topicType = .summary     // Summariser
+                seeAllButton.removeTarget(nil, action: nil, for: .touchUpInside)
+                seeAllButton.addTarget(self, action: #selector(summaryseeAllButtonTapped), for: .touchUpInside)
             default:
                 topicType = .flashcards
             }
+            
             loadModuleItemsForType(topicType, container: container)
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
