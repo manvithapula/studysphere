@@ -504,13 +504,7 @@ extension homeScreenViewController {
         titleLabel.font = .systemFont(ofSize: 16, weight: .bold)
         titleLabel.textColor = .darkText
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let subtitleLabel = UILabel()
-        subtitleLabel.text = item.subtitle
-        subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.textColor = mainColor.withAlphaComponent(0.8)
-        
+    
         
         let subjectTag = UILabel()
         subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
@@ -553,7 +547,7 @@ extension homeScreenViewController {
         cardBackground.addSubview(iconContainer)
         iconContainer.addSubview(iconView)
         cardBackground.addSubview(titleLabel)
-        cardBackground.addSubview(subtitleLabel)
+      //  cardBackground.addSubview(subtitleLabel)
         cardBackground.addSubview(subjectTag)
         cardBackground.addSubview(startButton)
         
@@ -575,9 +569,6 @@ extension homeScreenViewController {
             
             titleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
-            
-            subtitleLabel.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 16),
             
             subjectTag.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: 16),
             subjectTag.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),

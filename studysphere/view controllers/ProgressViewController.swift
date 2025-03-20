@@ -581,7 +581,7 @@ class ProgressViewController: UIViewController {
     }
     
     private func createBadges() {
-        // Define badges with their level requirements
+     
         let badgeDefinitions = [
             (name: "Beginner", icon: "star.leadinghalf.filled", level: 1, color: AppTheme.primary),
             (name: "Intermediate", icon: "star.fill", level: 2, color: AppTheme.secondary),
@@ -711,10 +711,8 @@ class ProgressViewController: UIViewController {
     @objc private func badgeTapped(_ gesture: UITapGestureRecognizer) {
         guard let badgeView = gesture.view else { return }
         
-        // Create a snapshot of the badge to animate
         guard let badgeSnapshot = badgeView.snapshotView(afterScreenUpdates: false) else { return }
-        
-        // Calculate coordinates for placing the snapshot in the main view
+        let badgeLevel = badgeView.tag
         let badgeFrameInWindow = badgeView.convert(badgeView.bounds, to: nil)
         
         badgeCelebrationView.alpha = 0
