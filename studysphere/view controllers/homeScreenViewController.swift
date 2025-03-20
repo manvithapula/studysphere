@@ -917,6 +917,7 @@ extension homeScreenViewController {
             subjectsStack.axis = .vertical
             subjectsStack.spacing = 12
             subjectsStack.translatesAutoresizingMaskIntoConstraints = false
+        
         let fileterdTopics = allTopics.filter{$0.type == type}
 
             
