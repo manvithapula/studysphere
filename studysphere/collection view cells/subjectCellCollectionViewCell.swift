@@ -3,6 +3,7 @@ import UIKit
 class SubjectCellCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Elements
     private let containerView = UIView()
+    private let cardBackground = UIView()
     private let iconContainerView = UIView()
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
@@ -34,13 +35,22 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        // Existing views setup
+        // Container view setup (with shadow like in TableViewCell)
+        containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 12
-        containerView.layer.masksToBounds = true
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.08
+        containerView.layer.shadowRadius = 8
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         contentView.addSubview(containerView)
         
+        // Card background setup
+        cardBackground.layer.cornerRadius = 12
+        cardBackground.clipsToBounds = true
+        containerView.addSubview(cardBackground)
+        
         iconContainerView.layer.cornerRadius = 20
-        contentView.addSubview(iconContainerView)
+        cardBackground.addSubview(iconContainerView)
         
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.tintColor = .white
@@ -48,14 +58,14 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         titleLabel.textColor = UIColor.black
-        containerView.addSubview(titleLabel)
+        cardBackground.addSubview(titleLabel)
         
         subtitleLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        containerView.addSubview(subtitleLabel)
+        cardBackground.addSubview(subtitleLabel)
         
         continueButton.setTitleColor(AppTheme.primary, for: .normal)
         continueButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        containerView.addSubview(continueButton)
+        cardBackground.addSubview(continueButton)
         
         // Empty state views setup
         contentView.addSubview(emptyStateContainer)
@@ -78,8 +88,9 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupConstraints() {
-        // Existing constraints
+        // Setup auto layout constraints
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        cardBackground.translatesAutoresizingMaskIntoConstraints = false
         iconContainerView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -92,15 +103,21 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         createActionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            // Existing constraints
+            // Container view constraints
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             containerView.heightAnchor.constraint(equalToConstant: 72),
             
-            iconContainerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            iconContainerView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            // Card background constraints
+            cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
+            cardBackground.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            cardBackground.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            cardBackground.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            
+            iconContainerView.leadingAnchor.constraint(equalTo: cardBackground.leadingAnchor, constant: 16),
+            iconContainerView.centerYAnchor.constraint(equalTo: cardBackground.centerYAnchor),
             iconContainerView.widthAnchor.constraint(equalToConstant: 40),
             iconContainerView.heightAnchor.constraint(equalToConstant: 40),
             
@@ -110,11 +127,11 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
             iconImageView.heightAnchor.constraint(equalToConstant: 24),
             
             titleLabel.leadingAnchor.constraint(equalTo: iconContainerView.trailingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: cardBackground.topAnchor, constant: 16),
             
             subtitleLabel.leadingAnchor.constraint(equalTo: iconContainerView.trailingAnchor, constant: 16),
-            subtitleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            subtitleLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
             
             // Empty state constraints
@@ -149,35 +166,66 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
     
     func showEmptyState(_ show: Bool) {
         containerView.isHidden = show
+        cardBackground.isHidden = show
         iconContainerView.isHidden = show
         emptyStateContainer.isHidden = !show
     }
     
+    // Updated configure method using the setupColors approach
     func configure(title: String, subtitle: String, iconName: String = "book", index: Int) {
         showEmptyState(false)
         
         titleLabel.text = title
         subtitleLabel.text = subtitle
         iconImageView.image = UIImage(systemName: iconName)
-
-        // Define background colors based on the index
-        let backgroundColors: [UIColor] = [
+        
+        setupColors(for: index)
+    }
+    
+    // Implementing setupColors from TableViewCell
+    private func setupColors(for index: Int) {
+        let colorSchemes: [UIColor] = [
             AppTheme.primary.withAlphaComponent(0.15),
-            AppTheme.secondary.withAlphaComponent(0.15),
+            AppTheme.secondary.withAlphaComponent(0.15)
         ]
         
-        let iconBackgroundColors: [UIColor] = [
+        let iconColorSchemes: [UIColor] = [
             AppTheme.primary,
-            AppTheme.secondary,
+            AppTheme.secondary
         ]
         
-        let colorIndex = index % backgroundColors.count
-        let backgroundColor = backgroundColors[colorIndex]
-        let iconBackgroundColor = iconBackgroundColors[colorIndex]
-
-        containerView.backgroundColor = backgroundColor
-        iconContainerView.backgroundColor = iconBackgroundColor
-        subtitleLabel.textColor = iconBackgroundColor.withAlphaComponent(0.8)
+        let colorIndex = index % colorSchemes.count
+        let backgroundColor = colorIndex < colorSchemes.count ?
+                             colorSchemes[colorIndex] :
+                             UIColor.systemGray.withAlphaComponent(0.15)
+        
+        let iconColor = colorIndex < iconColorSchemes.count ?
+                       iconColorSchemes[colorIndex] :
+                       UIColor.systemGray
+        
+        cardBackground.backgroundColor = backgroundColor
+        iconContainerView.backgroundColor = iconColor
+        subtitleLabel.textColor = iconColor.withAlphaComponent(0.8)
+    }
+    
+    // MARK: - Highlight handling for UICollectionViewCell
+    // UICollectionViewCell uses these methods instead of setHighlighted
+    override var isHighlighted: Bool {
+        didSet {
+            UIView.animate(withDuration: 0.2) {
+                self.containerView.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+                self.containerView.layer.shadowOpacity = self.isHighlighted ? 0.12 : 0.08
+            }
+        }
+    }
+    
+    override var isSelected: Bool {
+        didSet {
+            UIView.animate(withDuration: 0.2) {
+                self.containerView.transform = self.isSelected ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
+                self.containerView.layer.shadowOpacity = self.isSelected ? 0.12 : 0.08
+            }
+        }
     }
     
     override func layoutSubviews() {
@@ -190,5 +238,8 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         subtitleLabel.text = nil
         iconImageView.image = nil
         showEmptyState(false)
+        // Reset transform and shadow when reusing the cell
+        containerView.transform = .identity
+        containerView.layer.shadowOpacity = 0.08
     }
 }
