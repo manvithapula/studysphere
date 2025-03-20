@@ -205,13 +205,16 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
         private func performLogout() {
             // Clear user data
             AuthManager.shared.logOut()
-            subjectDb.clearCache()
-            scoreDb.clearCache()
-            topicsDb.clearCache()
-            schedulesDb.clearCache()
-            flashCardDb.clearCache()
-            summaryDb.clearCache()
-            questionsDb.clearCache()
+            Task{
+                await subjectDb.clearCache()
+                await scoreDb.clearCache()
+                await topicsDb.clearCache()
+                await schedulesDb.clearCache()
+                await flashCardDb.clearCache()
+                await summaryDb.clearCache()
+                await questionsDb.clearCache()
+                await metadataDb.clearCache()
+            }
             do{
                 try FirebaseAuthManager.shared.signOut()
             }

@@ -450,6 +450,34 @@ class FakeDb<T: Codable & Identifiable> {
     }
     private var items: [T]
     private var loaded = false
+    private actor DataStore {
+        var items: [T] = []
+        var loaded = false
+        var lastLoadTime: Date?
+        
+        func setItems(_ newItems: [T]) {
+            items = newItems
+            loaded = true
+            lastLoadTime = Date()
+        }
+        
+        func getItems() -> [T] {
+            return items
+        }
+        
+        func isLoaded() -> Bool {
+            return loaded
+        }
+        
+        func reset() {
+            items = []
+            loaded = false
+        }
+    }
+
+    private let dataStore = DataStore()
+    private var loadTask: Task<[T], Error>?
+
     init(name: String) {
         self.name = name
         self.db = FirestoreManager.shared.db
@@ -533,41 +561,71 @@ class FakeDb<T: Codable & Identifiable> {
         collection.document(id).delete()
         saveData()
     }
-    public func clearCache() {
+    public func clearCache()  async {
+        loadTask?.cancel()
+        loadTask = nil
+        await dataStore.reset()
         items = []
+        loaded = false
     }
 
-    @available(iOS 15.0, *)
     private func loadData() async -> [T] {
-        if loaded {
-            return items
+        // If there's already a loading task in progress, await its result
+        if let existingTask = loadTask {
+            do {
+                return try await existingTask.value
+            } catch {
+                // If the existing task failed, we'll create a new one below
+                print("Previous load task failed: \(error)")
+            }
         }
 
-        do {
-            let querySnapshot = try await collection.getDocuments()
-            let documents = querySnapshot.documents
+        // Check if data is already loaded
+        if await dataStore.isLoaded() {
+            return await dataStore.getItems()
+        }
+        
+        // Create a new loading task
+        let task = Task<[T], Error> {
+            do {
+                let querySnapshot = try await collection.getDocuments()
+                let documents = querySnapshot.documents
 
-            var fetchedItems: [T] = []
-            for document in documents {
-                let data = document.data()
-                do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .secondsSince1970
-                    let item = try decoder.decode(T.self, from: jsonData)
-                    fetchedItems.append(item)
-                } catch {
-                    print("Error decoding document: \(document.documentID), error: \(error)")
+                var fetchedItems: [T] = []
+                for document in documents {
+                    let data = document.data()
+                    do {
+                        let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .secondsSince1970
+                        let item = try decoder.decode(T.self, from: jsonData)
+                        fetchedItems.append(item)
+                    } catch {
+                        print("Error decoding document: \(document.documentID), error: \(error)")
+                    }
                 }
+
+                // Safely update the items
+                await dataStore.setItems(fetchedItems)
+                return fetchedItems
+            } catch {
+                print("Error getting documents: \(error)")
+                throw error
             }
-
-
-            return fetchedItems
+        }
+        
+        loadTask = task
+        
+        do {
+            let result = try await task.value
+            loadTask = nil
+            return result
         } catch {
-            print("Error getting documents: \(error)")
+            loadTask = nil
             return []
         }
     }
+
 
     private func saveData() {
         let plistEncoder = PropertyListEncoder()
