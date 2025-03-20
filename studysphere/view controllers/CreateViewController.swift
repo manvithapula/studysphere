@@ -869,7 +869,7 @@ class DashedRectangle: UIView {
 
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Drop your files here"
+        label.text = "Drop or Scan your files here"
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = AppTheme.primary
         return label
