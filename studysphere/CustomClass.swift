@@ -28,7 +28,7 @@ class PasswordTextField: UITextField {
         eyeButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         eyeButton.tintColor = .systemGray
         eyeButton.frame = CGRect(x: 0, y: 0, width: 36, height: 36)
-        eyeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
+        eyeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
         eyeButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
         
         rightView = eyeButton

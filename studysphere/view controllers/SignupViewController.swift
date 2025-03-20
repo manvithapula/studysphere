@@ -77,7 +77,7 @@ class SignupViewController: UIViewController {
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 8
+        stack.spacing = 12
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -89,6 +89,9 @@ class SignupViewController: UIViewController {
         eyeButton.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         eyeButton.tintColor = .gray
         eyeButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
+        
+        eyeButton.frame = CGRect(x: 0, y: 0, width: 36, height: 36)
+        eyeButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
     }
     
     // MARK: - Lifecycle
