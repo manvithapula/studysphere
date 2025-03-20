@@ -447,9 +447,13 @@ class QuestionViewController: UIViewController {
             if var scheduleTemp = schedule {
                 try await schedulesDb.update(&scheduleTemp)
             }
-            
-            let _ = scoreDb.create(&scoreValue!)
-            
+            if var prevscore = try await scoreDb.findAll(where: ["scheduleId":schedule!.id]).first{
+                prevscore.score = score
+                try await scoreDb.update(&prevscore)
+            }
+            else{
+                let _ = scoreDb.create(&scoreValue!)
+            }
         }
         performSegue(withIdentifier: "toARAnimation", sender: self)
     }

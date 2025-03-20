@@ -184,10 +184,16 @@ class FlashcardViewController: UIViewController {
             progressView.setProgress(1, animated: true)
             score = Score(id: "", score: memorisedNumCount, total: flashcards.count, scheduleId: schedule!.id, topicId: schedule!.topic, createdAt: Timestamp(), updatedAt: Timestamp())
             Task{
-                let _ = scoreDb.create(&score!)
                 schedule?.completed = Timestamp()
                 var scheduleTemp = schedule
                 try await schedulesDb.update(&scheduleTemp!)
+                if var prevscore = try await scoreDb.findAll(where: ["scheduleId":schedule!.id]).first{
+                    prevscore.score = memorisedNumCount
+                    try await scoreDb.update(&prevscore)
+                }
+                else{
+                    let _ = scoreDb.create(&score!)
+                }
             }
         }
         

@@ -386,7 +386,7 @@ class ReviewCell: UITableViewCell {
             retentionLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
             
             startButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            startButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            startButton.trailingAnchor.constraint(equalTo: retentionLabel.leadingAnchor, constant: -12),
             startButton.widthAnchor.constraint(equalToConstant: 100),
             startButton.heightAnchor.constraint(equalToConstant: 32)
         ])
@@ -401,7 +401,8 @@ class ReviewCell: UITableViewCell {
                 statusBar.backgroundColor = .systemGreen
                 statusIcon.image = UIImage(systemName: "checkmark.circle")
                 statusIcon.tintColor = .systemGreen
-                startButton.isHidden = true
+                startButton.setTitle("Retake", for: .normal)
+                startButton.isHidden = false
                 retentionLabel.isHidden = false
                 
                 // Get scores from database
@@ -410,6 +411,9 @@ class ReviewCell: UITableViewCell {
                     let percentage = (Double(score.score) / Double(score.total)) * 100
                     retentionLabel.text = "\(Int(percentage))%"
                 }
+                NSLayoutConstraint.activate([
+                    startButton.widthAnchor.constraint(equalToConstant: 60),
+                ])
             } else {
                 let isToday = Calendar.current.isDateInToday(date)
                 statusBar.backgroundColor = isToday ? .systemBlue : .systemGray5
