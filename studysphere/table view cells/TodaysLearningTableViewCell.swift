@@ -11,7 +11,7 @@ class TodaysLearningTableViewCell: UITableViewCell {
     private let subjectTag: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .black
+        label.textColor = AppTheme.primary
         label.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
         label.layer.cornerRadius = 10
         label.clipsToBounds = true
