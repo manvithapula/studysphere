@@ -110,11 +110,22 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            setupEmptyStateView()
        }
    
-       override func viewWillAppear(_ animated: Bool) {
-           super.viewWillAppear(animated)
-           fetchTopics()
-       }
-       
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Hide the tab bar when this view appears
+        self.tabBarController?.tabBar.isHidden = true
+        
+        fetchTopics()
+    }
+
+    // Add this method if it doesn't already exist
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Show the tab bar again when this view disappears
+        self.tabBarController?.tabBar.isHidden = false
+    }
        private func setupUI() {
            view.backgroundColor = .systemGray6
            view.addSubview(searchBar)

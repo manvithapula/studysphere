@@ -52,30 +52,35 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
         return label
     }()
 
+    private var emptyStateContainerView: UIView!
+
     private func setupEmptyStateView() {
-        let containerView = UIView()
-        containerView.addSubview(emptyStateLabel)
-        containerView.addSubview(actionLabel)
-        
+        emptyStateContainerView = UIView()
+        emptyStateContainerView.addSubview(emptyStateLabel)
+        emptyStateContainerView.addSubview(actionLabel)
         
         emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
         actionLabel.translatesAutoresizingMaskIntoConstraints = false
-     
+        
         NSLayoutConstraint.activate([
+            // Center the emptyStateLabel horizontally with some offset to the left
+            emptyStateLabel.centerXAnchor.constraint(equalTo: emptyStateContainerView.centerXAnchor, constant: -30),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: emptyStateContainerView.centerYAnchor),
             
-            emptyStateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 95),
-            emptyStateLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            // Position actionLabel to the right of emptyStateLabel
             actionLabel.leadingAnchor.constraint(equalTo: emptyStateLabel.trailingAnchor, constant: 8),
-            actionLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            actionLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor),
+            actionLabel.centerYAnchor.constraint(equalTo: emptyStateContainerView.centerYAnchor),
         ])
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCreateAction))
         actionLabel.addGestureRecognizer(tapGesture)
-        
-        SubjectCollectionView.backgroundView = containerView
     }
 
+    private func updateEmptyState() {
+        let isEmpty = filteredCards.isEmpty
+        SubjectCollectionView.backgroundView = isEmpty ? emptyStateContainerView : nil
+    }
+    
     @objc private func handleCreateAction() {
         performSegue(withIdentifier: "subjectdetailsempty", sender: self)
     }
@@ -96,19 +101,28 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
         }
    
 
-        private func updateEmptyState() {
-            let isEmpty = filteredCards.isEmpty
-            emptyStateLabel.isHidden = !isEmpty
-            SubjectCollectionView.backgroundView = isEmpty ? emptyStateLabel : nil
-        }
+    
         
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            subjectSegmentControl.selectedSegmentTintColor = AppTheme.primary
-            subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
-            subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-            SubjectCollectionView.reloadData()
-        }
+    // In SubjectDetailsViewController
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Hide the tab bar when this view appears
+        self.tabBarController?.tabBar.isHidden = true
+        
+        // Your existing code
+        subjectSegmentControl.selectedSegmentTintColor = AppTheme.primary
+        subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+        subjectSegmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        SubjectCollectionView.reloadData()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Show the tab bar again when this view disappears
+        self.tabBarController?.tabBar.isHidden = false
+    }
         
         // MARK: - UI Setup
         private func setupUI() {

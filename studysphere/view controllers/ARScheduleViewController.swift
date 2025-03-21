@@ -69,8 +69,13 @@ class ARScheduleViewController: UIViewController, UITableViewDataSource, UITable
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tabBarController?.isTabBarHidden = false
+        tabBarController?.isTabBarHidden = true
         setup() // Refresh data when view appears
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.isTabBarHidden = false
     }
     
     // MARK: - Setup
