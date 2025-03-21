@@ -324,7 +324,7 @@ class ReviewCell: UITableViewCell {
     private let retentionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
-        label.textColor = .black
+        label.textColor = .countLabel
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
