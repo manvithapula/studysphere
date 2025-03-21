@@ -166,7 +166,7 @@ class FirebaseAiManager {
             let prompt = """
                 Create flashcards from this PDF document.
                 Focus on key concepts and important details from the content.
-                Please provide 7 question-answer pairs.
+                Please provide 10-15 question-answer pairs.
                 """
 
             let content = ModelContent(
@@ -256,7 +256,7 @@ class FirebaseAiManager {
                 Focus on key concepts and important details from the content.
                 make sure the answers are small as possible and fit in one line.
                 one of the option should be the correct answer and randomize this option
-                Please provide at least 5 questions
+                Please provide 10-15 questions
                 """
 
             let content = ModelContent(
