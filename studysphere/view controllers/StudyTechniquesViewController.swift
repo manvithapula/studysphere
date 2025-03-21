@@ -10,7 +10,7 @@ class StudyTechniquesViewController: UIViewController {
     
     private let unitNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Unit Name"
+        label.text = "Topic Name"
         label.font = .systemFont(ofSize: 17, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false // Add this line
 
