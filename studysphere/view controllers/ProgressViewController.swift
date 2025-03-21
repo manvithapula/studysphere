@@ -6,7 +6,7 @@ import Charts
 class ProgressViewController: UIViewController {
     
     private var studyProgress: StudyProgress?
-    private let itemsPerLevel = 20 //
+    private let itemsPerLevel = 5//
     private var allTopics:[Schedule] = []
     private var totalCompletedTopics:[Schedule]{
         return allTopics.filter { card in
@@ -93,6 +93,25 @@ class ProgressViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private func calculateUserLevel() -> Int {
+        let completedFlashcards = completedFlashcards.count
+        let completedQuizzes = completedQuestions.count
+        let completedSummaries = completedSummary.count
+        
+        // Weight different activities differently
+        let totalProgress = (completedFlashcards * 2) +
+                           (completedQuizzes * 2) +    // Quizzes count double
+                           (completedSummaries * 2)    // Summaries count triple
+        
+        // Calculate level based on weighted progress
+        let baseLevel = Int(ceil(Float(totalProgress) / Float(itemsPerLevel)))
+        
+        // Add bonus level if first module is completed
+        let bonusLevel = studyProgress?.firstModuleCompleted == true ? 1 : 0
+        
+        return baseLevel + bonusLevel
+    }
     
     private let badgesContainerView: UIView = {
         let view = UIView()
@@ -233,6 +252,8 @@ class ProgressViewController: UIViewController {
             ])
 
         }
+    
+    
     private func configureStreakLineChart(
             lineChart: LineChartView, topic: TopicsType
         ) async {
@@ -438,19 +459,31 @@ class ProgressViewController: UIViewController {
     
     private func createProgressStats() {
         guard let progress = studyProgress else { return }
-        Task{
+        Task {
             allTopics = try await schedulesDb.findAll()
-            let allSummaries = try await topicsDb.findAll(where: ["type":TopicsType.summary.rawValue])
-            let totalItems = totalCompletedTopics.count + allSummaries.count
-            let nextLevelProgress = Float(totalItems % itemsPerLevel) / Float(itemsPerLevel)
+            let allSummaries = try await topicsDb.findAll(where: ["type": TopicsType.summary.rawValue])
+            
+            // Use the same weights as calculateUserLevel (all weights are 2)
+            let weight = 2  // Consistent weight as per calculateUserLevel
+            
+            let totalWeightedProgress = (completedFlashcards.count * weight) +
+                                      (completedQuestions.count * weight) +
+                                      (allSummaries.count * weight)
+            
+            // Calculate current level and progress towards next level
+            let currentLevel = Int(Float(totalWeightedProgress) / Float(itemsPerLevel))
+            let progressTowardsNext = totalWeightedProgress % itemsPerLevel
+            
+            // Calculate progress percentage for next badge (same calculation method)
+            let nextLevelProgress = Float(progressTowardsNext) / Float(itemsPerLevel)
+            
+            let progressText = "Progress for next badge"
             
             let statsViews = [
                 createStatView(icon: "clock", title: "Flashcards Completed", value: "\(completedFlashcards.count)"),
                 createStatView(icon: "brain.head.profile", title: "Quizzes Completed", value: "\(completedQuestions.count)"),
                 createStatView(icon: "doc.text", title: "Summaries Completed", value: "\(allSummaries.count)"),
-
-                
-                createProgressBar(title: "Progress for next badge", value: nextLevelProgress)
+                createProgressBar(title: progressText, value: nextLevelProgress)
             ]
             
             statsViews.forEach { statsStackView.addArrangedSubview($0) }
@@ -594,20 +627,17 @@ class ProgressViewController: UIViewController {
         ]
         
         // Calculate badge size and spacing
-        let containerWidth = UIScreen.main.bounds.width - 70 // Accounting for padding
+        let containerWidth = UIScreen.main.bounds.width - 70
         let badgeSize: CGFloat = containerWidth / 3 - 10
         let spacing: CGFloat = 16
-        
-        // Calculate user's current level
         guard let progress = studyProgress else { return }
         let totalItems = totalCompletedTopics.count
-        let userLevel = (totalItems / itemsPerLevel) + (progress.firstModuleCompleted ? 1 : 0)
+        let userLevel = calculateUserLevel()
         
-        // Create and position each badge
         for (index, badge) in badgeDefinitions.enumerated() {
-            let row = index / 3
-            let col = index % 3
-            let isUnlocked = userLevel >= badge.level
+                let row = index / 3
+                let col = index % 3
+                let isUnlocked = userLevel >= badge.level
             
             let badgeView = createBadgeView(
                 name: badge.name,
@@ -628,17 +658,16 @@ class ProgressViewController: UIViewController {
                 badgeView.heightAnchor.constraint(equalToConstant: badgeSize)
             ])
             
-            // Set the bottom constraint for the last row
+        
             if row == badgeDefinitions.count / 3 - 1 || index == badgeDefinitions.count - 1 {
                 badgeView.bottomAnchor.constraint(equalTo: badgesGridView.bottomAnchor).isActive = true
             }
-            
-            // Add tap gesture to unlocked badges
+        
             if isUnlocked {
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(badgeTapped(_:)))
                 badgeView.isUserInteractionEnabled = true
                 badgeView.addGestureRecognizer(tapGesture)
-                badgeView.tag = badge.level // Store the badge level in the tag
+                badgeView.tag = badge.level
             }
         }
     }
