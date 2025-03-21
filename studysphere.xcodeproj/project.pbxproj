@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 424AE6FE2CE5BA4500E7376F /* Lottie */; };
 		4250441F2D7C83FB00B55EB9 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 4250441E2D7C83FB00B55EB9 /* DGCharts */; };
 		42566DA32D553FB2007C170D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA22D553FB2007C170D /* FirebaseAuth */; };
 		42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 42566DA42D553FB2007C170D /* FirebaseCore */; };
@@ -78,7 +77,6 @@
 			files = (
 				42B828E52D55400E009BE803 /* GoogleGenerativeAI in Frameworks */,
 				429F0CF72D809F55003D8F3C /* FirebaseVertexAI in Frameworks */,
-				424AE6FF2CE5BA4500E7376F /* Lottie in Frameworks */,
 				42566DA72D553FB2007C170D /* FirebaseFirestore in Frameworks */,
 				42566DA52D553FB2007C170D /* FirebaseCore in Frameworks */,
 				429760232D7FE9FC00A6F8ED /* FirebaseStorage in Frameworks */,
@@ -152,7 +150,6 @@
 			);
 			name = studysphere;
 			packageProductDependencies = (
-				424AE6FE2CE5BA4500E7376F /* Lottie */,
 				42566DA22D553FB2007C170D /* FirebaseAuth */,
 				42566DA42D553FB2007C170D /* FirebaseCore */,
 				42566DA62D553FB2007C170D /* FirebaseFirestore */,
@@ -244,7 +241,6 @@
 			mainGroup = 3502260B2CCF5C50006F019D;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				424AE6FC2CE5BA3300E7376F /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				42566DA12D553FB2007C170D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				42B828E32D55400E009BE803 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 				4250441D2D7C83FB00B55EB9 /* XCRemoteSwiftPackageReference "Charts" */,
@@ -622,14 +618,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		424AE6FC2CE5BA3300E7376F /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.5.0;
-			};
-		};
 		4250441D2D7C83FB00B55EB9 /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts";
@@ -657,11 +645,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		424AE6FE2CE5BA4500E7376F /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 424AE6FC2CE5BA3300E7376F /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
-		};
 		4250441E2D7C83FB00B55EB9 /* DGCharts */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4250441D2D7C83FB00B55EB9 /* XCRemoteSwiftPackageReference "Charts" */;
