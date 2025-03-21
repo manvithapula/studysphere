@@ -513,7 +513,7 @@ class ProgressViewController: UIViewController {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        titleLabel.textColor = .darkGray
+        titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let valueLabel = UILabel()
@@ -568,6 +568,7 @@ class ProgressViewController: UIViewController {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let percentageLabel = UILabel()
