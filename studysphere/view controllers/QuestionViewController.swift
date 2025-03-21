@@ -593,7 +593,7 @@ class QuestionViewController: UIViewController {
             self.nextButton.isEnabled = true
             self.nextButton.alpha = 1.0
             
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.75){
                 self.nextButtonTapped()
             }
         }
@@ -601,7 +601,7 @@ class QuestionViewController: UIViewController {
 
     @objc private func nextButtonTapped() {
         // Animate transition to next question
-        UIView.animate(withDuration: 0.65, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.questionCardView.alpha = 0.7
             self.optionStackView.alpha = 0.7
             self.questionCardView.transform = CGAffineTransform(translationX: -30, y: 0)
