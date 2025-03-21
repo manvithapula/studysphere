@@ -96,7 +96,7 @@ class CreateViewController: UIViewController {
 
     private let unitNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Unit Name"
+        label.text = "Topic Name"
         label.font = .systemFont(ofSize: 17, weight: .medium)
         return label
     }()
@@ -279,7 +279,7 @@ class CreateViewController: UIViewController {
         }
 
         // Setup text fields
-        Topic.placeholder = "Enter unit name"
+        Topic.placeholder = "Enter topic name"
         subjectField.placeholder = "Select Subject"
 
         // Layout constraints
