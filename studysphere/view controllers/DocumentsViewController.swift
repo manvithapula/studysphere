@@ -561,7 +561,7 @@ extension DocumentsViewController: UIDocumentPickerDelegate {
             UserDefaults.standard.set(bookmarkData, forKey: "documentBookmark")
             
             // Copy the file to app's documents directory
-            let fileName = UUID().uuidString + ".pdf" // Or use a meaningful name if you have one
+            let fileName = selectedFileURL.lastPathComponent // Or use a meaningful name if you have one
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let localFileURL = documentsDirectory.appendingPathComponent(fileName)
             
