@@ -431,6 +431,7 @@
                         <segue destination="KzB-74-32G" kind="show" identifier="toSRSchedule" id="vbk-8J-x7B"/>
                         <segue destination="vhf-AP-aDg" kind="show" identifier="toARSchedule" id="llO-ze-ygf"/>
                         <segue destination="jcz-Zh-nQ0" kind="show" identifier="toSummary" id="qdn-Bb-u7i"/>
+                        <segue destination="065-Ov-wae" kind="presentation" identifier="subjectdetailsempty" id="a3T-o6-V17"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2t-ul-b2n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1481,7 +1482,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="745-se-5fL">
-                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666671"/>
+                                                    <rect key="frame" x="11" y="7" width="82" height="51.666666666666664"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="S9m-yM-5Od">
                                                             <rect key="frame" x="0.0" y="0.66666666666666607" width="19.666666666666668" height="19"/>
@@ -1999,13 +2000,13 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Ch3-LU-Swa"/>
-        <segue reference="bfc-Hh-3ad"/>
-        <segue reference="PO4-kN-YgS"/>
-        <segue reference="R3b-7h-LbB"/>
+        <segue reference="llO-ze-ygf"/>
+        <segue reference="vbk-8J-x7B"/>
+        <segue reference="a3T-o6-V17"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
         <segue reference="eiX-zA-o0B"/>
-        <segue reference="paQ-p4-NU6"/>
+        <segue reference="qdn-Bb-u7i"/>
         <segue reference="IXb-z0-nX3"/>
     </inferredMetricsTieBreakers>
     <resources>
