@@ -82,7 +82,7 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         createActionLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         createActionLabel.textColor = AppTheme.primary
         createActionLabel.isUserInteractionEnabled = true
-        
+         
         // Initially hide empty state
         emptyStateContainer.isHidden = true
     }

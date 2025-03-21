@@ -18,7 +18,7 @@ class MySubjectListTableViewController: UITableViewController {
         label.text = "No subjects yet.\nTap '+' to add a new subject."
         label.textAlignment = .center
         label.numberOfLines = 2
-        label.textColor = .black
+     //   label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
