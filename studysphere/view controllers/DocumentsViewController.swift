@@ -10,7 +10,7 @@ class DocumentsViewController: UIViewController {
     private var filteredDocuments: [FileMetadata] = [] // For search
     private var subjects: [Subject] = [] // Subject list
     private var selectedSubject: Subject? // Track selected subject
-    
+    private var isValueEditing = false
     private let searchBar: UISearchBar = {
         let sb = UISearchBar()
         sb.placeholder = "Search documents..."
@@ -92,6 +92,8 @@ class DocumentsViewController: UIViewController {
         view.addSubview(subjectsCollectionView)
         view.addSubview(documentsCollectionView)
         view.addSubview(emptyStateLabel)
+        let backButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEdit))
+        self.navigationItem.leftBarButtonItem = backButton
         
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -114,7 +116,10 @@ class DocumentsViewController: UIViewController {
             emptyStateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
     }
-    
+    @objc private func handleEdit(){
+        self.isValueEditing = !isValueEditing
+        documentsCollectionView.reloadData()
+    }
  
     
     private func createLayout() -> UICollectionViewLayout {
@@ -267,10 +272,10 @@ extension DocumentsViewController: UICollectionViewDataSource, UICollectionViewD
             }
             
             let document = filteredDocuments[indexPath.item]
-            cell.configure(with: document, index: indexPath.item)
+            cell.configure(with: document, index: indexPath.item,isEditing: isValueEditing)
             cell.previewButton.tag = indexPath.row
             cell.previewButton.addTarget(self, action: #selector(previewPDFTapped(_:)), for: .touchUpInside)
-
+            cell.delegate = self
             return cell
         }
     }
@@ -698,15 +703,60 @@ extension DocumentsViewController: VNDocumentCameraViewControllerDelegate,UIDocu
     // In your view controller that uses DocumentCell
     extension DocumentsViewController: DocumentCellDelegate {
         func didTapEdit(for cell: DocumentCell, document: FileMetadata) {
-            // Handle edit action
-            print("Edit document: \(document.title)")
-            // Navigate to edit screen or show edit dialog
+            showEditAlert(for: document)
         }
         
         func didTapDelete(for cell: DocumentCell, document: FileMetadata) {
-            // Handle delete action
-            print("Delete document: \(document.title)")
-            // Show confirmation dialog and delete if confirmed
+            showDeleteConfirmation(for: document)
+        }
+        private func showEditAlert(for topic: FileMetadata) {
+            let alertController = UIAlertController(title: "Edit Summary", message: "Update the summary title", preferredStyle: .alert)
+            
+            alertController.addTextField { textField in
+                textField.text = topic.title
+                textField.placeholder = "Enter summary title"
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+            let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
+                guard let self = self,
+                      let textField = alertController.textFields?.first,
+                      let newTitle = textField.text, !newTitle.isEmpty else { return }
+                var newTopic = topic
+                newTopic.title = newTitle
+                Task{
+                    await metadataDb.update(&newTopic)
+                    self.isValueEditing = false
+                    self.loadTestDocuments()
+                }
+                
+            }
+            
+            alertController.addAction(cancelAction)
+            alertController.addAction(saveAction)
+            
+            present(alertController, animated: true)
+        }
+        
+        private func showDeleteConfirmation(for topic: FileMetadata) {
+            let alertController = UIAlertController(title: "Delete Summary", message: "Are you sure you want to delete this summary? This action cannot be undone.", preferredStyle: .alert)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+             //   self.deleteTopic(topic)
+                Task{
+                    await metadataDb.delete(id: topic.id)
+                    let schedules = try await schedulesDb.findAll(where: ["topic":topic.id])
+                    self.isValueEditing = false
+                    self.loadTestDocuments()
+                }
+            }
+            
+            alertController.addAction(cancelAction)
+            alertController.addAction(deleteAction)
+            
+            present(alertController, animated: true)
         }
     }
     

@@ -211,12 +211,12 @@ class DocumentCell: UICollectionViewCell {
     }
     
     private func setupGestureRecognizers() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        containerView.addGestureRecognizer(panGesture)
+//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+//        containerView.addGestureRecognizer(panGesture)
     }
 
     // MARK: - Configure Cell
-    func configure(with document: FileMetadata, index: Int) {
+    func configure(with document: FileMetadata, index: Int,isEditing:Bool) {
         titleLabel.text = document.title
         currentDocument = document
         
@@ -227,6 +227,11 @@ class DocumentCell: UICollectionViewCell {
         setupColors(for: index)
         setupDocumentType(fileExtension: document.subjectId)
         resetSwipeState()
+        if(isEditing){
+            let newX = CGFloat(-150)// Limit swipe to -150 points
+            swipeViewRightConstraint?.constant = newX
+            layoutIfNeeded()
+        }
     }
 
     private func setupDocumentType(fileExtension: String) {
@@ -304,13 +309,11 @@ class DocumentCell: UICollectionViewCell {
     @objc private func editButtonTapped() {
         guard let document = currentDocument else { return }
         delegate?.didTapEdit(for: self, document: document)
-        resetSwipeState()
     }
     
     @objc private func deleteButtonTapped() {
         guard let document = currentDocument else { return }
         delegate?.didTapDelete(for: self, document: document)
-        resetSwipeState()
     }
     
     override var isHighlighted: Bool {
