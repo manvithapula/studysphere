@@ -183,20 +183,19 @@ extension homeScreenViewController {
         profileButton.layer.cornerRadius = 25
         profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
         func loadImageFromUserDefaults() {
-            if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
-                // Create a unique cache key based on the URL
-                let cacheKey = photoURL.absoluteString
-                
-                // Check if image exists in UserDefaults cache
-                if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
-                   let cachedImage = UIImage(data: cachedImageData) {
-                    // Use cached image
-                    DispatchQueue.main.async {
-                        let roundedImage = makeRoundedImage(cachedImage)
-                        profileButton.setImage(roundedImage, for: .normal)
-                    }
-                    return
+            let cacheKey = "profileImage"
+            
+            // Check if image exists in UserDefaults cache
+            if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
+               let cachedImage = UIImage(data: cachedImageData) {
+                // Use cached image
+                DispatchQueue.main.async {
+                    let roundedImage = makeRoundedImage(cachedImage)
+                    profileButton.setImage(roundedImage, for: .normal)
                 }
+                return
+            }
+            if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
                 
                 // If not in cache, download from network
                 URLSession.shared.dataTask(with: photoURL) { data, response, error in

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseStorage
 
 class ProfileMainViewController: UIViewController {
     // MARK: - Outlets
@@ -95,6 +96,10 @@ class ProfileMainViewController: UIViewController {
         nameLabel.font = .systemFont(ofSize: 24, weight: .bold)
         nameLabel.textAlignment = .center
         nameLabel.text = user.firstName
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped))
+        profileImageView.addGestureRecognizer(tapGesture)
+        profileImageView.isUserInteractionEnabled = true
         
         // Details button setup
         detailsButton.backgroundColor = .systemGray6
@@ -226,7 +231,15 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
                         (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = navVC
         }
         }
-    //notifications and face id 
+    //notifications and face id
+    @objc private func profileImageTapped() {
+        
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true)
+    }
     @objc private func toggleValueChanged(_ sender: UISwitch) {
             switch sender.tag {
             case 0:
@@ -244,20 +257,21 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
         }
     
     private func loadImageFromUserDefaults() {
+        let cacheKey = "profileImage"
+        
+        // Check if image exists in UserDefaults cache
+        if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
+           let cachedImage = UIImage(data: cachedImageData) {
+            // Use cached image
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.profileImageView.image = cachedImage
+            }
+            return
+        }
         if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
             // Create a unique cache key based on the URL
-            let cacheKey = photoURL.absoluteString
-            
-            // Check if image exists in UserDefaults cache
-            if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
-               let cachedImage = UIImage(data: cachedImageData) {
-                // Use cached image
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.profileImageView.image = cachedImage
-                }
-                return
-            }
+           
             
             // If not in cache, download from network
             URLSession.shared.dataTask(with: photoURL) { [weak self] data, response, error in
@@ -282,4 +296,100 @@ extension ProfileMainViewController: UITableViewDataSource, UITableViewDelegate 
             profileImageView.image = UIImage(systemName: "person.crop.circle")
         }
     }
+}
+extension ProfileMainViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        var selectedImage: UIImage?
+        
+        if let editedImage = info[.editedImage] as? UIImage {
+            selectedImage = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            selectedImage = originalImage
+        }
+        
+        if let image = selectedImage {
+            // Display the image
+            profileImageView.image = image
+            saveImageToUserDefaults(image)
+            
+            // First upload the image to Firebase Storage, then update profile
+            uploadImageToFirebaseStorage(image) { [weak self] result in
+                switch result {
+                case .success(let downloadURL):
+                    // Now update the profile with the image URL
+                    FirebaseAuthManager.shared.updateProfile(photoURL: downloadURL) { updateResult in
+                        switch updateResult {
+                        case .success:
+                            print("Profile photo updated successfully")
+                            // Update your UI here if needed
+                        case .failure(let error):
+                            print("Failed to update profile photo: \(error.localizedDescription)")
+                            // Show error to user
+                        }
+                    }
+                case .failure(let error):
+                    print("Failed to upload image: \(error.localizedDescription)")
+                    // Show error to user
+                }
+            }
+        }
+        
+        dismiss(animated: true)
+    }
+    func uploadImageToFirebaseStorage(_ image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
+        // 1. Convert image to data
+        guard let imageData = image.jpegData(compressionQuality: 0.7) else {
+            let error = NSError(domain: "ImageError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not convert image to data"])
+            completion(.failure(error))
+            return
+        }
+        
+        // 2. Create a reference to Firebase Storage
+        guard let userId = FirebaseAuthManager.shared.currentUser?.uid else {
+            let error = NSError(domain: "AuthError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No user logged in"])
+            completion(.failure(error))
+            return
+        }
+        
+        let storageRef = Storage.storage().reference()
+        let profileImagesRef = storageRef.child("profile_images")
+        let imageRef = profileImagesRef.child("\(userId).jpg")
+        
+        // 3. Upload the image data
+        imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // 4. Get the download URL
+            imageRef.downloadURL { url, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let downloadURL = url else {
+                    let error = NSError(domain: "StorageError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No download URL returned"])
+                    completion(.failure(error))
+                    return
+                }
+                
+                completion(.success(downloadURL))
+            }
+        }
+    }
+
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
+    private func saveImageToUserDefaults(_ image: UIImage) {
+            // Convert image to data
+            if let imageData = image.jpegData(compressionQuality: 0.8) {
+                UserDefaults.standard.set(imageData, forKey: "profileImage")
+            }
+        }
+        
+    
 }

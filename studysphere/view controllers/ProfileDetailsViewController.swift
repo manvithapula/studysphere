@@ -317,20 +317,20 @@ extension ProfileDetailsViewController: UIImagePickerControllerDelegate, UINavig
         }
         
     private func loadImageFromUserDefaults() {
+        let cacheKey = "profileImage"
+        
+        // Check if image exists in UserDefaults cache
+        if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
+           let cachedImage = UIImage(data: cachedImageData) {
+            // Use cached image
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.profileImageView.image = cachedImage
+            }
+            return
+        }
         if let photoURL = FirebaseAuthManager.shared.currentUser?.photoURL {
             // Create a unique cache key based on the URL
-            let cacheKey = photoURL.absoluteString
-            
-            // Check if image exists in UserDefaults cache
-            if let cachedImageData = UserDefaults.standard.data(forKey: cacheKey),
-               let cachedImage = UIImage(data: cachedImageData) {
-                // Use cached image
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.profileImageView.image = cachedImage
-                }
-                return
-            }
             
             // If not in cache, download from network
             URLSession.shared.dataTask(with: photoURL) { [weak self] data, response, error in
