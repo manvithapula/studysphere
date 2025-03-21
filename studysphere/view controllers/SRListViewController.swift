@@ -6,7 +6,7 @@ import UIKit
 
 class SRListViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
     @IBOutlet weak var SpacedRepetitionList: UICollectionView!
-   
+   private var isValueEditing = false
     
     private let searchBar: UISearchBar = {
            let search = UISearchBar()
@@ -77,6 +77,9 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            view.addSubview(searchBar)
            view.addSubview(segmentControl)
            
+           let backButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEdit))
+           self.navigationItem.rightBarButtonItem = backButton
+           
            SpacedRepetitionList.dataSource = self
            SpacedRepetitionList.delegate = self
            SpacedRepetitionList.setCollectionViewLayout(generateLayout(), animated: true)
@@ -86,6 +89,10 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            
            setupConstraints()
        }
+    @objc private func handleEdit(){
+        self.isValueEditing = !isValueEditing
+        SpacedRepetitionList.reloadData()
+    }
        
        private func setupConstraints() {
            NSLayoutConstraint.activate([
@@ -153,7 +160,8 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            let card = filteredCards[indexPath.item]
            
            if let cell = cell as? SRCollectionViewCell {
-               cell.configure(topic: card, index: indexPath.item)
+               cell.configure(topic: card, index: indexPath.item,isEditing: isValueEditing)
+               cell.delegate = self
            }
 
            return cell
@@ -196,14 +204,62 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
    }
 extension SRListViewController: SRCollectionViewCellDelegate {
     func didTapEdit(for cell: SRCollectionViewCell, topic: Topics) {
-        // Handle edit action
-        print("Edit topic: \(topic.title)")
-        // Navigate to edit screen or show edit modal
+        showEditAlert(for: topic)
     }
     
     func didTapDelete(for cell: SRCollectionViewCell, topic: Topics) {
-        // Handle delete action
-        print("Delete topic: \(topic.title)")
-        // Show confirmation alert and delete if confirmed
+        showDeleteConfirmation(for: topic)
+    }
+    private func showEditAlert(for topic: Topics) {
+        let alertController = UIAlertController(title: "Edit Summary", message: "Update the summary title", preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.text = topic.title
+            textField.placeholder = "Enter summary title"
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
+            guard let self = self,
+                  let textField = alertController.textFields?.first,
+                  let newTitle = textField.text, !newTitle.isEmpty else { return }
+            var newTopic = topic
+            newTopic.title = newTitle
+            Task{
+                await topicsDb.update(&newTopic)
+                self.isValueEditing = false
+                self.fetchTopics()
+            }
+            
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        present(alertController, animated: true)
+    }
+    
+    private func showDeleteConfirmation(for topic: Topics) {
+        let alertController = UIAlertController(title: "Delete Summary", message: "Are you sure you want to delete this summary? This action cannot be undone.", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+         //   self.deleteTopic(topic)
+            Task{
+                await topicsDb.delete(id: topic.id)
+                let schedules = try await schedulesDb.findAll(where: ["topic":topic.id])
+                for schedule in schedules {
+                    await schedulesDb.delete(id: schedule.id)
+                }
+                self.isValueEditing = false
+                self.fetchTopics()
+            }
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        
+        present(alertController, animated: true)
     }
 }

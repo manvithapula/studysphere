@@ -9,7 +9,8 @@ import UIKit
 
 class SummaryListViewController: UIViewController {
     @IBOutlet weak var summaryList: UICollectionView!
-    
+    private var isValueEditing = false
+
     private var gradientLayer = CAGradientLayer()
     private let searchBar = UISearchBar()
     private let emptyStateLabel: UILabel = {
@@ -84,6 +85,8 @@ class SummaryListViewController: UIViewController {
         searchBar.placeholder = "Find a topic you created..."
         searchBar.delegate = self
         view.addSubview(searchBar)
+        let backButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEdit))
+        self.navigationItem.rightBarButtonItem = backButton
         
         // Setup Collection View
         summaryList.translatesAutoresizingMaskIntoConstraints = false
@@ -105,6 +108,10 @@ class SummaryListViewController: UIViewController {
             summaryList.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             summaryList.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    @objc private func handleEdit(){
+        self.isValueEditing = !isValueEditing
+        summaryList.reloadData()
     }
     
     private func configureCollectionView() {
@@ -135,8 +142,14 @@ class SummaryListViewController: UIViewController {
             guard let self = self,
                   let textField = alertController.textFields?.first,
                   let newTitle = textField.text, !newTitle.isEmpty else { return }
+            var newTopic = topic
+            newTopic.title = newTitle
+            Task{
+                await topicsDb.update(&newTopic)
+                self.isValueEditing = false
+                self.loadData()
+            }
             
-       //     self.updateTopic(topic, with: newTitle)
         }
         
         alertController.addAction(cancelAction)
@@ -152,6 +165,15 @@ class SummaryListViewController: UIViewController {
         let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
             guard let self = self else { return }
          //   self.deleteTopic(topic)
+            Task{
+                await topicsDb.delete(id: topic.id)
+                let schedules = try await schedulesDb.findAll(where: ["topic":topic.id])
+                for schedule in schedules {
+                    await schedulesDb.delete(id: schedule.id)
+                }
+                self.isValueEditing = false
+                self.loadData()
+            }
         }
         
         alertController.addAction(cancelAction)
@@ -224,7 +246,8 @@ extension SummaryListViewController: UICollectionViewDelegate, UICollectionViewD
             title: topic.title,
             subject: " ",
             index: indexPath.item,
-            topic: topic
+            topic: topic,
+            isEditing: isValueEditing
         )
         
         // Set the delegate

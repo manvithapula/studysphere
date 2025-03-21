@@ -587,9 +587,16 @@ class FakeDb<T: Codable & Identifiable> {
         }
     }
 
-    public func delete(id: String) {
+    public func delete(id: String) async{
+        var items =  await dataStore.getItems()
         items.removeAll { $0.id == id }
-        collection.document(id).delete()
+        do{
+            await dataStore.setItems(items)
+            try await collection.document(id).delete()
+        }
+        catch{
+            
+        }
         saveData()
     }
     public func clearCache()  async {

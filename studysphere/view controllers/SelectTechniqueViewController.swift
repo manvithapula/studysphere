@@ -66,7 +66,7 @@ class SelectTechniqueViewController: UIViewController {
             if(cards.isEmpty){
                 hideLoading()
                 showError(message: "Faled to generate flashcards")
-                topicsDb.delete(id: newTopic.id)
+                await topicsDb.delete(id: newTopic.id)
                 return
             }
             
@@ -131,7 +131,7 @@ class SelectTechniqueViewController: UIViewController {
             if(ques.isEmpty){
                 hideLoading()
                 showError(message: "Failed to generate Quiz")
-                topicsDb.delete(id: newTopic.id)
+                await topicsDb.delete(id: newTopic.id)
                 return
             }
             let mySchedules = spacedRepetitionSchedule(startDate: Date(), title:newTopic.title,topic: newTopic.id,topicsType: TopicsType.quizzes)
@@ -188,7 +188,7 @@ class SelectTechniqueViewController: UIViewController {
             hideLoading()
             if(summary == nil){
                 showError(message: "Failed to create summary")
-                topicsDb.delete(id:newTopic.id)
+                await topicsDb.delete(id:newTopic.id)
                 return
             }
             let storyboard = UIStoryboard(name: "Main", bundle: nil)

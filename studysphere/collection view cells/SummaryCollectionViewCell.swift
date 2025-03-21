@@ -167,18 +167,23 @@ class SummaryCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupGestureRecognizers() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        containerView.addGestureRecognizer(panGesture)
+//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+//        containerView.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Configuration
-    func configure(title: String, subject: String, index: Int, topic: Topics) {
+    func configure(title: String, subject: String, index: Int, topic: Topics, isEditing:Bool) {
         titleLabel.text = title
         subjectTag.text = subject
         currentTopic = topic
         
         setupColors(for: index)
         resetSwipeState()
+        if(isEditing){
+            let newX = CGFloat(-150)// Limit swipe to -150 points
+            swipeViewRightConstraint?.constant = newX
+            layoutIfNeeded()
+        }
     }
     
     func updateSubject(topic: Topics) {
@@ -263,13 +268,11 @@ class SummaryCollectionViewCell: UICollectionViewCell {
     @objc private func editButtonTapped() {
         guard let topic = currentTopic else { return }
         delegate?.didTapEdit(for: self, topic: topic)
-        resetSwipeState()
     }
     
     @objc private func deleteButtonTapped() {
         guard let topic = currentTopic else { return }
         delegate?.didTapDelete(for: self, topic: topic)
-        resetSwipeState()
     }
     
     // MARK: - Highlight Handling

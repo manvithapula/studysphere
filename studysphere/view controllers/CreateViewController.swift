@@ -760,7 +760,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
             if cards.isEmpty {
                 hideLoading()
                 showError(message: "Faled to generate flashcards")
-                topicsDb.delete(id: newTopic.id)
+                await topicsDb.delete(id: newTopic.id)
                 return
             }
 
@@ -789,7 +789,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
             if ques.isEmpty {
                 hideLoading()
                 showError(message: "Failed to generate Quiz")
-                topicsDb.delete(id: newTopic.id)
+                await topicsDb.delete(id: newTopic.id)
                 return
             }
             let mySchedules = spacedRepetitionSchedule(
@@ -817,7 +817,7 @@ extension CreateViewController: UIDocumentPickerDelegate {
             hideLoading()
             if summary == nil {
                 showError(message: "Failed to create summary")
-                topicsDb.delete(id: newTopic.id)
+                await topicsDb.delete(id: newTopic.id)
                 return
             }
             performCustomNav(identifier: "toSuListView")

@@ -185,12 +185,12 @@ class SRCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupGestureRecognizers() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        containerView.addGestureRecognizer(panGesture)
+//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+//        containerView.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Configuration
-    func configure(topic: Topics, index: Int) {
+    func configure(topic: Topics, index: Int,isEditing: Bool) {
         titleLabel.text = topic.title
         subtitleLabel.text = topic.subtitle
         subjectTag.text = "" // Temporary until data is fetched
@@ -200,6 +200,11 @@ class SRCollectionViewCell: UICollectionViewCell {
         
         // Reset swipe state
         resetSwipeState()
+        if(isEditing){
+            let newX = CGFloat(-150)// Limit swipe to -150 points
+            swipeViewRightConstraint?.constant = newX
+            layoutIfNeeded()
+        }
     }
 
     private func setupColors(for index: Int) {
@@ -271,13 +276,11 @@ class SRCollectionViewCell: UICollectionViewCell {
     @objc private func editButtonTapped() {
         guard let topic = currentTopic else { return }
         delegate?.didTapEdit(for: self, topic: topic)
-        resetSwipeState()
     }
     
     @objc private func deleteButtonTapped() {
         guard let topic = currentTopic else { return }
         delegate?.didTapDelete(for: self, topic: topic)
-        resetSwipeState()
     }
 
     // MARK: - Highlight Handling

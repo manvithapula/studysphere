@@ -3,7 +3,7 @@ import UIKit
 
 class ARListViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
     @IBOutlet weak var ARList: UICollectionView!
-
+    private var isValueEditing = false
         
         private let searchBar: UISearchBar = {
             let search = UISearchBar()
@@ -85,6 +85,9 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             view.addSubview(searchBar)
             view.addSubview(segmentControl)
             
+            let backButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEdit))
+            self.navigationItem.rightBarButtonItem = backButton
+            
             ARList.dataSource = self
             ARList.delegate = self
             ARList.setCollectionViewLayout(generateLayout(), animated: true) // Re-added!
@@ -94,7 +97,10 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             
             setupConstraints()
         }
-        
+    @objc private func handleEdit(){
+        self.isValueEditing = !isValueEditing
+        ARList.reloadData()
+    }
         private func setupConstraints() {
             NSLayoutConstraint.activate([
                 // SearchBar Constraints
@@ -151,7 +157,8 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             let topic = filteredQuestions[indexPath.item]
             
             if let cell = cell as? ARCollectionViewCell {
-                cell.configure(topic: topic, index: indexPath.item)
+                cell.configure(topic: topic, index: indexPath.item,isEditing: isValueEditing )
+                cell.delegate = self
             }
             
             return cell
@@ -195,14 +202,62 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
 
 extension ARListViewController: ARCollectionViewCellDelegate {
     func didTapEdit(for cell: ARCollectionViewCell, topic: Topics) {
-        // Handle edit action
-        print("Edit topic: \(topic.title)")
-        // Navigate to edit screen or show edit modal
+        showEditAlert(for: topic)
     }
     
     func didTapDelete(for cell: ARCollectionViewCell, topic: Topics) {
-        // Handle delete action
-        print("Delete topic: \(topic.title)")
-        // Show confirmation alert and delete if confirmed
+        showDeleteConfirmation(for: topic)
+    }
+    private func showEditAlert(for topic: Topics) {
+        let alertController = UIAlertController(title: "Edit Summary", message: "Update the summary title", preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.text = topic.title
+            textField.placeholder = "Enter summary title"
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
+            guard let self = self,
+                  let textField = alertController.textFields?.first,
+                  let newTitle = textField.text, !newTitle.isEmpty else { return }
+            var newTopic = topic
+            newTopic.title = newTitle
+            Task{
+                await topicsDb.update(&newTopic)
+                self.isValueEditing = false
+                self.fetchTopics()
+            }
+            
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        present(alertController, animated: true)
+    }
+    
+    private func showDeleteConfirmation(for topic: Topics) {
+        let alertController = UIAlertController(title: "Delete Summary", message: "Are you sure you want to delete this summary? This action cannot be undone.", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+         //   self.deleteTopic(topic)
+            Task{
+                await topicsDb.delete(id: topic.id)
+                let schedules = try await schedulesDb.findAll(where: ["topic":topic.id])
+                for schedule in schedules {
+                    await schedulesDb.delete(id: schedule.id)
+                }
+                self.isValueEditing = false
+                self.fetchTopics()
+            }
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        
+        present(alertController, animated: true)
     }
 }
