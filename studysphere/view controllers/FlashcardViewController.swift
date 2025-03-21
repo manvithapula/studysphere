@@ -51,7 +51,8 @@ class FlashcardViewController: UIViewController {
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            
+            needsPracticeCount.textColor = .countLabel
+            memorisedCount.textColor = .countLabel
             Task{
                 self.flashcards = try await flashCardDb.findAll(where: ["topic":topic])
                 setupInitialCard()
