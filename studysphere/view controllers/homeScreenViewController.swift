@@ -149,19 +149,8 @@ extension homeScreenViewController {
         stackView.addArrangedSubview(createProfileHeaderView())
         stackView.addArrangedSubview(createUploadPDFView()) // pdf upload
         stackView.addArrangedSubview(createTodayScheduleView()) // todays schedule
-        stackView.addArrangedSubview(createSubjectsGridView()) //recent subjects
+        stackView.addArrangedSubview(createSubjectsGridView()) // recent subjects
         stackView.addArrangedSubview(createRecentModulesView())
-        
-        
-        
-        // stackView.addArrangedSubview(createStudyTechniquesView())
-        // stackView.addArrangedSubview(spacedRepetitionGridView(type: .flashcards, title: "Spaced Repetition", action: #selector(SRseeAllButtonTapped)))
-        
-        //  stackView.addArrangedSubview(spacedRepetitionGridView(type: .quizzes, title: "Active Recall", action: #selector(ARseeAllButtonTapped)))
-        
-        //  stackView.addArrangedSubview(spacedRepetitionGridView(type: .summary, title: "Summariser", action: #selector(summaryseeAllButtonTapped)))
-        
-        
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
@@ -170,7 +159,6 @@ extension homeScreenViewController {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
-    
     
     // MARK: HEADER
     private func createProfileHeaderView() -> UIView {
@@ -262,22 +250,33 @@ extension homeScreenViewController {
     
     //MARK: UPLOAD
     private func createUploadPDFView() -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 16
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOpacity = 0.08
-        containerView.layer.shadowRadius = 8
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
-        let bannerView = UIView()
-        bannerView.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
-        bannerView.layer.cornerRadius = 12
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        let containerView: UIView = {
+            let view = UIView()
+            view.backgroundColor = .white
+            view.layer.cornerRadius = 16
+            view.layer.shadowColor = UIColor.black.cgColor
+            view.layer.shadowOpacity = 0.08
+            view.layer.shadowRadius = 1.5
+            view.layer.shadowOffset = CGSize(width: 0, height: 1)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            return view
+        }()
+        
+        let bannerView: UIView = {
+            let view = UIView()
+            view.layer.cornerRadius = 16
+            view.clipsToBounds = true
+            view.backgroundColor = AppTheme.primary.withAlphaComponent(0.15)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            return view
+        }()
+        
         let iconContainer = UIView()
         iconContainer.layer.cornerRadius = 25
         iconContainer.clipsToBounds = true
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         iconContainer.backgroundColor = AppTheme.secondary
+        
         let pdfIcon = UIImageView()
         pdfIcon.image = UIImage(systemName: "doc")
         pdfIcon.tintColor = .white
@@ -301,7 +300,6 @@ extension homeScreenViewController {
         uploadButton.setTitle("Create module", for: .normal)
         uploadButton.setTitleColor(.white, for: .normal)
         uploadButton.backgroundColor = AppTheme.primary
-        
         uploadButton.layer.cornerRadius = 20
         uploadButton.clipsToBounds = true
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
@@ -325,11 +323,13 @@ extension homeScreenViewController {
         bannerView.addSubview(uploadButton)
         
         NSLayoutConstraint.activate([
-            bannerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            bannerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            bannerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            bannerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            // Card Background (no reference to contentView)
+            bannerView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            bannerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            bannerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            bannerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
+            // Icon and contents
             iconContainer.leadingAnchor.constraint(equalTo: bannerView.leadingAnchor, constant: 16),
             iconContainer.centerYAnchor.constraint(equalTo: bannerView.centerYAnchor),
             iconContainer.widthAnchor.constraint(equalToConstant: 50),
@@ -358,6 +358,8 @@ extension homeScreenViewController {
         return containerView
     }
     
+    
+   
     @objc private func uploadPDFButtonTapped() {
         performSegue(withIdentifier: "toCreate", sender: nil)
     }

@@ -191,11 +191,7 @@ class ARCollectionViewCell: UICollectionViewCell {
         currentTopic = topic
         
         setupColors(for: index)
-        
-        // Fetch subject asynchronously
         fetchSubject(topic: topic)
-        
-        // Reset swipe state
         resetSwipeState()
         if(isEditing){
             let newX = CGFloat(-150)// Limit swipe to -150 points
@@ -282,14 +278,14 @@ class ARCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: - Highlight Handling
-    override var isHighlighted: Bool {
+   /* override var isHighlighted: Bool {
         didSet {
             UIView.animate(withDuration: 0.2) {
                 self.containerView.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
                 self.containerView.layer.shadowOpacity = self.isHighlighted ? 0.12 : 0.08
             }
         }
-    }
+    }*/
     
     private func fetchSubject(topic: Topics) {
         Task {
