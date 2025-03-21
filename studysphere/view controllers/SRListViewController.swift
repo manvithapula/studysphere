@@ -272,6 +272,7 @@ extension SRListViewController: SRCollectionViewCellDelegate {
                 await topicsDb.update(&newTopic)
                 self.isValueEditing = false
                 self.fetchTopics()
+                self.updateSchedule(newTopic)
             }
             
         }
@@ -280,6 +281,16 @@ extension SRListViewController: SRCollectionViewCellDelegate {
         alertController.addAction(saveAction)
         
         present(alertController, animated: true)
+    }
+    private func updateSchedule(_ topic:Topics){
+        Task{
+            let schedules = try await schedulesDb.findAll(where: ["topic":topic.id])
+            for schedule in schedules {
+                var updatedSchedule = schedule
+                updatedSchedule.title = topic.title
+                await schedulesDb.update(&updatedSchedule)
+            }
+        }
     }
     
     private func showDeleteConfirmation(for topic: Topics) {
