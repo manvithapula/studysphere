@@ -167,7 +167,7 @@ class FlashcardViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.isTabBarHidden = true
-
+        view.backgroundColor = .background
         subjectBtn.tintColor = AppTheme.secondary
         subjectBtn.setTitleColor(AppTheme.primary, for: .normal)
         //add padding to text
