@@ -119,11 +119,21 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            fetchTopics()
-        }
+        // Hide the tab bar when this view appears
+        self.tabBarController?.tabBar.isHidden = true
+        
+        fetchTopics()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Show the tab bar again when this view disappears
+        self.tabBarController?.tabBar.isHidden = false
+    }
         
         private func setupUI() {
             view.backgroundColor = .systemGray6

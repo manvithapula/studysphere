@@ -74,6 +74,12 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tabBarController?.isTabBarHidden = true
+        setup() // Refresh data when view appears
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         tabBarController?.isTabBarHidden = false
     }
     

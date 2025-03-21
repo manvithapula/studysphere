@@ -937,7 +937,7 @@ extension homeScreenViewController {
         containerView.layer.shadowRadius = 8
         containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         
-        // Section header with title and "See All" button
+       
         let headerView = createSectionHeader(title: "Recent Modules")
         headerView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -1062,9 +1062,9 @@ extension homeScreenViewController {
 
     private func createSeeAllButton(selector: Selector, tag: Int) -> UIButton {
         let button = UIButton(type: .system)
-        button.setTitle("See All", for: .normal)
+        button.setTitle("See All Flashcards", for: .normal)
         button.setTitleColor(AppTheme.primary, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
         button.addTarget(self, action: selector, for: .touchUpInside)
         button.tag = tag
         return button
@@ -1072,13 +1072,30 @@ extension homeScreenViewController {
 
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         // Update the visible "See All" button based on the selected segment
-        if let srButton = view.viewWithTag(201),
-           let arButton = view.viewWithTag(202),
-           let summaryButton = view.viewWithTag(203) {
+        if let srButton = view.viewWithTag(201) as? UIButton,
+           let arButton = view.viewWithTag(202) as? UIButton,
+           let summaryButton = view.viewWithTag(203) as? UIButton {
             
-            srButton.isHidden = sender.selectedSegmentIndex != 0
-            arButton.isHidden = sender.selectedSegmentIndex != 1
-            summaryButton.isHidden = sender.selectedSegmentIndex != 2
+            // Hide all buttons first
+            srButton.isHidden = true
+            arButton.isHidden = true
+            summaryButton.isHidden = true
+            
+            // Update titles and show the relevant button
+            switch sender.selectedSegmentIndex {
+            case 0: // Flashcards
+                srButton.setTitle("See All Flashcards", for: .normal)
+                srButton.isHidden = false
+            case 1: // Quizzes
+                arButton.setTitle("See All Quizzes", for: .normal)
+                arButton.isHidden = false
+            case 2: // Summaries
+                summaryButton.setTitle("See All Summaries", for: .normal)
+                summaryButton.isHidden = false
+            default:
+                srButton.setTitle("See All Flashcards", for: .normal)
+                srButton.isHidden = false
+            }
         }
         
         // Update the module items
