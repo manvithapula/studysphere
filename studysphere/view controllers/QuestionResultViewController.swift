@@ -42,7 +42,7 @@ class QuestionResultViewController: UIViewController {
     
     // MARK: - Setup Methods
     private func setupView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         // Add subviews
         view.addSubview(containerView)
