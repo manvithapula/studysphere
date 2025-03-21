@@ -350,6 +350,7 @@
                     <connections>
                         <outlet property="summaryList" destination="g8G-7j-hYW" id="3Mv-gL-I1w"/>
                         <segue destination="jcz-Zh-nQ0" kind="show" identifier="toSummary" id="paQ-p4-NU6"/>
+                        <segue destination="065-Ov-wae" kind="presentation" identifier="summaryempty" id="R3b-7h-LbB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QEZ-QD-Kq4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1579,6 +1580,7 @@
                     <connections>
                         <outlet property="SpacedRepetitionList" destination="JCX-hL-CmR" id="gtq-am-QDQ"/>
                         <segue destination="KzB-74-32G" kind="show" identifier="toSRSchedule" id="PO4-kN-YgS"/>
+                        <segue destination="065-Ov-wae" kind="presentation" identifier="sremptystatecreate" id="KiP-h6-kd3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YQF-cK-aK2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1686,6 +1688,7 @@
                     <connections>
                         <outlet property="ARList" destination="PBk-yT-cO5" id="a2b-jR-4UN"/>
                         <segue destination="vhf-AP-aDg" kind="show" identifier="toARschedule" id="bfc-Hh-3ad"/>
+                        <segue destination="065-Ov-wae" kind="presentation" identifier="aremptystatecreate" id="59c-no-wOB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sgj-88-yrj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1996,12 +1999,13 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Ch3-LU-Swa"/>
-        <segue reference="llO-ze-ygf"/>
-        <segue reference="vbk-8J-x7B"/>
+        <segue reference="bfc-Hh-3ad"/>
+        <segue reference="PO4-kN-YgS"/>
+        <segue reference="R3b-7h-LbB"/>
         <segue reference="xRt-nh-R8f"/>
         <segue reference="BI1-l1-Jlu"/>
         <segue reference="eiX-zA-o0B"/>
-        <segue reference="qdn-Bb-u7i"/>
+        <segue reference="paQ-p4-NU6"/>
         <segue reference="IXb-z0-nX3"/>
     </inferredMetricsTieBreakers>
     <resources>

@@ -15,13 +15,65 @@ class SummaryListViewController: UIViewController {
     private let searchBar = UISearchBar()
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = "No modules yet.\n Click on upload to create module."
+        label.text = "No modules yet."
         label.textAlignment = .center
         label.numberOfLines = 2
       //  label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
+    
+    
+    private let actionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Create new"
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.textColor = .systemBlue
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+
+    private func setupEmptyStateView() {
+        let containerView = UIView()
+        containerView.addSubview(emptyStateLabel)
+        containerView.addSubview(actionLabel)
+        
+        // Disable autoresizing masks
+        emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
+        actionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add constraints for emptyStateLabel and actionLabel
+        NSLayoutConstraint.activate([
+            // emptyStateLabel constraints
+            
+            emptyStateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 95),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            // actionLabel constraints
+            actionLabel.leadingAnchor.constraint(equalTo: emptyStateLabel.trailingAnchor, constant: 8), // Add spacing between labels
+            actionLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            actionLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor), // Ensure it doesn't overflow
+        ])
+        
+        // Add tap gesture recognizer to actionLabel
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCreateAction))
+        actionLabel.addGestureRecognizer(tapGesture)
+        
+        summaryList.backgroundView = containerView
+    }
+
+    @objc private func handleCreateAction() {
+        performSegue(withIdentifier: "summaryempty", sender: self)
+    }
+
+    private func updateEmptyState() {
+        let isEmpty = cards.isEmpty
+        emptyStateLabel.isHidden = !isEmpty
+        actionLabel.isHidden = !isEmpty
+        summaryList.backgroundView = isEmpty ? emptyStateLabel.superview : nil
+    }
           
     // MARK: - Properties
     var cards: [Topics] = []
@@ -42,15 +94,6 @@ class SummaryListViewController: UIViewController {
         setupEmptyStateView()
     }
     
-    private func setupEmptyStateView() {
-        summaryList.backgroundView = emptyStateLabel
-    }
-
-    private func updateEmptyState() {
-        let isEmpty = cards.isEmpty
-        emptyStateLabel.isHidden = !isEmpty
-        summaryList.backgroundView = isEmpty ? emptyStateLabel : nil
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
