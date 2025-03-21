@@ -173,7 +173,7 @@ class FlashcardViewController: UIViewController {
         //add padding to text
         progressView.progressTintColor = AppTheme.primary
         progressView.trackTintColor = AppTheme.secondary.withAlphaComponent(0.2)
-        cardView.backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
+        cardView.backgroundColor = AppTheme.primary.withAlphaComponent(0.5)
     }
         // Existing methods (setupInitialCard, updateCompletion, etc.) remain the same
         private func setupInitialCard() {
@@ -216,7 +216,7 @@ class FlashcardViewController: UIViewController {
                 self.answerLabel.text = self.isShowingAnswer ?
                 self.flashcards[self.currentCardIndex].answer :
                 self.flashcards[self.currentCardIndex].question
-                self.cardView.backgroundColor = self.isShowingAnswer ? AppTheme.secondary.withAlphaComponent(0.2) : AppTheme.primary.withAlphaComponent(0.2)
+                self.cardView.backgroundColor = self.isShowingAnswer ? AppTheme.secondary.withAlphaComponent(0.5) : AppTheme.primary.withAlphaComponent(0.5)
             }
         }
     }
