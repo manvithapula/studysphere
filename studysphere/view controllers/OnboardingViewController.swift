@@ -4,6 +4,7 @@
 //
 //  Created by Dev on 17/03/25.
 //
+
 import UIKit
 import FirebaseAuth
 
@@ -28,7 +29,7 @@ class OnboardingViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Welcome to\nMemoriso"
-        label.textColor = .black
+        //label.textColor = .black
         label.font = .systemFont(ofSize: 30, weight: .bold)
         label.textAlignment = .center
         label.numberOfLines = 0 // Important for supporting multiple lines
@@ -55,14 +56,14 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Spaced Repetition"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = .black
+        //label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let spaceRepetitionDescription: UILabel = {
         let label = UILabel()
-        label.text = "Review at optimal intervals to maximize memory retention"
+        label.text = "Review your lessons using flashcards at the right times to remember better."
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -89,14 +90,14 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Active Recall"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = .black
+        //label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let activeRecallDescription: UILabel = {
         let label = UILabel()
-        label.text = "Test yourself to strengthen memory and understanding"
+        label.text = "Test yourself with questions to strengthen memory and learn faster."
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -123,7 +124,7 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Summariser"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = .black
+        //label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -156,14 +157,14 @@ class OnboardingViewController: UIViewController {
         let label = UILabel()
         label.text = "Document Organiser"
         label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = .black
+        //label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let documentDescription: UILabel = {
         let label = UILabel()
-        label.text = "Organize and access your study materials easily"
+        label.text = "Organise and access your study materials easily"
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -210,21 +211,21 @@ class OnboardingViewController: UIViewController {
         
         contentView.addSubview(titleLabel)
         
-        // Add all components directly to contentView instead of containers
-        contentView.addSubview(spaceRepetitionImageView)
+        // Add all components directly to contentView
         contentView.addSubview(spaceRepetitionTitle)
+        contentView.addSubview(spaceRepetitionImageView)
         contentView.addSubview(spaceRepetitionDescription)
         
-        contentView.addSubview(activeRecallImageView)
         contentView.addSubview(activeRecallTitle)
+        contentView.addSubview(activeRecallImageView)
         contentView.addSubview(activeRecallDescription)
         
-        contentView.addSubview(summarizerImageView)
         contentView.addSubview(summarizerTitle)
+        contentView.addSubview(summarizerImageView)
         contentView.addSubview(summarizerDescription)
         
-        contentView.addSubview(documnetImageView)
         contentView.addSubview(DocumnetTitle)
+        contentView.addSubview(documnetImageView)
         contentView.addSubview(documentDescription)
         
         contentView.addSubview(nextButton)
@@ -245,48 +246,52 @@ class OnboardingViewController: UIViewController {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            // Spaced Repetition constraints
-            spaceRepetitionImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
+            // Spaced Repetition
+            spaceRepetitionTitle.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
+            spaceRepetitionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
+            spaceRepetitionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
             spaceRepetitionImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            spaceRepetitionImageView.topAnchor.constraint(equalTo: spaceRepetitionTitle.bottomAnchor, constant: -10),
             
-            spaceRepetitionTitle.leadingAnchor.constraint(equalTo: spaceRepetitionImageView.trailingAnchor, constant: 12),
-            spaceRepetitionTitle.centerYAnchor.constraint(equalTo: spaceRepetitionImageView.centerYAnchor),
-            
-            spaceRepetitionDescription.topAnchor.constraint(equalTo: spaceRepetitionImageView.bottomAnchor, constant: 8),
-            spaceRepetitionDescription.leadingAnchor.constraint(equalTo: spaceRepetitionImageView.leadingAnchor,constant: 50),
+            spaceRepetitionDescription.topAnchor.constraint(equalTo: spaceRepetitionTitle.bottomAnchor, constant: 10),
+            spaceRepetitionDescription.leadingAnchor.constraint(equalTo: spaceRepetitionImageView.trailingAnchor, constant: 20),
             spaceRepetitionDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            // Active Recall constraints
-            activeRecallImageView.topAnchor.constraint(equalTo: spaceRepetitionDescription.bottomAnchor, constant: 32),
+            // Active Recall
+            activeRecallTitle.topAnchor.constraint(equalTo: spaceRepetitionDescription.bottomAnchor, constant: 30),
+            activeRecallTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
+            activeRecallTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
             activeRecallImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            activeRecallImageView.topAnchor.constraint(equalTo: activeRecallTitle.bottomAnchor, constant: -10),
             
-            activeRecallTitle.leadingAnchor.constraint(equalTo: activeRecallImageView.trailingAnchor, constant: 12),
-            activeRecallTitle.centerYAnchor.constraint(equalTo: activeRecallImageView.centerYAnchor),
-            
-            activeRecallDescription.topAnchor.constraint(equalTo: activeRecallImageView.bottomAnchor, constant: 8),
-            activeRecallDescription.leadingAnchor.constraint(equalTo: spaceRepetitionImageView.leadingAnchor,constant: 50),
+            activeRecallDescription.topAnchor.constraint(equalTo: activeRecallTitle.bottomAnchor, constant: 10),
+            activeRecallDescription.leadingAnchor.constraint(equalTo: activeRecallImageView.trailingAnchor, constant: 20),
             activeRecallDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            // Summarizer constraints
-            summarizerImageView.topAnchor.constraint(equalTo: activeRecallDescription.bottomAnchor, constant: 32),
+            // Summarizer
+            summarizerTitle.topAnchor.constraint(equalTo: activeRecallDescription.bottomAnchor, constant: 30),
+            summarizerTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
+            summarizerTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
             summarizerImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            summarizerImageView.topAnchor.constraint(equalTo: summarizerTitle.bottomAnchor, constant: -10),
             
-            summarizerTitle.leadingAnchor.constraint(equalTo: summarizerImageView.trailingAnchor, constant: 12),
-            summarizerTitle.centerYAnchor.constraint(equalTo: summarizerImageView.centerYAnchor),
-            
-            summarizerDescription.topAnchor.constraint(equalTo: summarizerImageView.bottomAnchor, constant: 8),
-            summarizerDescription.leadingAnchor.constraint(equalTo: summarizerImageView.leadingAnchor,constant: 52),
+            summarizerDescription.topAnchor.constraint(equalTo: summarizerTitle.bottomAnchor, constant: 10),
+            summarizerDescription.leadingAnchor.constraint(equalTo: summarizerImageView.trailingAnchor, constant: 20),
             summarizerDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            // Document constraints
-            documnetImageView.topAnchor.constraint(equalTo: summarizerDescription.bottomAnchor, constant: 32),
+            // Document
+            DocumnetTitle.topAnchor.constraint(equalTo: summarizerDescription.bottomAnchor, constant: 30),
+            DocumnetTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
+            DocumnetTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
             documnetImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            documnetImageView.topAnchor.constraint(equalTo: DocumnetTitle.bottomAnchor, constant: -10),
             
-            DocumnetTitle.leadingAnchor.constraint(equalTo: documnetImageView.trailingAnchor, constant: 12),
-            DocumnetTitle.centerYAnchor.constraint(equalTo: documnetImageView.centerYAnchor),
-            
-            documentDescription.topAnchor.constraint(equalTo: documnetImageView.bottomAnchor, constant: 8),
-            documentDescription.leadingAnchor.constraint(equalTo: documnetImageView.leadingAnchor,constant: 52),
+            documentDescription.topAnchor.constraint(equalTo: DocumnetTitle.bottomAnchor, constant: 10),
+            documentDescription.leadingAnchor.constraint(equalTo: documnetImageView.trailingAnchor, constant: 20),
             documentDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             nextButton.topAnchor.constraint(equalTo: documentDescription.bottomAnchor, constant: 40),
