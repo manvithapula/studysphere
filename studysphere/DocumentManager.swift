@@ -14,6 +14,14 @@ class DocumentManager{
     func upload(document:URL,metadata:FileMetadata) async
     -> FileMetadata?
     {
+        let didStartAccessing = document.startAccessingSecurityScopedResource()
+            
+            // Use defer to ensure we stop accessing the resource when the function exits
+            defer {
+                if didStartAccessing {
+                    document.stopAccessingSecurityScopedResource()
+                }
+            }
         guard let pdfData = try? Data(contentsOf: document) else {
             print("Error reading PDF data")
             return nil

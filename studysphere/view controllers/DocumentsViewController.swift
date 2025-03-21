@@ -541,19 +541,43 @@ extension DocumentsViewController {
     }
 }
 extension DocumentsViewController: UIDocumentPickerDelegate {
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let selectedURL = urls.first else { return }
+    func documentPicker(
+        _ controller: UIDocumentPickerViewController,
+        didPickDocumentsAt urls: [URL]
+    ) {
+        guard let selectedFileURL = urls.first else { return }
         
-        // Secure access to the URL
-        let securityScoped = selectedURL.startAccessingSecurityScopedResource()
+        // Start accessing the security-scoped resource
+        let didStartAccessing = selectedFileURL.startAccessingSecurityScopedResource()
         defer {
-            if securityScoped {
-                selectedURL.stopAccessingSecurityScopedResource()
+            if didStartAccessing {
+                selectedFileURL.stopAccessingSecurityScopedResource()
             }
         }
         
-        // Process the document
-        uploadDocument(from: selectedURL)
+        // Create a security-scoped bookmark for later access
+        do {
+            let bookmarkData = try selectedFileURL.bookmarkData(options: .minimalBookmark)
+            UserDefaults.standard.set(bookmarkData, forKey: "documentBookmark")
+            
+            // Copy the file to app's documents directory
+            let fileName = UUID().uuidString + ".pdf" // Or use a meaningful name if you have one
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let localFileURL = documentsDirectory.appendingPathComponent(fileName)
+            
+            // Remove the file if it already exists
+            if FileManager.default.fileExists(atPath: localFileURL.path) {
+                try FileManager.default.removeItem(at: localFileURL)
+            }
+            
+            // Copy the file
+            try FileManager.default.copyItem(at: selectedFileURL, to: localFileURL)
+            
+            // Store the local URL instead of the security-scoped URL
+            uploadDocument(from: localFileURL)
+        } catch {
+            print("Error processing document: \(error.localizedDescription)")
+        }
     }
 }
 

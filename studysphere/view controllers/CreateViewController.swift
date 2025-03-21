@@ -692,11 +692,41 @@ extension CreateViewController: UIDocumentPickerDelegate {
         didPickDocumentsAt urls: [URL]
     ) {
         guard let selectedFileURL = urls.first else { return }
-
-        document = selectedFileURL
-        // call docUploaded func to change the backgroundColor of the fileuploadview
-        docUploaded()
-        updateCreateButtonState()
+        
+        // Start accessing the security-scoped resource
+        let didStartAccessing = selectedFileURL.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                selectedFileURL.stopAccessingSecurityScopedResource()
+            }
+        }
+        
+        // Create a security-scoped bookmark for later access
+        do {
+            let bookmarkData = try selectedFileURL.bookmarkData(options: .minimalBookmark)
+            UserDefaults.standard.set(bookmarkData, forKey: "documentBookmark")
+            
+            // Copy the file to app's documents directory
+            let fileName = UUID().uuidString + ".pdf" // Or use a meaningful name if you have one
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let localFileURL = documentsDirectory.appendingPathComponent(fileName)
+            
+            // Remove the file if it already exists
+            if FileManager.default.fileExists(atPath: localFileURL.path) {
+                try FileManager.default.removeItem(at: localFileURL)
+            }
+            
+            // Copy the file
+            try FileManager.default.copyItem(at: selectedFileURL, to: localFileURL)
+            
+            // Store the local URL instead of the security-scoped URL
+            document = localFileURL
+            
+            docUploaded()
+            updateCreateButtonState()
+        } catch {
+            print("Error processing document: \(error.localizedDescription)")
+        }
     }
 
     func documentPickerWasCancelled(
