@@ -51,11 +51,11 @@ class DocumentsViewController: UIViewController {
     
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = "No documentd yet.\nTap '+' to add a upload a new document."
+        label.text = "No documents yet.\nTap '+' to add a upload a new document."
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .black
+       // label.textColor = .black
         label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -637,7 +637,7 @@ extension DocumentsViewController: VNDocumentCameraViewControllerDelegate,UIDocu
         
         uploadDocument(from: pdfURL)
     }
-
+    
     // Create PDF from array of images
     private func createPDF(from images: [UIImage]) -> URL {
         // Create a unique filename for the PDF
@@ -676,7 +676,7 @@ extension DocumentsViewController: VNDocumentCameraViewControllerDelegate,UIDocu
         
         return pdfFilename
     }
-
+    
     // Helper method to view the PDF
     private func viewPDF(at url: URL) {
         // This is a simple implementation that uses a UIDocumentInteractionController
@@ -692,6 +692,22 @@ extension DocumentsViewController: VNDocumentCameraViewControllerDelegate,UIDocu
         return paths[0]
     }
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
-            return self
-        }
+        return self
+    }
 }
+    // In your view controller that uses DocumentCell
+    extension DocumentsViewController: DocumentCellDelegate {
+        func didTapEdit(for cell: DocumentCell, document: FileMetadata) {
+            // Handle edit action
+            print("Edit document: \(document.title)")
+            // Navigate to edit screen or show edit dialog
+        }
+        
+        func didTapDelete(for cell: DocumentCell, document: FileMetadata) {
+            // Handle delete action
+            print("Delete document: \(document.title)")
+            // Show confirmation dialog and delete if confirmed
+        }
+    }
+    
+

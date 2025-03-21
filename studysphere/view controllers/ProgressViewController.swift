@@ -757,7 +757,7 @@ class ProgressViewController: UIViewController {
         let levelLabel = UILabel()
         levelLabel.text = "Level \(badgeView.tag)"
         levelLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        levelLabel.textColor = .black
+     //   levelLabel.textColor = .black
         levelLabel.textAlignment = .center
         levelLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -765,7 +765,7 @@ class ProgressViewController: UIViewController {
         let descriptionLabel = UILabel()
         descriptionLabel.text = "Congratulations! You've achieved this badge."
         descriptionLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        descriptionLabel.textColor = .black
+      //  descriptionLabel.textColor = .black
         descriptionLabel.textAlignment = .center
         descriptionLabel.numberOfLines = 0
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false

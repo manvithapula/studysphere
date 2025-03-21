@@ -1,7 +1,16 @@
 import UIKit
+// Delegate protocol for handling edit and delete actions
+protocol DocumentCellDelegate: AnyObject {
+    func didTapEdit(for cell: DocumentCell, document: FileMetadata)
+    func didTapDelete(for cell: DocumentCell, document: FileMetadata)
+}
 
 class DocumentCell: UICollectionViewCell {
     static let reuseIdentifier = "DocumentCell"
+    
+    // MARK: - Properties
+    weak var delegate: DocumentCellDelegate?
+    private var currentDocument: FileMetadata?
     
     // MARK: - UI Elements
     private let containerView: UIView = {
@@ -41,6 +50,7 @@ class DocumentCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    
     let previewButton:UIButton = {
         let startButton = UIButton()
         startButton.setImage(UIImage(systemName: "eye"), for: .normal)
@@ -79,11 +89,45 @@ class DocumentCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    // MARK: - Swipe Gesture Elements
+    private lazy var swipeActionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemGray6
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var editButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Edit", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var deleteButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Delete", for: .normal)
+        button.backgroundColor = .systemRed
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private var initialTouchPoint: CGPoint = .zero
+    private var swipeViewRightConstraint: NSLayoutConstraint?
 
     // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        setupGestureRecognizers()
     }
     
     required init?(coder: NSCoder) {
@@ -93,6 +137,12 @@ class DocumentCell: UICollectionViewCell {
     // MARK: - Setup UI
     private func setupUI() {
         backgroundColor = .clear
+        
+        // Add swipe action view
+        contentView.addSubview(swipeActionView)
+        swipeActionView.addSubview(editButton)
+        swipeActionView.addSubview(deleteButton)
+        
         contentView.addSubview(containerView)
         containerView.addSubview(cardBackground)
         cardBackground.addSubview(iconContainer)
@@ -102,9 +152,27 @@ class DocumentCell: UICollectionViewCell {
         cardBackground.addSubview(previewButton)
         
         NSLayoutConstraint.activate([
+            // Swipe Action View
+            swipeActionView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            swipeActionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            swipeActionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            swipeActionView.widthAnchor.constraint(equalToConstant: 150),
+            
+            // Edit Button
+            editButton.leadingAnchor.constraint(equalTo: swipeActionView.leadingAnchor, constant: 8),
+            editButton.centerYAnchor.constraint(equalTo: swipeActionView.centerYAnchor),
+            editButton.widthAnchor.constraint(equalToConstant: 60),
+            editButton.heightAnchor.constraint(equalToConstant: 36),
+            
+            // Delete Button
+            deleteButton.leadingAnchor.constraint(equalTo: editButton.trailingAnchor, constant: 8),
+            deleteButton.trailingAnchor.constraint(equalTo: swipeActionView.trailingAnchor, constant: -16),
+            deleteButton.centerYAnchor.constraint(equalTo: swipeActionView.centerYAnchor),
+            deleteButton.widthAnchor.constraint(equalToConstant: 60),
+            deleteButton.heightAnchor.constraint(equalToConstant: 36),
+            
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
             cardBackground.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -136,21 +204,29 @@ class DocumentCell: UICollectionViewCell {
             dateLabel.trailingAnchor.constraint(equalTo: cardBackground.trailingAnchor, constant: -16),
             dateLabel.bottomAnchor.constraint(lessThanOrEqualTo: cardBackground.bottomAnchor, constant: -16)
         ])
+        
+        // Initialize containerView right constraint
+        swipeViewRightConstraint = containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+        swipeViewRightConstraint?.isActive = true
+    }
+    
+    private func setupGestureRecognizers() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        containerView.addGestureRecognizer(panGesture)
     }
 
     // MARK: - Configure Cell
     func configure(with document: FileMetadata, index: Int) {
         titleLabel.text = document.title
+        currentDocument = document
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateLabel.text = dateFormatter.string(from: document.createdAt.dateValue())
         
         setupColors(for: index)
-        
-        // Assuming file extension property exists on FileMetadata
         setupDocumentType(fileExtension: document.subjectId)
-
+        resetSwipeState()
     }
 
     private func setupDocumentType(fileExtension: String) {
@@ -183,14 +259,66 @@ class DocumentCell: UICollectionViewCell {
         fileTypeLabel.backgroundColor = mainColor
     }
     
+    // MARK: - Swipe Gesture Handling
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: containerView)
+        
+        switch gesture.state {
+        case .began:
+            initialTouchPoint = containerView.frame.origin
+            
+        case .changed:
+            if translation.x < 0 { // Only allow left swipe
+                let newX = max(translation.x, -150) // Limit swipe to -150 points
+                swipeViewRightConstraint?.constant = newX - 16 // Account for container right margin
+                layoutIfNeeded()
+            }
+            
+        case .ended, .cancelled:
+            let velocity = gesture.velocity(in: containerView)
+            
+            if swipeViewRightConstraint?.constant ?? 0 < -75 || velocity.x < -200 {
+                // Show action buttons
+                UIView.animate(withDuration: 0.3) {
+                    self.swipeViewRightConstraint?.constant = -150 - 16 // Account for container right margin
+                    self.layoutIfNeeded()
+                }
+            } else {
+                // Reset position
+                resetSwipeState()
+            }
+            
+        default:
+            break
+        }
+    }
+    
+    private func resetSwipeState() {
+        UIView.animate(withDuration: 0.3) {
+            self.swipeViewRightConstraint?.constant = -16 // Reset to original right margin
+            self.layoutIfNeeded()
+        }
+    }
+    
+    // MARK: - Action Handlers
+    @objc private func editButtonTapped() {
+        guard let document = currentDocument else { return }
+        delegate?.didTapEdit(for: self, document: document)
+        resetSwipeState()
+    }
+    
+    @objc private func deleteButtonTapped() {
+        guard let document = currentDocument else { return }
+        delegate?.didTapDelete(for: self, document: document)
+        resetSwipeState()
+    }
+    
     override var isHighlighted: Bool {
         didSet {
             animateHighlightState()
         }
     }
 
-    
-        
     private func animateHighlightState() {
         let transform: CGAffineTransform = isHighlighted ? CGAffineTransform(scaleX: 0.98, y: 0.98) : .identity
         let shadowOpacity: Float = isHighlighted ? 0.12 : 0.08
@@ -241,5 +369,7 @@ class DocumentCell: UICollectionViewCell {
         fileTypeLabel.backgroundColor = nil
         containerView.transform = .identity
         containerView.layer.shadowOpacity = 0.08
+        currentDocument = nil
+        resetSwipeState()
     }
 }

@@ -915,17 +915,20 @@ extension homeScreenViewController {
     // MARK: RECENT MODULES
     
     
+    // MARK: RECENT MODULES
+        
     @objc private func SRseeAllButtonTapped() {
-    performSegue(withIdentifier: "toSrListView", sender: nil)
+        performSegue(withIdentifier: "toSrListView", sender: nil)
     }
+
     @objc private func ARseeAllButtonTapped() {
-    performSegue(withIdentifier: "toArListView", sender: nil)
+        performSegue(withIdentifier: "toArListView", sender: nil)
     }
+
     @objc private func summaryseeAllButtonTapped() {
-    performSegue(withIdentifier: "toSuListView", sender: nil)
+        performSegue(withIdentifier: "toSuListView", sender: nil)
     }
-    
-    
+
     private func createRecentModulesView() -> UIView {
         let containerView = UIView()
         containerView.backgroundColor = .white
@@ -935,36 +938,31 @@ extension homeScreenViewController {
         containerView.layer.shadowRadius = 8
         containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
         
-        // Title for the section
-        let titleLabel = UILabel()
-        titleLabel.text = "Recent Modules"
-        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
-        titleLabel.textColor = .black
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        // Section header with title and "See All" button
+        let headerView = createSectionHeader(title: "Recent Modules")
+        headerView.translatesAutoresizingMaskIntoConstraints = false
         
-        let titleContainer = UIStackView()
-           titleContainer.axis = .horizontal
-           titleContainer.distribution = .equalSpacing
-           titleContainer.alignment = .center
-           titleContainer.translatesAutoresizingMaskIntoConstraints = false
-           
+        // Standard segmented control instead of circular
+        let segmentItems = ["Spaced Repetition", "Active Recall", "Summariser"]
+        let segmentControl = UISegmentedControl(items: segmentItems)
+        segmentControl.selectedSegmentIndex = 0
         
-        let seeAllButton = UIButton()
-           seeAllButton.setTitle("See All", for: .normal)
-           seeAllButton.setTitleColor(AppTheme.primary, for: .normal)
-           seeAllButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-           seeAllButton.tag = 200 // Tag for reference
-           seeAllButton.addTarget(self, action: #selector(SRseeAllButtonTapped), for: .touchUpInside)
-        titleContainer.addArrangedSubview(titleLabel)
-        titleContainer.addArrangedSubview(seeAllButton)
-     
+        // Improve segmented control appearance
+        segmentControl.backgroundColor = UIColor.systemGray6
+        segmentControl.selectedSegmentTintColor = AppTheme.primary
+        segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.systemGray], for: .normal)
+        segmentControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        let selectedTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        let normalTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.darkGray]
+       
         
-        // Custom circular segment control
-        let segmentControl = CircularSegmentControl(
-            items: ["Spaced Repetition", "Active Recall", "Summariser"],
-            initialIndex: 0
-        )
-        segmentControl.addTarget(self, action: #selector(circularSegmentChanged(_:)), for: .valueChanged)
+        if #available(iOS 13.0, *) {
+            segmentControl.selectedSegmentTintColor = AppTheme.primary
+        } else {
+            segmentControl.tintColor = AppTheme.primary
+        }
+        
+        segmentControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         
         // Container for module items
@@ -973,111 +971,133 @@ extension homeScreenViewController {
         moduleItemsContainer.translatesAutoresizingMaskIntoConstraints = false
         
         // Add all elements to container
-          containerView.addSubview(titleContainer)
-          containerView.addSubview(segmentControl)
-          containerView.addSubview(moduleItemsContainer)
-          
-          NSLayoutConstraint.activate([
-              titleContainer.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-              titleContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-              titleContainer.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-              
-              segmentControl.topAnchor.constraint(equalTo: titleContainer.bottomAnchor, constant: 16),
-              segmentControl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-              segmentControl.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-              segmentControl.heightAnchor.constraint(equalToConstant: 44),
-              
-              moduleItemsContainer.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 16),
-              moduleItemsContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-              moduleItemsContainer.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-              moduleItemsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
-          ])
-          
-          // Initial load of All (Spaced Repetition) content
-          loadModuleItemsForType(.flashcards, container: moduleItemsContainer)
-          
-          return containerView
-      }
+        containerView.addSubview(headerView)
+        containerView.addSubview(segmentControl)
+        containerView.addSubview(moduleItemsContainer)
+        
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            headerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            
+            segmentControl.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 16),
+            segmentControl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            segmentControl.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            segmentControl.heightAnchor.constraint(equalToConstant: 36),
+            
+            moduleItemsContainer.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 16),
+            moduleItemsContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            moduleItemsContainer.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
+            moduleItemsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+        ])
+        
+        // Initial load of Spaced Repetition content
+        loadModuleItemsForType(.flashcards, container: moduleItemsContainer)
+        
+        return containerView
+    }
 
+    private func createSectionHeader(title: String) -> UIView {
+        let headerView = UIView()
+        
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        titleLabel.textColor = .black
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create a container for the See All buttons - we'll show/hide them as needed
+        let buttonsContainer = UIView()
+        buttonsContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create separate buttons for each module type
+        let srButton = createSeeAllButton(selector: #selector(SRseeAllButtonTapped), tag: 201)
+        srButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let arButton = createSeeAllButton(selector: #selector(ARseeAllButtonTapped), tag: 202)
+        arButton.translatesAutoresizingMaskIntoConstraints = false
+        arButton.isHidden = true
+        
+        let summaryButton = createSeeAllButton(selector: #selector(summaryseeAllButtonTapped), tag: 203)
+        summaryButton.translatesAutoresizingMaskIntoConstraints = false
+        summaryButton.isHidden = true
+        
+        // Add all buttons to the container
+        buttonsContainer.addSubview(srButton)
+        buttonsContainer.addSubview(arButton)
+        buttonsContainer.addSubview(summaryButton)
+        
+        // Position all buttons in the same spot
+        NSLayoutConstraint.activate([
+            srButton.topAnchor.constraint(equalTo: buttonsContainer.topAnchor),
+            srButton.leadingAnchor.constraint(equalTo: buttonsContainer.leadingAnchor),
+            srButton.trailingAnchor.constraint(equalTo: buttonsContainer.trailingAnchor),
+            srButton.bottomAnchor.constraint(equalTo: buttonsContainer.bottomAnchor),
+            
+            arButton.topAnchor.constraint(equalTo: buttonsContainer.topAnchor),
+            arButton.leadingAnchor.constraint(equalTo: buttonsContainer.leadingAnchor),
+            arButton.trailingAnchor.constraint(equalTo: buttonsContainer.trailingAnchor),
+            arButton.bottomAnchor.constraint(equalTo: buttonsContainer.bottomAnchor),
+            
+            summaryButton.topAnchor.constraint(equalTo: buttonsContainer.topAnchor),
+            summaryButton.leadingAnchor.constraint(equalTo: buttonsContainer.leadingAnchor),
+            summaryButton.trailingAnchor.constraint(equalTo: buttonsContainer.trailingAnchor),
+            summaryButton.bottomAnchor.constraint(equalTo: buttonsContainer.bottomAnchor)
+        ])
+        
+        headerView.addSubview(titleLabel)
+        headerView.addSubview(buttonsContainer)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
+            
+            buttonsContainer.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            buttonsContainer.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            buttonsContainer.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
+        return headerView
+    }
 
-    // Custom Circular Segment Control
-    class CircularSegmentControl: UIControl {
-        private var buttons: [UIButton] = []
-        private var selectedIndex: Int = 0
-        
-        init(items: [String], initialIndex: Int = 0) {
-            super.init(frame: .zero)
-            self.selectedIndex = initialIndex
-            setupButtons(with: items)
-        }
-        
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-        }
-        
-        private func setupButtons(with items: [String]) {
-            let stackView = UIStackView()
-            stackView.axis = .horizontal
-            stackView.distribution = .fillProportionally
-            stackView.spacing = 10
-            stackView.translatesAutoresizingMaskIntoConstraints = false
+    private func createSeeAllButton(selector: Selector, tag: Int) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle("See All", for: .normal)
+        button.setTitleColor(AppTheme.primary, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        button.addTarget(self, action: selector, for: .touchUpInside)
+        button.tag = tag
+        return button
+    }
+
+    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+        // Update the visible "See All" button based on the selected segment
+        if let srButton = view.viewWithTag(201),
+           let arButton = view.viewWithTag(202),
+           let summaryButton = view.viewWithTag(203) {
             
-            for (index, title) in items.enumerated() {
-                let button = UIButton()
-                button.setTitle(title, for: .normal)
-                button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-                button.layer.cornerRadius = 19
-                button.clipsToBounds = true
-                button.tag = index
-                button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-                
-                if index == selectedIndex {
-                    button.backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
-                    button.setTitleColor(AppTheme.primary, for: .normal)
-                } else {
-                    button.backgroundColor = UIColor.systemGray6
-                    button.setTitleColor(UIColor.darkGray, for: .normal)
-                }
-                
-                buttons.append(button)
-                stackView.addArrangedSubview(button)
+            srButton.isHidden = sender.selectedSegmentIndex != 0
+            arButton.isHidden = sender.selectedSegmentIndex != 1
+            summaryButton.isHidden = sender.selectedSegmentIndex != 2
+        }
+        
+        // Update the module items
+        if let container = view.viewWithTag(100) {
+            let topicType: TopicsType
+            
+            switch sender.selectedSegmentIndex {
+            case 0:
+                topicType = .flashcards  // Spaced Repetition
+            case 1:
+                topicType = .quizzes     // Active Recall
+            case 2:
+                topicType = .summary     // Summariser
+            default:
+                topicType = .flashcards
             }
             
-            addSubview(stackView)
-            
-            NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: topAnchor),
-                stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            ])
-            
-            // Set height constraints for buttons
-            buttons.forEach { button in
-                button.heightAnchor.constraint(equalToConstant: 36).isActive = true
-            }
-        }
-        
-        @objc private func buttonTapped(_ sender: UIButton) {
-            let previousIndex = selectedIndex
-            selectedIndex = sender.tag
-            
-            buttons[previousIndex].backgroundColor = UIColor.systemGray6
-            buttons[previousIndex].setTitleColor(UIColor.darkGray, for: .normal)
-            
-            buttons[selectedIndex].backgroundColor = AppTheme.primary.withAlphaComponent(0.2)
-            buttons[selectedIndex].setTitleColor(AppTheme.primary, for: .normal)
-            
-            sendActions(for: .valueChanged)
-        }
-        
-        var selectedSegmentIndex: Int {
-            get { return selectedIndex }
-            set {
-                if newValue >= 0 && newValue < buttons.count {
-                    buttonTapped(buttons[newValue])
-                }
-            }
+            loadModuleItemsForType(topicType, container: container)
         }
     }
 
@@ -1118,8 +1138,6 @@ extension homeScreenViewController {
             for (index, topic) in filteredTopics.enumerated() {
                 let iconName = type == .flashcards ? "clock" : type == .quizzes ? "brain.head.profile" : "doc.text"
                 
-               
-                
                 let item = ScheduleItem(
                     iconName: iconName,
                     title: topic.title,
@@ -1134,69 +1152,65 @@ extension homeScreenViewController {
             }
         }
     }
-    
-   
-        private func createEmptyModuleView(for type: TopicsType) -> UIView {
-            let emptyContainer = UIView()
-            emptyContainer.translatesAutoresizingMaskIntoConstraints = false
-            
-            let iconName: String
-            let message: String
-            
-            switch type {
-            case .flashcards:
-                iconName = "clock"
-                message = "No spaced repetition modules yet\n"
-            case .quizzes:
-                iconName = "brain.head.profile"
-                message = "No active recall modules yet\n"
-            case .summary:
-                iconName = "doc.text"
-                message = "No summariser modules yet\n"
-            }
-            
-            let emptyIcon = UIImageView(image: UIImage(systemName: iconName))
-            emptyIcon.tintColor = AppTheme.primary
-            emptyIcon.contentMode = .scaleAspectFit
-            emptyIcon.translatesAutoresizingMaskIntoConstraints = false
-            
-            let emptyLabel = UILabel()
-            emptyLabel.text = message
-            emptyLabel.font = .systemFont(ofSize: 15, weight: .medium)
-            emptyLabel.textColor = .darkGray
-            emptyLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            let createButton = UIButton()
-            createButton.setTitle("Create New", for: .normal)
-            createButton.setTitleColor(AppTheme.primary, for: .normal)
-            createButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-            createButton.layer.borderColor = AppTheme.primary.cgColor
-            createButton.layer.borderWidth = 1
-            createButton.layer.cornerRadius = 14
-            createButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-            createButton.addTarget(self, action: #selector(uploadPDFButtonTapped), for: .touchUpInside)
-            createButton.translatesAutoresizingMaskIntoConstraints = false
-            
-            let stackView = UIStackView(arrangedSubviews: [emptyIcon, emptyLabel, createButton])
-            stackView.axis = .horizontal
-            stackView.spacing = 10
-            stackView.alignment = .center
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            emptyContainer.addSubview(stackView)
-            
-            NSLayoutConstraint.activate([
-                stackView.centerXAnchor.constraint(equalTo: emptyContainer.centerXAnchor),
-                stackView.centerYAnchor.constraint(equalTo: emptyContainer.centerYAnchor),
-                
-                emptyIcon.widthAnchor.constraint(equalToConstant: 24),
-                emptyIcon.heightAnchor.constraint(equalToConstant: 24)
-            ])
-            
-            return emptyContainer
-        }
 
-  
+    private func createEmptyModuleView(for type: TopicsType) -> UIView {
+        let emptyContainer = UIView()
+        emptyContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        let iconName: String
+        let message: String
+        
+        switch type {
+        case .flashcards:
+            iconName = "clock"
+            message = "No modules yet.\n"
+        case .quizzes:
+            iconName = "brain.head.profile"
+            message = "No modules yet.\n"
+        case .summary:
+            iconName = "doc.text"
+            message = "No modules yet.\n"
+        }
+        
+        let emptyIcon = UIImageView(image: UIImage(systemName: iconName))
+        emptyIcon.tintColor = AppTheme.primary
+        emptyIcon.contentMode = .scaleAspectFit
+        emptyIcon.translatesAutoresizingMaskIntoConstraints = false
+        
+        let emptyLabel = UILabel()
+        emptyLabel.text = message
+        emptyLabel.font = .systemFont(ofSize: 15, weight: .medium)
+        emptyLabel.textColor = .darkGray
+        emptyLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let createButton = UIButton()
+        createButton.setTitle("Create New", for: .normal)
+        createButton.setTitleColor(AppTheme.primary, for: .normal)
+        createButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        createButton.layer.cornerRadius = 14
+        createButton.contentEdgeInsets = UIEdgeInsets(top: 5, left:0, bottom: 5, right: 10)
+        createButton.addTarget(self, action: #selector(uploadPDFButtonTapped), for: .touchUpInside)
+        createButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let stackView = UIStackView(arrangedSubviews: [emptyIcon, emptyLabel, createButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        emptyContainer.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: emptyContainer.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: emptyContainer.centerYAnchor),
+            
+            emptyIcon.widthAnchor.constraint(equalToConstant: 24),
+            emptyIcon.heightAnchor.constraint(equalToConstant: 24)
+        ])
+        
+        return emptyContainer
+    }
+
     private func createModuleItemView(for item: ScheduleItem, index: Int) -> UIView {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -1229,7 +1243,7 @@ extension homeScreenViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let subtitleLabel = UILabel()
-        subtitleLabel.text = item.subtitle // Assuming ScheduleItem has a subtitle property
+        subtitleLabel.text = item.subtitle
         subtitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.textColor = mainColor.withAlphaComponent(0.8)
@@ -1282,19 +1296,17 @@ extension homeScreenViewController {
             subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             
-            // Subject tag constraints - removed bottom constraint to card
+            // Subject tag constraints
             subjectTag.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 8),
             subjectTag.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
-            // No longer using: subjectTag.bottomAnchor.constraint(equalTo: cardBackground.bottomAnchor, constant: -16)
         ])
-
         
         // Add tap gesture recognizer with animation
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(moduleItemTapped(_:)))
         cardBackground.addGestureRecognizer(tapGesture)
         cardBackground.isUserInteractionEnabled = true
         viewTopicIds[cardBackground] = item.topicId
-
+        
         // Asynchronously load subject name
         Task {
             let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
@@ -1310,9 +1322,6 @@ extension homeScreenViewController {
         
         return containerView
     }
-
-    
-   
 
     // Handle module item tap
     @objc private func moduleItemTapped(_ sender: UITapGestureRecognizer) {
@@ -1336,37 +1345,8 @@ extension homeScreenViewController {
                     self.performSegue(withIdentifier: segueIdentifier, sender: topic)
                 }
             }
-            
         }
     }
-
-    // Handler for circular segment changes
-    @objc private func circularSegmentChanged(_ sender: CircularSegmentControl) {
-        if let container = view.viewWithTag(100), let seeAllButton = view.viewWithTag(200) as? UIButton {
-            let topicType: TopicsType
-            
-            // Update See All button action based on selected segment
-            switch sender.selectedSegmentIndex {
-            case 0:
-                topicType = .flashcards  // Spaced Repetition
-                seeAllButton.removeTarget(nil, action: nil, for: .touchUpInside)
-                seeAllButton.addTarget(self, action: #selector(SRseeAllButtonTapped), for: .touchUpInside)
-            case 1:
-                topicType = .quizzes     // Active Recall
-                seeAllButton.removeTarget(nil, action: nil, for: .touchUpInside)
-                seeAllButton.addTarget(self, action: #selector(ARseeAllButtonTapped), for: .touchUpInside)
-            case 2:
-                topicType = .summary     // Summariser
-                seeAllButton.removeTarget(nil, action: nil, for: .touchUpInside)
-                seeAllButton.addTarget(self, action: #selector(summaryseeAllButtonTapped), for: .touchUpInside)
-            default:
-                topicType = .flashcards
-            }
-            
-            loadModuleItemsForType(topicType, container: container)
-        }
-    }
-    
     
     
 }

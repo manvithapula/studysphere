@@ -17,7 +17,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         label.text = "No modules yet.\n Click on upload to create module."
         label.textAlignment = .center
         label.numberOfLines = 2
-        label.textColor = .black
+      //  label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
@@ -193,3 +193,16 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
 
+extension ARListViewController: ARCollectionViewCellDelegate {
+    func didTapEdit(for cell: ARCollectionViewCell, topic: Topics) {
+        // Handle edit action
+        print("Edit topic: \(topic.title)")
+        // Navigate to edit screen or show edit modal
+    }
+    
+    func didTapDelete(for cell: ARCollectionViewCell, topic: Topics) {
+        // Handle delete action
+        print("Delete topic: \(topic.title)")
+        // Show confirmation alert and delete if confirmed
+    }
+}
