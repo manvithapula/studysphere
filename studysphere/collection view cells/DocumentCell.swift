@@ -54,9 +54,9 @@ class DocumentCell: UICollectionViewCell {
     let previewButton:UIButton = {
         let startButton = UIButton()
         startButton.setImage(UIImage(systemName: "eye"), for: .normal)
-        startButton.tintColor = .white
+        startButton.tintColor = .black
         startButton.setTitleColor(.white, for: .normal)
-        startButton.backgroundColor = AppTheme.primary
+        startButton.backgroundColor = .clear
         startButton.layer.cornerRadius = 16
         startButton.translatesAutoresizingMaskIntoConstraints = false
         startButton.isUserInteractionEnabled = true
