@@ -32,13 +32,53 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
     }
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
-        label.text = "No modules yet.\n Click on upload to create module."
+        label.text = "No modules yet."
         label.textAlignment = .center
         label.numberOfLines = 2
-        label.textColor = .black
+      //  label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
+    
+    
+    private let actionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Create new"
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.textColor = .systemBlue
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+
+    private func setupEmptyStateView() {
+        let containerView = UIView()
+        containerView.addSubview(emptyStateLabel)
+        containerView.addSubview(actionLabel)
+        
+        
+        emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
+        actionLabel.translatesAutoresizingMaskIntoConstraints = false
+     
+        NSLayoutConstraint.activate([
+            
+            emptyStateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 95),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            actionLabel.leadingAnchor.constraint(equalTo: emptyStateLabel.trailingAnchor, constant: 8),
+            actionLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            actionLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor),
+        ])
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCreateAction))
+        actionLabel.addGestureRecognizer(tapGesture)
+        
+        SubjectCollectionView.backgroundView = containerView
+    }
+
+    @objc private func handleCreateAction() {
+        performSegue(withIdentifier: "subjectdetailsempty", sender: self)
+    }
     
     
     @IBOutlet weak var subjectSegmentControl: UISegmentedControl!
@@ -54,12 +94,10 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
             loadCards()
             setupEmptyStateView()
         }
-    private func setupEmptyStateView() {
-        SubjectCollectionView.backgroundView = emptyStateLabel
-        }
+   
 
         private func updateEmptyState() {
-            let isEmpty = cards.isEmpty
+            let isEmpty = filteredCards.isEmpty
             emptyStateLabel.isHidden = !isEmpty
             SubjectCollectionView.backgroundView = isEmpty ? emptyStateLabel : nil
         }

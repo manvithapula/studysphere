@@ -279,7 +279,7 @@ class CreateViewController: UIViewController {
         }
 
         // Setup text fields
-        Topic.placeholder = "Enter unit name"
+        Topic.placeholder = "Enter topic name"
         subjectField.placeholder = "Select Subject"
 
         // Layout constraints

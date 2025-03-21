@@ -942,7 +942,7 @@ extension homeScreenViewController {
         headerView.translatesAutoresizingMaskIntoConstraints = false
         
         // Standard segmented control instead of circular
-        let segmentItems = ["Spaced Repetition", "Active Recall", "Summariser"]
+        let segmentItems = ["Flashcards", "Quizzes", "Summaries"]
         let segmentControl = UISegmentedControl(items: segmentItems)
         segmentControl.selectedSegmentIndex = 0
         

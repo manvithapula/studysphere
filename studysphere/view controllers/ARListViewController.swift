@@ -56,7 +56,7 @@ class ARListViewController: UIViewController, UICollectionViewDelegate, UICollec
             actionLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor), // Ensure it doesn't overflow
         ])
         
-        // Add tap gesture recognizer to actionLabel
+       
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCreateAction))
         actionLabel.addGestureRecognizer(tapGesture)
         
