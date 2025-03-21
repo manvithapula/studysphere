@@ -78,13 +78,13 @@ class ProfileDetailsViewController: UIViewController {
         // Setup title labels
         [firstNameLabel, lastNameLabel, dateOfBirthLabel].forEach { label in
             label?.font = .systemFont(ofSize: 17)
-            label?.textColor = .black
+            label?.textColor = .countLabel
         }
         
         // Setup value labels
         [firstNameValueLabel, lastNameValueLabel, dateOfBirthValueLabel].forEach { label in
             label?.font = .systemFont(ofSize: 17)
-            label?.textColor = .black
+            label?.textColor = .countLabel
             label?.textAlignment = .right
         }
         
