@@ -93,7 +93,8 @@ class FirebaseAiManager {
                 return nil
             }
             let prompt = """
-                Summarize the following text into concise, clear key points. Focus on the most important facts, arguments, and conclusions. Use bullet points for clarity. Maintain the original context and meaning without adding personal opinions. Ignore any special characters like asterisks, markdown symbols, or unusual formatting. Output should be professional and easy to read.
+                Summarize the following text into concise, clear key points. Focus on the most important facts, arguments, and conclusions. Use bullet points for clarity. Maintain the original context and meaning without adding personal opinions. Present only plain text using simple bullet points with no asterisks, dashes, or any special symbols. Maintain a formal tone and ensure readability. Output should be professional and easy to read.
+
                 """
 
             let content = ModelContent(

@@ -187,7 +187,7 @@ class SummaryViewController: UIViewController {
         } else {
             let utterance = AVSpeechUtterance(string: summaryTextView.text ?? "")
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-            utterance.rate = 0.5
+            utterance.rate = 0.47
             synthesizer.speak(utterance)
             isPlayingAudio = true
         }
