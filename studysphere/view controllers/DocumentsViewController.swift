@@ -64,6 +64,7 @@ class DocumentsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBarController?.tabBar.backgroundColor = .systemGray6
         setupTapGesture()
         setupUI()
         loadTestDocuments()
