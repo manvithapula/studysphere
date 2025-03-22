@@ -110,19 +110,19 @@ class QuestionResultViewController: UIViewController {
         // You got label
         youGot.translatesAutoresizingMaskIntoConstraints = false
         youGot.text = "You got"
-        youGot.textColor = .black
+       // youGot.textColor = .black
         youGot.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         youGot.textAlignment = .center
         
         // Score label
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
-        scoreLabel.textColor = .black
+       // scoreLabel.textColor = .black
         scoreLabel.font = UIFont.systemFont(ofSize: 72, weight: .bold)
         scoreLabel.textAlignment = .center
         
         encouragementLabel.translatesAutoresizingMaskIntoConstraints = false
         encouragementLabel.text = "Let's try again! "
-        encouragementLabel.textColor = .black
+       // encouragementLabel.textColor = .black
         encouragementLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         encouragementLabel.textAlignment = .center
         
@@ -137,13 +137,13 @@ class QuestionResultViewController: UIViewController {
         
         // Percentage label
         percentageLabel.translatesAutoresizingMaskIntoConstraints = false
-        percentageLabel.textColor = .black
+      //  percentageLabel.textColor = .black
         percentageLabel.font = UIFont.systemFont(ofSize: 38, weight: .bold)
         percentageLabel.textAlignment = .center
        
         progressMessageLabel.translatesAutoresizingMaskIntoConstraints = false
         progressMessageLabel.text = "Every card mastered is progress! "
-        progressMessageLabel.textColor = .black
+      //  progressMessageLabel.textColor = .black
         progressMessageLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         progressMessageLabel.textAlignment = .center
         progressMessageLabel.numberOfLines = 0
@@ -175,13 +175,13 @@ class QuestionResultViewController: UIViewController {
         // Learned label (replacing "memorised")
         learnedLabel.translatesAutoresizingMaskIntoConstraints = false
         learnedLabel.text = "Answered correctly: 0"
-        learnedLabel.textColor = .black // Changed to black for visibility
+       // learnedLabel.textColor = .black // Changed to black for visibility
         learnedLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         
         // Review label (replacing "need practice")
         reviewLabel.translatesAutoresizingMaskIntoConstraints = false
         reviewLabel.text = "Needs more practice: 0"
-        reviewLabel.textColor = .black // Changed to black for visibility
+       // reviewLabel.textColor = .black // Changed to black for visibility
         reviewLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         
         // Next button - with secondary color gradient
