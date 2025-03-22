@@ -6,9 +6,15 @@
 //
 
 import UIKit
-
+protocol MySubjectListTableViewControllerDelegate: AnyObject {
+    func didTapEdit(for cell: subjectListTableViewCell, topic: Subject)
+    func didTapDelete(for cell: subjectListTableViewCell, topic: Subject)
+}
 class subjectListTableViewCell: UITableViewCell {
-    
+    weak var delegate:MySubjectListTableViewControllerDelegate?
+    private var swipeViewRightConstraint: NSLayoutConstraint?
+    private var currentSubject:Subject?
+
     private let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -66,7 +72,33 @@ class subjectListTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    private lazy var swipeActionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemGray6
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private lazy var editButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Edit", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        return button
+    }()
     
+    private lazy var deleteButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Delete", for: .normal)
+        button.backgroundColor = .systemRed
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        return button
+    }()
   
     // MARK: - Initialization
     
@@ -86,6 +118,10 @@ class subjectListTableViewCell: UITableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
         
+        contentView.addSubview(swipeActionView)
+        swipeActionView.addSubview(editButton)
+        swipeActionView.addSubview(deleteButton)
+        
         contentView.addSubview(containerView)
         containerView.addSubview(cardBackground)
         cardBackground.addSubview(iconContainer)
@@ -94,6 +130,22 @@ class subjectListTableViewCell: UITableViewCell {
         cardBackground.addSubview(topicsCountLabel)
         
         NSLayoutConstraint.activate([
+            swipeActionView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            swipeActionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            swipeActionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -5),
+            swipeActionView.widthAnchor.constraint(equalToConstant: 150),
+            
+            // Edit Button
+            editButton.leadingAnchor.constraint(equalTo: swipeActionView.leadingAnchor, constant: 8),
+            editButton.centerYAnchor.constraint(equalTo: swipeActionView.centerYAnchor),
+            editButton.widthAnchor.constraint(equalToConstant: 60),
+            editButton.heightAnchor.constraint(equalToConstant: 36),
+            
+            // Delete Button
+            deleteButton.leadingAnchor.constraint(equalTo: editButton.trailingAnchor, constant: 8),
+            deleteButton.centerYAnchor.constraint(equalTo: swipeActionView.centerYAnchor),
+            deleteButton.widthAnchor.constraint(equalToConstant: 60),
+            deleteButton.heightAnchor.constraint(equalToConstant: 36),
             // Container view constraints
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -129,13 +181,17 @@ class subjectListTableViewCell: UITableViewCell {
             topicsCountLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             topicsCountLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             topicsCountLabel.bottomAnchor.constraint(lessThanOrEqualTo: cardBackground.bottomAnchor, constant: -16)])
+        swipeViewRightConstraint = containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        swipeViewRightConstraint?.isActive = true
+
             
     }
     
     // MARK: - Configuration
     
-    func configure(with subject: Subject, index: Int) {
+    func configure(with subject: Subject, index: Int,isEditing:Bool) {
         titleLabel.text = subject.name
+        currentSubject = subject
         Task{
             let allTopics = try await topicsDb.findAll(where: ["subject":subject.id])
             let topicsCount = allTopics.count
@@ -145,6 +201,29 @@ class subjectListTableViewCell: UITableViewCell {
        
         setupIcon(for: subject.name, at: index)
         setupColors(for: index)
+        resetSwipeState()
+        if(isEditing){
+            let newX = CGFloat(-150)// Limit swipe to -150 points
+            swipeViewRightConstraint?.constant = newX
+            layoutIfNeeded()
+        }
+    }
+    private func resetSwipeState() {
+        UIView.animate(withDuration: 0.3) {
+            self.swipeViewRightConstraint?.constant = 0
+            self.layoutIfNeeded()
+        }
+    }
+    
+    // MARK: - Action Handlers
+    @objc private func editButtonTapped() {
+        guard let topic = currentSubject else { return }
+        delegate?.didTapEdit(for: self, topic: topic)
+    }
+    
+    @objc private func deleteButtonTapped() {
+        guard let topic = currentSubject else { return }
+        delegate?.didTapDelete(for: self, topic: topic)
     }
     
     // MARK: - Subject Icon Management

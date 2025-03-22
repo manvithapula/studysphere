@@ -12,6 +12,7 @@ class MySubjectListTableViewController: UITableViewController {
     
     @IBOutlet var subjectTableView: UITableView!
     public var subjects: [Subject] = []
+    private var isValueEditing = false
     
     private let emptyStateLabel: UILabel = {
         let label = UILabel()
@@ -31,10 +32,6 @@ class MySubjectListTableViewController: UITableViewController {
           loadSubjects()
           setupEmptyStateView()
     
-          Task {
-              subjects = try await subjectDb.findAll()
-              tableView.reloadData()
-          }
       }
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -58,6 +55,8 @@ class MySubjectListTableViewController: UITableViewController {
           )
           addButton.tintColor = AppTheme.primary
           navigationItem.rightBarButtonItem = addButton
+//          let backButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEdit))
+//          self.navigationItem.leftBarButtonItem = backButton
           
         
           tableView.backgroundColor = .systemGray6
@@ -71,6 +70,10 @@ class MySubjectListTableViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
 
+    }
+    @objc private func handleEdit(){
+        self.isValueEditing = !isValueEditing
+        subjectTableView.reloadData()
     }
     
     private func setupEmptyStateView() {
@@ -117,10 +120,10 @@ class MySubjectListTableViewController: UITableViewController {
         }
     
     private func loadSubjects() {
-           if let savedData = UserDefaults.standard.data(forKey: "subjects"),
-              let decodedSubjects = try? JSONDecoder().decode([Subject].self, from: savedData) {
-               subjects = decodedSubjects
-           }
+        Task {
+            subjects = try await subjectDb.findAll()
+            tableView.reloadData()
+        }
        }
     
 
@@ -138,7 +141,8 @@ class MySubjectListTableViewController: UITableViewController {
       override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
           let cell = tableView.dequeueReusableCell(withIdentifier: "subjectCell", for: indexPath) as! subjectListTableViewCell
           let subject = subjects[indexPath.row]
-          cell.configure(with: subject, index: indexPath.row)
+          cell.configure(with: subject, index: indexPath.row,isEditing: isValueEditing)
+          cell.delegate = self
           return cell
       }
       
@@ -151,3 +155,75 @@ class MySubjectListTableViewController: UITableViewController {
           tableView.deselectRow(at: indexPath, animated: true)
       }
   }
+
+
+extension MySubjectListTableViewController: MySubjectListTableViewControllerDelegate {
+    func didTapEdit(for cell: subjectListTableViewCell, topic: Subject) {
+        showEditAlert(for: topic)
+    }
+    
+    func didTapDelete(for cell: subjectListTableViewCell, topic: Subject) {
+        showDeleteConfirmation(for: topic)
+    }
+    private func showEditAlert(for topic: Subject) {
+        let alertController = UIAlertController(title: "Edit Subject", message: "Update the subject title", preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.text = topic.name
+            textField.placeholder = "Enter subject title"
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
+            guard let self = self,
+                  let textField = alertController.textFields?.first,
+                  let newTitle = textField.text, !newTitle.isEmpty else { return }
+            var newTopic = topic
+            newTopic.name = newTitle
+            Task{
+                await subjectDb.update(&newTopic)
+                self.isValueEditing = false
+                self.loadSubjects()
+                self.deleteModules(newTopic)
+            }
+            
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        present(alertController, animated: true)
+    }
+    private func deleteModules(_ topic:Subject){
+        Task{
+            let topics = try await topicsDb.findAll(where: ["subject": topic.id])
+            for topic in topics{
+                await topicsDb.delete(id: topic.id)
+            }
+        }
+    }
+    
+    private func showDeleteConfirmation(for topic: Subject) {
+        let alertController = UIAlertController(title: "Delete Subject", message: "Are you sure you want to delete this subject? This action cannot be undone.", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+         //   self.deleteTopic(topic)
+            Task{
+                await topicsDb.delete(id: topic.id)
+                let schedules = try await schedulesDb.findAll(where: ["topic":topic.id])
+                for schedule in schedules {
+                    await subjectDb.delete(id: schedule.id)
+                }
+                self.isValueEditing = false
+                self.loadSubjects()
+            }
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        
+        present(alertController, animated: true)
+    }
+}

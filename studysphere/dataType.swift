@@ -132,7 +132,7 @@ struct DashboardData {
 //subject
 struct Subject: Codable, Identifiable {
     var id: String
-    let name: String
+    var name: String
     var createdAt: Timestamp
     var updatedAt: Timestamp
 
