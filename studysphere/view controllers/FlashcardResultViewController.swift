@@ -112,20 +112,20 @@ class FlashcardResultViewController: UIViewController {
         // You got label
         youGot.translatesAutoresizingMaskIntoConstraints = false
         youGot.text = "You memorized"
-        youGot.textColor = .black
+    //   youGot.textColor = .black
         youGot.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         youGot.textAlignment = .center
         
         // Score label
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
-        scoreLabel.textColor = .black
+    //    scoreLabel.textColor = .black
         scoreLabel.font = UIFont.systemFont(ofSize: 72, weight: .bold)
         scoreLabel.textAlignment = .center
         
         // Encouragement label
         encouragementLabel.translatesAutoresizingMaskIntoConstraints = false
         encouragementLabel.text = "Great progress!"
-        encouragementLabel.textColor = .black
+     //   encouragementLabel.textColor = .black
         encouragementLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         encouragementLabel.textAlignment = .center
         
@@ -140,14 +140,14 @@ class FlashcardResultViewController: UIViewController {
         
         // Percentage label
         percentageL.translatesAutoresizingMaskIntoConstraints = false
-        percentageL.textColor = .black
+      //  percentageL.textColor = .black
         percentageL.font = UIFont.systemFont(ofSize: 38, weight: .bold)
         percentageL.textAlignment = .center
         
         // Progress message label
         progressMessageLabel.translatesAutoresizingMaskIntoConstraints = false
         progressMessageLabel.text = "Keep up the consistent practice! 🌱"
-        progressMessageLabel.textColor = .black
+      //  progressMessageLabel.textColor = .black
         progressMessageLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         progressMessageLabel.textAlignment = .center
         progressMessageLabel.numberOfLines = 0
@@ -178,13 +178,13 @@ class FlashcardResultViewController: UIViewController {
         // Memorised label
         memorisedL.translatesAutoresizingMaskIntoConstraints = false
         memorisedL.text = "Cards memorized: 0"
-        memorisedL.textColor = .black
+      //  memorisedL.textColor = .black
         memorisedL.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         
         // Need Practice label
         needPracticeL.translatesAutoresizingMaskIntoConstraints = false
         needPracticeL.text = "Cards to review: 0"
-        needPracticeL.textColor = .black
+       // needPracticeL.textColor = .black
         needPracticeL.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         
         // Next button - with secondary color gradient
