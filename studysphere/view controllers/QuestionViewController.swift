@@ -55,9 +55,10 @@ class QuestionViewController: UIViewController {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
         gradientLayer.colors = [
-            UIColor(red: 0.94, green: 0.97, blue: 1.0, alpha: 1.0).cgColor,
-            UIColor(red: 0.97, green: 0.99, blue: 1.0, alpha: 1.0).cgColor
+            UIColor(named: "gradTop")!.cgColor,
+            UIColor(named: "gradBottom")!.cgColor
         ]
+        
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
         view.layer.insertSublayer(gradientLayer, at: 0)
@@ -68,7 +69,6 @@ class QuestionViewController: UIViewController {
         setupProgressBar()
         setupQuestionCard()
         setupOptionStack()
-        setupNextButton()
         applyConstraints()
     }
     
@@ -287,7 +287,7 @@ class QuestionViewController: UIViewController {
     
     private func applyConstraints() {
         // Make all views use auto layout
-        for view in [progressBar, progressLabel, questionCardView, questionTextLabel, optionStackView, nextButton] {
+        for view in [progressBar, progressLabel, questionCardView, questionTextLabel, optionStackView] {
             view.translatesAutoresizingMaskIntoConstraints = false
         }
         
@@ -323,19 +323,12 @@ class QuestionViewController: UIViewController {
             optionStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 4),
             optionStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -4),
             
-            // Next button
-            nextButton.topAnchor.constraint(equalTo: optionStackView.bottomAnchor, constant: 24),
-            nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            nextButton.widthAnchor.constraint(equalToConstant: 200),
-            nextButton.heightAnchor.constraint(equalToConstant: 56),
-            nextButton.bottomAnchor.constraint(lessThanOrEqualTo: safeArea.bottomAnchor, constant: -20),
             
             // Ensure the option stack has some maximum height if needed
             optionStackView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.5),
             
             // Ensure proper spacing between elements
             optionStackView.topAnchor.constraint(equalTo: questionCardView.bottomAnchor, constant: 20),
-            nextButton.topAnchor.constraint(equalTo: optionStackView.bottomAnchor, constant: 24)
         ])
         
         // Remove any fixed height constraints for option buttons
@@ -632,9 +625,6 @@ class QuestionViewController: UIViewController {
     }
     
     // MARK: - Cleanup
-    deinit {
-        nextButton.removeObserver(self, forKeyPath: "frame")
-    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         if let destination = segue.destination as? QuestionResultViewController {
