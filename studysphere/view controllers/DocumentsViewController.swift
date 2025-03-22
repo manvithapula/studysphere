@@ -710,11 +710,11 @@ extension DocumentsViewController: VNDocumentCameraViewControllerDelegate,UIDocu
             showDeleteConfirmation(for: document)
         }
         private func showEditAlert(for topic: FileMetadata) {
-            let alertController = UIAlertController(title: "Edit Summary", message: "Update the summary title", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Edit Document", message: "Update the document title", preferredStyle: .alert)
             
             alertController.addTextField { textField in
                 textField.text = topic.title
-                textField.placeholder = "Enter summary title"
+                textField.placeholder = "Enter document title"
             }
             
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -739,7 +739,7 @@ extension DocumentsViewController: VNDocumentCameraViewControllerDelegate,UIDocu
         }
         
         private func showDeleteConfirmation(for topic: FileMetadata) {
-            let alertController = UIAlertController(title: "Delete Summary", message: "Are you sure you want to delete this summary? This action cannot be undone.", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Delete Document", message: "Are you sure you want to delete this document? This action cannot be undone.", preferredStyle: .alert)
             
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
             let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
