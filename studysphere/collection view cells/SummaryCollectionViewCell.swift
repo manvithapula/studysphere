@@ -12,17 +12,7 @@ class SummaryCollectionViewCell: UICollectionViewCell {
     private var currentTopic: Topics?
     
     // MARK: - UI Elements
-    private let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 16
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.08
-        view.layer.shadowRadius = 1.5
-        view.layer.shadowOffset = CGSize(width: 0, height: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let containerView = DesignManager.cardView()
     
     private let cardBackground: UIView = {
         let view = UIView()
@@ -32,13 +22,7 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = .systemFont(ofSize: 17, weight: .semibold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let titleLabel = DesignManager.cellTitleLabel()
     
     private let subjectTag: UILabel = {
         let label = UILabel()
@@ -60,27 +44,9 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private lazy var editButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Edit", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var editButton = DesignManager.editButton(selector: #selector(editButtonTapped))
     
-    private lazy var deleteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Delete", for: .normal)
-        button.backgroundColor = .systemRed
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var deleteButton = DesignManager.deleteButton(selector: #selector(deleteButtonTapped))
     
     private var initialTouchPoint: CGPoint = .zero
     private var swipeViewRightConstraint: NSLayoutConstraint?
@@ -90,14 +56,12 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setupViews()
         setupConstraints()
-        setupGestureRecognizers()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
         setupConstraints()
-        setupGestureRecognizers()
     }
     
     // MARK: - Setup
@@ -163,13 +127,8 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         // Add padding to the subject tag
         subjectTag.layoutIfNeeded()
         subjectTag.layer.cornerRadius = 8
-        subjectTag.setPadding(horizontal: 12, vertical: 4)
     }
     
-    private func setupGestureRecognizers() {
-//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-//        containerView.addGestureRecognizer(panGesture)
-    }
     
     // MARK: - Configuration
     func configure(title: String, subject: String, index: Int, topic: Topics, isEditing:Bool) {
@@ -224,38 +183,7 @@ class SummaryCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Gesture Handling
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: containerView)
-        
-        switch gesture.state {
-        case .began:
-            initialTouchPoint = containerView.frame.origin
-            
-        case .changed:
-            if translation.x < 0 { // Only allow left swipe
-                let newX = max(translation.x, -150) // Limit swipe to -150 points
-                swipeViewRightConstraint?.constant = newX - 16 // Account for container right margin
-                layoutIfNeeded()
-            }
-            
-        case .ended, .cancelled:
-            let velocity = gesture.velocity(in: containerView)
-            
-            if swipeViewRightConstraint?.constant ?? 0 < -75 || velocity.x < -200 {
-                // Show action buttons
-                UIView.animate(withDuration: 0.3) {
-                    self.swipeViewRightConstraint?.constant = -150 - 16 // Account for container right margin
-                    self.layoutIfNeeded()
-                }
-            } else {
-                // Reset position
-                resetSwipeState()
-            }
-            
-        default:
-            break
-        }
-    }
+    
     
     private func resetSwipeState() {
         UIView.animate(withDuration: 0.3) {
@@ -308,27 +236,5 @@ class SummaryCollectionViewCell: UICollectionViewCell {
         subjectTag.text = nil
         currentTopic = nil
         resetSwipeState()
-    }
-}
-
-// Helper extension for padding
-extension UILabel {
-    func setPadding(horizontal: CGFloat, vertical: CGFloat) {
-        let padding = UIEdgeInsets(top: vertical, left: horizontal, bottom: vertical, right: horizontal)
-        if let textString = text {
-            let attributedString = NSAttributedString(
-                string: textString,
-                attributes: [
-                    NSAttributedString.Key.font: font ?? .systemFont(ofSize: 14)
-                ]
-            )
-            let rect = attributedString.boundingRect(
-                with: CGSize(width: frame.size.width, height: .greatestFiniteMagnitude),
-                options: .usesLineFragmentOrigin,
-                context: nil
-            )
-            frame.size.height = rect.height + padding.top + padding.bottom
-            frame.size.width = rect.width + padding.left + padding.right
-        }
     }
 }

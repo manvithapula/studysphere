@@ -6,7 +6,7 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
     private let cardBackground = UIView()
     private let iconContainerView = UIView()
     private let iconImageView = UIImageView()
-    private let titleLabel = UILabel()
+    private let titleLabel = DesignManager.cellTitleLabel()
     private let subtitleLabel = UILabel()
     private let continueButton = UIButton(type: .system)
     
@@ -56,8 +56,6 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         iconImageView.tintColor = .white
         iconContainerView.addSubview(iconImageView)
         
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        titleLabel.textColor = UIColor.black
         cardBackground.addSubview(titleLabel)
         
         subtitleLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -93,7 +91,6 @@ class SubjectCellCollectionViewCell: UICollectionViewCell {
         cardBackground.translatesAutoresizingMaskIntoConstraints = false
         iconContainerView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         

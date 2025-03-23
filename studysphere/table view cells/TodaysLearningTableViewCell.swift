@@ -3,23 +3,12 @@ import UIKit
 class TodaysLearningTableViewCell: UITableViewCell {
     private let containerView = UIView()
     private let cardBackground = UIView()
-    private let iconContainer = UIView()
+    private let iconContainer = DesignManager.iconContainer()
     private let iconImageView = UIImageView()
-    private let titleLabel = UILabel()
+    private let titleLabel = DesignManager.cellTitleLabel()
     private let statusTagButton = UIButton()
     
-    private let subjectTag: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = AppTheme.primary
-        label.backgroundColor = AppTheme.primary.withAlphaComponent(0.1)
-        label.layer.cornerRadius = 10
-        label.clipsToBounds = true
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.layoutMargins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
-        return label
-    }()
+    private let subjectTag = DesignManager.subjectTag()
     
     var currentDateOffset: Int = 0
     private var itemIndex: Int = 0 // Add this to store the item's index
@@ -49,17 +38,12 @@ class TodaysLearningTableViewCell: UITableViewCell {
         cardBackground.layer.cornerRadius = 16
         cardBackground.translatesAutoresizingMaskIntoConstraints = false
         
-        iconContainer.layer.cornerRadius = 22
-        iconContainer.clipsToBounds = true
-        iconContainer.translatesAutoresizingMaskIntoConstraints = false
         
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.tintColor = .white
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         titleLabel.numberOfLines = 2
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         configureStatusTagButton()
         
@@ -153,8 +137,7 @@ class TodaysLearningTableViewCell: UITableViewCell {
                 let allSubjects = try await subjectDb.findAll(where: ["id": topic.subject])
                 if let subject = allSubjects.first {
                     await MainActor.run {
-                        self.subjectTag.text = "  \(subject.name)  "
-                        self.subjectTag.sizeToFit()
+                        self.subjectTag.text = subject.name
                     }
                 }
             }
@@ -177,8 +160,6 @@ class TodaysLearningTableViewCell: UITableViewCell {
         
         cardBackground.backgroundColor = colors[colorIndex]
         iconContainer.backgroundColor = iconColors[colorIndex]
-        titleLabel.textColor = .black
-        subjectTag.backgroundColor = colors[colorIndex]
     }
     
     override var isHighlighted: Bool {

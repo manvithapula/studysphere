@@ -83,10 +83,6 @@ class DocumentsViewController: UIViewController {
     
     // MARK: - Setup UI
     private func setupUI() {
-        
-      
-        
-        view.backgroundColor = .systemGray6
         searchBar.delegate = self
         
         view.addSubview(searchBar)
@@ -109,7 +105,7 @@ class DocumentsViewController: UIViewController {
             documentsCollectionView.topAnchor.constraint(equalTo: subjectsCollectionView.bottomAnchor),
             documentsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             documentsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            documentsCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            documentsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),

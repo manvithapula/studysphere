@@ -90,12 +90,11 @@ class homeScreenViewController: UIViewController {
             let destination = segue.destination as! MySubjectListTableViewController
             destination.subjects = self.subjects
         }
-        if segue.identifier == "toFLS" || segue.identifier == "toQTS" || segue.identifier == "toSummary"{
-            if let destinationVC = segue.destination as? SRScheduleViewController {
-                if let topic = sender as? Topics {
-                    destinationVC.topic = topic
-                }
-            } else if let destinationVC = segue.destination as? ARScheduleViewController {
+        if segue.identifier == "toSrListView",let destinationVc = segue.destination as? ModuleListViewController,let type = sender as? TopicsType{
+            destinationVc.type = type
+        }
+        if segue.identifier == "toFLS" || segue.identifier == "toSummary"{
+            if let destinationVC = segue.destination as? ModuleScheduleViewController {
                 if let topic = sender as? Topics {
                     destinationVC.topic = topic
                 }
@@ -106,7 +105,7 @@ class homeScreenViewController: UIViewController {
             }
         }
             else if let destinationVC = segue.destination as? UINavigationController{
-                if let destination = destinationVC.topViewController as? SRScheduleViewController{
+                if let destination = destinationVC.topViewController as? ModuleScheduleViewController{
                     if let topic = sender as? Topics {
                         destination.topic = topic
                     }
@@ -250,17 +249,7 @@ extension homeScreenViewController {
     
     //MARK: UPLOAD
     private func createUploadPDFView() -> UIView {
-        let containerView: UIView = {
-            let view = UIView()
-            view.backgroundColor = .white
-            view.layer.cornerRadius = 16
-            view.layer.shadowColor = UIColor.black.cgColor
-            view.layer.shadowOpacity = 0.08
-            view.layer.shadowRadius = 1.5
-            view.layer.shadowOffset = CGSize(width: 0, height: 1)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            return view
-        }()
+        let containerView = DesignManager.cardView()
         
         let bannerView: UIView = {
             let view = UIView()
@@ -271,10 +260,7 @@ extension homeScreenViewController {
             return view
         }()
         
-        let iconContainer = UIView()
-        iconContainer.layer.cornerRadius = 25
-        iconContainer.clipsToBounds = true
-        iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        let iconContainer = DesignManager.iconContainer()
         iconContainer.backgroundColor = AppTheme.secondary
         
         let pdfIcon = UIImageView()
@@ -366,13 +352,7 @@ extension homeScreenViewController {
     
     //MARK: TODAYS LEARNING
     private func createTodayScheduleView() -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 16
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOpacity = 0.08
-        containerView.layer.shadowRadius = 8
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        let containerView = DesignManager.cardView()
         
         // Fix date formatting to match the UI
         let dateFormatter = DateFormatter()
@@ -488,10 +468,7 @@ extension homeScreenViewController {
         cardBackground.translatesAutoresizingMaskIntoConstraints = false
         
         
-        let iconContainer = UIView()
-        iconContainer.translatesAutoresizingMaskIntoConstraints = false
-        iconContainer.layer.cornerRadius = 24
-        iconContainer.clipsToBounds = true
+        let iconContainer = DesignManager.iconContainer()
         iconContainer.backgroundColor = mainColor
         
         let iconView = UIImageView()
@@ -507,15 +484,7 @@ extension homeScreenViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
     
         
-        let subjectTag = UILabel()
-        subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
-        subjectTag.text = " "
-        subjectTag.textColor = mainColor.withAlphaComponent(0.8)
-        subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
-        subjectTag.layer.cornerRadius = 8
-        subjectTag.clipsToBounds = true
-        subjectTag.translatesAutoresizingMaskIntoConstraints = false
-        subjectTag.setPadding(horizontal: 12, vertical: 4)
+        let subjectTag = DesignManager.subjectTag()
         
         let startButton = UIButton()
         startButton.setTitle("Start", for: .normal)
@@ -528,7 +497,7 @@ extension homeScreenViewController {
         startButton.addAction(UIAction { [weak self] _ in
             Task {
                 let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
-                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toFLS", sender: topic)
             }
         }, for: .touchUpInside)
         
@@ -641,22 +610,11 @@ extension homeScreenViewController {
         startButton.addAction(UIAction { [weak self] _ in
             Task {
                 let topic = try await topicsDb.findAll(where: ["id": item.topicId]).first
-                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toQTS", sender: topic)
+                self?.performSegue(withIdentifier: item.topicType == TopicsType.flashcards ? "toFLS" : "toFLS", sender: topic)
             }
         }, for: .touchUpInside)
         
-        let subjectTag: UILabel = {
-            let label = UILabel()
-            label.font = .systemFont(ofSize: 12)
-            label.textColor = .black
-            label.backgroundColor = AppTheme.secondary.withAlphaComponent(0.1)
-            label.layer.cornerRadius = 10
-            label.clipsToBounds = true
-            label.textAlignment = .center
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.text = " "
-            return label
-        }()
+        let subjectTag = DesignManager.subjectTag()
         containerView.addSubview(iconView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(startButton)
@@ -686,7 +644,6 @@ extension homeScreenViewController {
         ])
         subjectTag.layoutIfNeeded()
         subjectTag.layer.cornerRadius = 8
-        subjectTag.setPadding(horizontal: 12, vertical: 4)
         
         Task {
             let alltopics = try await topicsDb.findAll(where: ["id": item.topicId])
@@ -705,13 +662,7 @@ extension homeScreenViewController {
     
     //MARK: RECENT SUBJECTS
     private func createSubjectsGridView() -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 16
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOpacity = 0.08
-        containerView.layer.shadowRadius = 8
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        let containerView = DesignManager.cardView()
         
         let titleLabel = UILabel()
         titleLabel.text = "Recent Subjects"
@@ -919,11 +870,11 @@ extension homeScreenViewController {
     // MARK: RECENT MODULES
         
     @objc private func SRseeAllButtonTapped() {
-        performSegue(withIdentifier: "toSrListView", sender: nil)
+        performSegue(withIdentifier: "toSrListView", sender: TopicsType.flashcards)
     }
 
     @objc private func ARseeAllButtonTapped() {
-        performSegue(withIdentifier: "toArListView", sender: nil)
+        performSegue(withIdentifier: "toSrListView", sender: TopicsType.quizzes)
     }
 
     @objc private func summaryseeAllButtonTapped() {
@@ -931,13 +882,7 @@ extension homeScreenViewController {
     }
 
     private func createRecentModulesView() -> UIView {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.layer.cornerRadius = 16
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOpacity = 0.08
-        containerView.layer.shadowRadius = 8
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        let containerView = DesignManager.cardView()
         
        
         let headerView = createSectionHeader(title: "Recent Modules")
@@ -1266,15 +1211,7 @@ extension homeScreenViewController {
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.textColor = mainColor.withAlphaComponent(0.8)
         
-        let subjectTag = UILabel()
-        subjectTag.font = .systemFont(ofSize: 12, weight: .medium)
-        subjectTag.text = " "
-        subjectTag.textColor = mainColor.withAlphaComponent(0.8)
-        subjectTag.backgroundColor = mainColor.withAlphaComponent(0.1)
-        subjectTag.layer.cornerRadius = 8
-        subjectTag.clipsToBounds = true
-        subjectTag.translatesAutoresizingMaskIntoConstraints = false
-        subjectTag.setPadding(horizontal: 12, vertical: 4)
+        let subjectTag = DesignManager.subjectTag()
         
         // Add views to hierarchy
         containerView.addSubview(cardBackground)
@@ -1359,7 +1296,7 @@ extension homeScreenViewController {
                 
                 if let topic = topic {
                     let segueIdentifier = topic.type == .flashcards ? "toFLS" :
-                    topic.type == .quizzes ? "toQTS" : "toSummary"
+                    topic.type == .quizzes ? "toFLS" : "toSummary"
                     self.performSegue(withIdentifier: segueIdentifier, sender: topic)
                 }
             }

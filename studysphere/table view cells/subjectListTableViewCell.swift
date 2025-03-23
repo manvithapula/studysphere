@@ -15,17 +15,7 @@ class subjectListTableViewCell: UITableViewCell {
     private var swipeViewRightConstraint: NSLayoutConstraint?
     private var currentSubject:Subject?
 
-    private let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 16
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.08
-        view.layer.shadowRadius = 8
-        view.layer.shadowOffset = CGSize(width: 0, height: 3)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let containerView = DesignManager.cardView()
     
     
     private let cardBackground: UIView = {
@@ -37,13 +27,7 @@ class subjectListTableViewCell: UITableViewCell {
     }()
 
   
-    private let iconContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 24
-        view.clipsToBounds = true
-        return view
-    }()
+    private let iconContainer = DesignManager.iconContainer()
     
 
     private let iconImageView: UIImageView = {
@@ -55,13 +39,7 @@ class subjectListTableViewCell: UITableViewCell {
     }()
     
   
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .bold)
-        label.textColor = .darkText
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let titleLabel = DesignManager.cellTitleLabel()
     
   
     
@@ -78,27 +56,9 @@ class subjectListTableViewCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private lazy var editButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Edit", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var editButton = DesignManager.editButton(selector: #selector(editButtonTapped))
     
-    private lazy var deleteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Delete", for: .normal)
-        button.backgroundColor = .systemRed
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var deleteButton = DesignManager.deleteButton(selector: #selector(deleteButtonTapped))
   
     // MARK: - Initialization
     
@@ -298,18 +258,4 @@ class subjectListTableViewCell: UITableViewCell {
 }
 
 
-/*class GradientView: UIView {
-    private var gradientLayer: CAGradientLayer?
-    
-    override class var layerClass: AnyClass {
-        return CAGradientLayer.self
-    }
-    
-    func setGradient(startColor: UIColor, endColor: UIColor, startPoint: CGPoint, endPoint: CGPoint) {
-        let gradientLayer = self.layer as? CAGradientLayer
-        gradientLayer?.colors = [startColor.cgColor, endColor.cgColor]
-        gradientLayer?.startPoint = startPoint
-        gradientLayer?.endPoint = endPoint
-        self.gradientLayer = gradientLayer
-    }
-}*/
+

@@ -8,27 +8,17 @@
 import UIKit
 
 protocol SRCollectionViewCellDelegate: AnyObject {
-    func didTapEdit(for cell: SRCollectionViewCell, topic: Topics)
-    func didTapDelete(for cell: SRCollectionViewCell, topic: Topics)
+    func didTapEdit(for cell: ModuleListCollectionViewCell, topic: Topics)
+    func didTapDelete(for cell: ModuleListCollectionViewCell, topic: Topics)
 }
 
-class SRCollectionViewCell: UICollectionViewCell {
+class ModuleListCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     weak var delegate: SRCollectionViewCellDelegate?
     private var currentTopic: Topics?
     
     // MARK: - UI Elements
-    private let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 16
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.08
-        view.layer.shadowRadius = 1.5
-        view.layer.shadowOffset = CGSize(width: 0, height: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let containerView = DesignManager.cardView()
     
     private let cardBackground: UIView = {
         let view = UIView()
@@ -38,13 +28,7 @@ class SRCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = .systemFont(ofSize: 17, weight: .semibold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let titleLabel = DesignManager.cellTitleLabel()
     
     private let subtitleLabel: UILabel = {
         let label = UILabel()
@@ -54,17 +38,7 @@ class SRCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let subjectTag: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .black
-        label.layer.cornerRadius = 10
-        label.clipsToBounds = true
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = ""
-        return label
-    }()
+    private let subjectTag  = DesignManager.subjectTag()
     
     // MARK: - Swipe Gesture Elements
     private lazy var swipeActionView: UIView = {
@@ -74,27 +48,9 @@ class SRCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private lazy var editButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Edit", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var editButton = DesignManager.editButton(selector: #selector(editButtonTapped))
     
-    private lazy var deleteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Delete", for: .normal)
-        button.backgroundColor = .systemRed
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var deleteButton = DesignManager.deleteButton(selector: #selector(deleteButtonTapped))
     
     private var initialTouchPoint: CGPoint = .zero
     private var swipeViewRightConstraint: NSLayoutConstraint?
@@ -104,14 +60,12 @@ class SRCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setupViews()
         setupConstraints()
-        setupGestureRecognizers()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
         setupConstraints()
-        setupGestureRecognizers()
     }
     
     // MARK: - Setup
@@ -180,14 +134,8 @@ class SRCollectionViewCell: UICollectionViewCell {
         swipeViewRightConstraint = containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         swipeViewRightConstraint?.isActive = true
         
-        // Add padding to the subject tag
-        subjectTag.setPadding(horizontal: 12, vertical: 4)
     }
     
-    private func setupGestureRecognizers() {
-//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-//        containerView.addGestureRecognizer(panGesture)
-    }
     
     // MARK: - Configuration
     func configure(topic: Topics, index: Int,isEditing: Bool) {
@@ -232,38 +180,7 @@ class SRCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: - Gesture Handling
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: containerView)
-        
-        switch gesture.state {
-        case .began:
-            initialTouchPoint = containerView.frame.origin
-            
-        case .changed:
-            if translation.x < 0 { // Only allow left swipe
-                let newX = max(translation.x, -150) // Limit swipe to -150 points
-                swipeViewRightConstraint?.constant = newX
-                layoutIfNeeded()
-            }
-            
-        case .ended, .cancelled:
-            let velocity = gesture.velocity(in: containerView)
-            
-            if swipeViewRightConstraint?.constant ?? 0 < -75 || velocity.x < -200 {
-                // Show action buttons
-                UIView.animate(withDuration: 0.3) {
-                    self.swipeViewRightConstraint?.constant = -150
-                    self.layoutIfNeeded()
-                }
-            } else {
-                // Reset position
-                resetSwipeState()
-            }
-            
-        default:
-            break
-        }
-    }
+    
     
     private func resetSwipeState() {
         UIView.animate(withDuration: 0.3) {

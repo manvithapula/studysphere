@@ -4,7 +4,7 @@
 
 import UIKit
 
-class SRListViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
+class ModuleListViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
     @IBOutlet weak var SpacedRepetitionList: UICollectionView!
    private var isValueEditing = false
     
@@ -91,6 +91,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
        }
        
        var cards: [Topics] = []
+    var type = TopicsType.flashcards
        
        var filteredCards: [Topics] {
            return cards.filter { card in
@@ -130,6 +131,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            view.backgroundColor = .systemGray6
            view.addSubview(searchBar)
            view.addSubview(segmentControl)
+           title = type == .flashcards ? "Spaced Repetition" : "Active Recall"
            
            let backButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEdit))
            self.navigationItem.rightBarButtonItem = backButton
@@ -179,7 +181,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
        private func fetchTopics() {
            Task {
                do {
-                   let topics = try await topicsDb.findAll(where: ["type": TopicsType.flashcards.rawValue])
+                   let topics = try await topicsDb.findAll(where: ["type": type.rawValue])
                    DispatchQueue.main.async {
                        self.cards = topics
                        self.SpacedRepetitionList.reloadData()
@@ -213,7 +215,7 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "spacedrepetition", for: indexPath)
            let card = filteredCards[indexPath.item]
            
-           if let cell = cell as? SRCollectionViewCell {
+           if let cell = cell as? ModuleListCollectionViewCell {
                cell.configure(topic: card, index: indexPath.item,isEditing: isValueEditing)
                cell.delegate = self
            }
@@ -249,19 +251,19 @@ class SRListViewController: UIViewController, UICollectionViewDelegate, UICollec
        
        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
            if segue.identifier == "toSRSchedule",
-              let destinationVC = segue.destination as? SRScheduleViewController,
+              let destinationVC = segue.destination as? ModuleScheduleViewController,
               let selectedIndex = sender as? Int {
                let selectedCard = filteredCards[selectedIndex]
                destinationVC.topic = selectedCard
            }
        }
    }
-extension SRListViewController: SRCollectionViewCellDelegate {
-    func didTapEdit(for cell: SRCollectionViewCell, topic: Topics) {
+extension ModuleListViewController: SRCollectionViewCellDelegate {
+    func didTapEdit(for cell: ModuleListCollectionViewCell, topic: Topics) {
         showEditAlert(for: topic)
     }
     
-    func didTapDelete(for cell: SRCollectionViewCell, topic: Topics) {
+    func didTapDelete(for cell: ModuleListCollectionViewCell, topic: Topics) {
         showDeleteConfirmation(for: topic)
     }
     private func showEditAlert(for topic: Topics) {

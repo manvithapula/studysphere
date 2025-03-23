@@ -13,17 +13,7 @@ class DocumentCell: UICollectionViewCell {
     private var currentDocument: FileMetadata?
     
     // MARK: - UI Elements
-    private let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 16
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.08
-        view.layer.shadowRadius = 8
-        view.layer.shadowOffset = CGSize(width: 0, height: 3)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let containerView = DesignManager.cardView()
     
     private let cardBackground: UIView = {
         let view = UIView()
@@ -33,14 +23,7 @@ class DocumentCell: UICollectionViewCell {
         return view
     }()
     
-    private let iconContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 24
-        view.backgroundColor = AppTheme.primary
-        view.clipsToBounds = true
-        return view
-    }()
+    private let iconContainer = DesignManager.iconContainer()
     
     private let documentImageView: UIImageView = {
         let imageView = UIImageView()
@@ -63,14 +46,7 @@ class DocumentCell: UICollectionViewCell {
         return startButton
     }()
     
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .bold)
-        label.textColor = .darkText
-        label.numberOfLines = 2
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let titleLabel = DesignManager.cellTitleLabel()
     
     private let dateLabel: UILabel = {
         let label = UILabel()
@@ -98,27 +74,9 @@ class DocumentCell: UICollectionViewCell {
         return view
     }()
     
-    private lazy var editButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Edit", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var editButton = DesignManager.editButton(selector: #selector(editButtonTapped))
     
-    private lazy var deleteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Delete", for: .normal)
-        button.backgroundColor = .systemRed
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private lazy var deleteButton = DesignManager.deleteButton(selector: #selector(deleteButtonTapped))
     
     private var initialTouchPoint: CGPoint = .zero
     private var swipeViewRightConstraint: NSLayoutConstraint?
@@ -127,7 +85,6 @@ class DocumentCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        setupGestureRecognizers()
     }
     
     required init?(coder: NSCoder) {
@@ -210,10 +167,6 @@ class DocumentCell: UICollectionViewCell {
         swipeViewRightConstraint?.isActive = true
     }
     
-    private func setupGestureRecognizers() {
-//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-//        containerView.addGestureRecognizer(panGesture)
-    }
 
     // MARK: - Configure Cell
     func configure(with document: FileMetadata, index: Int,isEditing:Bool) {
@@ -265,38 +218,6 @@ class DocumentCell: UICollectionViewCell {
     }
     
     // MARK: - Swipe Gesture Handling
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: containerView)
-        
-        switch gesture.state {
-        case .began:
-            initialTouchPoint = containerView.frame.origin
-            
-        case .changed:
-            if translation.x < 0 { // Only allow left swipe
-                let newX = max(translation.x, -150) // Limit swipe to -150 points
-                swipeViewRightConstraint?.constant = newX - 16 // Account for container right margin
-                layoutIfNeeded()
-            }
-            
-        case .ended, .cancelled:
-            let velocity = gesture.velocity(in: containerView)
-            
-            if swipeViewRightConstraint?.constant ?? 0 < -75 || velocity.x < -200 {
-                // Show action buttons
-                UIView.animate(withDuration: 0.3) {
-                    self.swipeViewRightConstraint?.constant = -150 - 16 // Account for container right margin
-                    self.layoutIfNeeded()
-                }
-            } else {
-                // Reset position
-                resetSwipeState()
-            }
-            
-        default:
-            break
-        }
-    }
     
     private func resetSwipeState() {
         UIView.animate(withDuration: 0.3) {

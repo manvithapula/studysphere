@@ -82,7 +82,7 @@ class FlashcardResultViewController: UIViewController {
             .font: UIFont.systemFont(ofSize: 20, weight: .semibold)
         ]
         navigationController?.navigationBar.titleTextAttributes = titleAttributes
-        title = "Flashcard Results"
+        title = "Results"
     }
     
     private func configureUI() {

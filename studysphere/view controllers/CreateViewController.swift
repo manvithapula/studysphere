@@ -575,17 +575,11 @@ class CreateViewController: UIViewController {
                 default:
                     break
                 }
-            } catch {
-                print("Error uploading file: \(error.localizedDescription)")
             }
         }
     }
 
     private func updateCreateButtonState() {
-        let isValid =
-            !(Topic.text?.isEmpty ?? true)
-            && !(subjectField.text?.isEmpty ?? true) && selectedTechnique != nil
-            && document != nil
         // change isValid to check doc uploaded
         let isValidDoc =
             !(Topic.text?.isEmpty ?? true)

@@ -216,7 +216,7 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
             case 0:
                 performSegue(withIdentifier: "toSRSchedule", sender: indexPath.row)
             case 1:
-                performSegue(withIdentifier: "toARSchedule", sender: indexPath.row)
+                performSegue(withIdentifier: "toSRSchedule", sender: indexPath.row)
             case 2:
                 performSegue(withIdentifier: "toSummary", sender: indexPath.row)
             default:
@@ -252,11 +252,7 @@ class SubjectDetailsViewController: UIViewController, UICollectionViewDelegate, 
             
             switch segue.identifier {
             case "toSRSchedule":
-                if let destinationVC = segue.destination as? SRScheduleViewController {
-                    destinationVC.topic = selectedCard
-                }
-            case "toARSchedule":
-                if let destinationVC = segue.destination as? ARScheduleViewController {
+                if let destinationVC = segue.destination as? ModuleScheduleViewController {
                     destinationVC.topic = selectedCard
                 }
             case "toSummary":

@@ -627,7 +627,7 @@ class QuestionViewController: UIViewController {
     // MARK: - Cleanup
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? QuestionResultViewController {
+        if let destination = segue.destination as? FlashcardResultViewController {
             destination.score = scoreValue
         }
     }

@@ -9,7 +9,7 @@ import UIKit
 import FirebaseCore
 
 
-class SRScheduleViewController: UIViewController, UITableViewDataSource {
+class ModuleScheduleViewController: UIViewController, UITableViewDataSource {
     // MARK: - Properties
     private var mySchedules: [Schedule] = []
     var topic: Topics?
@@ -191,6 +191,13 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
                 destinationVC.schedule = mySchedules[completedSchedules.count]
             }
         }
+        if segue.identifier == "toQuestionVC" {
+            if let destinationVC = segue.destination as? QuestionViewController,
+               let index = sender as? IndexPath {
+                destinationVC.topic = topic
+                destinationVC.schedule = mySchedules[index.row]
+            }
+        }
         
         if segue.identifier == "showScheduleDetail",
            let destinationVC = segue.destination as? FlashcardViewController,
@@ -199,11 +206,6 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
             destinationVC.schedule = mySchedules[index.row]
         }
         
-        if segue.identifier == "toSREditSchedule",
-           let navController = segue.destination as? UINavigationController,
-           let destinationVC = navController.topViewController as? SREditScheduleViewController {
-            destinationVC.schedules1 = mySchedules
-        }
     }
     
     @IBAction func comeHere(segue: UIStoryboardSegue) {
@@ -213,7 +215,7 @@ class SRScheduleViewController: UIViewController, UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate & DataSource
-extension SRScheduleViewController: UITableViewDelegate {
+extension ModuleScheduleViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return mySchedules.count
     }
@@ -229,7 +231,8 @@ extension SRScheduleViewController: UITableViewDelegate {
             schedule: schedule.id        )
         cell.startButton.removeTarget(nil, action: nil, for: .touchUpInside)
         cell.startButton.addAction(UIAction { [weak self] _ in
-            self?.performSegue(withIdentifier: "showScheduleDetail", sender: indexPath)
+            let identifier = schedule.topicType == .flashcards ? "showScheduleDetail" : "toQuestionVC"
+            self?.performSegue(withIdentifier: identifier, sender: indexPath)
             }, for: .touchUpInside)
         
         
